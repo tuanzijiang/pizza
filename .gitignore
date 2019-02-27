@@ -35,3 +35,4 @@ target
 
 # Vscode project file
 .history
+.DS_Store
