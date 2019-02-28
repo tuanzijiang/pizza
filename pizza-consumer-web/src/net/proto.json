@@ -281,10 +281,6 @@
             "imgUrl": {
               "type": "string",
               "id": 6
-            },
-            "num": {
-              "type": "int32",
-              "id": 7
             }
           }
         },
@@ -307,6 +303,11 @@
               "keyType": "string",
               "type": "Pizza",
               "id": 2
+            },
+            "pizzasNum": {
+              "keyType": "string",
+              "type": "int32",
+              "id": 3
             }
           }
         },
@@ -344,10 +345,15 @@
               "type": "string",
               "id": 1
             },
+            "pizzaIds": {
+              "rule": "repeated",
+              "type": "string",
+              "id": 2
+            },
             "pizzasNum": {
               "keyType": "string",
               "type": "int32",
-              "id": 2
+              "id": 3
             }
           }
         },
