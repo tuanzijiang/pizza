@@ -1,0 +1,114 @@
+@import '~@ui/base.less';
+
+.activity-wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.activity-header {
+  position: relative;
+  width: 100%;
+  flex: 0 0 70px;
+  height: 70px;
+  background: @white_1;
+  display: flex;
+  align-items: center;
+}
+
+.activity-main {
+  width: 100%;
+  flex: 1 1 0;
+  height: calc(~'100% - 70px');
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.activity-headerLeft {
+  flex: 1 1 0;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.activity-headerRight {
+  margin: 0 30px 0 0;
+}
+
+.activity-headerSearch {
+  height: 32px;
+  width: 340px;
+}
+
+.activity-mainContent {
+  height: calc(~'100% - 60px');
+  width: calc(~'100% - 80px');
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: @white_1;
+  .ant-pagination-item-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.activity-table {
+  height: calc(~'100% - 60px');
+  width: calc(~'100% - 60px');
+  overflow: auto;
+  td {
+    word-break: break-all;
+    position: relative;
+  }
+  .ant-table-body {
+    max-height: calc(~'100% - 70px') !important;
+  }
+  .activity-item {
+    text-overflow: ellipsis;
+    word-break: break-all;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .activity-item_itemID {
+    width: 200px - @table_item_padding * 2;
+  }
+  .activity-item_itemName {
+    width: 200px - @table_item_padding * 2;
+  }
+  .activity-item_itemCreator {
+    width: 130px - @table_item_padding * 2;
+  }
+  .activity-item_itemTime {
+    width: 200px - @table_item_padding * 2;
+  }
+  .activity-item_itemStart {
+    position: absolute;
+    left: 16px;
+    top: 5px;
+    width: 220px - @table_item_padding * 2;
+  }
+  .activity-item_itemEnd {
+    position: absolute;
+    left: 16px;
+    top: 25px;
+    width: 220px - @table_item_padding * 2;
+  }
+  .activity-item_itemState {
+    width: 100px - @table_item_padding * 2;
+  }
+  .activity-itemState_start {
+    color: @green_3;
+  }
+  .activity-itemState_toStart {
+    color: @red_2;
+  }
+  .activity-itemState_stop {
+    color: @gray_3;
+  }
+}
