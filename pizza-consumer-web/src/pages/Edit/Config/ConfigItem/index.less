@@ -1,0 +1,29 @@
+@import '~@ui/base.less';
+
+.configItem-wrapper {
+  width: 100%;
+}
+
+
+.configItem-content {
+  box-sizing: border-box;
+  width: 100%;
+  padding: @table_item_padding @table_item_padding * 2;
+
+  tbody {
+    width: 100%;
+  }
+}
+
+.configItem-name {
+  color: @blue_2;
+  font-size: 18px;
+  text-align: center;
+}
+
+.configItem-dividing {
+  margin: 0 auto;
+  width: calc(100% - @table_item_padding * 4);
+  background: @gray_2;
+  height: 1px;
+}

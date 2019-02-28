@@ -32,3 +32,6 @@ hs_err_pid*
 out
 gen
 target
+
+# Vscode project file
+.history

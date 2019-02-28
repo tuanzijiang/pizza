@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package pizza;
+
+import "common.proto";
+import "order.proto";
+
+message Pizza {
+  string pizza_id = 1;
+  string name = 2;
+  string description = 3;
+  string price = 4;
+  string pizza_type = 5;
+  string img_url = 6;
+  int32 num = 7;
+}
+
+// 获取当前用户的菜单
+
+message FetchMenuReq {
+  string user_id = 1;
+}
+
+message FetchMenuResp {
+  repeated string pizza_ids = 1;
+  map<string, Pizza> pizzas = 2;
+}
+
+// 更新当前用户的菜单
+
+message UpdateMenuReq {
+  enum Type {
+    ADD = 0;
+    DELETE = 1;
+  }
+
+  string user_id = 1;
+  string pizza_id = 2;
+}
+
+message UpdateMenuResp {
+  ResultType result_type = 1;
+}
+
+// 全量更新当前用户的菜单
+
+message UpdateAllMenuReq {
+  string user_id = 1;
+  map<string, int32> pizzas_num = 2;
+}
+
+message UpdateAllMenuResp {
+  ResultType result_type = 1;
+}
+
+// 下单
+
+message SendMenuReq {
+  string user_id = 1;
+  map<string, int32> pizza_num = 2;
+}
+
+message SendMenuResp {
+  ResultType result_type = 1;
+  Order order = 2;
+}
