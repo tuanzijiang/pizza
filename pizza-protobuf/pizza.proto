@@ -12,7 +12,6 @@ message Pizza {
   string price = 4;
   string pizza_type = 5;
   string img_url = 6;
-  int32 num = 7;
 }
 
 // 获取当前用户的菜单
@@ -24,6 +23,7 @@ message FetchMenuReq {
 message FetchMenuResp {
   repeated string pizza_ids = 1;
   map<string, Pizza> pizzas = 2;
+  map<string, int32> pizzas_num = 3; //  默认value为0，不出现在map中
 }
 
 // 更新当前用户的菜单
@@ -39,18 +39,19 @@ message UpdateMenuReq {
 }
 
 message UpdateMenuResp {
-  ResultType result_type = 1;
+  ResultType result_type = 1; // 可能因为当前菜单发生了变化而失败
 }
 
 // 全量更新当前用户的菜单
 
 message UpdateAllMenuReq {
   string user_id = 1;
-  map<string, int32> pizzas_num = 2;
+  repeated string pizza_ids = 2;
+  map<string, int32> pizzas_num = 3; // 默认value为0，不出现在map中
 }
 
 message UpdateAllMenuResp {
-  ResultType result_type = 1;
+  ResultType result_type = 1; // 可能因为菜单发生了改变而失败
 }
 
 // 下单
