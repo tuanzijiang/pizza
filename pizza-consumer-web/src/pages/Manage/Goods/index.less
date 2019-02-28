@@ -1,0 +1,190 @@
+@import '~@ui/base.less';
+.goods-wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.goods-header {
+  position: relative;
+  width: 100%;
+  flex: 0 0 70px;
+  height: 70px;
+  background: @white_1;
+  display: flex;
+  align-items: center;
+}
+
+.goods-main {
+  width: 100%;
+  flex: 1 1 0;
+  height: calc(~'100% - 70px');
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.goods-headerLeft {
+  flex: 1 1 0;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.goods-headerRight {
+  margin: 0 30px 0 0;
+}
+
+.goods-headerSearch {
+  height: 32px;
+  width: 340px;
+}
+
+.goods-mainContent {
+  height: calc(~'100% - 60px');
+  width: calc(~'100% - 80px');
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .ant-pagination-item-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .goods-group {
+    height: 100%;
+    width: 250px;
+    flex: 0 0 250px;
+    background: @white_1;
+    border-radius: 5px;
+    overflow: hidden;
+    .goods-addGroup {
+      color: white;
+      background: @blue_2;
+      width: 100%;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all .3s;
+      &:hover {
+        background: @blue_1;
+      }
+      &:active {
+        background: @blue_3;
+      }
+    }
+    .goods-groups {
+      height: calc(~'100% - 50px');
+      overflow: hidden;
+      width: 100%;
+    }
+    .goods-groupList {
+      height: 100%;
+      width: 100%;
+      overflow: auto;
+    }
+  }
+  .goods-table {
+    height: 100%;
+    width: 150px;
+    flex: 1 1 0;
+    margin: 0 0 0 30px;
+    background: @white_1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.goods-goodsTable {
+  height: calc(~'100% - 60px');
+  width: calc(~'100% - 60px');
+  overflow: auto;
+  td {
+    word-break: break-all;
+    position: relative;
+  }
+  .ant-table-body {
+    max-height: calc(~'100% - 70px') !important;
+  }
+  .goods-item {
+    text-overflow: ellipsis;
+    word-break: break-all;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .goods-item_itemID {
+    width: 200px - @table_item_padding * 2;
+  }
+  .goods-item_itemPic {
+    width: 100px- @table_item_padding * 2;
+    position: relative;
+  }
+  .goods-item_pic {
+    width: 100px - @table_item_padding * 2;
+    height: 40px;
+    position: relative;
+  }
+  .goods-item_itemName {
+    width: 300px - @table_item_padding * 2;
+  }
+  .goods-item_itemPrice {
+    width: 100px - @table_item_padding * 2;
+  }
+}
+
+.goods-groupItem {
+  overflow: hidden;
+  height: 80px;
+  width: 100%;
+  border-bottom: 1px solid @gray_2;
+  position: relative;
+  cursor: pointer;
+  background: @white_1;
+  transition: all .3s;
+  &:hover {
+    background: fadeout(@blue_1, 95%);
+  }
+}
+
+.goods-groupItemName {
+  position: absolute;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 115px;
+  left: 10px;
+  top: 10px;
+  color: @black_1;
+}
+
+.goods-groupItemTime {
+  position: absolute;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 115px;
+  left: 10px;
+  bottom: 10px;
+  color: @gray_3;
+}
+
+.goods-groupItemNum {
+  position: absolute;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 115px;
+  right: 10px;
+  top: 10px;
+  text-align: right;
+  color: @gray_3;
+}

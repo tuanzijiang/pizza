@@ -1,0 +1,21 @@
+{
+  "extends": "tslint-config-airbnb",
+  "rules": {
+    "import-name": false,
+    "variable-name": false,
+    "align": false,
+    "jsx-self-close": false,
+    "no-boolean-literal-compare": false,
+    "ter-arrow-parens": false,
+    "ordered-imports": false,
+    "no-submodule-imports": false,
+    "no-angle-bracket-type-assertion": false,
+    "quotemark": [true, "single", "jsx-double"],
+    "no-default-export": false,
+    "prefer-readonly": true,
+    "promise-function-async": true,
+    "jsx-no-multiline-js": false,
+    "function-name": false,
+    "no-else-after-return": false
+  }
+}
