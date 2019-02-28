@@ -1,0 +1,30 @@
+@import '~@ui/base.less';
+.template-wrapper {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+
+.template-group {
+  margin: 0 auto;
+  width: 250px;
+  color: @blue_2;
+  text-align: center;
+}
+
+.template-groupName {
+  font-size: 18px;
+  margin: 25px 0 0;
+}
+
+.template-groupItem {
+  width: 100%;
+  color: @black_1;
+  margin: 15px 0 0;
+  box-shadow: 0 0 4px 0 @gray_2;
+  cursor: pointer;
+  transition: all .3s;
+  &:hover {
+    box-shadow: 0 0 4px 0 @gray_3;
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "module": "esnext",
+    "target": "es5",
+    "jsx": "react",
+    "allowJs": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "downlevelIteration": true,
+    "resolveJsonModule": true,
+    "lib": [
+      "es2015",
+      "dom",
+      "es6",
+    ],
+    "baseUrl": "./",
+    "paths": {
+      "@biz-components/*": [
+        "src/biz-components/*"
+      ],
+      "@components/*": [
+        "src/components/*"
+      ],
+      "@src/*": [
+        "src/*"
+      ],
+      "@ui/*": [
+        "src/ui/*"
+      ],
+      "@assets/*": [
+        "src/assets/*"
+      ],
+      "@net/*": [
+        "src/net/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
+      ],
+      "@schemas/*": [
+        "src/schemas/*"
+      ],
+      "@store/*": [
+        "src/store/*"
+      ]
+    }
+  },
+  "include": [
+    "./src/**/*"
+  ]
+}

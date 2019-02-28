@@ -1,0 +1,465 @@
+{
+  "nested": {
+    "user": {
+      "nested": {
+        "User": {
+          "fields": {
+            "userId": {
+              "type": "string",
+              "id": 1
+            },
+            "name": {
+              "type": "string",
+              "id": 2
+            },
+            "phone": {
+              "type": "string",
+              "id": 3
+            },
+            "email": {
+              "type": "string",
+              "id": 4
+            },
+            "birthday": {
+              "type": "int64",
+              "id": 5
+            },
+            "city": {
+              "type": "string",
+              "id": 6
+            }
+          }
+        },
+        "FetchUserReq": {
+          "fields": {
+            "userId": {
+              "type": "string",
+              "id": 1
+            }
+          }
+        },
+        "FetchUserResp": {
+          "fields": {
+            "resultType": {
+              "type": "ResultType",
+              "id": 1
+            },
+            "user": {
+              "type": "User",
+              "id": 2
+            }
+          }
+        },
+        "UpdateUserReq": {
+          "fields": {
+            "userId": {
+              "type": "string",
+              "id": 1
+            },
+            "value": {
+              "type": "string",
+              "id": 2
+            }
+          },
+          "nested": {
+            "Type": {
+              "values": {
+                "NAME": 0,
+                "PHONE": 1,
+                "EMAIL": 2,
+                "BIRTHDAY": 3,
+                "CITY": 4
+              }
+            }
+          }
+        },
+        "UpdateUserResp": {
+          "fields": {
+            "resultType": {
+              "type": "ResultType",
+              "id": 1
+            }
+          }
+        },
+        "LoginReq": {
+          "fields": {
+            "type": {
+              "type": "Type",
+              "id": 1
+            },
+            "account": {
+              "type": "string",
+              "id": 2
+            },
+            "password": {
+              "type": "string",
+              "id": 3
+            }
+          },
+          "nested": {
+            "Type": {
+              "values": {
+                "PASSWORD": 0,
+                "VERIFICATION": 1
+              }
+            }
+          }
+        },
+        "LoginResp": {
+          "fields": {
+            "resultType": {
+              "type": "ResultType",
+              "id": 1
+            },
+            "user": {
+              "type": "User",
+              "id": 2
+            }
+          }
+        },
+        "LogoutReq": {
+          "fields": {
+            "userId": {
+              "type": "string",
+              "id": 1
+            }
+          }
+        },
+        "LogoutResp": {
+          "fields": {
+            "resultType": {
+              "type": "ResultType",
+              "id": 1
+            }
+          }
+        },
+        "SignUpReq": {
+          "fields": {
+            "phone": {
+              "type": "string",
+              "id": 1
+            },
+            "password": {
+              "type": "string",
+              "id": 2
+            },
+            "email": {
+              "type": "string",
+              "id": 3
+            }
+          }
+        },
+        "SignUpResp": {
+          "fields": {
+            "resultType": {
+              "type": "ResultType",
+              "id": 1
+            },
+            "user": {
+              "type": "User",
+              "id": 2
+            }
+          }
+        }
+      }
+    },
+    "common": {
+      "nested": {
+        "ResultType": {
+          "values": {
+            "FAILUER": 0,
+            "SUCCESS": 1
+          }
+        }
+      }
+    },
+    "address": {
+      "nested": {
+        "Address": {
+          "fields": {
+            "addressId": {
+              "type": "string",
+              "id": 1
+            },
+            "name": {
+              "type": "string",
+              "id": 2
+            },
+            "sex": {
+              "type": "Sex",
+              "id": 3
+            },
+            "address": {
+              "type": "string",
+              "id": 4
+            },
+            "addressDetail": {
+              "type": "string",
+              "id": 5
+            },
+            "phone": {
+              "type": "string",
+              "id": 6
+            },
+            "tag": {
+              "type": "string",
+              "id": 7
+            }
+          },
+          "nested": {
+            "Sex": {
+              "values": {
+                "MALE": 0,
+                "FEMALE": 1
+              }
+            }
+          }
+        },
+        "FetchAddressReq": {
+          "fields": {
+            "userId": {
+              "type": "string",
+              "id": 1
+            }
+          }
+        },
+        "FetchAddressResp": {
+          "fields": {
+            "addresses": {
+              "rule": "repeated",
+              "type": "Address",
+              "id": 2
+            }
+          }
+        },
+        "UpdateAddressReq": {
+          "fields": {
+            "userId": {
+              "type": "string",
+              "id": 1
+            },
+            "address": {
+              "type": "Address",
+              "id": 2
+            }
+          }
+        },
+        "UpdateAddressResp": {
+          "fields": {
+            "resultType": {
+              "type": "ResultType",
+              "id": 1
+            }
+          }
+        }
+      }
+    },
+    "pizza": {
+      "nested": {
+        "Pizza": {
+          "fields": {
+            "pizzaId": {
+              "type": "string",
+              "id": 1
+            },
+            "name": {
+              "type": "string",
+              "id": 2
+            },
+            "description": {
+              "type": "string",
+              "id": 3
+            },
+            "price": {
+              "type": "string",
+              "id": 4
+            },
+            "pizzaType": {
+              "type": "string",
+              "id": 5
+            },
+            "imgUrl": {
+              "type": "string",
+              "id": 6
+            },
+            "num": {
+              "type": "int32",
+              "id": 7
+            }
+          }
+        },
+        "FetchMenuReq": {
+          "fields": {
+            "userId": {
+              "type": "string",
+              "id": 1
+            }
+          }
+        },
+        "FetchMenuResp": {
+          "fields": {
+            "pizzaIds": {
+              "rule": "repeated",
+              "type": "string",
+              "id": 1
+            },
+            "pizzas": {
+              "keyType": "string",
+              "type": "Pizza",
+              "id": 2
+            }
+          }
+        },
+        "UpdateMenuReq": {
+          "fields": {
+            "userId": {
+              "type": "string",
+              "id": 1
+            },
+            "pizzaId": {
+              "type": "string",
+              "id": 2
+            }
+          },
+          "nested": {
+            "Type": {
+              "values": {
+                "ADD": 0,
+                "DELETE": 1
+              }
+            }
+          }
+        },
+        "UpdateMenuResp": {
+          "fields": {
+            "resultType": {
+              "type": "ResultType",
+              "id": 1
+            }
+          }
+        },
+        "UpdateAllMenuReq": {
+          "fields": {
+            "userId": {
+              "type": "string",
+              "id": 1
+            },
+            "pizzasNum": {
+              "keyType": "string",
+              "type": "int32",
+              "id": 2
+            }
+          }
+        },
+        "UpdateAllMenuResp": {
+          "fields": {
+            "resultType": {
+              "type": "ResultType",
+              "id": 1
+            }
+          }
+        },
+        "SendMenuReq": {
+          "fields": {
+            "userId": {
+              "type": "string",
+              "id": 1
+            },
+            "pizzaNum": {
+              "keyType": "string",
+              "type": "int32",
+              "id": 2
+            }
+          }
+        },
+        "SendMenuResp": {
+          "fields": {
+            "resultType": {
+              "type": "ResultType",
+              "id": 1
+            },
+            "order": {
+              "type": "Order",
+              "id": 2
+            }
+          }
+        }
+      }
+    },
+    "order": {
+      "nested": {
+        "Order": {
+          "fields": {
+            "orderId": {
+              "type": "string",
+              "id": 1
+            },
+            "startTime": {
+              "type": "int64",
+              "id": 2
+            },
+            "pizzas": {
+              "keyType": "string",
+              "type": "Pizza",
+              "id": 3
+            },
+            "pizzaIds": {
+              "rule": "repeated",
+              "type": "string",
+              "id": 4
+            },
+            "address": {
+              "type": "Address",
+              "id": 5
+            },
+            "status": {
+              "type": "Status",
+              "id": 6
+            },
+            "phone": {
+              "type": "string",
+              "id": 7
+            }
+          },
+          "nested": {
+            "Status": {
+              "values": {
+                "UNPAID": 0,
+                "PAID": 1,
+                "RECEIVED": 2,
+                "TRANSPORT": 3,
+                "FINISH": 4
+              }
+            }
+          }
+        },
+        "FetchOrdersReq": {
+          "fields": {
+            "userId": {
+              "type": "string",
+              "id": 1
+            }
+          }
+        },
+        "FetchOrdersResp": {
+          "fields": {
+            "resultType": {
+              "type": "ResultType",
+              "id": 1
+            },
+            "orders": {
+              "keyType": "string",
+              "type": "Order",
+              "id": 3
+            },
+            "orderIds": {
+              "rule": "repeated",
+              "type": "string",
+              "id": 4
+            }
+          }
+        }
+      }
+    }
+  }
+}
