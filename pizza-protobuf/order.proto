@@ -24,7 +24,19 @@ message Order {
 }
 
 // 获取订单详情
-// [get] /orders
+// [get] /fetchOrder
+
+message FetchOrderReq {
+  string order_id = 2;
+}
+
+message FetchOrderResp {
+  ResultType result_type = 1;
+  Order orders = 2;
+}
+
+// 获取订单详情
+// [get] /fetchOrders
 
 message FetchOrdersReq {
   int32 user_id = 1;
@@ -51,7 +63,7 @@ message FetchMenuResp {
 }
 
 // 下单
-// [put] /order
+// [put] /sendOrder
 
 message SendOrderReq {
   string user_id = 1;
@@ -64,7 +76,7 @@ message SendOrderResp {
 }
 
 // 更新当前用户的菜单
-// [post] /order
+// [post] /updateOrder
 
 message UpdateOrderReq {
   string order_id = 1;
