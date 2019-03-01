@@ -6,13 +6,13 @@ import "common.proto";
 import "address.proto";
 
 message User {
-  string user_id = 1;
+  int32 id = 1;
   string name = 2;
   string phone = 3;
   string email = 4;
   int64 birthday = 5;
   string city = 6;
-  string avatar = 7;
+  string img = 7;
 }
 
 // 获取当前用户信息
@@ -37,7 +37,7 @@ message UpdateUserReq {
     EMAIL = 2;
     BIRTHDAY = 3;
     CITY = 4;
-    AVATAR = 5;
+    IMGAE = 5;
   }
 
   string user_id = 1;
