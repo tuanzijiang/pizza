@@ -19,7 +19,7 @@ message User {
 // [get] /user
 
 message FetchUserReq {
-  string user_id = 1;
+  int32 user_id = 1;
 }
 
 message FetchUserResp {
@@ -40,7 +40,7 @@ message UpdateUserReq {
     IMGAE = 5;
   }
 
-  string user_id = 1;
+  int32 user_id = 1;
   Type type = 2;
   string value = 3;
 }
@@ -72,7 +72,7 @@ message LoginResp {
 // [post] /logoutStatus
 
 message LogoutReq {
-  string user_id = 1;
+  int32 user_id = 1;
 }
 
 message LogoutResp {

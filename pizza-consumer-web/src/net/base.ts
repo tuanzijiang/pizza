@@ -1,80 +1,66 @@
-import log from '@utils/log';
 import proto from './proto.json';
 import { Root as protobufRoot } from 'protobufjs';
-
-export enum Method {
-  GET = 'GET',
-  POST = 'POST',
-  DELETE = 'DELETE',
-  PUT = 'PUT',
-}
-
-export interface BaseRequest { }
-
-export interface BaseResponse { }
+import { reqProto, respProto, Command, CommandReq, CommandResp, reqUrl } from './Command';
 
 const BASE_URL = 'http://localhost:3000/v0.0.1';
 
-const getParams = (data: Object) =>
-  Object.entries(data).reduce((prev, [key, val], idx) =>
-    idx ? `${prev}&${key}=${encodeURI(val)}` : `${key}=${encodeURI(val)}`
-    , '');
+const request = async <T extends Command>
+  (T: Command, ...param: CommandReq<T>): Promise<CommandResp<T>> => {
+  try {
+    const root = protobufRoot.fromJSON(proto);
+    const reqType = root.lookupType(reqProto[T]);
+    const respType = root.lookupType(respProto[T]);
+    console.warn(1111, ...param);
+    const postBuffer = reqType.encode(reqType.create(...param)).finish();
+    console.warn(1111, postBuffer);
 
-const base = (method: Method) =>
-  (url: string, data: Object) => {
-    let fetchUrl = `${BASE_URL}/${url}`;
-    if (method === Method.GET) {
-      fetchUrl = data ? `${fetchUrl}?${getParams(data)}` : fetchUrl;
-    }
+    fetch(reqUrl[T], {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-protobuf',
+      },
+      body: postBuffer,
+    }).then(async res => {
+      const resBuffer = await res.arrayBuffer();
+      const result = respType.decode(new Uint8Array(resBuffer));
+      return Promise.resolve(result);
+    }).catch(error => console.log('Error:', error));
+  } catch (e) {
+    this.printLarkError(e.code);
+    return Promise.reject(e);
+  }
+};
 
-    return new Promise((resolve: (response: any) => void, reject: (err: any) => void) => {
-      log.info(`[net]: fetchUrl: ${fetchUrl}`);
-      fetch(fetchUrl, {
-        method,
-        body: method !== Method.GET ? JSON.stringify(data && {}) : null,
-        mode: 'cors',
-        credentials: 'omit',
-        headers: {
-          'content-type': 'application/json',
-        },
-      }).then(async (response) => {
-        resolve(await response.json());
-      }).catch((err) => {
-        reject(err);
-      });
-    });
-  };
-
-const protoNet = () => {
+const protoNet = async () => {
   const root = protobufRoot.fromJSON(proto);
-  const UserProto = root.lookupType('user.User');
-  const loginReqProto = root.lookupType('user.LoginReq');
+  const protoType = root.lookupType(respProto[Command.FETCH_USER]);
 
-  const user = {
-    id: 'id123',
-    phone: 'phone123',
-    userName: 'name123',
+  const test = {
+    userId: 1,
   };
 
-  const loginReq = {
-    type: 'PASSWORD',
-    account: 'account',
-    password: 'password',
-  };
+  console.warn(9999, await request(Command.FETCH_USER, test));
 
-  console.warn(1111, user, loginReq);
-  const infoEncodeMsg = UserProto.encode(UserProto.create(user)).finish();
-  const logininfoEncodeMsg = loginReqProto.encode(loginReqProto.create(loginReq)).finish();
-  console.warn(2222, infoEncodeMsg, loginReqProto);
-  const infoUnSerialized = UserProto.decode(infoEncodeMsg);
-  const logininfoUnSerialized = loginReqProto.decode(logininfoEncodeMsg);
-  console.warn(3333, infoUnSerialized, logininfoUnSerialized);
+  // const UserProto = root.lookupType('user.User');
+  // const loginReqProto = root.lookupType('user.LoginReq');
+
+  // console.warn(1111, User.decode(User.encode(User.fromJS())));
+
+  // const loginReq = {
+  //   type: 'PASSWORD',
+  //   account: 'account',
+  //   password: 'password',
+  // };
+
+  // console.warn(1111, user, loginReq);
+  // const infoEncodeMsg = UserProto.encode(UserProto.create(user)).finish();
+  // const logininfoEncodeMsg = loginReqProto.encode(loginReqProto.create(loginReq)).finish();
+  // console.warn(2222, infoEncodeMsg, loginReqProto);
+  // const infoUnSerialized = UserProto.decode(infoEncodeMsg);
+  // const logininfoUnSerialized = loginReqProto.decode(logininfoEncodeMsg);
+  // console.warn(3333, infoUnSerialized, logininfoUnSerialized);
 };
 
 export default {
   protoNet,
-  post: base(Method.POST),
-  get: base(Method.GET),
-  put: base(Method.PUT),
-  delete: base(Method.DELETE),
 };
