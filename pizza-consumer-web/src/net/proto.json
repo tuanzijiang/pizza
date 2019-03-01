@@ -202,7 +202,7 @@
               "id": 6
             },
             "tag": {
-              "type": "string",
+              "type": "Tag",
               "id": 7
             }
           },
@@ -211,6 +211,14 @@
               "values": {
                 "MALE": 0,
                 "FEMALE": 1
+              }
+            },
+            "Tag": {
+              "values": {
+                "NULL": 0,
+                "HOME": 1,
+                "SCHOOL": 2,
+                "COMPANY": 3
               }
             }
           }
@@ -249,6 +257,106 @@
             "resultType": {
               "type": "ResultType",
               "id": 1
+            }
+          }
+        }
+      }
+    },
+    "order": {
+      "nested": {
+        "Order": {
+          "fields": {
+            "orderId": {
+              "type": "string",
+              "id": 1
+            },
+            "startTime": {
+              "type": "int64",
+              "id": 2
+            },
+            "pizzas": {
+              "keyType": "string",
+              "type": "Pizza",
+              "id": 3
+            },
+            "pizzaIds": {
+              "rule": "repeated",
+              "type": "string",
+              "id": 4
+            },
+            "address": {
+              "type": "Address",
+              "id": 5
+            },
+            "status": {
+              "type": "Status",
+              "id": 6
+            },
+            "phone": {
+              "type": "string",
+              "id": 7
+            }
+          },
+          "nested": {
+            "Status": {
+              "values": {
+                "UNPAID": 0,
+                "PAID": 1,
+                "RECEIVED": 2,
+                "TRANSPORT": 3,
+                "FINISH": 4
+              }
+            }
+          }
+        },
+        "FetchOrdersReq": {
+          "fields": {
+            "userId": {
+              "type": "string",
+              "id": 1
+            }
+          }
+        },
+        "FetchOrdersResp": {
+          "fields": {
+            "resultType": {
+              "type": "ResultType",
+              "id": 1
+            },
+            "orders": {
+              "keyType": "string",
+              "type": "Order",
+              "id": 3
+            },
+            "orderIds": {
+              "rule": "repeated",
+              "type": "string",
+              "id": 4
+            }
+          }
+        },
+        "SendOrderReq": {
+          "fields": {
+            "userId": {
+              "type": "string",
+              "id": 1
+            },
+            "pizzaNum": {
+              "keyType": "string",
+              "type": "int32",
+              "id": 2
+            }
+          }
+        },
+        "SendOrderResp": {
+          "fields": {
+            "resultType": {
+              "type": "ResultType",
+              "id": 1
+            },
+            "order": {
+              "type": "Order",
+              "id": 2
             }
           }
         }
@@ -362,106 +470,6 @@
             "resultType": {
               "type": "ResultType",
               "id": 1
-            }
-          }
-        },
-        "SendMenuReq": {
-          "fields": {
-            "userId": {
-              "type": "string",
-              "id": 1
-            },
-            "pizzaNum": {
-              "keyType": "string",
-              "type": "int32",
-              "id": 2
-            }
-          }
-        },
-        "SendMenuResp": {
-          "fields": {
-            "resultType": {
-              "type": "ResultType",
-              "id": 1
-            },
-            "order": {
-              "type": "Order",
-              "id": 2
-            }
-          }
-        }
-      }
-    },
-    "order": {
-      "nested": {
-        "Order": {
-          "fields": {
-            "orderId": {
-              "type": "string",
-              "id": 1
-            },
-            "startTime": {
-              "type": "int64",
-              "id": 2
-            },
-            "pizzas": {
-              "keyType": "string",
-              "type": "Pizza",
-              "id": 3
-            },
-            "pizzaIds": {
-              "rule": "repeated",
-              "type": "string",
-              "id": 4
-            },
-            "address": {
-              "type": "Address",
-              "id": 5
-            },
-            "status": {
-              "type": "Status",
-              "id": 6
-            },
-            "phone": {
-              "type": "string",
-              "id": 7
-            }
-          },
-          "nested": {
-            "Status": {
-              "values": {
-                "UNPAID": 0,
-                "PAID": 1,
-                "RECEIVED": 2,
-                "TRANSPORT": 3,
-                "FINISH": 4
-              }
-            }
-          }
-        },
-        "FetchOrdersReq": {
-          "fields": {
-            "userId": {
-              "type": "string",
-              "id": 1
-            }
-          }
-        },
-        "FetchOrdersResp": {
-          "fields": {
-            "resultType": {
-              "type": "ResultType",
-              "id": 1
-            },
-            "orders": {
-              "keyType": "string",
-              "type": "Order",
-              "id": 3
-            },
-            "orderIds": {
-              "rule": "repeated",
-              "type": "string",
-              "id": 4
             }
           }
         }

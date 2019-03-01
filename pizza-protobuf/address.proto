@@ -27,6 +27,7 @@ message Address {
 }
 
 // 获取当前用户的地址信息
+// [get] /addresses
 
 message FetchAddressReq {
   string user_id = 1;
@@ -37,6 +38,7 @@ message FetchAddressResp {
 }
 
 // 更新当前用户的地址信息
+// [post] /address
 
 message UpdateAddressReq {
   string user_id = 1;
