@@ -12,6 +12,7 @@ message User {
   string email = 4;
   int64 birthday = 5;
   string city = 6;
+  string avatar = 7;
 }
 
 // 获取当前用户信息
@@ -36,10 +37,12 @@ message UpdateUserReq {
     EMAIL = 2;
     BIRTHDAY = 3;
     CITY = 4;
+    AVATAR = 5;
   }
 
   string user_id = 1;
-  string value = 2;
+  Type type = 2;
+  string value = 3;
 }
 
 message UpdateUserResp {

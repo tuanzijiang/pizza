@@ -10,20 +10,13 @@ message Address {
     FEMALE = 1;
   }
 
-  enum Tag {
-    NULL = 0;
-    HOME = 1;
-    SCHOOL = 2;
-    COMPANY = 3;
-  }
-
   string address_id = 1;
   string name = 2;
   Sex sex = 3;
   string address = 4;
   string address_detail = 5;
   string phone = 6;
-  Tag tag = 7;
+  string tag = 7;
 }
 
 // 获取当前用户的地址信息
