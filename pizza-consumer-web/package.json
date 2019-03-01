@@ -12,7 +12,7 @@
     "analysis": "webpack --config webpack.dev.js --profile --json > stats.json",
     "lint": "tslint --project . src/**/*.ts src/**/*.tsx",
     "mock": "nodemon mock/server",
-    "pb": "pbjs -t json ../pizza-protobuf/user.proto ../pizza-protobuf/pizza.proto > src/net/proto.json"
+    "pb": "pbjs -t json ../pizza-protobuf/user.proto ../pizza-protobuf/order.proto > src/net/proto.json"
   },
   "devDependencies": {
     "@types/autobind-decorator": "^2.1.0",
