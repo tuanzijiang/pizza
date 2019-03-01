@@ -48,6 +48,7 @@ module.exports = {
       "@assets": path.resolve(__dirname, 'src/assets/'),
       "@schemas": path.resolve(__dirname, 'src/schemas/'),
       "@store": path.resolve(__dirname, 'src/store/'),
+      "@entity": path.resolve(__dirname, 'src/entity/'),
     },
     extensions: ['.tsx', '.ts', '.js'],
   },

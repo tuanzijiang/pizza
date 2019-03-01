@@ -5,10 +5,15 @@ package pizza;
 import "common.proto";
 
 message Pizza {
+  enum Status {
+    SOLE_OUT = 0;
+    IN_SALES = 1;
+  }
+
   int32 id = 1;
   string name = 2;
   string description = 3;
-  string price = 4;
+  int32 price = 4;
   string tag = 5;
   string img = 6;
   int32 state = 7;

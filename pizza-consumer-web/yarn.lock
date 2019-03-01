@@ -1286,7 +1286,7 @@ content-disposition@~0.5.0:
   dependencies:
     safe-buffer "5.1.2"
 
-content-type@^1.0.0, content-type@~1.0.4:
+content-type@^1.0.0, content-type@^1.0.4, content-type@~1.0.4:
   version "1.0.4"
   resolved "http://bnpm.byted.org/content-type/download/content-type-1.0.4.tgz#e138cc75e040c727b1966fe5e5f8c9aee256fe3b"
   integrity sha1-4TjMdeBAxyexlm/l5fjJruJW/js=
@@ -3256,6 +3256,15 @@ koa-is-json@^1.0.0:
   version "1.0.0"
   resolved "http://bnpm.byted.org/koa-is-json/download/koa-is-json-1.0.0.tgz#273c07edcdcb8df6a2c1ab7d59ee76491451ec14"
   integrity sha1-JzwH7c3Ljfaiwat9We52SRRR7BQ=
+
+koa-protobuf@^0.1.1:
+  version "0.1.1"
+  resolved "http://bnpm.byted.org/koa-protobuf/download/koa-protobuf-0.1.1.tgz#49cf13d3dfbeb5c34ce1161cea80886d2db8af92"
+  integrity sha1-Sc8T09++tcNM4RYc6oCIbS24r5I=
+  dependencies:
+    co-body "^6.0.0"
+    content-type "^1.0.4"
+    raw-body "^2.3.3"
 
 koa-router@^7.4.0:
   version "7.4.0"

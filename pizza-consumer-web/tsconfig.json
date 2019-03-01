@@ -45,6 +45,9 @@
       ],
       "@store/*": [
         "src/store/*"
+      ],
+      "@entity/*": [
+        "src/entity/*"
       ]
     }
   },
