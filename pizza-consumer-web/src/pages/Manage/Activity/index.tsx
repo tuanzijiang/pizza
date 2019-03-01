@@ -10,7 +10,7 @@ import {
 } from '@schemas//store';
 import './index.less';
 import i18n from '@src/utils/i18n';
-import { fetchActivity } from '@net/activity';
+// import { fetchActivity } from '@net/activity';
 import { formater } from '@utils/time';
 
 const Search = Input.Search;
@@ -196,13 +196,13 @@ export default class Activity extends React.PureComponent<ActivityProps, Activit
   async init() {
     const { keyword, pageIdx } = this.state;
     const { updateActivities } = this.props;
-    try {
-      const result = await fetchActivity({
-        keyword,
-        pageIdx,
-      });
-      updateActivities(result.response);
-    } catch (e) { }
+    // try {
+    //   const result = await fetchActivity({
+    //     keyword,
+    //     pageIdx,
+    //   });
+    //   updateActivities(result.response);
+    // } catch (e) { }
   }
 
   render() {

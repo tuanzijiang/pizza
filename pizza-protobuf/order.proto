@@ -6,13 +6,13 @@ import "address.proto";
 import "pizza.proto";
 
 enum Status {
-      CART = 0;
-      UNPAID = 1;
-      PAID = 2;
-      RECEIVED = 3;
-      TRANSPORT = 4;
-      FINISH = 5;
-  }
+  CART = 0;
+  UNPAID = 1;
+  PAID = 2;
+  RECEIVED = 3;
+  TRANSPORT = 4;
+  FINISH = 5;
+}
 
 message Order {
   string id = 1;
