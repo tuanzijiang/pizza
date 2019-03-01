@@ -3,7 +3,6 @@ syntax = "proto3";
 package pizza;
 
 import "common.proto";
-import "order.proto";
 
 message Pizza {
   string pizza_id = 1;
@@ -15,6 +14,7 @@ message Pizza {
 }
 
 // 获取当前用户的菜单
+// [get] /menu
 
 message FetchMenuReq {
   string user_id = 1;
@@ -27,6 +27,7 @@ message FetchMenuResp {
 }
 
 // 更新当前用户的菜单
+// [post] /menu
 
 message UpdateMenuReq {
   enum Type {
@@ -43,6 +44,7 @@ message UpdateMenuResp {
 }
 
 // 全量更新当前用户的菜单
+// [post] /allMenu
 
 message UpdateAllMenuReq {
   string user_id = 1;
@@ -52,16 +54,4 @@ message UpdateAllMenuReq {
 
 message UpdateAllMenuResp {
   ResultType result_type = 1; // 可能因为菜单发生了改变而失败
-}
-
-// 下单
-
-message SendMenuReq {
-  string user_id = 1;
-  map<string, int32> pizza_num = 2;
-}
-
-message SendMenuResp {
-  ResultType result_type = 1;
-  Order order = 2;
 }

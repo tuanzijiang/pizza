@@ -15,6 +15,7 @@ message User {
 }
 
 // 获取当前用户信息
+// [get] /user
 
 message FetchUserReq {
   string user_id = 1;
@@ -26,6 +27,7 @@ message FetchUserResp {
 }
 
 // 更新当前用户信息
+// [post] /user
 
 message UpdateUserReq {
   enum Type {
@@ -45,6 +47,7 @@ message UpdateUserResp {
 }
 
 // 登录
+// [post] /loginStatus
 
 message LoginReq {
   enum Type {
@@ -63,6 +66,7 @@ message LoginResp {
 }
 
 // 退出 
+// [post] /logoutStatus
 
 message LogoutReq {
   string user_id = 1;
@@ -73,6 +77,7 @@ message LogoutResp {
 }
 
 // 注册
+// [put] /user
 
 message SignUpReq {
   string phone = 1;
