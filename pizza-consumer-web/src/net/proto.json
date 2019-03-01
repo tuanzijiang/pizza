@@ -27,6 +27,10 @@
             "city": {
               "type": "string",
               "id": 6
+            },
+            "avatar": {
+              "type": "string",
+              "id": 7
             }
           }
         },
@@ -202,7 +206,7 @@
               "id": 6
             },
             "tag": {
-              "type": "Tag",
+              "type": "string",
               "id": 7
             }
           },
@@ -211,14 +215,6 @@
               "values": {
                 "MALE": 0,
                 "FEMALE": 1
-              }
-            },
-            "Tag": {
-              "values": {
-                "NULL": 0,
-                "HOME": 1,
-                "SCHOOL": 2,
-                "COMPANY": 3
               }
             }
           }
@@ -300,11 +296,12 @@
           "nested": {
             "Status": {
               "values": {
-                "UNPAID": 0,
-                "PAID": 1,
-                "RECEIVED": 2,
-                "TRANSPORT": 3,
-                "FINISH": 4
+                "NO_ORDER": 0,
+                "UNPAID": 1,
+                "PAID": 2,
+                "RECEIVED": 3,
+                "TRANSPORT": 4,
+                "FINISH": 5
               }
             }
           }
@@ -314,6 +311,14 @@
             "userId": {
               "type": "string",
               "id": 1
+            },
+            "startIdx": {
+              "type": "int32",
+              "id": 2
+            },
+            "num": {
+              "type": "int32",
+              "id": 3
             }
           }
         },
@@ -359,6 +364,68 @@
               "id": 2
             }
           }
+        },
+        "UpdateOrderReq": {
+          "fields": {
+            "userId": {
+              "type": "string",
+              "id": 1
+            },
+            "pizzaId": {
+              "type": "string",
+              "id": 2
+            },
+            "type": {
+              "type": "Type",
+              "id": 3
+            }
+          },
+          "nested": {
+            "Type": {
+              "values": {
+                "ADD": 0,
+                "DELETE": 1
+              }
+            }
+          }
+        },
+        "UpdateMenuResp": {
+          "fields": {
+            "resultType": {
+              "type": "ResultType",
+              "id": 1
+            }
+          }
+        },
+        "UpdateEntireOrderReq": {
+          "fields": {
+            "userId": {
+              "type": "string",
+              "id": 1
+            },
+            "orderId": {
+              "type": "string",
+              "id": 2
+            },
+            "pizzaIds": {
+              "rule": "repeated",
+              "type": "string",
+              "id": 3
+            },
+            "pizzasNum": {
+              "keyType": "string",
+              "type": "int32",
+              "id": 4
+            }
+          }
+        },
+        "UpdateEntireOrderResp": {
+          "fields": {
+            "resultType": {
+              "type": "ResultType",
+              "id": 1
+            }
+          }
         }
       }
     },
@@ -389,33 +456,6 @@
             "imgUrl": {
               "type": "string",
               "id": 6
-            }
-          }
-        },
-        "FetchMenuReq": {
-          "fields": {
-            "userId": {
-              "type": "string",
-              "id": 1
-            }
-          }
-        },
-        "FetchMenuResp": {
-          "fields": {
-            "pizzaIds": {
-              "rule": "repeated",
-              "type": "string",
-              "id": 1
-            },
-            "pizzas": {
-              "keyType": "string",
-              "type": "Pizza",
-              "id": 2
-            },
-            "pizzasNum": {
-              "keyType": "string",
-              "type": "int32",
-              "id": 3
             }
           }
         },
