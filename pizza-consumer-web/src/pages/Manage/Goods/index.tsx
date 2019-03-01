@@ -4,7 +4,7 @@ import { ColumnProps } from 'antd/lib/table';
 import { EntityState } from '@schemas/store';
 import './index.less';
 import i18n from '@src/utils/i18n';
-import { fetchGroup, fetchGoods } from '@src/net/goods';
+// import { fetchGroup, fetchGoods } from '@src/net/goods';
 import { GoodsEntity, GoodsGroupEntity } from '@src/store/reducers/entity/schema';
 import { formater } from '@utils/time';
 import { TIMEFOAMTER } from '@schemas/utils';
@@ -85,27 +85,27 @@ export default class Goods extends React.PureComponent<GoodsProps, GoodsState> {
   }
 
   componentDidMount() {
-    this.init();
+    // this.init();
   }
 
-  async init() {
-    const { keyword, pageIdx } = this.state;
-    const { updateGoods, updateGoodsGroup } = this.props;
-    try {
-      const groupResult = await fetchGroup();
-      const currGroup = groupResult.response[0];
-      if (currGroup) {
-        const group_id = currGroup.group_id;
-        const goodsResult = await fetchGoods({
-          group_id,
-          pageIdx,
-          keyword,
-        });
-        updateGoods(goodsResult.response);
-      }
-      updateGoodsGroup(groupResult.response);
-    } catch (e) { }
-  }
+  // async init() {
+  //   const { keyword, pageIdx } = this.state;
+  //   const { updateGoods, updateGoodsGroup } = this.props;
+  //   try {
+  //     const groupResult = await fetchGroup();
+  //     const currGroup = groupResult.response[0];
+  //     if (currGroup) {
+  //       const group_id = currGroup.group_id;
+  //       const goodsResult = await fetchGoods({
+  //         group_id,
+  //         pageIdx,
+  //         keyword,
+  //       });
+  //       updateGoods(goodsResult.response);
+  //     }
+  //     updateGoodsGroup(groupResult.response);
+  //   } catch (e) { }
+  // }
 
   renderGoods() {
     const { entity } = this.props;
