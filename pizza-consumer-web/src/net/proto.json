@@ -4,8 +4,8 @@
       "nested": {
         "User": {
           "fields": {
-            "userId": {
-              "type": "string",
+            "id": {
+              "type": "int32",
               "id": 1
             },
             "name": {
@@ -28,7 +28,7 @@
               "type": "string",
               "id": 6
             },
-            "avatar": {
+            "img": {
               "type": "string",
               "id": 7
             }
@@ -60,9 +60,13 @@
               "type": "string",
               "id": 1
             },
+            "type": {
+              "type": "Type",
+              "id": 2
+            },
             "value": {
               "type": "string",
-              "id": 2
+              "id": 3
             }
           },
           "nested": {
@@ -72,7 +76,8 @@
                 "PHONE": 1,
                 "EMAIL": 2,
                 "BIRTHDAY": 3,
-                "CITY": 4
+                "CITY": 4,
+                "IMGAE": 5
               }
             }
           }
@@ -181,8 +186,8 @@
       "nested": {
         "Address": {
           "fields": {
-            "addressId": {
-              "type": "string",
+            "id": {
+              "type": "int32",
               "id": 1
             },
             "name": {
@@ -260,9 +265,19 @@
     },
     "order": {
       "nested": {
+        "Status": {
+          "values": {
+            "CART": 0,
+            "UNPAID": 1,
+            "PAID": 2,
+            "RECEIVED": 3,
+            "TRANSPORT": 4,
+            "FINISH": 5
+          }
+        },
         "Order": {
           "fields": {
-            "orderId": {
+            "id": {
               "type": "string",
               "id": 1
             },
@@ -271,54 +286,41 @@
               "id": 2
             },
             "pizzas": {
-              "keyType": "string",
+              "rule": "repeated",
               "type": "Pizza",
               "id": 3
             },
-            "pizzaIds": {
-              "rule": "repeated",
-              "type": "string",
-              "id": 4
-            },
             "address": {
               "type": "Address",
-              "id": 5
+              "id": 4
             },
             "status": {
               "type": "Status",
-              "id": 6
+              "id": 5
             },
             "phone": {
               "type": "string",
-              "id": 7
-            }
-          },
-          "nested": {
-            "Status": {
-              "values": {
-                "NO_ORDER": 0,
-                "UNPAID": 1,
-                "PAID": 2,
-                "RECEIVED": 3,
-                "TRANSPORT": 4,
-                "FINISH": 5
-              }
+              "id": 6
             }
           }
         },
         "FetchOrdersReq": {
           "fields": {
             "userId": {
-              "type": "string",
+              "type": "int32",
               "id": 1
             },
-            "startIdx": {
-              "type": "int32",
+            "lastOrderId": {
+              "type": "string",
               "id": 2
             },
             "num": {
               "type": "int32",
               "id": 3
+            },
+            "status": {
+              "type": "Status",
+              "id": 4
             }
           }
         },
@@ -329,14 +331,30 @@
               "id": 1
             },
             "orders": {
-              "keyType": "string",
-              "type": "Order",
-              "id": 3
-            },
-            "orderIds": {
               "rule": "repeated",
-              "type": "string",
-              "id": 4
+              "type": "Order",
+              "id": 2
+            }
+          }
+        },
+        "FetchMenuReq": {
+          "fields": {
+            "userId": {
+              "type": "int32",
+              "id": 1
+            }
+          }
+        },
+        "FetchMenuResp": {
+          "fields": {
+            "resultType": {
+              "type": "ResultType",
+              "id": 1
+            },
+            "pizzas": {
+              "rule": "repeated",
+              "type": "Pizza",
+              "id": 2
             }
           }
         },
@@ -347,7 +365,7 @@
               "id": 1
             },
             "pizzaNum": {
-              "keyType": "string",
+              "keyType": "int32",
               "type": "int32",
               "id": 2
             }
@@ -367,59 +385,21 @@
         },
         "UpdateOrderReq": {
           "fields": {
-            "userId": {
+            "orderId": {
               "type": "string",
               "id": 1
             },
             "pizzaId": {
-              "type": "string",
+              "type": "int32",
               "id": 2
             },
-            "type": {
-              "type": "Type",
+            "count": {
+              "type": "int32",
               "id": 3
-            }
-          },
-          "nested": {
-            "Type": {
-              "values": {
-                "ADD": 0,
-                "DELETE": 1
-              }
             }
           }
         },
         "UpdateMenuResp": {
-          "fields": {
-            "resultType": {
-              "type": "ResultType",
-              "id": 1
-            }
-          }
-        },
-        "UpdateEntireOrderReq": {
-          "fields": {
-            "userId": {
-              "type": "string",
-              "id": 1
-            },
-            "orderId": {
-              "type": "string",
-              "id": 2
-            },
-            "pizzaIds": {
-              "rule": "repeated",
-              "type": "string",
-              "id": 3
-            },
-            "pizzasNum": {
-              "keyType": "string",
-              "type": "int32",
-              "id": 4
-            }
-          }
-        },
-        "UpdateEntireOrderResp": {
           "fields": {
             "resultType": {
               "type": "ResultType",
@@ -433,8 +413,8 @@
       "nested": {
         "Pizza": {
           "fields": {
-            "pizzaId": {
-              "type": "string",
+            "id": {
+              "type": "int32",
               "id": 1
             },
             "name": {
@@ -449,67 +429,21 @@
               "type": "string",
               "id": 4
             },
-            "pizzaType": {
+            "tag": {
               "type": "string",
               "id": 5
             },
-            "imgUrl": {
+            "img": {
               "type": "string",
               "id": 6
-            }
-          }
-        },
-        "UpdateMenuReq": {
-          "fields": {
-            "userId": {
-              "type": "string",
-              "id": 1
             },
-            "pizzaId": {
-              "type": "string",
-              "id": 2
-            }
-          },
-          "nested": {
-            "Type": {
-              "values": {
-                "ADD": 0,
-                "DELETE": 1
-              }
-            }
-          }
-        },
-        "UpdateMenuResp": {
-          "fields": {
-            "resultType": {
-              "type": "ResultType",
-              "id": 1
-            }
-          }
-        },
-        "UpdateAllMenuReq": {
-          "fields": {
-            "userId": {
-              "type": "string",
-              "id": 1
-            },
-            "pizzaIds": {
-              "rule": "repeated",
-              "type": "string",
-              "id": 2
-            },
-            "pizzasNum": {
-              "keyType": "string",
+            "state": {
               "type": "int32",
-              "id": 3
-            }
-          }
-        },
-        "UpdateAllMenuResp": {
-          "fields": {
-            "resultType": {
-              "type": "ResultType",
-              "id": 1
+              "id": 7
+            },
+            "count": {
+              "type": "int32",
+              "id": 8
             }
           }
         }
