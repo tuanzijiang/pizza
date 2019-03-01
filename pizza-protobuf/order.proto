@@ -27,12 +27,13 @@ message Order {
 // [get] /fetchOrder
 
 message FetchOrderReq {
+  int32 user_id = 1;
   string order_id = 2;
 }
 
 message FetchOrderResp {
   ResultType result_type = 1;
-  Order orders = 2;
+  Order order = 2;
 }
 
 // 获取订单详情
