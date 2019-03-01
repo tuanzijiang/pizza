@@ -5,11 +5,13 @@ package pizza;
 import "common.proto";
 
 message Pizza {
-  string pizza_id = 1;
+  int32 id = 1;
   string name = 2;
   string description = 3;
   string price = 4;
-  string pizza_type = 5;
-  string img_url = 6;
+  string tag = 5;
+  string img = 6;
+  int32 state = 7;
+  int32 count = 8;
 }
 
