@@ -5,38 +5,49 @@ package order;
 import "address.proto";
 import "pizza.proto";
 
-message Order {
-  enum Status {
-    NO_ORDER = 0;
-    UNPAID = 1;
-    PAID = 2;
-    RECEIVED = 3;
-    TRANSPORT = 4;
-    FINISH = 5;
+enum Status {
+      CART = 0;
+      UNPAID = 1;
+      PAID = 2;
+      RECEIVED = 3;
+      TRANSPORT = 4;
+      FINISH = 5;
   }
 
-  string order_id = 1;
+message Order {
+  string id = 1;
   int64 start_time = 2;
-  map<string, Pizza> pizzas = 3;
-  repeated string pizza_ids = 4;
-  Address address = 5;
-  Status status = 6;
-  string phone = 7;
+  repeated Pizza pizzas = 3;
+  Address address = 4;
+  Status status = 5;
+  string phone = 6;
 }
 
 // 获取订单详情
 // [get] /orders
 
 message FetchOrdersReq {
-  string user_id = 1;
-  int32 start_idx = 2;
+  int32 user_id = 1;
+  string last_order_id = 2;
   int32 num = 3;
+  Status status = 4;
 }
 
 message FetchOrdersResp {
   ResultType result_type = 1;
-  map<string, Order> orders= 3;
-  repeated string order_ids = 4;
+  repeated Order orders = 2;
+}
+
+// 获取menu
+// [get] /menu
+
+message FetchMenuReq {
+  int32 user_id = 1;
+}
+
+message FetchMenuResp {
+  ResultType result_type = 1;
+  repeated Pizza pizzas = 2;
 }
 
 // 下单
@@ -44,7 +55,7 @@ message FetchOrdersResp {
 
 message SendOrderReq {
   string user_id = 1;
-  map<string, int32> pizza_num = 2;
+  map<int32, int32> pizza_num = 2;
 }
 
 message SendOrderResp {
@@ -56,30 +67,11 @@ message SendOrderResp {
 // [post] /order
 
 message UpdateOrderReq {
-  enum Type {
-    ADD = 0;
-    DELETE = 1;
-  }
-
-  string user_id = 1;
-  string pizza_id = 2;
-  Type type = 3;
+  string order_id = 1;
+  int32 pizza_id = 2;
+  int32 count = 3;
 }
 
 message UpdateMenuResp {
-  ResultType result_type = 1; // 可能因为当前菜单发生了变化而失败
-}
-
-// 全量更新当前用户的菜单
-// [post] /entireOrder
-
-message UpdateEntireOrderReq {
-  string user_id = 1;
-  string order_id = 2;
-  repeated string pizza_ids = 3;
-  map<string, int32> pizzas_num = 4;
-}
-
-message UpdateEntireOrderResp {
   ResultType result_type = 1;
 }
