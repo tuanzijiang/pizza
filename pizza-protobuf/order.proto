@@ -24,6 +24,7 @@ message Order {
 }
 
 // 获取订单详情
+// [get] /orders
 
 message FetchOrdersReq {
   string user_id = 1;
@@ -33,4 +34,17 @@ message FetchOrdersResp {
   ResultType result_type = 1;
   map<string, Order> orders= 3;
   repeated string order_ids = 4;
+}
+
+// 下单
+// [put] /order
+
+message SendOrderReq {
+  string user_id = 1;
+  map<string, int32> pizza_num = 2;
+}
+
+message SendOrderResp {
+  ResultType result_type = 1;
+  Order order = 2;
 }
