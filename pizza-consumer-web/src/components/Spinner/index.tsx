@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { gray_4 } from '@ui/base';
-import './index.less';
+import './index.scss';
 
 export interface ISpinnerProps {
   style?: React.CSSProperties;

@@ -1,0 +1,43 @@
+/* global style */
+
+/* color */
+
+/* black */
+$black_1: #000;
+/* gray */
+$gray_1: #f2f2f2;
+$gray_2: #c4c4c4;
+$gray_3: #a1a1a1;
+$gray_4: #666;
+/* white */
+$white_1: #fff;
+/* blue */
+$blue_1: #40a9ff;
+$blue_2: #1890ff;
+$blue_3: #096dd9;
+/* green */
+$green_1: #eaff8f;
+$green_2: #d3f261;
+$green_3: #a0d911;
+/* red */
+$red_1: #ff7875;
+$red_2: #f5222d;
+$red_3: #cf1322;
+
+
+/* size */
+$table_item_padding: 16px;
+
+/* tool function */
+$base-font: 16;
+$base-screen: 320;
+
+@function rem($px) {
+  $remSize: $px / $base-font;
+  @return #{$remSize}rem;
+}
+
+@function vw($px) {
+  $vmSize: $px * 100 / $base-screen;
+  @return #{$vmSize}vw;
+}
