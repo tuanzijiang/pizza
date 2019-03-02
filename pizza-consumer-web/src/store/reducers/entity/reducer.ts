@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
-import activity from './activity/reducer';
-import goods from './goods/reducer';
-import display from './display/reducer';
+import user from './user/reducer';
+import addresses from './addresses/reducer';
+import orders from './orders/reducer';
+import pizzas from './pizzas/reducer';
 
 export default combineReducers({
-  activity,
-  goods,
-  display,
+  user,
+  addresses,
+  orders,
+  pizzas,
 });

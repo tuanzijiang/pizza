@@ -2,6 +2,8 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
+console.warn(111, path.resolve(__dirname, 'src/ui/'));
+
 module.exports = {
   entry: './src/entry.tsx',
   output: {
@@ -18,6 +20,20 @@ module.exports = {
         'css-loader',
         'less-loader'
       ],
+      exclude: /node_modules/
+    }, {
+      test: /\.scss$/,
+      use: [{
+        loader: "style-loader"
+      }, {
+        loader: "css-loader"
+      }, {
+        loader: "sass-loader",
+        options: {
+          sourceMap: true,
+          includePaths: [path.resolve(__dirname, 'src/ui/')],
+        }
+      }],
       exclude: /node_modules/
     }, {
       test: /\.(png|gif|jpg|svg|jpeg|woff|woff2|eot|ttf|otf)$/,

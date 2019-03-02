@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Spinner from '@components/Spinner';
 import { gray_4 } from '@ui/base';
-import './index.less';
+import './index.scss';
 
 const style = {
   width: '30px',
