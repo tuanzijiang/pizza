@@ -1,11 +1,21 @@
 @import '~@ui/base.scss';
-
-.Login1 {
-  color: $black_1;
-  font-size: 32px;
+.login {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  -webkit-overflow-scrolling: none;
 }
 
-.Login2 {
-  color: $black_1;
-  font-size: vw(32);
+.login-list {
+  position: absolute;
+  width: 100%;
+  top: 100px;
+  height: calc(100% - 100px);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+
+  div {
+    line-height: 50px;
+  }
 }

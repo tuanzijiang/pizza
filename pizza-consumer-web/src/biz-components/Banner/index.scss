@@ -1,0 +1,31 @@
+@import '~@ui/base.scss';
+
+.banner-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.banner-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: vw(50);
+  background: $blue_3;
+  box-sizing: border-box;
+  padding: 0 vw(10);
+}
+
+.banner-header {
+  height: 20px;
+  width: 100%;
+  background: $blue_3;
+}
+
+.banner-icon {
+  color: $black_1;
+  font-size: vw(16);
+}

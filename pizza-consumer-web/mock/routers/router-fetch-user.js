@@ -16,8 +16,6 @@ router.post('/', async (ctx, next) => {
   const result = reqType.decode(protoBuff);
 
   // mock
-  console.warn(1111, User.random());
-
   const body = {
     resultType: 0,
     user: User.random(),
