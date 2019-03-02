@@ -5,7 +5,7 @@ package pizza;
 import "common.proto";
 
 message Pizza {
-  enum Status {
+  enum PizzaStatus {
     SOLE_OUT = 0;
     IN_SALES = 1;
   }
@@ -16,7 +16,7 @@ message Pizza {
   int32 price = 4;
   string tag = 5;
   string img = 6;
-  int32 state = 7;
+  PizzaStatus status = 7;
   int32 count = 8;
 }
 

@@ -5,7 +5,7 @@ package order;
 import "address.proto";
 import "pizza.proto";
 
-enum Status {
+enum OrderStatus {
   CART = 0;
   UNPAID = 1;
   PAID = 2;
@@ -19,7 +19,7 @@ message Order {
   int64 start_time = 2;
   repeated Pizza pizzas = 3;
   Address address = 4;
-  Status status = 5;
+  OrderStatus status = 5;
   string phone = 6;
 }
 
@@ -43,7 +43,7 @@ message FetchOrdersReq {
   int32 user_id = 1;
   string last_order_id = 2;
   int32 num = 3;
-  Status status = 4;
+  OrderStatus status = 4;
 }
 
 message FetchOrdersResp {
