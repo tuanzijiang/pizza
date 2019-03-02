@@ -7,12 +7,20 @@ import { Login } from './pages';
 
 // @ts-ignore
 window.__STORE__ = store;
-// @ts-ignore
-window.__getPageState = () => store.getState().page;
-// @ts-ignore
-window.__getEntityState = () => store.getState().entity;
 
-export default class App extends React.PureComponent {
+export interface AppProps { }
+
+export interface AppState { }
+
+export default class App extends React.PureComponent<AppProps, AppState> {
+
+  constructor(props: AppProps) {
+    super(props);
+    this.state = {
+      canBeTouch: true,
+    };
+  }
+
   render() {
     return (
       <Provider store={store}>
@@ -21,7 +29,7 @@ export default class App extends React.PureComponent {
             <Route component={Login} path="/Login" />
             <Redirect to={{
               pathname: '/Login',
-            }}/>
+            }} />
           </Switch>
         </Router>
       </Provider>

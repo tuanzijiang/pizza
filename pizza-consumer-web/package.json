@@ -8,7 +8,6 @@
     "watch": "yarn pb && webpack --watch --config webpack.dev.js",
     "dev": "yarn pb && webpack-dev-server --open --config webpack.dev.js",
     "build": "yarn pb && webpack --config webpack.prod.js",
-    "server": "node server.js",
     "analysis": "webpack --config webpack.dev.js --profile --json > stats.json",
     "lint": "tslint --project . src/**/*.ts src/**/*.tsx",
     "mock": "nodemon mock/server",
@@ -65,7 +64,8 @@
     "webpack-cli": "^3.2.3",
     "webpack-dev-middleware": "^3.5.1",
     "webpack-dev-server": "^3.1.14",
-    "webpack-merge": "^4.2.1"
+    "webpack-merge": "^4.2.1",
+    "webpack-pwa-manifest": "^4.0.0"
   },
   "dependencies": {
     "koa-protobuf": "^0.1.1",
