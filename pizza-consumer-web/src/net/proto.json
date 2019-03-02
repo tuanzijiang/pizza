@@ -265,7 +265,7 @@
     },
     "order": {
       "nested": {
-        "Status": {
+        "OrderStatus": {
           "values": {
             "CART": 0,
             "UNPAID": 1,
@@ -295,12 +295,36 @@
               "id": 4
             },
             "status": {
-              "type": "Status",
+              "type": "OrderStatus",
               "id": 5
             },
             "phone": {
               "type": "string",
               "id": 6
+            }
+          }
+        },
+        "FetchOrderReq": {
+          "fields": {
+            "userId": {
+              "type": "int32",
+              "id": 1
+            },
+            "orderId": {
+              "type": "string",
+              "id": 2
+            }
+          }
+        },
+        "FetchOrderResp": {
+          "fields": {
+            "resultType": {
+              "type": "ResultType",
+              "id": 1
+            },
+            "order": {
+              "type": "Order",
+              "id": 2
             }
           }
         },
@@ -319,7 +343,7 @@
               "id": 3
             },
             "status": {
-              "type": "Status",
+              "type": "OrderStatus",
               "id": 4
             }
           }
@@ -437,8 +461,8 @@
               "type": "string",
               "id": 6
             },
-            "state": {
-              "type": "int32",
+            "status": {
+              "type": "PizzaStatus",
               "id": 7
             },
             "count": {
@@ -447,7 +471,7 @@
             }
           },
           "nested": {
-            "Status": {
+            "PizzaStatus": {
               "values": {
                 "SOLE_OUT": 0,
                 "IN_SALES": 1
