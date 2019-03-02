@@ -2,8 +2,6 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
-console.warn(path.resolve(__dirname, './src/biz-components/'));
-
 module.exports = {
   entry: './src/entry.tsx',
   output: {

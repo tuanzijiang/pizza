@@ -1,17 +1,17 @@
-const info = (...params: any) => {
-  console.info(...params);
+export const info = (tag: string, ...params: any) => {
+  if (process.env.NODE_ENV === 'development') {
+    console.info(`[${tag}]:`, ...params);
+  }
 };
 
-const warn = (...params: any) => {
-  console.warn(...params);
+export const warn = (tag: string, extraInfo: string, ...params: any) => {
+  console.warn(`[${tag}]:${extraInfo}`, ...params);
 };
 
-const error = (...params: any) => {
-  console.error(...params);
+export const error = (tag: string, extraInfo: string, ...params: any) => {
+  console.error(`[${tag}]:${extraInfo}`, ...params);
 };
 
-export default {
-  info,
-  warn,
-  error,
-};
+export enum LogTag {
+  NET = 'NET',
+}
