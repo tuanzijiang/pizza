@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const common = require('./webpack.common');
+const path = require('path');
 
 module.exports = merge(common, {
   devtool: 'inline-source-map',
@@ -18,6 +19,7 @@ module.exports = merge(common, {
   devServer: {
     https: false,
     host: '0.0.0.0',
+    contentBase: path.resolve(__dirname, './src/assets/'),
     allowedHosts: [
       '.local',
     ],

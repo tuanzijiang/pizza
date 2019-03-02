@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Banner from '@biz-components/Banner';
 import './index.scss';
 
 interface LoginProps { }
@@ -8,9 +9,87 @@ interface LoginState { }
 export default class Login extends React.PureComponent<LoginProps, LoginState> {
   render() {
     return (
-      <div className="Login">
-        <span className="Login1">login1</span>
-        <span className="Login2">login2</span>
+      <div className="login">
+        <Banner right={null} leftClick={() => { console.warn(1111); }}/>
+        <div className="login-list">
+          <div>1</div>
+          <div>2</div>
+          <div>3</div>
+          <div>4</div>
+          <div>5</div>
+          <div>6</div>
+          <div>7</div>
+          <div>8</div>
+          <div>1</div>
+          <div>1</div>
+          <div>1</div>
+          <div>1</div>
+          <div>8</div>
+          <div>6</div>
+          <div>4</div>
+          <div>3</div>
+          <div>2</div>
+          <div>1</div>
+          <div>2</div>
+          <div>3</div>
+          <div>4</div>
+          <div>5</div>
+          <div>6</div>
+          <div>7</div>
+          <div>8</div>
+          <div>8</div>
+          <div>6</div>
+          <div>4</div>
+          <div>3</div>
+          <div>2</div>
+          <div>1</div>
+          <div>2</div>
+          <div>3</div>
+          <div>4</div>
+          <div>5</div>
+          <div>6</div>
+          <div>7</div>
+          <div>8</div>
+          <div>8</div>
+          <div>6</div>
+          <div>4</div>
+          <div>3</div>
+          <div>2</div>
+          <div>1</div>
+          <div>2</div>
+          <div>3</div>
+          <div>4</div>
+          <div>5</div>
+          <div>6</div>
+          <div>7</div>
+          <div>8</div>
+          <div>8</div>
+          <div>6</div>
+          <div>4</div>
+          <div>3</div>
+          <div>2</div>
+          <div>1</div>
+          <div>2</div>
+          <div>3</div>
+          <div>4</div>
+          <div>5</div>
+          <div>6</div>
+          <div>7</div>
+          <div>8</div>
+          <div>8</div>
+          <div>6</div>
+          <div>4</div>
+          <div>3</div>
+          <div>2</div>
+          <div>1</div>
+          <div>2</div>
+          <div>3</div>
+          <div>4</div>
+          <div>5</div>
+          <div>6</div>
+          <div>7</div>
+          <div>8</div>
+        </div>
       </div>
     );
   }
