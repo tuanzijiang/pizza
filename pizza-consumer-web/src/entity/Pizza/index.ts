@@ -13,13 +13,13 @@ export class Pizza implements PizzaSchema {
     [prop: string]: any,
   }) {
     if (pizza) {
-      this.id = pizza.id && this.id;
-      this.name = pizza.name && this.name;
-      this.description = pizza.description && this.description;
-      this.price = pizza.price && this.price;
-      this.tag = pizza.tag && this.tag;
-      this.img = pizza.img && this.img;
-      this.state = pizza.state && this.state;
+      this.id = pizza.id || this.id;
+      this.name = pizza.name || this.name;
+      this.description = pizza.description || this.description;
+      this.price = pizza.price || this.price;
+      this.tag = pizza.tag || this.tag;
+      this.img = pizza.img || this.img;
+      this.state = pizza.state || this.state;
     }
   }
 

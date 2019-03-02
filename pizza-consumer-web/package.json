@@ -5,9 +5,9 @@
   "author": "tuanzijiang",
   "license": "MIT",
   "scripts": {
-    "watch": "webpack --watch --config webpack.dev.js",
-    "dev": "webpack-dev-server --open --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js",
+    "watch": "yarn pb && webpack --watch --config webpack.dev.js",
+    "dev": "yarn pb && webpack-dev-server --open --config webpack.dev.js",
+    "build": "yarn pb && webpack --config webpack.prod.js",
     "server": "node server.js",
     "analysis": "webpack --config webpack.dev.js --profile --json > stats.json",
     "lint": "tslint --project . src/**/*.ts src/**/*.tsx",

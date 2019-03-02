@@ -13,13 +13,13 @@ export class User implements UserSchema {
     [prop: string]: any,
   }) {
     if (user) {
-      this.id = user.id && this.id;
-      this.name = user.name && this.name;
-      this.phone = user.phone && this.phone;
-      this.email = user.email && this.email;
-      this.birthday = user.birthday && this.birthday;
-      this.city = user.city && this.city;
-      this.img = user.img && this.img;
+      this.id = user.id || this.id;
+      this.name = user.name || this.name;
+      this.phone = user.phone || this.phone;
+      this.email = user.email || this.email;
+      this.birthday = user.birthday || this.birthday;
+      this.city = user.city || this.city;
+      this.img = user.img || this.img;
     }
   }
 

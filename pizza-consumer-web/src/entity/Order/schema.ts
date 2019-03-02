@@ -9,7 +9,7 @@ export enum OrderStatusSchema {
 
 export interface OrderSchema {
   id: string;
-  startTime: string;
+  startTime: number;
   pizzas: string[];
   address: number;
   status: OrderStatusSchema;

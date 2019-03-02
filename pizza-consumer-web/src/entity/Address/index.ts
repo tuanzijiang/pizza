@@ -13,13 +13,13 @@ export class Address implements AddressSchema {
     [prop: string]: any,
   }) {
     if (address) {
-      this.id = address.id && this.id;
-      this.name = address.name && this.name;
-      this.sex = address.sex && this.sex;
-      this.address = address.address && this.address;
-      this.addressDetail = address.addressDetail && this.addressDetail;
-      this.phone = address.phone && this.phone;
-      this.tag = address.tag && this.tag;
+      this.id = address.id || this.id;
+      this.name = address.name || this.name;
+      this.sex = address.sex || this.sex;
+      this.address = address.address || this.address;
+      this.addressDetail = address.addressDetail || this.addressDetail;
+      this.phone = address.phone || this.phone;
+      this.tag = address.tag || this.tag;
     }
   }
 
