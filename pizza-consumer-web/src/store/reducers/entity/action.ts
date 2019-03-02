@@ -1,9 +1,11 @@
-import activity from './activity/action';
-import goods from './goods/action';
-import display from './display/action';
+import user from './user/action';
+import pizzas from './pizzas/action';
+import orders from './orders/action';
+import addresses from './addresses/action';
 
 export const entity = {
-  activity,
-  goods,
-  display,
+  user,
+  pizzas,
+  orders,
+  addresses,
 };

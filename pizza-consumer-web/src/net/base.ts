@@ -38,17 +38,6 @@ const request = async <T extends Command>
   }
 };
 
-const protoNet = async () => {
-  const root = protobufRoot.fromJSON(proto);
-  const protoType = root.lookupType(respProto[Command.FETCH_USER]);
-
-  const test = {
-    userId: 1,
-  };
-
-  console.warn(9999, await request(Command.FETCH_USER, test));
-};
-
 export default {
-  protoNet,
+  request,
 };

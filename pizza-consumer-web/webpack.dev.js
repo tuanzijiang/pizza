@@ -16,6 +16,7 @@ module.exports = merge(common, {
     })
   ],
   devServer: {
+    https: false,
     host: '0.0.0.0',
     allowedHosts: [
       '.local',

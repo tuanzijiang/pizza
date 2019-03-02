@@ -1,8 +1,6 @@
 import { combineReducers } from 'redux';
-import manage from './manage/reducer';
-import edit from './edit/reducer';
+import login from './login/reducer';
 
 export default combineReducers({
-  manage,
-  edit,
+  login,
 });
