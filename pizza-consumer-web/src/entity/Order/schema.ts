@@ -18,3 +18,19 @@ export interface OrderSchema {
     [pizza_id: number]: number;
   };
 }
+
+export interface OrderWeakSchema {
+  id?: string;
+  startTime?: number;
+  pizzas?: string[];
+  address?: number;
+  status?: OrderStatusSchema;
+  phone?: string;
+  num?: {
+    [pizza_id: number]: number;
+  };
+}
+
+export interface OrderMap {
+  [prop: string]: OrderSchema | OrderWeakSchema;
+}
