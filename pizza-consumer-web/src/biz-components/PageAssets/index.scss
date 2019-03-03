@@ -1,0 +1,68 @@
+@import '~@ui/base.scss';
+
+.pageAssets-wrapper {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.pageAssets-page {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: $white_1;
+  z-index: -1;
+}
+
+.pageAssets-page_hidden {
+  opacity: 0;
+}
+
+.pageAssets-page_mask {
+  position: absolute;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.pageAssets-page_left {
+  left: -100%;
+  z-index: 20;
+}
+
+.pageAssets-page_leftAnimation {
+  z-index: 20;
+  transition: left ease-in-out $animation_timer;
+}
+
+.pageAssets-page_right {
+  left: 100%;
+  z-index: 20;
+}
+
+.pageAssets-page_rightAnimation {
+  z-index: 20;
+  transition: left ease-in-out $animation_timer;
+}
+
+.pageAssets-page_from {
+  z-index: 10;
+}
+
+.pageAssets-page_fromAnimation_right {
+  z-index: 10;
+  transition: left ease-in-out $animation_timer;
+  left: -100%;
+}
+
+.pageAssets-page_fromAnimation_left {
+  z-index: 10;
+  transition: left ease-in-out $animation_timer;
+  left: 100%;
+}

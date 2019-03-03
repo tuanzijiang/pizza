@@ -1,7 +1,7 @@
 import * as React from 'react';
 import autobind from 'autobind-decorator';
 import Icon from '@biz-components/Icon';
-import { isWebApp, isiOS } from '@utils/device';
+import { neetStatusBar } from '@utils/device';
 import './index.scss';
 
 export interface BannerProps {
@@ -38,7 +38,6 @@ export default class Banner extends React.PureComponent<BannerProps, BannerState
   @autobind
   handleLeftClick(e: React.MouseEvent<HTMLDivElement>) {
     const { leftClick } = this.props;
-    alert(1);
     if (leftClick) {
       leftClick(e);
     }
@@ -68,7 +67,7 @@ export default class Banner extends React.PureComponent<BannerProps, BannerState
     return (
       <div className="banner-wrapper" id="banner-wrapper" ref={this.bannerEl}>
         {
-          isWebApp && isiOS && <div className="banner-header" />
+          neetStatusBar && <div className="banner-header" />
         }
         <div className="banner-content">
           <div

@@ -45,3 +45,6 @@ export const vw = (px: number) => {
   const vmSize = px * 100 / base_screen;
   return `${vmSize}vw`;
 };
+
+/* size */
+export const animation_timer = 500;
