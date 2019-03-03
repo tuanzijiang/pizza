@@ -1,7 +1,6 @@
 @import '~@ui/base.scss';
-
 .banner-wrapper {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -26,6 +25,19 @@
 }
 
 .banner-icon {
-  color: $black_1;
+  color: $white_2;
   font-size: vw(16);
+}
+
+.banner-left {
+  flex: 1 1 0;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.banner-right {
+  flex: 1 1 0;
+  text-align: right;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
 }

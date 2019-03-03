@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import store from './store';
 import history from '@utils/history';
 import { Login } from './pages';
+import { neetStatusBar } from '@utils/device';
 
 // @ts-ignore
 window.__STORE__ = store;
@@ -19,6 +20,10 @@ export default class App extends React.PureComponent<AppProps, AppState> {
     this.state = {
       canBeTouch: true,
     };
+
+    if (neetStatusBar) {
+      document.documentElement.style.cssText = `height: calc(100% + 20px)`;
+    }
   }
 
   render() {
