@@ -1,37 +1,28 @@
 @import '~@ui/base.scss';
-.loginPW-wrapper {
+.findPW-wrapper {
   height: 100%;
   width: 100%;
   overflow: hidden;
   background: $white_3;
 }
 
-.loginPW-middle {
+.findPW-middle {
   color: $white_2;
   font-size: vw(16);
 }
 
-.loginPW-beforeInput {
+.findPW-beforeInput {
   height: vw(20);
   width: 100%;
 }
 
-.loginPW-content {
+.findPW-content {
   width: 100%;
   position: relative;
   top: $banner_height;
 }
 
-.loginPW-afterInput {
-  font-size: vw(12);
-  line-height: vw(40);
-  margin: 0 $padding_width 0 0;
-  color: $blue_3;
-  text-align: right;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.loginPW-button {
+.findPW-button {
   margin: vw(10) auto 0;
   height: vw(40);
   line-height: vw(40);

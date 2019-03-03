@@ -4,7 +4,8 @@
 
 /* black */
 $black_1: #262626;
-$black_2: #000;
+$black_2: #111;
+$black_3: #000;
 
 /* gray */
 $gray_1: #e8e8e8;
@@ -15,7 +16,8 @@ $gray_5: #595959;
 
 /* white */
 $white_1: #fff;
-$white_2: #f5f5f5;
+$white_2: #fafafa;
+$white_3: #f5f5f5;
 
 /* blue */
 $blue_1: #91d5ff;
@@ -36,10 +38,6 @@ $red_3: #ff4d4f;
 $red_4: #f5222d;
 $red_5: #cf1322;
 
-
-/* size */
-$animation_timer: .5s;
-
 /* tool function */
 $base_font: 16;
 $base_screen: 320;
@@ -53,3 +51,12 @@ $base_screen: 320;
   $vmSize: $px * 100 / $base_screen;
   @return #{$vmSize}vw;
 }
+
+/* size */
+$animation_timer: .3s;
+
+$padding_width: vw(10);
+
+$banner_height: vw(50);
+
+$banner_height_status: calc(#{$banner_height} + 20px);
