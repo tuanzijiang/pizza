@@ -59,3 +59,17 @@ export const formater = (timeNumber: number, kind: TIMEFOAMTER) => {
     });
   }
 };
+
+export const timerFormater = (timeNumber: number) => {
+  let curr = timeNumber;
+  const millionSecond = Math.floor(curr % 1000);
+  curr = Math.floor(curr / 1000);
+  const second = Math.floor(curr % 60);
+  curr = Math.floor(curr / 60);
+  const minu = curr;
+  return {
+    millionSecond,
+    second,
+    minu,
+  };
+};

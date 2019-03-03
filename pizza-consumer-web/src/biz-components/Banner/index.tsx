@@ -65,7 +65,11 @@ export default class Banner extends React.PureComponent<BannerProps, BannerState
       leftClick, rightClick, middleClick,
     } = this.props;
     return (
-      <div className="banner-wrapper" id="banner-wrapper" ref={this.bannerEl}>
+      <div
+        className="banner-wrapper"
+        id="banner-wrapper"
+        ref={this.bannerEl}
+      >
         {
           neetStatusBar && <div className="banner-header" />
         }

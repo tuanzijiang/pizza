@@ -6,9 +6,7 @@ import { animation_timer } from '@src/ui/base';
 
 enum AssetsState {
   FIX = 'FIX',
-  START = 'START',
   ANIMATION = 'ANIMATION',
-  STOP = 'STOP',
 }
 
 enum PageState {
@@ -24,6 +22,7 @@ export enum OpenType {
 
 export interface PageAssetsProps {
   init: number;
+  changeCb?: (idx: number, ...extraInfo: any[]) => void;
 }
 
 export interface PageAssetsState {
@@ -53,8 +52,9 @@ export default class PageAssets extends React.PureComponent<PageAssetsProps, Pag
   }
 
   @autobind
-  openByName(pageIdx: number, openType?: OpenType) {
+  openByName(pageIdx: number, openType?: OpenType, ...extraInfo: any[]) {
     const { pageStates, assetsState } = this.state;
+    const { changeCb } = this.props;
     const to = pageIdx;
 
     // 如果处于动画状态
@@ -106,6 +106,11 @@ export default class PageAssets extends React.PureComponent<PageAssetsProps, Pag
       });
       clearTimeout(this.leaveAnimationTimer);
       this.leaveAnimationTimer = null;
+
+      //  触发change钩子
+      if (changeCb) {
+        changeCb(pageIdx, ...extraInfo);
+      }
     }, animation_timer * 2);
   }
 
