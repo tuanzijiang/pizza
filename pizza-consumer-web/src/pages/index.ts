@@ -3,7 +3,7 @@ import * as Loadable from 'react-loadable';
 
 export const Login = Loadable({
   // tslint:disable-next-line:space-in-parens
-  loader: () => import(/* webpackChunkName: "login" */'./Login'),
+  loader: () => import(/* webpackChunkName: "login" */'./LoginAssets'),
   loading: Loading,
 });
 
