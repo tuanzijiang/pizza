@@ -1,6 +1,7 @@
 /* black */
 export const black_1 = '#262626';
-export const black_2 = '#000';
+export const black_2 = '#111';
+export const black_3 = '#000';
 
 /* gray */
 export const gray_1 = '#e8e8e8';
@@ -11,7 +12,8 @@ export const gray_5 = '#595959';
 
 /* white */
 export const white_1 = '#fff';
-export const white_2 = '#f5f5f5';
+export const white_2 = '#fafafa';
+export const white_3 = '#f5f5f5';
 
 /* blue */
 export const blue_1 = '#91d5ff';
@@ -47,4 +49,4 @@ export const vw = (px: number) => {
 };
 
 /* size */
-export const animation_timer = 500;
+export const animation_timer = 300;

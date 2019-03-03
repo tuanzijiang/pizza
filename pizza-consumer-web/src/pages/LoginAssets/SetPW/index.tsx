@@ -10,30 +10,41 @@ import { neetStatusBar } from '@utils/device';
 import autobind from 'autobind-decorator';
 import { timerFormater } from '@utils/time';
 
-interface LoginProps {
+interface SetPWProps {
   onPageChange(idx: LoginAssetName, openType?: OpenType): void;
   onVarifyClick: (varifyTime: number) => void;
   varifyTime: number;
 }
 
-interface LoginState {
+interface SetPWState {
   currentTime: number;
-  account: string;
-  varify: string;
+  tel: string;
 }
 
 const VARIFY_TIME = 1000 * 45;
 
-export default class Login extends React.PureComponent<LoginProps, LoginState> {
+export default class SetPW extends React.PureComponent<SetPWProps, SetPWState> {
   private varifyTimer: any = null;
 
-  constructor(props: LoginProps) {
+  constructor(props: SetPWProps) {
     super(props);
     this.state = {
       currentTime: new Date().valueOf(),
-      account: '',
-      varify: '',
+      tel: '',
     };
+  }
+
+  @autobind
+  componentDidEnter(...extraInfo: any[]) {
+    const { varifyTime } = this.props;
+    const tel = extraInfo[0];
+    this.setState({
+      tel,
+    });
+
+    if (!varifyTime) {
+      this.handleVarifyClick();
+    }
   }
 
   componentDidMount() {
@@ -49,17 +60,13 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
   }
 
   @autobind
-  handleRightClick(e: React.MouseEvent<React.ReactNode>) {
+  handleLeftClick(e: React.MouseEvent<React.ReactNode>) {
     const { onPageChange } = this.props;
-    onPageChange(LoginAssetName.LoginPW);
+    onPageChange(LoginAssetName.FindPW, OpenType.LEFT);
   }
 
   renderMiddle() {
-    return <span className="login-middle">{i18n('登录')}</span>;
-  }
-
-  renderRight() {
-    return <span className="login-right">{i18n('密码登录')}</span>;
+    return <span className="setPW-middle">{i18n('重设密码')}</span>;
   }
 
   @autobind
@@ -71,24 +78,6 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
     }
   }
 
-  @autobind
-  handleAccountChange(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target) {
-      this.setState({
-        account: e.target.value,
-      });
-    }
-  }
-
-  @autobind
-  handleVarifyChange(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target) {
-      this.setState({
-        varify: e.target.value,
-      });
-    }
-  }
-
   renderVarifyCode() {
     const { varifyTime } = this.props;
     const { currentTime } = this.state;
@@ -97,7 +86,7 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
     if (!varifyTime || varifyTime - currentTime < 0) {
       return (
         <div
-          className="login-varigy_ready"
+          className="setPW-varigy_ready"
           onClick={this.handleVarifyClick}
         >
           {text}
@@ -106,7 +95,7 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
     } else {
       const { second } = timerFormater(varifyTime - currentTime);
       return (
-        <div className="login-varigy_wait">
+        <div className="setPW-varigy_wait">
           <span>{i18n('已发送:')}</span>
           <span>{second}</span>
           <span>{i18n('s')}</span>
@@ -116,44 +105,32 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
   }
 
   render() {
-    const loginContent = cx({
-      'login-content': true,
-      'login-content_status': neetStatusBar,
+    const setPWContent = cx({
+      'setPW-content': true,
+      'setPW-content_status': neetStatusBar,
     });
-    const { varify, account } = this.state;
+    const { tel } = this.state;
 
     return (
-      <div className="login-wrapper">
+      <div className="setPW-wrapper">
         <Banner
-          left={null}
-          right={this.renderRight()}
+          right={null}
           middle={this.renderMiddle()}
-          rightClick={this.handleRightClick}
+          leftClick={this.handleLeftClick}
         />
-        <div className={loginContent}>
-          <div className="login-beforeInput" />
-          <div className="login-input">
-            <Input
-              placeholde={i18n('手机号')}
-              right={this.renderVarifyCode()}
-              value={account}
-              onChange={this.handleAccountChange}
-            />
+        <form className={setPWContent}>
+          <div className="setPW-tel">
+            {i18n('验证码发送至:')}
+            <span>{tel}</span>
           </div>
-          <div className="login-input">
-            <Input
-              placeholde={i18n('验证码')}
-              type="number"
-              value={varify}
-              onChange={this.handleVarifyChange}
-            />
+          <div className="setPW-input">
+            <Input placeholde={i18n('验证码')} type="number" right={this.renderVarifyCode()} />
           </div>
-          <div className="login-afterInput">
-            <span>{i18n('没有账号？')}</span>
-            <span className="login-toRegister">{i18n('注册')}</span>
+          <div className="setPW-input">
+            <Input placeholde={i18n('新密码')} type="password" />
           </div>
-          <div className="login-button">{i18n('登录')}</div>
-        </div>
+          <div className="setPW-button">{i18n('确定')}</div>
+        </form>
       </div>
     );
   }
