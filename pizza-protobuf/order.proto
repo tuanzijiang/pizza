@@ -6,13 +6,16 @@ import "address.proto";
 import "pizza.proto";
 
 enum OrderStatus {
-  CART = 0;
-  UNPAID = 1;
-  PAID = 2;
-  RECEIVED = 3;
-  TRANSPORT = 4;
-  FINISH = 5;
-}
+      CART = 0;
+      UNPAID = 1;
+      PAID = 2;
+      CANCEL_CHECKING = 3;
+      CANCELED = 4;
+      CANCEL_FAILED = 5;
+      DELIVERING = 6;
+      RECEIVED = 7;
+      FINISH = 8;
+  }
 
 message Order {
   string id = 1;
@@ -20,7 +23,6 @@ message Order {
   repeated Pizza pizzas = 3;
   Address address = 4;
   OrderStatus status = 5;
-  string phone = 6;
 }
 
 // 获取订单详情
@@ -67,7 +69,7 @@ message FetchMenuResp {
 // [put] /sendOrder
 
 message SendOrderReq {
-  string user_id = 1;
+  int32 user_id = 1;
   map<int32, int32> pizza_num = 2;
 }
 
@@ -86,5 +88,16 @@ message UpdateOrderReq {
 }
 
 message UpdateMenuResp {
+  ResultType result_type = 1;
+}
+
+// 取消订单
+// [post] /cancelOrder
+
+message CancelOrderReq {
+  string order_id = 1;
+}
+
+message CancelOrderResp {
   ResultType result_type = 1;
 }
