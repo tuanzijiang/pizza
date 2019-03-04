@@ -17,6 +17,7 @@ public class UserEntity {
     private Timestamp latestLoginTime;
     private String city;
     private Date birthday;
+    private String image;
 
     @Id
     @Column(name = "id")
@@ -118,6 +119,16 @@ public class UserEntity {
         this.birthday = birthday;
     }
 
+    @Basic
+    @Column(name = "image")
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -137,6 +148,7 @@ public class UserEntity {
             return false;
         if (city != null ? !city.equals(that.city) : that.city != null) return false;
         if (birthday != null ? !birthday.equals(that.birthday) : that.birthday != null) return false;
+        if (image != null ? !image.equals(that.image) : that.image != null) return false;
 
         return true;
     }
@@ -153,6 +165,7 @@ public class UserEntity {
         result = 31 * result + (latestLoginTime != null ? latestLoginTime.hashCode() : 0);
         result = 31 * result + (city != null ? city.hashCode() : 0);
         result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
+        result = 31 * result + (image != null ? image.hashCode() : 0);
         return result;
     }
 }
