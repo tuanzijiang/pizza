@@ -10,7 +10,8 @@ public class MenuEntity {
     private String image;
     private String description;
     private Double price;
-    private int state;
+    private Integer state;
+    private String tag;
 
     @Id
     @Column(name = "id")
@@ -64,12 +65,22 @@ public class MenuEntity {
 
     @Basic
     @Column(name = "state")
-    public int getState() {
+    public Integer getState() {
         return state;
     }
 
-    public void setState(int state) {
+    public void setState(Integer state) {
         this.state = state;
+    }
+
+    @Basic
+    @Column(name = "tag")
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     @Override
@@ -85,7 +96,8 @@ public class MenuEntity {
         if (image != null ? !image.equals(that.image) : that.image != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (price != null ? !price.equals(that.price) : that.price != null) return false;
-
+        if (tag != null ? !tag.equals(that.tag) : that.tag != null) return false;
+        
         return true;
     }
 
@@ -97,6 +109,7 @@ public class MenuEntity {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + state;
+        result = 31 * result + (tag != null ? tag.hashCode() : 0);
         return result;
     }
 }

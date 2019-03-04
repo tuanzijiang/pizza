@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 @Table(name = "order", schema = "pizza_project", catalog = "")
 public class OrderEntity {
     private int id;
+    private String orderId;
     private int userId;
     private int addressId;
     private int state;
@@ -25,6 +26,16 @@ public class OrderEntity {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Basic
+    @Column(name = "orderId")
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     @Basic
@@ -125,6 +136,7 @@ public class OrderEntity {
         OrderEntity that = (OrderEntity) o;
 
         if (id != that.id) return false;
+        if (orderId != null ? !orderId.equals(that.orderId) : that.orderId != null) return false;
         if (userId != that.userId) return false;
         if (addressId != that.addressId) return false;
         if (state != that.state) return false;
@@ -144,6 +156,7 @@ public class OrderEntity {
     public int hashCode() {
         int result = id;
         result = 31 * result + userId;
+        result = 31 * result + (orderId != null ? orderId.hashCode() : 0);
         result = 31 * result + addressId;
         result = 31 * result + state;
         result = 31 * result + (totalPrice != null ? totalPrice.hashCode() : 0);
