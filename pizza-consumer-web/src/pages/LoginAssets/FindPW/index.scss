@@ -1,0 +1,34 @@
+@import '~@ui/base.scss';
+.findPW-wrapper {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: $white_3;
+}
+
+.findPW-middle {
+  color: $white_2;
+  font-size: vw(16);
+}
+
+.findPW-beforeInput {
+  height: vw(20);
+  width: 100%;
+}
+
+.findPW-content {
+  width: 100%;
+  position: relative;
+  top: $banner_height;
+}
+
+.findPW-button {
+  margin: vw(10) auto 0;
+  height: vw(40);
+  line-height: vw(40);
+  color: $white_1;
+  background: $green_4;
+  border-radius: vw(3);
+  text-align: center;
+  width: calc(100% - 2 * #{$padding_width});
+}

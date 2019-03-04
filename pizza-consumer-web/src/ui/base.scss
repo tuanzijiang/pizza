@@ -1,0 +1,62 @@
+/* global style */
+
+/* color */
+
+/* black */
+$black_1: #262626;
+$black_2: #111;
+$black_3: #000;
+
+/* gray */
+$gray_1: #e8e8e8;
+$gray_2: #d9d9d9;
+$gray_3: #bfbfbf;
+$gray_4: #8c8c8c;
+$gray_5: #595959;
+
+/* white */
+$white_1: #fff;
+$white_2: #fafafa;
+$white_3: #f5f5f5;
+
+/* blue */
+$blue_1: #91d5ff;
+$blue_2: #69c0ff;
+$blue_3: #40a9ff;
+$blue_4: #1890ff;
+$blue_5: #096dd9;
+/* green */
+$green_1: #b7eb8f;
+$green_2: #95de64;
+$green_3: #73d13d;
+$green_4: #52c41a;
+$green_5: #389e0d;
+/* red */
+$red_1: #ffa39e;
+$red_2: #ff7875;
+$red_3: #ff4d4f;
+$red_4: #f5222d;
+$red_5: #cf1322;
+
+/* tool function */
+$base_font: 16;
+$base_screen: 320;
+
+@function rem($px) {
+  $remSize: $px / $base_font;
+  @return #{$remSize}rem;
+}
+
+@function vw($px) {
+  $vmSize: $px * 100 / $base_screen;
+  @return #{$vmSize}vw;
+}
+
+/* size */
+$animation_timer: .3s;
+
+$padding_width: vw(10);
+
+$banner_height: vw(50);
+
+$banner_height_status: calc(#{$banner_height} + 20px);

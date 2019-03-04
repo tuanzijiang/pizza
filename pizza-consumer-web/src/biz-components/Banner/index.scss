@@ -1,0 +1,43 @@
+@import '~@ui/base.scss';
+.banner-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.banner-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: vw(50);
+  background: $blue_3;
+  box-sizing: border-box;
+  padding: 0 $padding_width;
+}
+
+.banner-header {
+  height: 20px;
+  width: 100%;
+  background: $blue_3;
+}
+
+.banner-icon {
+  color: $white_2;
+  font-size: vw(16);
+}
+
+.banner-left {
+  flex: 1 1 0;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.banner-right {
+  flex: 1 1 0;
+  text-align: right;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}

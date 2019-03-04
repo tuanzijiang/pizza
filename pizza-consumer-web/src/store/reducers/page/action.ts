@@ -1,7 +1,5 @@
-import manage from './manage/action';
-import edit from './edit/action';
+import login from './login/action';
 
 export const page = {
-  manage,
-  edit,
+  login,
 };

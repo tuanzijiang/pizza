@@ -5,14 +5,15 @@
   "author": "tuanzijiang",
   "license": "MIT",
   "scripts": {
-    "watch": "webpack --watch --config webpack.dev.js",
-    "dev": "webpack-dev-server --open --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js",
-    "server": "node server.js",
+    "watch": "yarn pb && webpack --watch --config webpack.dev.js",
+    "dev": "yarn pb && webpack-dev-server --open --config webpack.dev.js",
+    "build": "yarn pb && webpack --config webpack.prod.js",
     "analysis": "webpack --config webpack.dev.js --profile --json > stats.json",
     "lint": "tslint --project . src/**/*.ts src/**/*.tsx",
     "mock": "nodemon mock/server",
-    "pb": "pbjs -t json ../pizza-protobuf/user.proto ../pizza-protobuf/order.proto > src/net/proto.json"
+    "pb": "yarn pb-web && yarn pb-server",
+    "pb-server": "pbjs -t json ../pizza-protobuf/user.proto ../pizza-protobuf/order.proto > mock/proto.json",
+    "pb-web": "pbjs -t json ../pizza-protobuf/user.proto ../pizza-protobuf/order.proto > src/net/proto.json"
   },
   "devDependencies": {
     "@types/autobind-decorator": "^2.1.0",
@@ -42,12 +43,15 @@
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
     "lodash": "^4.17.11",
+    "node-sass": "^4.11.0",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-loadable": "^5.5.0",
     "react-redux": "^6.0.0",
     "react-router-dom": "^4.3.1",
     "redux": "^4.0.1",
+    "sass": "^1.17.2",
+    "sass-loader": "^7.1.0",
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.1",
     "ts-loader": "^5.3.3",
@@ -60,9 +64,12 @@
     "webpack-cli": "^3.2.3",
     "webpack-dev-middleware": "^3.5.1",
     "webpack-dev-server": "^3.1.14",
-    "webpack-merge": "^4.2.1"
+    "webpack-merge": "^4.2.1",
+    "webpack-pwa-manifest": "^4.0.0"
   },
   "dependencies": {
-    "protobufjs": "^6.8.8"
+    "koa-protobuf": "^0.1.1",
+    "protobufjs": "^6.8.8",
+    "raw-body": "^2.3.3"
   }
 }

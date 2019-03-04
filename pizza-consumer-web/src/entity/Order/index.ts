@@ -1,0 +1,52 @@
+import { OrderSchema, OrderStatusSchema, OrderWeakSchema } from './schema';
+
+export class Order implements OrderSchema {
+  public id: string = '';
+  public startTime: number = 0;
+  public pizzas: string[] = [];
+  public address: number = 0;
+  public status: OrderStatusSchema = OrderStatusSchema.CART;
+  public phone: string = '';
+  public num: {
+    [pizza_id: number]: number;
+  } = {};
+
+  constructor(order?: OrderWeakSchema) {
+    if (order) {
+      this.id = order.id || this.id;
+      this.startTime = order.startTime || this.startTime;
+      this.pizzas = order.pizzas || this.pizzas;
+      this.address = order.address || this.address;
+      this.status = order.status || this.status;
+      this.phone = order.phone || this.phone;
+      this.num = order.num || this.num;
+    }
+  }
+
+  update(order: OrderWeakSchema, onlyModified?: boolean) {
+    if (onlyModified) {
+      this.id = order.id || this.id;
+      this.startTime = order.startTime || this.startTime;
+      this.pizzas = order.pizzas || this.pizzas;
+      this.address = order.address || this.address;
+      this.status = order.status || this.status;
+      this.phone = order.phone || this.phone;
+      this.num = order.num || this.num;
+      return this;
+    } else {
+      const newOrder = Order.fromJS();
+      newOrder.id = order.id || this.id;
+      newOrder.startTime = order.startTime || this.startTime;
+      newOrder.pizzas = order.pizzas || this.pizzas;
+      newOrder.address = order.address || this.address;
+      newOrder.status = order.status || this.status;
+      newOrder.phone = order.phone || this.phone;
+      newOrder.num = order.num || this.num;
+      return newOrder;
+    }
+  }
+
+  static fromJS(order?: OrderWeakSchema) {
+    return new Order(order);
+  }
+}

@@ -1,1 +1,4 @@
-export { page, userInfo, entity } from './reducers/action';
+export {
+  page,
+  entity,
+} from './reducers/action';

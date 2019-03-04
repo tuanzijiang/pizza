@@ -1,37 +1,37 @@
 import * as React from 'react';
-import { InputConfig } from './schema';
-import { getInputByConfigType } from './config';
+import './index.scss';
+
+export interface InputProps {
+  left?: React.ReactNode;
+  right?: React.ReactNode;
+  defaultValue?: string;
+  placeholde?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  type?: string;
+  value?: string | number;
+}
 
 export interface InputState { }
 
-export interface InputProps {
-  value: any;
-  config: InputConfig;
-  rootKey: string;
-  currKey: string;
-  propName: string;
-  propValue: any;
-}
+export default class Ipnut extends React.PureComponent<InputProps, InputState> {
+  static defaultProps = {
+    type: 'string',
+  };
 
-export default class Input extends React.PureComponent<InputProps, InputState> {
   render() {
-    const { value, config, rootKey, currKey, propName, propValue } = this.props;
-    const { inputType } = config;
-    const { type } = inputType;
-    const InputComponent = getInputByConfigType(type);
-    const renderInput = InputComponent ?
-      <InputComponent
-        value={value}
-        rootKey={rootKey}
-        currKey={currKey}
-        propName={propName}
-        propValue={propValue}
-      /> :
-      <div>{value}</div>;
+    const { left, right, placeholde, type, value, onChange } = this.props;
     return (
-      <>
-        {renderInput}
-      </>
+      <div className="input-wrapper">
+        <div className="input-left">
+          {left}
+        </div>
+        <div className="input-content">
+          <input placeholder={placeholde} type={type} value={value} onChange={onChange} />
+        </div>
+        <div className="input-right">
+          {right}
+        </div>
+      </div>
     );
   }
 }

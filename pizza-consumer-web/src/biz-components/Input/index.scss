@@ -1,0 +1,32 @@
+@import '~@ui/base.scss';
+
+.input-wrapper {
+  background: $white_1;
+  height: vw(50);
+  width: 100%;
+  box-sizing: border-box;
+  padding: vw(10);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-content {
+  flex: 1 1 0;
+
+  input {
+    outline: none;
+    height: 100%;
+    width: 100%;
+    font-size: vw(12);
+    border: none;
+  }
+}
+
+.input-left {
+  flex: 0 0 auto;
+}
+
+.input-right {
+  flex: 0 0 auto;
+}
