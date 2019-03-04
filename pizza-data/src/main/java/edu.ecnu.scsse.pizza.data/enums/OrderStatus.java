@@ -23,6 +23,14 @@ public enum OrderStatus {
 
     private String expression;
 
+    public int getDbValue() {
+        return dbValue;
+    }
+
+    public String getExpression() {
+        return expression;
+    }
+
     public static OrderStatus fromDbValue(Integer dbStatusValue) {
         if (dbStatusValue == null) {
             return UNKNOWN;
