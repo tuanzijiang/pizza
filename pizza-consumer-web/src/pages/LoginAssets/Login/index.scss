@@ -1,0 +1,78 @@
+@import '~@ui/base.scss';
+
+.login-wrapper {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: $white_3;
+}
+
+.login-middle {
+  color: $white_2;
+  font-size: vw(16);
+}
+
+.login-right {
+  color: $white_2;
+  font-size: vw(14);
+}
+
+.login-content {
+  width: 100%;
+  position: relative;
+  top: $banner_height;
+}
+
+.login-content_status {
+  top: $banner_height_status;
+}
+
+.login-beforeInput {
+  height: vw(20);
+  width: 100%;
+}
+
+.login-varigy_ready {
+  font-size: vw(12);
+  padding: vw(5) vw(10);
+  border-radius: vw(3);
+  margin: 0 0 0 vw(5);
+  background: $green_4;
+  color: $white_2;
+}
+
+.login-varigy_wait {
+  font-size: vw(12);
+  padding: vw(5) vw(10);
+  border-radius: vw(3);
+  margin: 0 0 0 vw(5);
+  background: $gray_3;
+  color: $white_2;
+}
+
+.login-input {
+  margin: vw(1) 0;
+}
+
+.login-afterInput {
+  color: $black_1;
+  font-size: vw(12);
+  line-height: vw(40);
+  margin: 0 0 0 $padding_width;
+
+  .login-toRegister {
+    color: $blue_3;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+.login-button {
+  margin: vw(10) auto;
+  height: vw(40);
+  line-height: vw(40);
+  color: $white_1;
+  background: $green_4;
+  border-radius: vw(3);
+  text-align: center;
+  width: calc(100% - 2 * #{$padding_width});
+}
