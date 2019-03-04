@@ -23,6 +23,7 @@ message Order {
   repeated Pizza pizzas = 3;
   Address address = 4;
   OrderStatus status = 5;
+  int32 userId = 6;
 }
 
 // 获取订单详情
