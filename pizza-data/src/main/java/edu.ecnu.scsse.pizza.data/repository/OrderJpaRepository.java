@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
 
-    Optional<OrderEntity> findByOrderId(String orderId);
+    Optional<OrderEntity> findByOrderUuid(String orderId);
 }

@@ -2,6 +2,7 @@ package edu.ecnu.scsse.pizza.data.domain;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "driver", schema = "pizza_project", catalog = "")
@@ -12,6 +13,7 @@ public class DriverEntity {
     private BigDecimal lon;
     private String phone;
     private int state;
+    private Timestamp latestDepartTime;
 
     @Id
     @Column(name = "id")
@@ -73,6 +75,16 @@ public class DriverEntity {
         this.state = state;
     }
 
+    @Basic
+    @Column(name = "latest_depart_time")
+    public Timestamp getLatestDepartTime() {
+        return latestDepartTime;
+    }
+
+    public void setLatestDepartTime(Timestamp latestDepartTime) {
+        this.latestDepartTime = latestDepartTime;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -86,6 +98,8 @@ public class DriverEntity {
         if (lat != null ? !lat.equals(that.lat) : that.lat != null) return false;
         if (lon != null ? !lon.equals(that.lon) : that.lon != null) return false;
         if (phone != null ? !phone.equals(that.phone) : that.phone != null) return false;
+        if (latestDepartTime != null ? !latestDepartTime.equals(that.latestDepartTime) : that.latestDepartTime != null)
+            return false;
 
         return true;
     }
@@ -98,6 +112,7 @@ public class DriverEntity {
         result = 31 * result + (lon != null ? lon.hashCode() : 0);
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         result = 31 * result + state;
+        result = 31 * result + (latestDepartTime != null ? latestDepartTime.hashCode() : 0);
         return result;
     }
 }
