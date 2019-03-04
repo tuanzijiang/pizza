@@ -7,7 +7,6 @@ import java.sql.Timestamp;
 @Table(name = "order", schema = "pizza_project", catalog = "")
 public class OrderEntity {
     private int id;
-    private String orderId;
     private int userId;
     private int addressId;
     private int state;
@@ -17,6 +16,7 @@ public class OrderEntity {
     private Timestamp commitTime;
     private Timestamp deliverStartTime;
     private Timestamp deliverEndTime;
+    private String orderUuid;
 
     @Id
     @Column(name = "id")
@@ -26,16 +26,6 @@ public class OrderEntity {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    @Basic
-    @Column(name = "orderId")
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
     }
 
     @Basic
@@ -128,6 +118,16 @@ public class OrderEntity {
         this.deliverEndTime = deliverEndTime;
     }
 
+    @Basic
+    @Column(name = "order_uuid")
+    public String getOrderUuid() {
+        return orderUuid;
+    }
+
+    public void setOrderUuid(String orderUuid) {
+        this.orderUuid = orderUuid;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -136,7 +136,6 @@ public class OrderEntity {
         OrderEntity that = (OrderEntity) o;
 
         if (id != that.id) return false;
-        if (orderId != null ? !orderId.equals(that.orderId) : that.orderId != null) return false;
         if (userId != that.userId) return false;
         if (addressId != that.addressId) return false;
         if (state != that.state) return false;
@@ -148,6 +147,7 @@ public class OrderEntity {
             return false;
         if (deliverEndTime != null ? !deliverEndTime.equals(that.deliverEndTime) : that.deliverEndTime != null)
             return false;
+        if (orderUuid != null ? !orderUuid.equals(that.orderUuid) : that.orderUuid != null) return false;
 
         return true;
     }
@@ -156,7 +156,6 @@ public class OrderEntity {
     public int hashCode() {
         int result = id;
         result = 31 * result + userId;
-        result = 31 * result + (orderId != null ? orderId.hashCode() : 0);
         result = 31 * result + addressId;
         result = 31 * result + state;
         result = 31 * result + (totalPrice != null ? totalPrice.hashCode() : 0);
@@ -165,6 +164,7 @@ public class OrderEntity {
         result = 31 * result + (commitTime != null ? commitTime.hashCode() : 0);
         result = 31 * result + (deliverStartTime != null ? deliverStartTime.hashCode() : 0);
         result = 31 * result + (deliverEndTime != null ? deliverEndTime.hashCode() : 0);
+        result = 31 * result + (orderUuid != null ? orderUuid.hashCode() : 0);
         return result;
     }
 }
