@@ -1,0 +1,48 @@
+<div class="headerWrapper">
+  <header class="header">
+    <div class="container">
+      <h4 class="mt-2">
+        PizzaExpress后台管理系统
+      </h4>
+      <ul class="nav">
+        <li class="nav-item">
+          <a>管理员：{{userName}}</a>
+        </li>
+        <li class="nav-item">
+          <a [routerLink]="['/login']">[退出]</a>
+        </li>
+      </ul>
+    </div>
+  </header>
+</div>
+<div class="main">
+  <div class="side-nav">
+    <el-menu model="2" class="el-menu-vertical">
+      <el-submenu index="1">
+        <ng-template #title>
+          <i class="el-icon-tickets"></i>订单中心
+        </ng-template>
+        <el-menu-item index="1-1">订单列表</el-menu-item>
+        <el-menu-item index="1-2">订单统计</el-menu-item>
+      </el-submenu>
+      <el-submenu index="2">
+        <ng-template #title>
+          <i class="el-icon-news"></i>系统管理
+        </ng-template>
+        <el-menu-item index="2-1">用户管理</el-menu-item>
+        <el-menu-item index="2-2">菜单管理</el-menu-item>
+        <el-menu-item index="2-3">工厂管理</el-menu-item>
+      </el-submenu>
+      <el-menu-item index="3"><i class="el-icon-warning"></i>退单管理</el-menu-item>
+      <el-menu-item index="4"><i class="el-icon-setting"></i>配送人员管理</el-menu-item>
+      <el-submenu index="5">
+        <ng-template #title>
+          <i class="el-icon-goods"></i>库存管理
+        </ng-template>
+        <el-menu-item index="5-1">原料管理</el-menu-item>
+        <el-menu-item index="5-2">订购管理</el-menu-item>
+      </el-submenu>
+      <el-menu-item index="6"><i class="el-icon-menu"></i>操作记录</el-menu-item>
+    </el-menu>
+  </div>
+</div>
