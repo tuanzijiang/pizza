@@ -270,9 +270,12 @@
             "CART": 0,
             "UNPAID": 1,
             "PAID": 2,
-            "RECEIVED": 3,
-            "TRANSPORT": 4,
-            "FINISH": 5
+            "CANCEL_CHECKING": 3,
+            "CANCELED": 4,
+            "CANCEL_FAILED": 5,
+            "DELIVERING": 6,
+            "RECEIVED": 7,
+            "FINISH": 8
           }
         },
         "Order": {
@@ -297,10 +300,6 @@
             "status": {
               "type": "OrderStatus",
               "id": 5
-            },
-            "phone": {
-              "type": "string",
-              "id": 6
             }
           }
         },
@@ -385,7 +384,7 @@
         "SendOrderReq": {
           "fields": {
             "userId": {
-              "type": "string",
+              "type": "int32",
               "id": 1
             },
             "pizzaNum": {
@@ -424,6 +423,22 @@
           }
         },
         "UpdateMenuResp": {
+          "fields": {
+            "resultType": {
+              "type": "ResultType",
+              "id": 1
+            }
+          }
+        },
+        "CancelOrderReq": {
+          "fields": {
+            "orderId": {
+              "type": "string",
+              "id": 1
+            }
+          }
+        },
+        "CancelOrderResp": {
           "fields": {
             "resultType": {
               "type": "ResultType",
