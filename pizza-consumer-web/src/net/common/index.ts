@@ -32,6 +32,16 @@ export interface Address {
   tag: string;
 }
 
+export interface User {
+  id: number;
+  name: string;
+  phone: string;
+  email: string;
+  birthday: number;
+  city: string;
+  img: string;
+}
+
 export interface Pizza {
   id: number;
   name: string;

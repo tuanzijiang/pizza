@@ -1,4 +1,4 @@
-import { FetchUserReq, FetchUserResp } from './user';
+import { FetchUserReq, FetchUserResp } from './fetch-user';
 import { FetchMenuReq, FetchMenuResp } from './fetch-menu';
 
 export enum Command {

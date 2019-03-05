@@ -1,4 +1,18 @@
 const { getRandomNum, getRandomStr } = require('../utils/random');
+const _ = require('lodash');
+
+const USER_NAME_ARR = [
+  '年少不负好时光',
+];
+
+const USER_TEL_ARR = [
+  '15317315332'
+];
+
+const USER_CITY_ARR = [
+  '上海',
+  '北京',
+]
 
 class User {
   constructor(user) {
@@ -20,11 +34,11 @@ class User {
   static random() {
     return new User({
       id: getRandomNum(5),
-      name: `name_${getRandomStr(2)}`,
-      phone: `phone_${getRandomStr(2)}`,
-      email: `email_${getRandomStr(2)}`,
-      birthday: getRandomNum(7),
-      city: `city_${getRandomStr(2)}`,
+      name: USER_NAME_ARR[0],
+      phone: USER_TEL_ARR[0],
+      email: `zhangqi.67@bytedance.com`,
+      birthday: new Date().valueOf(),
+      city: USER_TEL_ARR[_.random(0, 1)],
       img: `img_${getRandomStr(2)}`,
     });
   }
