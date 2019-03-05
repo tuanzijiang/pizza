@@ -1,9 +1,14 @@
 import {
   UPDATE_NAV_IDX,
+  UPDATE_ORDER_IDS,
 } from './action';
 
-const initState = {
+const initState: {
+  navIdx: number;
+  orderIds: string[];
+} = {
   navIdx: 3,
+  orderIds: [],
 };
 
 export default (state = initState, action: any) => {
@@ -12,6 +17,22 @@ export default (state = initState, action: any) => {
       return {
         ...state,
         navIdx: action.navIdx,
+      };
+    }
+    case UPDATE_ORDER_IDS: {
+      const currOrderIds = action.orderIds;
+      const prevOrderIds = state.orderIds;
+
+      const newOrdersId = [...prevOrderIds];
+      currOrderIds.forEach((orderId: string) => {
+        if (!newOrdersId.includes(orderId)) {
+          newOrdersId.push(orderId);
+        }
+      });
+
+      return {
+        ...state,
+        orderIds: newOrdersId,
       };
     }
     default:

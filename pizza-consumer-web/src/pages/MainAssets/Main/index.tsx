@@ -6,6 +6,7 @@ import Footer from '@biz-components/Footer';
 import Menu from './Menu';
 import Shopping from './Shopping';
 import Me from './Me';
+import OrderList from './OrderList';
 import { Order, CART_ORDER_ID } from '@entity/Order';
 import { OpenType } from '@biz-components/PageAssets';
 import i18n from '@utils/i18n';
@@ -18,6 +19,7 @@ import { neetStatusBar } from '@utils/device';
 interface MainProps {
   onPageChange(idx: MainAssetName, openType?: OpenType, ...extraInfo: any[]): void;
   navIdx: number;
+  orderIds: string[];
   updateNavIdx: (idx: number) => void;
   entityStore: any;
 }
@@ -51,7 +53,7 @@ export default class Login extends React.PureComponent<MainProps, MainState> {
   }
 
   render() {
-    const { navIdx, entityStore } = this.props;
+    const { navIdx, entityStore, orderIds } = this.props;
     const { pizzas, addresses, orders, user } = entityStore;
     const menu = orders[CART_ORDER_ID];
 
@@ -77,6 +79,12 @@ export default class Login extends React.PureComponent<MainProps, MainState> {
             'main-pageWrapper_active': navIdx === 1,
           })}>
             <Shopping pizzas={pizzas} menu={menu} />
+          </div>
+          <div className={cx({
+            'main-pageWrapper': true,
+            'main-pageWrapper_active': navIdx === 2,
+          })}>
+            <OrderList pizzas={pizzas} addresses={addresses} orders={orders} orderIds={orderIds} />
           </div>
           <div className={cx({
             'main-pageWrapper': true,

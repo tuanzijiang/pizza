@@ -12,9 +12,12 @@ export enum OrderStatus {
   CART = 0,
   UNPAID = 1,
   PAID = 2,
-  RECEIVED = 3,
-  TRANSPORT = 4,
-  FINISH = 5,
+  CANCEL_CHECKING = 3,
+  CANCELED = 4,
+  CANCEL_FAILED = 5,
+  DELIVERING = 6,
+  RECEIVED = 7,
+  FINISH = 8,
 }
 
 export enum PizzaStatus {
@@ -55,7 +58,7 @@ export interface Pizza {
 
 export interface Order {
   id: string;
-  start_time: number;
+  startTime: number;
   pizzas: Pizza[];
   address: Address;
   status: OrderStatus;

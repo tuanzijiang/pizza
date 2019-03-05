@@ -1,6 +1,7 @@
 export enum TIMEFOAMTER {
   TYPE1 = 'TYPE1',
   TYPE2 = 'TYPE2',
+  TYPE3 = 'TYPE3',
 }
 
 const getFormater = (type: TIMEFOAMTER) => {
@@ -21,6 +22,15 @@ const getFormater = (type: TIMEFOAMTER) => {
         year: string, month: string, day: string, hour: string, minutes: string, second: string,
       }) => (
           `${year}-${month}-${day}`
+        );
+    }
+    case TIMEFOAMTER.TYPE3: {
+      return ({
+        year, month, day, hour, minutes, second,
+      }: {
+        year: string, month: string, day: string, hour: string, minutes: string, second: string,
+      }) => (
+          `${year}-${month}-${day} ${hour}:${minutes}:${second}`
         );
     }
     default: {
