@@ -4,6 +4,8 @@ import './index.scss';
 import Banner from '@biz-components/Banner';
 import Footer from '@biz-components/Footer';
 import Menu from './Menu';
+import Shopping from './Shopping';
+import Me from './Me';
 import { Order, CART_ORDER_ID } from '@entity/Order';
 import { OpenType } from '@biz-components/PageAssets';
 import i18n from '@utils/i18n';
@@ -69,6 +71,18 @@ export default class Login extends React.PureComponent<MainProps, MainState> {
             'main-pageWrapper_active': navIdx === 0,
           })}>
             <Menu pizzas={pizzas} menu={menu} />
+          </div>
+          <div className={cx({
+            'main-pageWrapper': true,
+            'main-pageWrapper_active': navIdx === 1,
+          })}>
+            <Shopping pizzas={pizzas} menu={menu} />
+          </div>
+          <div className={cx({
+            'main-pageWrapper': true,
+            'main-pageWrapper_active': navIdx === 3,
+          })}>
+            <Me user={user} />
           </div>
         </div>
         <Footer height={vw(50)} wrapperClass="main-footer">

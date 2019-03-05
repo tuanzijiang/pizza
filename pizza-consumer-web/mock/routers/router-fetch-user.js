@@ -17,7 +17,7 @@ router.post('/', async (ctx, next) => {
 
   // mock
   const body = {
-    resultType: 0,
+    resultType: 1,
     user: User.random(),
   }
 

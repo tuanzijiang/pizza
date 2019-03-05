@@ -3,7 +3,7 @@ import {
 } from './action';
 
 const initState = {
-  navIdx: 0,
+  navIdx: 3,
 };
 
 export default (state = initState, action: any) => {
