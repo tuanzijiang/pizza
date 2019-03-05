@@ -8,11 +8,11 @@ export const UPDATE_ORDER = Symbol('UPDATE_ORDER');
 /**
  * action creator
  */
-const updateAddress = (order: OrderWeakSchema) => ({
+const updateOrder = (order: OrderWeakSchema) => ({
   order,
   type: UPDATE_ORDER,
 });
 
 export default {
-  updateAddress,
+  updateOrder,
 };

@@ -1,0 +1,87 @@
+@import '~@ui/base.scss';
+.main-wrapper {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: $white_3;
+}
+
+.main-middle {
+  color: $gray_5;
+  font-size: vw(16);
+}
+
+.main-middle_other {
+  color: $white_2;
+  font-size: vw(16);
+}
+
+.main-footer {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 2px 1px $gray_1;
+  background: $white_1;
+}
+
+.main-content {
+  position: absolute;
+  width: 100%;
+  top: $banner_height;
+  height: calc(100% - #{vw(50)} - #{$banner_height});
+}
+
+.main-content_status {
+  position: absolute;
+  width: 100%;
+  top: $banner_height_status;
+  height: calc(100% - #{vw(50)} - #{$banner_height_status});
+}
+
+.main-pageWrapper {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+}
+
+.main-pageWrapper_active {
+  display: block;
+}
+
+.main-footerItem {
+  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: $gray_5;
+}
+
+.main-footerItem_active {
+  color: $blue_3;
+  font-size: vw(20) !important;
+}
+
+.main-footerItem_inActive {
+  font-size: vw(20) !important;
+}
+
+.main-footerFont_active {
+  font-size: vw(8);
+  line-height: 1.2;
+  color: $blue_3;
+}
+
+.main-footerFont_inActive {
+  font-size: vw(8);
+  line-height: 1.2;
+  color: $gray_5;
+}

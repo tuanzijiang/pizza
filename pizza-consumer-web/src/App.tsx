@@ -3,7 +3,7 @@ import { Router, Route, Switch, Redirect } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store';
 import history from '@utils/history';
-import { Login } from './pages';
+import { LoginAssets, MainAssets } from './pages';
 import { neetStatusBar } from '@utils/device';
 
 // @ts-ignore
@@ -31,9 +31,10 @@ export default class App extends React.PureComponent<AppProps, AppState> {
       <Provider store={store}>
         <Router history={history}>
           <Switch>
-            <Route component={Login} path="/Login" />
+            <Route component={LoginAssets} path="/LoginAssets" />
+            <Route component={MainAssets} path="/MainAssets" />
             <Redirect to={{
-              pathname: '/Login',
+              pathname: '/MainAssets',
             }} />
           </Switch>
         </Router>
