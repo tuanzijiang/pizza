@@ -1,6 +1,9 @@
-import { PizzaMap } from '@entity/schema';
+import { PizzaMap, PizzaWeakSchema } from '@entity/schema';
 
-import { UPDATE_PIZZA } from './action';
+import {
+  UPDATE_PIZZA,
+  UPDATE_PIZZAS,
+} from './action';
 
 export default (state: PizzaMap = {}, action: any) => {
   switch (action.type) {
@@ -12,6 +15,18 @@ export default (state: PizzaMap = {}, action: any) => {
           [pizza.id]: pizza,
         };
       }
+    }
+    case UPDATE_PIZZAS: {
+      const pizzas = action.pizzas;
+      const updatePizzas = pizzas.reduce((prev: any, curr: PizzaWeakSchema) => {
+        const pizzaId = curr.id;
+        prev[pizzaId] = curr;
+        return prev;
+      }, {});
+      return {
+        ...state,
+        ...updatePizzas,
+      };
     }
     default:
       return state;
