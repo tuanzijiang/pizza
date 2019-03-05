@@ -80,6 +80,7 @@ message SendOrderResp {
 
 // 更新当前用户的菜单
 // [post] /updateOrder
+// note: 能更新的菜单只能是cart，需要order_id？
 
 message UpdateOrderReq {
   string order_id = 1;
@@ -87,7 +88,7 @@ message UpdateOrderReq {
   int32 count = 3;
 }
 
-message UpdateMenuResp {
+message UpdateOrderResp {
   ResultType result_type = 1;
 }
 

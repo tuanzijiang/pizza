@@ -3,6 +3,9 @@ import './index.scss';
 import { Order, Pizza } from '@src/entity';
 import Icon from '@biz-components/Icon';
 import i18n from '@src/utils/i18n';
+import autobind from 'autobind-decorator';
+import { CART_ORDER_ID } from '@entity/Order';
+import { updateOrderApi } from '@services/api-update-order';
 
 interface ShoppingCartProps {
   menu: Order;
@@ -14,6 +17,17 @@ interface ShoppingCartState {
 }
 
 export default class Shopping extends React.PureComponent<ShoppingCartProps, ShoppingCartState> {
+
+  @autobind
+  handleMenuUpdateClick(pizzaId: number, count: number) {
+    return () => {
+      updateOrderApi({
+        pizzaId,
+        count,
+        orderId: CART_ORDER_ID,
+      });
+    };
+  }
 
   renderOrder() {
     const { menu, pizzas } = this.props;
@@ -47,11 +61,17 @@ export default class Shopping extends React.PureComponent<ShoppingCartProps, Sho
                   </div>
                 </div>
                 <div className="shoppingCart-pizzaItemCount">
-                  <Icon name="delete" />
+                  <Icon
+                    name="delete"
+                    onClick={this.handleMenuUpdateClick(orderPizzaId, orderPizzaNum - 1)}
+                  />
                   <span className="shoppingCart-pizzaItemCountFont">
                     {orderPizzaNum}
                   </span>
-                  <Icon name="add-fill" />
+                  <Icon
+                    name="add-fill"
+                    onClick={this.handleMenuUpdateClick(orderPizzaId, orderPizzaNum + 1)}
+                  />
                 </div>
               </div>
             );

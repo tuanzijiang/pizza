@@ -75,4 +75,5 @@
   border-radius: vw(3);
   text-align: center;
   width: calc(100% - 2 * #{$padding_width});
+  -webkit-tap-highlight-color: transparent;
 }

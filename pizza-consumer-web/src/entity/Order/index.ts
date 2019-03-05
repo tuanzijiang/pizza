@@ -8,7 +8,6 @@ export class Order implements OrderSchema {
   public pizzas: number[] = [];
   public address: number = 0;
   public status: OrderStatusSchema = OrderStatusSchema.CART;
-  public phone: string = '';
   public num: {
     [pizza_id: number]: number;
   } = {};
@@ -20,7 +19,6 @@ export class Order implements OrderSchema {
       this.pizzas = order.pizzas || this.pizzas;
       this.address = order.address || this.address;
       this.status = order.status || this.status;
-      this.phone = order.phone || this.phone;
       this.num = order.num || this.num;
     }
   }
@@ -32,7 +30,6 @@ export class Order implements OrderSchema {
       this.pizzas = order.pizzas || this.pizzas;
       this.address = order.address || this.address;
       this.status = order.status || this.status;
-      this.phone = order.phone || this.phone;
       this.num = order.num || this.num;
       return this;
     } else {
@@ -42,7 +39,6 @@ export class Order implements OrderSchema {
       newOrder.pizzas = order.pizzas || this.pizzas;
       newOrder.address = order.address || this.address;
       newOrder.status = order.status || this.status;
-      newOrder.phone = order.phone || this.phone;
       newOrder.num = order.num || this.num;
       return newOrder;
     }

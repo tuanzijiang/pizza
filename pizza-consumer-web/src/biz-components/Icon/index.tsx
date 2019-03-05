@@ -6,13 +6,14 @@ import './icon/iconfont.css';
 export interface IconProps {
   name: string;
   classnames?: string[] | string;
+  onClick?: () => void;
 }
 
 export interface IconState { }
 
 export default class Icon extends React.PureComponent<IconProps, IconState> {
   render() {
-    const { name, classnames } = this.props;
+    const { name, classnames, onClick } = this.props;
     const extra = [].concat(classnames);
     const iconName = cx(
       'iconfont',
@@ -20,7 +21,10 @@ export default class Icon extends React.PureComponent<IconProps, IconState> {
       ...extra,
     );
     return (
-      <div className="icon-main">
+      <div
+        className="icon-main"
+        onClick={onClick}
+      >
         <span className={iconName} />
       </div>
     );
