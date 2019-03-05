@@ -1,1 +1,81 @@
 @import '~@ui/base.scss';
+.shoppingCart-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+.shoppingCart-pizzaItem {
+  width: 100%;
+  height: vw(70);
+  box-sizing: border-box;
+  padding: vw(10) vw(10);
+  display: flex; 
+  align-items: center;
+  background: $white_1;
+  margin: 0 0 vw(1);
+}
+
+.shoppingCart-pizzaItemImg {
+  height: vw(50);
+  width: vw(50);
+  background: $gray_1;
+  border-radius: vw(3);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 vw(10) 0 0;
+  flex: 0 0 auto;
+}
+
+.shoppingCart-pizzaItemPisa {
+  font-size: vw(25);
+  color: $white_1;
+}
+
+.shoppingCart-pizzaItemCount {
+  height: vw(20);
+  width: vw(65);
+  color: $blue_3;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex: 0 0 auto;
+  margin: 0 0 0 vw(10);
+}
+
+.shoppingCart-pizzaItemCountFont {
+  color: $gray_5;
+  display: inline-block;
+  text-align: center;
+  width: vw(30);
+}
+
+.shoppingCart-pizzaItemContent {
+  height: 100%;
+  flex: 1 1 auto;
+  font-size: vw(14);
+  overflow: hidden;
+  position: relative;
+  color: $black_1;
+}
+
+.shoppingCart-pizzaItemName {
+  word-break: break-all;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+  text-overflow: ellipsis;
+}
+
+.shoppingCart-pizzaItemPrice {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  span {
+    margin: 0 vw(1) 0 0;
+    font-size: 60%;
+  }
+}
