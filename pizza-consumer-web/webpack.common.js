@@ -1,7 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const WebpackPwaManifest = require('webpack-pwa-manifest')
+const WebpackPwaManifest = require('webpack-pwa-manifest');
 
 module.exports = {
   entry: './src/entry.tsx',
@@ -62,6 +62,7 @@ module.exports = {
       "@schemas": path.resolve(__dirname, 'src/schemas/'),
       "@store": path.resolve(__dirname, 'src/store/'),
       "@entity": path.resolve(__dirname, 'src/entity/'),
+      "@services": path.resolve(__dirname, 'src/services/'),
     },
     extensions: ['.tsx', '.ts', '.js'],
   },

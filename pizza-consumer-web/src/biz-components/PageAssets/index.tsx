@@ -92,7 +92,7 @@ export default class PageAssets extends React.PureComponent<PageAssetsProps, Pag
       });
       clearTimeout(this.enterAnimationTimer);
       this.enterAnimationTimer = null;
-    }, 0);
+    }, 200);
 
     // 恢复初始状态
     this.leaveAnimationTimer = setTimeout(() => {

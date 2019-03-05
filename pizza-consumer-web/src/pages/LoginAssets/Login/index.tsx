@@ -14,10 +14,10 @@ interface LoginProps {
   onPageChange(idx: LoginAssetName, openType?: OpenType): void;
   onVarifyClick: (varifyTime: number) => void;
   varifyTime: number;
+  currentTime: number;
 }
 
 interface LoginState {
-  currentTime: number;
   account: string;
   varify: string;
 }
@@ -25,33 +25,24 @@ interface LoginState {
 const VARIFY_TIME = 1000 * 45;
 
 export default class Login extends React.PureComponent<LoginProps, LoginState> {
-  private varifyTimer: any = null;
-
   constructor(props: LoginProps) {
     super(props);
     this.state = {
-      currentTime: new Date().valueOf(),
       account: '',
       varify: '',
     };
-  }
-
-  componentDidMount() {
-    this.varifyTimer = setInterval(() => {
-      this.setState({
-        currentTime: new Date().valueOf(),
-      });
-    }, 1000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.varifyTimer);
   }
 
   @autobind
   handleRightClick(e: React.MouseEvent<React.ReactNode>) {
     const { onPageChange } = this.props;
     onPageChange(LoginAssetName.LoginPW);
+  }
+
+  @autobind
+  handleRegisterClick(e: React.MouseEvent<React.ReactNode>) {
+    const { onPageChange } = this.props;
+    onPageChange(LoginAssetName.Register);
   }
 
   renderMiddle() {
@@ -64,8 +55,7 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
 
   @autobind
   handleVarifyClick() {
-    const { varifyTime, onVarifyClick } = this.props;
-    const { currentTime } = this.state;
+    const { varifyTime, onVarifyClick, currentTime } = this.props;
     if (varifyTime < currentTime) {
       onVarifyClick(new Date().valueOf() + VARIFY_TIME);
     }
@@ -90,8 +80,7 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
   }
 
   renderVarifyCode() {
-    const { varifyTime } = this.props;
-    const { currentTime } = this.state;
+    const { varifyTime, currentTime } = this.props;
     const text = !varifyTime ? i18n('获取验证码') : i18n('重新获取');
 
     if (!varifyTime || varifyTime - currentTime < 0) {
@@ -150,7 +139,12 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
           </div>
           <div className="login-afterInput">
             <span>{i18n('没有账号？')}</span>
-            <span className="login-toRegister">{i18n('注册')}</span>
+            <span
+              className="login-toRegister"
+              onClick={this.handleRegisterClick}
+            >
+              {i18n('注册')}
+            </span>
           </div>
           <div className="login-button">{i18n('登录')}</div>
         </div>
