@@ -1,6 +1,9 @@
-const { getRandomNum, getRandomStr } = require('../utils/random');
+const { getRandomStr } = require('../utils/random');
+const Address = require('./Address');
+const Pizza = require('./Pizza');
+const _ = require('lodash');
 
-export class Order {
+class Order {
 
   constructor(order) {
     if (order) {
@@ -21,12 +24,14 @@ export class Order {
   static random() {
     return new Order({
       id: `id_${getRandomStr(2)}`,
-      startTime: getRandomNum(5),
-      pizzas: [],
-      address: `addressId_${getRandomStr(2)}`,
-      status: getRandomNum(1),
-      phone: `phone_${getRandomStr(2)}`,
+      startTime: new Date().valueOf(),
+      pizzas: _.range(0, 5).map(v => Pizza.random()),
+      address: Address.random(),
+      status: _.random(0, 8),
+      phone: 15317315332,
       num: {},
     });
   }
 }
+
+module.exports = Order;

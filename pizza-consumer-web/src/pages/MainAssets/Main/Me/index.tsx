@@ -4,6 +4,8 @@ import Icon from '@biz-components/Icon';
 import { fetchUserApi } from '@src/services/api-fetch-user';
 import { User } from '@src/entity';
 import i18n from '@src/utils/i18n';
+import autobind from 'autobind-decorator';
+import history from '@utils/history';
 
 interface MeProps {
   user: User;
@@ -16,6 +18,11 @@ export default class Me extends React.PureComponent<MeProps, MeState> {
     fetchUserApi({
       userId: 123,
     });
+  }
+
+  @autobind
+  handleLogoutClick(e: React.MouseEvent) {
+    history.push('./LoginAssets');
   }
 
   render() {
@@ -67,6 +74,12 @@ export default class Me extends React.PureComponent<MeProps, MeState> {
             </div>
             <div className="me-contentItemInfo" />
             <Icon name="right" classnames="me-iconRight" />
+          </div>
+          <div
+            className="me-logout"
+            onClick={this.handleLogoutClick}
+          >
+            {i18n('退出登录')}
           </div>
         </div>
       </div>

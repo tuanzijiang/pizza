@@ -1,0 +1,57 @@
+@import '~@ui/base.scss';
+.orderList-wrapper {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.orderList-item {
+  height: vw(100);
+  width: 100%;
+  padding: vw(10);
+  background: $white_1;
+  margin: 0 0 vw(1);
+  box-sizing: border-box;
+}
+
+.orderList-itemName {
+  font-size: vw(14);
+  color: $gray_5;
+  width: 100%;
+  overflow: hidden;
+  font-weight: 600;
+  span {
+    max-width: vw(150);
+    display: inline-block;
+    padding: 0 vw(5) 0 0;
+    overflow: hidden;
+    white-space: nowrap;
+    word-break: break-all;
+    text-overflow: ellipsis;
+  }
+}
+
+.orderList-itemPrice {
+  font-size: vw(14);
+  color: $gray_5;
+  margin: vw(10) 0 0;
+  span {
+    padding: 0 vw(3) 0 0;
+  }
+}
+
+.orderList-itemOther {
+  color: $gray_3;
+  margin: vw(10) 0 0;
+  font-size: vw(12);
+  span {
+    border: vw(1) solid $gray_1;
+    color: $gray_5;
+    float: right;
+    padding: vw(3);
+    position: relative;
+    top: vw(-5);
+    border-radius: vw(2);
+  }
+}

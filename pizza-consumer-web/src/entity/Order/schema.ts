@@ -2,9 +2,12 @@ export enum OrderStatusSchema {
   CART = 0,
   UNPAID = 1,
   PAID = 2,
-  RECEIVED = 3,
-  TRANSPORT = 4,
-  FINISH = 5,
+  CANCEL_CHECKING = 3,
+  CANCELED = 4,
+  CANCEL_FAILED = 5,
+  DELIVERING = 6,
+  RECEIVED = 7,
+  FINISH = 8,
 }
 
 export interface OrderSchema {
@@ -13,7 +16,6 @@ export interface OrderSchema {
   pizzas: number[];
   address: number;
   status: OrderStatusSchema;
-  phone: string;
   num: {
     [pizza_id: number]: number;
   };
@@ -25,7 +27,6 @@ export interface OrderWeakSchema {
   pizzas?: number[];
   address?: number;
   status?: OrderStatusSchema;
-  phone?: string;
   num?: {
     [pizza_id: number]: number;
   };
