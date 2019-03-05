@@ -48,6 +48,9 @@
       ],
       "@entity/*": [
         "src/entity/*"
+      ],
+      "@services/*": [
+        "src/services/*"
       ]
     }
   },

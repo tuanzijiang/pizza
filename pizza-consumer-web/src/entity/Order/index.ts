@@ -1,9 +1,11 @@
 import { OrderSchema, OrderStatusSchema, OrderWeakSchema } from './schema';
 
+export const CART_ORDER_ID = '0000';
+
 export class Order implements OrderSchema {
   public id: string = '';
   public startTime: number = 0;
-  public pizzas: string[] = [];
+  public pizzas: number[] = [];
   public address: number = 0;
   public status: OrderStatusSchema = OrderStatusSchema.CART;
   public phone: string = '';

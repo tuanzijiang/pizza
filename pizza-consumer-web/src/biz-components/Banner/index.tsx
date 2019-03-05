@@ -1,5 +1,6 @@
 import * as React from 'react';
 import autobind from 'autobind-decorator';
+import cx from 'classnames';
 import Icon from '@biz-components/Icon';
 import { neetStatusBar } from '@utils/device';
 import './index.scss';
@@ -11,6 +12,9 @@ export interface BannerProps {
   rightClick?: (e?: React.MouseEvent<HTMLDivElement>) => void;
   middle?: React.ReactNode;
   middleClick?: (e?: React.MouseEvent<HTMLDivElement>) => void;
+  avoidTouchMove?: boolean;
+  background?: string;
+  wrapperClass?: string | string[];
 }
 
 export interface BannerState { }
@@ -25,10 +29,14 @@ export default class Banner extends React.PureComponent<BannerProps, BannerState
   static defaultProps = {
     left: <Icon name="left" classnames="banner-icon" />,
     right: <Icon name="right" classnames="banner-icon" />,
+    avoidTouchMove: false,
   };
 
   componentDidMount() {
-    this.bannerEl.current.addEventListener('touchmove', handleTouchMove, { passive: false });
+    const { avoidTouchMove } = this.props;
+    if (avoidTouchMove) {
+      this.bannerEl.current.addEventListener('touchmove', handleTouchMove, { passive: false });
+    }
   }
 
   componentWillUnmount() {
@@ -63,17 +71,23 @@ export default class Banner extends React.PureComponent<BannerProps, BannerState
     const {
       left, right, middle,
       leftClick, rightClick, middleClick,
+      background, wrapperClass,
     } = this.props;
+    const style = background ? { background } : {};
+    const wrapperName = cx(
+      'banner-wrapper',
+      ...[].concat(wrapperClass),
+    );
     return (
       <div
-        className="banner-wrapper"
+        className={wrapperName}
         id="banner-wrapper"
         ref={this.bannerEl}
       >
         {
-          neetStatusBar && <div className="banner-header" />
+          neetStatusBar && <div className="banner-header" style={style} />
         }
-        <div className="banner-content">
+        <div className="banner-content" style={style}>
           <div
             className="banner-left"
             onClick={leftClick && this.handleLeftClick}

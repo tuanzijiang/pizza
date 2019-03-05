@@ -14,10 +14,10 @@ interface SetPWProps {
   onPageChange(idx: LoginAssetName, openType?: OpenType): void;
   onVarifyClick: (varifyTime: number) => void;
   varifyTime: number;
+  currentTime: number;
 }
 
 interface SetPWState {
-  currentTime: number;
   tel: string;
 }
 
@@ -29,7 +29,6 @@ export default class SetPW extends React.PureComponent<SetPWProps, SetPWState> {
   constructor(props: SetPWProps) {
     super(props);
     this.state = {
-      currentTime: new Date().valueOf(),
       tel: '',
     };
   }
@@ -47,18 +46,6 @@ export default class SetPW extends React.PureComponent<SetPWProps, SetPWState> {
     }
   }
 
-  componentDidMount() {
-    this.varifyTimer = setInterval(() => {
-      this.setState({
-        currentTime: new Date().valueOf(),
-      });
-    }, 1000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.varifyTimer);
-  }
-
   @autobind
   handleLeftClick(e: React.MouseEvent<React.ReactNode>) {
     const { onPageChange } = this.props;
@@ -71,16 +58,14 @@ export default class SetPW extends React.PureComponent<SetPWProps, SetPWState> {
 
   @autobind
   handleVarifyClick() {
-    const { varifyTime, onVarifyClick } = this.props;
-    const { currentTime } = this.state;
+    const { varifyTime, onVarifyClick, currentTime } = this.props;
     if (varifyTime < currentTime) {
       onVarifyClick(new Date().valueOf() + VARIFY_TIME);
     }
   }
 
   renderVarifyCode() {
-    const { varifyTime } = this.props;
-    const { currentTime } = this.state;
+    const { varifyTime, currentTime  } = this.props;
     const text = !varifyTime ? i18n('获取验证码') : i18n('重新获取');
 
     if (!varifyTime || varifyTime - currentTime < 0) {
