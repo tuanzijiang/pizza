@@ -1,7 +1,9 @@
 import * as React from 'react';
 import './index.scss';
 import { fetchMenuApi } from '@services/api-fetch-menu';
+import { updateOrderApi } from '@services/api-update-order';
 import { Order, Pizza } from '@src/entity';
+import { CART_ORDER_ID } from '@entity/Order';
 import Icon from '@biz-components/Icon';
 import i18n from '@src/utils/i18n';
 import autobind from 'autobind-decorator';
@@ -147,6 +149,17 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
     );
   }
 
+  @autobind
+  handleMenuUpdateClick(pizzaId: number, count: number) {
+    return () => {
+      updateOrderApi({
+        pizzaId,
+        count,
+        orderId: CART_ORDER_ID,
+      });
+    };
+  }
+
   renderMenuPizzas() {
     const { tags } = this.state;
     const { menu, pizzas } = this.props;
@@ -161,7 +174,7 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
             const needTag = tags.includes(pizzaId);
             const {
               name: title, description: desc,
-              price,
+              price, id,
             } = currPizza;
             const count = menu.num[pizzaId];
 
@@ -200,13 +213,13 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
                       {
                         count !== 0 &&
                         <>
-                          <Icon name="delete" />
+                          <Icon name="delete" onClick={this.handleMenuUpdateClick(id, count - 1)} />
                           <span className="menu-pizzaItemCountFont">
                             {count}
                           </span>
                         </>
                       }
-                      <Icon name="add-fill" />
+                      <Icon name="add-fill" onClick={this.handleMenuUpdateClick(id, count + 1)} />
                     </div>
                   </div>
                 </div>

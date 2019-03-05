@@ -422,7 +422,7 @@
             }
           }
         },
-        "UpdateMenuResp": {
+        "UpdateOrderResp": {
           "fields": {
             "resultType": {
               "type": "ResultType",

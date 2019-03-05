@@ -9,6 +9,7 @@ import { LoginAssetName } from '../index';
 import { neetStatusBar } from '@utils/device';
 import autobind from 'autobind-decorator';
 import { timerFormater } from '@utils/time';
+import history from '@utils/history';
 
 interface LoginProps {
   onPageChange(idx: LoginAssetName, openType?: OpenType): void;
@@ -79,6 +80,11 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
     }
   }
 
+  @autobind
+  handleLoginClick() {
+    history.push('./MainAssets');
+  }
+
   renderVarifyCode() {
     const { varifyTime, currentTime } = this.props;
     const text = !varifyTime ? i18n('获取验证码') : i18n('重新获取');
@@ -146,7 +152,12 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
               {i18n('注册')}
             </span>
           </div>
-          <div className="login-button">{i18n('登录')}</div>
+          <div
+            className="login-button"
+            onClick={this.handleLoginClick}
+          >
+            {i18n('登录')}
+          </div>
         </div>
       </div>
     );
