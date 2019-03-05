@@ -16,7 +16,7 @@ message Address {
   string address = 4;
   string address_detail = 5;
   string phone = 6;
-  string expression = 7;
+  string tag = 7;
 }
 
 // 获取当前用户的地址信息
