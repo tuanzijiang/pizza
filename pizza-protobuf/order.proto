@@ -80,7 +80,9 @@ message SendOrderResp {
 
 // 更新当前用户的菜单
 // [post] /updateOrder
-// note: 能更新的菜单只能是cart，需要order_id？
+// note: 能更新的菜单只能是cart，需要order_id？支付超时？
+// note: 配送信息是要能查看骑手电话吗？
+// note: 标签要不要弄，要怎么弄
 
 message UpdateOrderReq {
   string order_id = 1;

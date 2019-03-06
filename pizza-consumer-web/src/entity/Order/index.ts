@@ -47,4 +47,21 @@ export class Order implements OrderSchema {
   static fromJS(order?: OrderWeakSchema) {
     return new Order(order);
   }
+
+  static canBeCancel(order?: OrderSchema) {
+    const status = order.status;
+    return status !== OrderStatusSchema.CART &&
+      status !== OrderStatusSchema.FINISH &&
+      status !== OrderStatusSchema.CANCELED;
+  }
+
+  static canAgain(order?: OrderSchema) {
+    const status = order.status;
+    return status !== OrderStatusSchema.CART;
+  }
+
+  static needPay(order?: OrderSchema) {
+    const status = order.status;
+    return status === OrderStatusSchema.UNPAID;
+  }
 }
