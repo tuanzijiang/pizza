@@ -1,0 +1,185 @@
+@import '~@ui/base.scss';
+.orderDetail-wrapper {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: $white_3;
+}
+
+.orderDetail-middle {
+  color: $white_2;
+  font-size: vw(16);
+}
+
+.orderDetail-content {
+  width: 100%;
+  position: relative;
+  top: $banner_height;
+  height: calc(100% - #{$banner_height});
+  overflow: auto;
+}
+
+.orderDetail-content_status {
+  top: $banner_height_status;
+  height: calc(100% - #{$banner_height_status});
+}
+
+.orderDetail-status {
+  box-sizing: border-box;
+  width: 100%;
+  height: vw(115);
+  padding: vw(10);
+  background: $white_1;
+  margin: 0 0 vw(10);
+}
+
+.orderDetail-statusName {
+  font-size: vw(20);
+  font-weight: 600;
+  color: $gray_5;
+}
+
+.orderDetail-statusInfo {
+  font-size: vw(12);
+  margin: vw(3) 0;
+  color: $gray_3;
+}
+
+.orderDetail-statusButton {
+  color: $gray_5;
+  padding: vw(3);
+  font-size: vw(14);
+  border: vw(1) solid $gray_1;
+  border-radius: vw(3);
+  margin: 0 vw(5) 0 0;
+}
+
+.orderDetail-statusButtons {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: vw(30);
+  margin: vw(10) 0 0;
+}
+
+.orderDetail-pizzas {
+  box-sizing: border-box;
+  width: 100%;
+  padding: vw(10);
+  background: $white_1;
+  margin: 0 0 vw(10);
+}
+
+.orderDetail-pizzasTitle {
+  font-size: vw(14);
+  color: $gray_5;
+  font-weight: 600;
+  padding: 0 0 vw(7) 0;
+  border-bottom: vw(1) solid $white_3;
+}
+
+.orderDetail-pizzaItem {
+  box-sizing: border-box;
+  background: $white_1;
+  height: vw(70);
+  width: 100%;
+  padding: vw(10) 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.orderDetail-pizzaItemImage {
+  height: vw(50);
+  width: vw(50);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 vw(10) 0 0;
+  background: $gray_1;
+  border-radius: vw(3);
+  flex: 0 0 auto;
+}
+
+.orderDetail-pizzaItemPisa {
+  font-size: vw(50);
+  color: $white_1;
+}
+
+.orderDetail-pizzaItemName {
+  color: $gray_5;
+  font-size: vw(14);
+  width: vw(140);
+  overflow: hidden;
+  margin: 0 vw(5) 0 0;
+  white-space: nowrap;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  font-weight: 400;
+}
+
+.orderDetail-pizzaItemNum {
+  width: vw(30);
+  font-size: vw(14);
+  color: $gray_5;
+  span {
+    font-size: vw(12);
+  }
+}
+
+.orderDetail-pizzaItemPrice {
+  width: vw(30);
+  font-size: vw(14);
+  color: $gray_5;
+  span {
+    font-size: vw(12);
+  }
+}
+
+.orderDetail-address {
+  box-sizing: border-box;
+  width: 100%;
+  padding: vw(10);
+  background: $white_1;
+  margin: 0 0 vw(10);
+}
+
+.orderDetail-addressTitle {
+  font-size: vw(14);
+  color: $gray_5;
+  font-weight: 600;
+  padding: 0 0 vw(7) 0;
+  border-bottom: vw(1) solid $white_3;
+}
+
+.orderDetail-addressInfoItem {
+  box-sizing: border-box;
+  background: $white_1;
+  width: 100%;
+  height: vw(50);
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: vw(14);
+  color: $gray_5
+}
+
+.orderDetail-addressInfoItemTitle {
+  flex: 0 0 auto;
+  width: vw(70);
+  margin: 0 vw(10) 0 0;
+}
+
+.orderDetail-addressInfoItemContent {
+  flex: 1 1 auto;
+  overflow: hidden;
+  white-space: nowrap;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  font-size: vw(12);
+  text-align: right;
+  color: $gray_4;
+}

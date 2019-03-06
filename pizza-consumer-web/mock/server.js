@@ -5,6 +5,7 @@ const Router = require('koa-router');
 const getRawBody = require('raw-body');
 
 const routers = require('./routers/index');
+const log = require('./utils/log');
 
 const app = new koa();
 const PORT = 3000;
@@ -20,7 +21,7 @@ app.use(async (ctx, next) => {
   const body = ctx.request.body;
   const query = ctx.request.query;
   const header = ctx.request.header;
-  console.warn(url, method, body, query, header['content-type']);
+  log.info(url, method, body, query, header['content-type']);
   next();
 });
 
@@ -33,4 +34,4 @@ routers.forEach(({reqUrl, reqRouter}) => {
 app.use(router.routes(), router.allowedMethods());
 
 app.listen(3000);
-console.info(`mock server start as port: ${PORT}`);
+log.info(`mock server start as port: ${PORT}`);

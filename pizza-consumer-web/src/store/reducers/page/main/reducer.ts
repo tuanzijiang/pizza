@@ -7,7 +7,7 @@ const initState: {
   navIdx: number;
   orderIds: string[];
 } = {
-  navIdx: 3,
+  navIdx: 2,
   orderIds: [],
 };
 
