@@ -22,5 +22,4 @@ public class AdminController {
     public LoginResponse adminLogin(@RequestBody LoginRequest loginRequest){
         return adminService.adminLogin(loginRequest);
     }
-
 }
