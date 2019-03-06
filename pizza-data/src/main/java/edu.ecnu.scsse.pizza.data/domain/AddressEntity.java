@@ -10,7 +10,6 @@ public class AddressEntity {
     private String address;
     private BigDecimal lat;
     private BigDecimal lon;
-    private String addressDetail;
 
     @Id
     @Column(name = "id")
@@ -52,16 +51,6 @@ public class AddressEntity {
         this.lon = lon;
     }
 
-    @Basic
-    @Column(name = "address_detail")
-    public String getAddressDetail() {
-        return addressDetail;
-    }
-
-    public void setAddressDetail(String addressDetail) {
-        this.addressDetail = addressDetail;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -73,8 +62,6 @@ public class AddressEntity {
         if (address != null ? !address.equals(that.address) : that.address != null) return false;
         if (lat != null ? !lat.equals(that.lat) : that.lat != null) return false;
         if (lon != null ? !lon.equals(that.lon) : that.lon != null) return false;
-        if (addressDetail != null ? !addressDetail.equals(that.addressDetail) : that.addressDetail != null)
-            return false;
 
         return true;
     }
@@ -85,7 +72,6 @@ public class AddressEntity {
         result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (lat != null ? lat.hashCode() : 0);
         result = 31 * result + (lon != null ? lon.hashCode() : 0);
-        result = 31 * result + (addressDetail != null ? addressDetail.hashCode() : 0);
         return result;
     }
 }
