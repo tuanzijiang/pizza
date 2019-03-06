@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Service
 public class AdminService {
+
     @Autowired
     private AdminJpaRepository adminJpaRepository;
 
