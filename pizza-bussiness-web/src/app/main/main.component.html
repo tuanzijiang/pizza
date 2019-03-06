@@ -17,32 +17,35 @@
 </div>
 <div class="main">
   <div class="side-nav">
-    <el-menu model="2" class="el-menu-vertical">
-      <el-submenu index="1">
+    <el-menu model="1-1" class="el-menu-vertical">
+      <el-submenu  index="1">
         <ng-template #title>
           <i class="el-icon-tickets"></i>订单中心
         </ng-template>
-        <el-menu-item index="1-1">订单列表</el-menu-item>
-        <el-menu-item index="1-2">订单统计</el-menu-item>
+        <el-menu-item  index="1-1" [to]="'/order-list'">订单列表</el-menu-item>
+        <el-menu-item  index="1-2" [to]="'/order-count'">订单统计</el-menu-item>
       </el-submenu>
-      <el-submenu index="2">
+      <el-submenu  index="2">
         <ng-template #title>
           <i class="el-icon-news"></i>系统管理
         </ng-template>
-        <el-menu-item index="2-1">用户管理</el-menu-item>
-        <el-menu-item index="2-2">菜单管理</el-menu-item>
-        <el-menu-item index="2-3">工厂管理</el-menu-item>
+        <el-menu-item  index="2-1" [to]="'/user-manage'">用户管理</el-menu-item>
+        <el-menu-item  index="2-2" [to]="'/menu-manage'">菜单管理</el-menu-item>
+        <el-menu-item  index="2-3" [to]="'/factory-manage'">工厂管理</el-menu-item>
       </el-submenu>
-      <el-menu-item index="3"><i class="el-icon-warning"></i>退单管理</el-menu-item>
-      <el-menu-item index="4"><i class="el-icon-setting"></i>配送人员管理</el-menu-item>
+      <el-menu-item index="3" [to]="'/chargeback'"><i class="el-icon-warning"></i>退单管理</el-menu-item>
+      <el-menu-item index="4" [to]="'/delivery'"><i class="el-icon-setting"></i>配送人员管理</el-menu-item>
       <el-submenu index="5">
         <ng-template #title>
           <i class="el-icon-goods"></i>库存管理
         </ng-template>
-        <el-menu-item index="5-1">原料管理</el-menu-item>
-        <el-menu-item index="5-2">订购管理</el-menu-item>
+        <el-menu-item  index="5-1" [to]="'/book-manage'">原料管理</el-menu-item>
+        <el-menu-item  index="5-2" [to]="'/material-manage'">订购管理</el-menu-item>
       </el-submenu>
-      <el-menu-item index="6"><i class="el-icon-menu"></i>操作记录</el-menu-item>
+      <el-menu-item  index="6" [to]="'/operation-record'"><i class="el-icon-menu"></i>操作记录</el-menu-item>
     </el-menu>
+  </div>
+  <div class="mainPage">
+    <router-outlet></router-outlet>
   </div>
 </div>

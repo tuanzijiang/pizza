@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {AuthService} from "../services/auth.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-main',
@@ -9,12 +10,13 @@ import {ActivatedRoute} from "@angular/router";
 export class MainComponent implements OnInit {
   userName: string;
   constructor(
-    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit() {
-    this.userName = this.route.snapshot.paramMap.get('userName');
-    console.log(this.userName);
+    this.userName = AuthService.UserName;
   }
 
+  goToOrderList() {
+  }
 }

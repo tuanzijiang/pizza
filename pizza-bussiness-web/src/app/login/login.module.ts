@@ -5,6 +5,7 @@ import {ButtonModule} from 'primeng/button';
 import {CUSTOM_ERROR_MESSAGES, NgBootstrapFormValidationModule} from "ng-bootstrap-form-validation";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {CUSTOM_ERRORS} from "../directives/custom-errors";
+import {LoginRoutingModule} from "./login-routing.module";
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import {CUSTOM_ERRORS} from "../directives/custom-errors";
     NgBootstrapFormValidationModule,
     FormsModule,
     ReactiveFormsModule,
+    LoginRoutingModule
   ],
   exports:[CardModule, ButtonModule],
   providers: [{
