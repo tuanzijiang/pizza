@@ -187,7 +187,7 @@ public class OrderService {
         pizza.setImg(menuEntity.getImage());
         pizza.setPrice(menuEntity.getPrice());
         pizza.setState(PizzaStatus.fromDbValue(menuEntity.getState()));
-        pizza.setTag(menuEntity.getTag());
+        // pizza.setTag(menuEntity.getTag());
 
         return pizza;
     }
