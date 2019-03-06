@@ -5,7 +5,10 @@ import { fetchOrdersApi } from '@src/services/api-fetch-orders';
 import { OrderStatus } from '@net/common';
 import { User, Pizza, Address, Order } from '@src/entity';
 import i18n from '@src/utils/i18n';
+import { MainAssetName } from '../../index';
+import { OpenType } from '@biz-components/PageAssets';
 import { formater, TIMEFOAMTER } from '@utils/time';
+import autobind from 'autobind-decorator';
 
 interface OrderListProps {
   pizzas: {
@@ -18,6 +21,7 @@ interface OrderListProps {
     [key: string]: Order;
   };
   orderIds: string[];
+  onPageChange(idx: MainAssetName, openType?: OpenType, ...extraInfo: any[]): void;
 }
 
 interface OrderListState { }
@@ -30,6 +34,14 @@ export default class OrderList extends React.PureComponent<OrderListProps, Order
       num: 10,
       status: OrderStatus.PAID,
     });
+  }
+
+  @autobind
+  handleDetailClick(orderId: string) {
+    return () => {
+      const { onPageChange } = this.props;
+      onPageChange(MainAssetName.OrderDetail, OpenType.RIGHT, orderId);
+    };
   }
 
   render() {
@@ -68,7 +80,11 @@ export default class OrderList extends React.PureComponent<OrderListProps, Order
                 </div>
                 <div className="orderList-itemOther">
                   {startTime}
-                  <span>{i18n('查看详情')}</span>
+                  <span
+                    onClick={this.handleDetailClick(orderId)}
+                  >
+                    {i18n('查看详情')}
+                  </span>
                 </div>
               </div>
             );
