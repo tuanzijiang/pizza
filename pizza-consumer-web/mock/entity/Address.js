@@ -1,4 +1,5 @@
 const { getRandomNum, getRandomStr } = require('../utils/random');
+const _ = require('lodash');
 
 class Address {
   constructor(address) {
@@ -20,12 +21,12 @@ class Address {
   static random() {
     return new Address({
       id: getRandomNum(5),
-      name: `name_${getRandomStr(2)}`,
-      sex: getRandomNum(1),
-      address: `address_${getRandomStr(2)}`,
-      addressDetail: `addressDetail_${getRandomStr(2)}`,
-      phone: `phone_${getRandomStr(2)}`,
-      tag: `tag_${getRandomStr(2)}`,
+      name: '章琪',
+      sex: _.random(0, 1),
+      address: '上海市 普陀区 中山北路 3663号',
+      addressDetail: '第五宿舍',
+      phone: '15317315332',
+      tag: '学校',
     });
   }
 }

@@ -2,6 +2,7 @@ import * as React from 'react';
 import PageAssets, { OpenType } from '@biz-components/PageAssets';
 import './index.scss';
 import Main from './Main';
+import OrderDetail from './OrderDetail';
 import { connect } from 'react-redux';
 import { page as pageActionCreator } from '@store/action';
 import autobind from 'autobind-decorator';
@@ -15,11 +16,13 @@ interface LoginAssetsProps {
 interface LoginAssetsState { }
 
 export enum MainAssetName {
-  Main = 'Main',
+  Main = 0,
+  OrderDetail = 1,
 }
 
 const config = {
   [MainAssetName.Main]: 0,
+  [MainAssetName.OrderDetail]: 1,
 };
 
 const handleTouchMove = (e: TouchEvent) => {
@@ -28,10 +31,11 @@ const handleTouchMove = (e: TouchEvent) => {
 
 export class MainAssets extends React.PureComponent<LoginAssetsProps, LoginAssetsState> {
   private pageAssetsEl: React.RefObject<PageAssets> = React.createRef();
+  private orderDetailEl: React.RefObject<OrderDetail> = React.createRef();
 
   constructor(props: LoginAssetsProps) {
     super(props);
-    this.state = { };
+    this.state = {};
   }
 
   @autobind
@@ -47,17 +51,30 @@ export class MainAssets extends React.PureComponent<LoginAssetsProps, LoginAsset
   componentWillUnmount() {
   }
 
+  @autobind
+  onPageChange(idx: number, ...extraInfo: any[]) {
+    if (idx === config[MainAssetName.OrderDetail] &&
+      this.orderDetailEl && this.orderDetailEl.current.componentDidEnter) {
+      this.orderDetailEl.current.componentDidEnter(...extraInfo);
+    }
+  }
+
   render() {
     const { mainStore, updateNavIdx, entityStore } = this.props;
     const { navIdx, orderIds } = mainStore;
     return (
       <div className="loginAssets">
-        <PageAssets ref={this.pageAssetsEl}>
+        <PageAssets init={MainAssetName.Main} ref={this.pageAssetsEl} changeCb={this.onPageChange}>
           <Main
             onPageChange={this.handlePageChange}
             navIdx={navIdx}
             orderIds={orderIds}
             updateNavIdx={updateNavIdx}
+            entityStore={entityStore}
+          />
+          <OrderDetail
+            ref={this.orderDetailEl}
+            onPageChange={this.handlePageChange}
             entityStore={entityStore}
           />
         </PageAssets>

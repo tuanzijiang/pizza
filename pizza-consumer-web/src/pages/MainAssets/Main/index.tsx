@@ -7,7 +7,7 @@ import Menu from './Menu';
 import Shopping from './Shopping';
 import Me from './Me';
 import OrderList from './OrderList';
-import { Order, CART_ORDER_ID } from '@entity/Order';
+import { CART_ORDER_ID } from '@entity/Order';
 import { OpenType } from '@biz-components/PageAssets';
 import i18n from '@utils/i18n';
 import { MainAssetName } from '../index';
@@ -53,7 +53,7 @@ export default class Login extends React.PureComponent<MainProps, MainState> {
   }
 
   render() {
-    const { navIdx, entityStore, orderIds } = this.props;
+    const { navIdx, entityStore, orderIds, onPageChange } = this.props;
     const { pizzas, addresses, orders, user } = entityStore;
     const menu = orders[CART_ORDER_ID];
 
@@ -84,7 +84,13 @@ export default class Login extends React.PureComponent<MainProps, MainState> {
             'main-pageWrapper': true,
             'main-pageWrapper_active': navIdx === 2,
           })}>
-            <OrderList pizzas={pizzas} addresses={addresses} orders={orders} orderIds={orderIds} />
+            <OrderList
+              pizzas={pizzas}
+              addresses={addresses}
+              orders={orders}
+              orderIds={orderIds}
+              onPageChange={onPageChange}
+            />
           </div>
           <div className={cx({
             'main-pageWrapper': true,
