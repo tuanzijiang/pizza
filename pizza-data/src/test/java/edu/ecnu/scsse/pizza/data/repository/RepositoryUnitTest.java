@@ -1,4 +1,4 @@
-package edu.ecnu.scsse.pizza.data;
+package edu.ecnu.scsse.pizza.data.repository;
 
 import edu.ecnu.scsse.pizza.data.domain.AddressEntity;
 import edu.ecnu.scsse.pizza.data.repository.AddressJpaRepository;

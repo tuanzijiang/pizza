@@ -5,6 +5,7 @@ import java.util.Optional;
 
 public enum PizzaTag {
 
+    UNKNOWN(-1, "披萨")
     // todo - add pizza tags !
     ;
 
@@ -26,17 +27,16 @@ public enum PizzaTag {
     }
 
     public static PizzaTag fromDbValue(Integer dbStatusValue) {
-        if (dbStatusValue == null) {
-            return null;
-        }
-        Optional<PizzaTag> pizzaTag =  Arrays.stream(PizzaTag.values())
-                .filter(s -> s.dbValue == dbStatusValue)
-                .findFirst();
+        if (dbStatusValue != null) {
+            Optional<PizzaTag> pizzaTag =  Arrays.stream(PizzaTag.values())
+                    .filter(s -> s.dbValue == dbStatusValue)
+                    .findFirst();
 
-        if (pizzaTag.isPresent()) {
-            return pizzaTag.get();
-        } else {
-            return null;
+            if (pizzaTag.isPresent()) {
+                return pizzaTag.get();
+            }
         }
+
+        return UNKNOWN;
     }
 }
