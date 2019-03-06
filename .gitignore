@@ -35,6 +35,7 @@ target
 
 # Vscode project file
 .history
+.todo
 /DS_Store
 /node_modules
 /.idea

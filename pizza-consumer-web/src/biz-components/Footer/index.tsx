@@ -10,7 +10,7 @@ export interface FooterProps {
 export interface FooterState { }
 
 const handleTouchMove = (e: TouchEvent) => {
-  e.preventDefault();
+  // e.preventDefault();
 };
 
 export default class Footer extends React.PureComponent<FooterProps, FooterState> {
