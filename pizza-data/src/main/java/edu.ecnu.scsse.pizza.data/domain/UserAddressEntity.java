@@ -10,6 +10,9 @@ public class UserAddressEntity {
     private Integer userId;
     private String phone;
     private String name;
+    private String addressDetail;
+    private Integer sex;
+    private Integer tag;
 
     @Id
     @Column(name = "id")
@@ -61,6 +64,36 @@ public class UserAddressEntity {
         this.name = name;
     }
 
+    @Basic
+    @Column(name = "address_detail")
+    public String getAddressDetail() {
+        return addressDetail;
+    }
+
+    public void setAddressDetail(String addressDetail) {
+        this.addressDetail = addressDetail;
+    }
+
+    @Basic
+    @Column(name = "sex")
+    public Integer getSex() {
+        return sex;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
+    }
+
+    @Basic
+    @Column(name = "tag")
+    public Integer getTag() {
+        return tag;
+    }
+
+    public void setTag(Integer tag) {
+        this.tag = tag;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -73,6 +106,10 @@ public class UserAddressEntity {
         if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
         if (phone != null ? !phone.equals(that.phone) : that.phone != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (addressDetail != null ? !addressDetail.equals(that.addressDetail) : that.addressDetail != null)
+            return false;
+        if (sex != null ? !sex.equals(that.sex) : that.sex != null) return false;
+        if (tag != null ? !tag.equals(that.tag) : that.tag != null) return false;
 
         return true;
     }
@@ -84,6 +121,9 @@ public class UserAddressEntity {
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (addressDetail != null ? addressDetail.hashCode() : 0);
+        result = 31 * result + (sex != null ? sex.hashCode() : 0);
+        result = 31 * result + (tag != null ? tag.hashCode() : 0);
         return result;
     }
 }
