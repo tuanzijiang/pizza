@@ -20,7 +20,7 @@ export interface BannerProps {
 export interface BannerState { }
 
 const handleTouchMove = (e: TouchEvent) => {
-  e.preventDefault();
+  // e.preventDefault();
 };
 
 export default class Banner extends React.PureComponent<BannerProps, BannerState> {

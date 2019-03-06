@@ -56,7 +56,7 @@ export default class Me extends React.PureComponent<MeProps, MeState> {
           </div>
           <div className="me-contentItem">
             <div className="me-contentItemTitle">
-              {i18n('收获地址')}
+              {i18n('收货地址')}
             </div>
             <div className="me-contentItemInfo" />
             <Icon name="right" classnames="me-iconRight" />
