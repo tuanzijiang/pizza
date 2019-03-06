@@ -7,7 +7,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserJpaRepository extends JpaRepository<UserEntity,Integer> {
-    List<UserEntity> getAll();
-
     Optional<UserEntity> findByEmail(String email);
 }
