@@ -11,7 +11,7 @@ import { CART_ORDER_ID } from '@entity/Order';
 import { OpenType } from '@biz-components/PageAssets';
 import i18n from '@utils/i18n';
 import { MainAssetName } from '../index';
-import { vw, blue_2, white_1 } from '@ui/base';
+import { vw } from '@ui/base';
 import Icon from '@biz-components/Icon';
 import autobind from 'autobind-decorator';
 import { neetStatusBar } from '@utils/device';
@@ -78,7 +78,11 @@ export default class Login extends React.PureComponent<MainProps, MainState> {
             'main-pageWrapper': true,
             'main-pageWrapper_active': navIdx === 1,
           })}>
-            <Shopping pizzas={pizzas} menu={menu} />
+            <Shopping
+              pizzas={pizzas}
+              menu={menu}
+              onPageChange={onPageChange}
+            />
           </div>
           <div className={cx({
             'main-pageWrapper': true,

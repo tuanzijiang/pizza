@@ -6,8 +6,11 @@ import i18n from '@src/utils/i18n';
 import autobind from 'autobind-decorator';
 import { CART_ORDER_ID } from '@entity/Order';
 import { updateOrderApi } from '@services/api-update-order';
+import { MainAssetName } from '../..';
+import { OpenType } from '@biz-components/PageAssets';
 
 interface ShoppingCartProps {
+  onPageChange(idx: MainAssetName, openType?: OpenType, ...extraInfo: any[]): void;
   menu: Order;
   pizzas: Pizza[];
 }
@@ -27,6 +30,12 @@ export default class Shopping extends React.PureComponent<ShoppingCartProps, Sho
         orderId: CART_ORDER_ID,
       });
     };
+  }
+
+  @autobind
+  handleSettlementClick() {
+    const { onPageChange } = this.props;
+    onPageChange(MainAssetName.Settlement, OpenType.RIGHT);
   }
 
   renderOrder() {
@@ -82,11 +91,39 @@ export default class Shopping extends React.PureComponent<ShoppingCartProps, Sho
   }
 
   render() {
-    const { menu } = this.props;
+    const { menu, pizzas } = this.props;
+    let price = 0;
+    if (menu) {
+      const { num } = menu;
+      price = Object.entries(num).reduce((prev, [pizzaId, count]) => {
+        const currPizza = pizzas[parseInt(pizzaId, 10)];
+        const perPrice = currPizza.price;
+        return prev + perPrice * count;
+      }, 0);
+    }
 
     return (
       <div className="shoppingCart-wrapper">
-        {menu && this.renderOrder()}
+        <div className="shoppingCart-content">
+          {menu && this.renderOrder()}
+        </div>
+        <div className="shoppingCart-sum">
+          <span className="shoppingCart-prompt">
+            {i18n('应付合计:')}
+          </span>
+          <span className="shoppingCart-unit">
+            {i18n('¥')}
+          </span>
+          <span className="shoppingCart-totalPrice">
+            {price}
+          </span>
+          <span
+            className="shoppingCart-order"
+            onClick={this.handleSettlementClick}
+          >
+            {i18n('去结算')}
+          </span>
+        </div>
       </div>
     );
   }
