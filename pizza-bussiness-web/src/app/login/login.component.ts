@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ErrorMessage} from "ng-bootstrap-form-validation";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, NavigationExtras, Router} from "@angular/router";
+import {AuthService} from "../services/auth.service";
 
 @Component({
   selector: 'app-login',
@@ -23,7 +24,8 @@ export class LoginComponent implements OnInit {
   ];
 
   constructor(
-    private router: Router
+    private router: Router,
+    public authService: AuthService
   ) {
   }
 
@@ -41,9 +43,20 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.buttonDisabled = true;
-    console.log(this.formGroup);
-    this.router.navigate(['../main', this.userName])
-  }
+    this.authService.login(this.userName).subscribe(
+      () => {
+        let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/order-list';
+        // Set our navigation extras object
+        // that passes on our global query params and fragment
+        let navigationExtras: NavigationExtras = {
+          queryParamsHandling: 'preserve',
+          preserveFragment: true
+        };
+
+        // Redirect the user
+        this.router.navigate([redirect], navigationExtras);
+      }
+    );}
 
   onReset() {
     this.formGroup.reset();
