@@ -2,6 +2,7 @@ package edu.ecnu.scsse.pizza.data.repository;
 
 import edu.ecnu.scsse.pizza.data.domain.OrderEntity;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -14,9 +15,14 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
 
     Optional<OrderEntity> findByOrderUuid(String orderId);
 
-    List<OrderEntity> findByUserIdAndStateInAndCommitTimeAfter(Integer userId,
+    @Query("select id from OrderEntity where orderUuid=?1")
+    Optional<Integer> findIdByOrderUuid(String orderId);
+
+    Optional<OrderEntity> findFirstByUserIdAndStateOrderByIdDesc(Integer userId, Integer state);
+
+    List<OrderEntity> findByUserIdAndStateInAndIdGreaterThan(Integer userId,
                                                                List<Integer> states,
-                                                               Date commitTime,
-                                                               PageRequest pageRequest);
+                                                               Integer lastOrderId,
+                                                               Pageable pageable);
 
 }

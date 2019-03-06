@@ -11,6 +11,8 @@
 
     <artifactId>pizza-data</artifactId>
 
+    <packaging>jar</packaging>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
