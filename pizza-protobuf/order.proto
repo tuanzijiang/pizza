@@ -80,9 +80,6 @@ message SendOrderResp {
 
 // 更新当前用户的菜单
 // [post] /updateOrder
-// note: 能更新的菜单只能是cart，需要order_id？支付超时？
-// note: 配送信息是要能查看骑手电话吗？
-// note: 标签要不要弄，要怎么弄
 
 message UpdateOrderReq {
   string order_id = 1;
@@ -103,4 +100,17 @@ message CancelOrderReq {
 
 message CancelOrderResp {
   ResultType result_type = 1;
+}
+
+// 查看电话
+// [get] /fetchPhone
+message FetchPhoneReq {
+  string order_id = 1;
+}
+
+message FetchPhoneResp {
+  ResultType result_type = 1;
+  string deliveryman_phone = 2;
+  string shop_phone = 3;
+  string service_phone = 4;
 }
