@@ -31,7 +31,7 @@ public class UserManageService {
 
     public UserManageResponse getUserList(){
         UserManageResponse userManageResponse;
-        List<UserEntity> userEntityList = userJpaRepository.getAll();
+        List<UserEntity> userEntityList = userJpaRepository.findAll();
         userManageResponse = new UserManageResponse();
         List<User> userList = userEntityList.stream().map(this::convert).collect(Collectors.toList());
         userManageResponse.setUserList(userList);

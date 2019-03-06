@@ -17,6 +17,11 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
+    /**
+    * 管理员登录
+    * @param loginRequest
+    * @return
+    */
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     @ResponseBody
     public LoginResponse adminLogin(@RequestBody LoginRequest loginRequest){
