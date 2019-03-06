@@ -15,6 +15,9 @@ public class UserManageController {
     @Autowired
     private UserManageService userManageService;
 
+    /**
+     * 查看用户信息列表
+     */
     @RequestMapping(value = "/getUserList",method = RequestMethod.GET)
     @ResponseBody
     public UserManageResponse adminLogin(){

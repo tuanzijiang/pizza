@@ -5,7 +5,9 @@ import edu.ecnu.scsse.pizza.bussiness.server.exception.BusinessServerException;
 public class LoginResponse extends BaseResponse{
     private int adminId;
 
-    public LoginResponse(){}
+    public LoginResponse(){
+        this.adminId = -1;
+    }
 
     public LoginResponse(int adminId) {
         this.adminId = adminId;
@@ -13,6 +15,7 @@ public class LoginResponse extends BaseResponse{
 
     public LoginResponse(BusinessServerException e) {
         super(e);
+        this.adminId = -1;
     }
 
     public int getAdminId() {

@@ -4,6 +4,8 @@ public class LoginRequest{
     private String adminName;
     private String password;
 
+    public LoginRequest(){}
+
     public LoginRequest(String adminName, String password) {
         this.adminName = adminName;
         this.password = password;
