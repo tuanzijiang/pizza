@@ -1,0 +1,22 @@
+.login-page {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  background-image: url("../../assets/images/login_bg.png");
+  .login-card {
+    margin: 180px auto;
+    width: 800px;
+    display: block;
+  }
+}
+
+.login-btn {
+  margin-right: .25em;
+  width: 100px;
+}
+
+.login-group {
+  width: 100%;
+  margin: 0;
+}
