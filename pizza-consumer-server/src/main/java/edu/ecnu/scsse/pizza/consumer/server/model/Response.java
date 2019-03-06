@@ -13,6 +13,10 @@ public abstract class Response {
     public Response() {}
 
     public Response(ConsumerServerException e) {
+        this.setException(e);
+    }
+
+    public void setException(ConsumerServerException e) {
         this.setResultType(ResultType.FAILURE);
         this.setErrorMsg(e.getHintMessage());
         this.setCause(e);

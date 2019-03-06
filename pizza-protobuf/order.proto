@@ -64,6 +64,7 @@ message FetchMenuReq {
 message FetchMenuResp {
   ResultType result_type = 1;
   repeated Pizza pizzas = 2;
+  Order cart = 3;
 }
 
 // 下单

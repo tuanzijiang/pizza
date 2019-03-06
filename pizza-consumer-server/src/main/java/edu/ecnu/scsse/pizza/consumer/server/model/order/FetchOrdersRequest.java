@@ -2,6 +2,8 @@ package edu.ecnu.scsse.pizza.consumer.server.model.order;
 
 import edu.ecnu.scsse.pizza.data.enums.OrderStatus;
 
+import java.util.List;
+
 public class FetchOrdersRequest {
 
     private Integer userId;
@@ -10,7 +12,7 @@ public class FetchOrdersRequest {
 
     private Integer num;
 
-    private OrderStatus status;
+    private List<OrderStatus> status;
 
     public Integer getUserId() {
         return userId;
@@ -36,11 +38,11 @@ public class FetchOrdersRequest {
         this.num = num;
     }
 
-    public OrderStatus getStatus() {
+    public List<OrderStatus> getStatus() {
         return status;
     }
 
-    public void setStatus(OrderStatus status) {
+    public void setStatus(List<OrderStatus> status) {
         this.status = status;
     }
 }
