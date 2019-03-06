@@ -18,6 +18,16 @@ public class User {
     private String latestLoginTime;
 
     public User() {
+        this.id="";
+        this.image = "";
+        this.name = "";
+        this.email = "";
+        this.phone = "";
+        this.weChat = "";
+        this.defaultUserAddress = "";
+        this.city = "";
+        this.birthday = "";
+        this.latestLoginTime = "";
     }
     public User(UserEntity userEntity){
         this.id = String.valueOf(userEntity.getId());

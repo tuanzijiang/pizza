@@ -34,9 +34,13 @@ public class AdminService {
                 AdminEntity admin = adminEntity.get();
                 if(admin.getPassword().equals(loginRequest.getPassword())){
                     loginResponse.setResultType(ResultType.SUCCESS);
+                    loginResponse.setAdminId(admin.getId());
+                    log.info("Admin {} success to login.",admin.getUsername());
                 }
                 else{
                     loginResponse.setResultType(ResultType.FAILURE);
+                    loginResponse.setErrorMsg("密码错误");
+
                 }
             /*} catch (BusinessServerException e) {
                 loginResponse = new LoginResponse(e);
@@ -45,7 +49,7 @@ public class AdminService {
         } else {
             NotFoundException e = new NotFoundException(String.format("Admin with username %s is not found.", adminName));
             loginResponse = new LoginResponse(e);
-            log.warn("Fail to find the admin with username{}.", adminName, e);
+            log.warn("Fail to find the admin with username {}.", adminName, e);
         }
         return loginResponse;
     }
