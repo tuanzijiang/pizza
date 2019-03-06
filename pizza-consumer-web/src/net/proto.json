@@ -31,6 +31,10 @@
             "img": {
               "type": "string",
               "id": 7
+            },
+            "address": {
+              "type": "Address",
+              "id": 8
             }
           }
         },
@@ -443,6 +447,34 @@
             "resultType": {
               "type": "ResultType",
               "id": 1
+            }
+          }
+        },
+        "FetchPhoneReq": {
+          "fields": {
+            "orderId": {
+              "type": "string",
+              "id": 1
+            }
+          }
+        },
+        "FetchPhoneResp": {
+          "fields": {
+            "resultType": {
+              "type": "ResultType",
+              "id": 1
+            },
+            "deliverymanPhone": {
+              "type": "string",
+              "id": 2
+            },
+            "shopPhone": {
+              "type": "string",
+              "id": 3
+            },
+            "servicePhone": {
+              "type": "string",
+              "id": 4
             }
           }
         }

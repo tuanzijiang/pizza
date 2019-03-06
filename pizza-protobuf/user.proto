@@ -13,6 +13,7 @@ message User {
   int64 birthday = 5;
   string city = 6;
   string img = 7;
+  Address address = 8;
 }
 
 // 获取当前用户信息
