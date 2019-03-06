@@ -1,17 +1,17 @@
 package edu.ecnu.scsse.pizza.consumer.server.controller;
 
 import edu.ecnu.scsse.pizza.consumer.server.exception.ConsumerServerException;
+import edu.ecnu.scsse.pizza.consumer.server.exception.IllegalArgumentException;
+import edu.ecnu.scsse.pizza.consumer.server.exception.NotFoundException;
 import edu.ecnu.scsse.pizza.consumer.server.model.Response;
 import edu.ecnu.scsse.pizza.consumer.server.model.ResultType;
-import edu.ecnu.scsse.pizza.consumer.server.model.order.FetchOrderRequest;
-import edu.ecnu.scsse.pizza.consumer.server.model.order.FetchOrderResponse;
-import edu.ecnu.scsse.pizza.consumer.server.model.order.FetchOrdersRequest;
-import edu.ecnu.scsse.pizza.consumer.server.model.order.FetchOrdersResponse;
+import edu.ecnu.scsse.pizza.consumer.server.model.order.*;
 import edu.ecnu.scsse.pizza.consumer.server.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -27,10 +27,10 @@ public class OrderController {
     @RequestMapping("/fetchOrder")
     @ResponseBody
     public FetchOrderResponse fetchOrder(@RequestBody FetchOrderRequest request) {
-        if (request.getOrderId() != null) {
+        try {
             return orderService.fetchOrder(request.getOrderId());
-        } else {
-            return orderService.createCartOrder(request.getUserId());
+        } catch (ConsumerServerException e) {
+            return new FetchOrderResponse(e);
         }
     }
 
@@ -40,8 +40,29 @@ public class OrderController {
     @RequestMapping("/fetchOrders")
     @ResponseBody
     public FetchOrdersResponse fetchOrders(@RequestBody FetchOrdersRequest request) {
-        // todo
-        return new FetchOrdersResponse();
+        try {
+            return orderService.fetchOrders(request.getUserId(),
+                    request.getStatus(),
+                    request.getLastOrderId(),
+                    request.getNum());
+        } catch (NotFoundException | IllegalArgumentException e) {
+            return new FetchOrdersResponse(e);
+        }
     }
 
+    /**
+     * 获取菜单和购物车
+     */
+    @RequestMapping("/fetchMenu")
+    @ResponseBody
+    public FetchMenuResponse fetchMenu(@RequestBody FetchMenuRequest request) {
+        FetchMenuResponse response = new FetchMenuResponse();
+        response.setPizzas(orderService.getAllMenu());
+        try {
+            response.setCart(orderService.getCartOrder(request.getUserId()));
+        } catch (IllegalArgumentException e) {
+            response.setException(e);
+        }
+        return response;
+    }
 }

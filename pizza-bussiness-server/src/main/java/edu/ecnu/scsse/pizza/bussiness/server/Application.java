@@ -1,11 +1,12 @@
 package edu.ecnu.scsse.pizza.bussiness.server;
 
+import edu.ecnu.scsse.pizza.data.ScanConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackageClasses = ScanConfiguration.class)
 public class Application extends SpringBootServletInitializer {
 
     @Override

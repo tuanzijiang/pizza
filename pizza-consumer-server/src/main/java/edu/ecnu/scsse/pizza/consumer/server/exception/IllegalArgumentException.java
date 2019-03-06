@@ -4,6 +4,10 @@ import static edu.ecnu.scsse.pizza.consumer.server.exception.ExceptionType.BUSSI
 
 public class IllegalArgumentException extends ConsumerServerException {
 
+    public IllegalArgumentException(String message) {
+        super(BUSSINESS, "非法参数！", message);
+    }
+
     public IllegalArgumentException(String message, Throwable cause) {
         super(BUSSINESS, "非法参数！", message, cause);
     }
