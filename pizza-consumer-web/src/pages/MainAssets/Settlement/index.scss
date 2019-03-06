@@ -1,0 +1,142 @@
+@import '~@ui/base.scss';
+.settlement-wrapper {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: $white_3;
+}
+
+.settlement-middle {
+  color: $white_2;
+  font-size: vw(16);
+}
+
+.settlement-content {
+  width: 100%;
+  position: relative;
+  top: $banner_height;
+  height: calc(100% - #{$banner_height});
+  overflow: auto;
+}
+
+.settlement-content_status {
+  top: $banner_height_status;
+  height: calc(100% - #{$banner_height_status});
+}
+
+.settlement-pizzas {
+  box-sizing: border-box;
+  width: 100%;
+  padding: vw(10);
+  background: $white_1;
+  margin: 0 0 vw(10);
+}
+
+.settlement-pizzasTitle {
+  font-size: vw(14);
+  color: $gray_5;
+  font-weight: 600;
+  padding: 0 0 vw(7) 0;
+  border-bottom: vw(1) solid $white_3;
+}
+
+.settlement-pizzaItem {
+  box-sizing: border-box;
+  background: $white_1;
+  height: vw(70);
+  width: 100%;
+  padding: vw(10) 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.settlement-pizzaItemImage {
+  height: vw(50);
+  width: vw(50);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 vw(10) 0 0;
+  background: $gray_1;
+  border-radius: vw(3);
+  flex: 0 0 auto;
+}
+
+.settlement-pizzaItemPisa {
+  font-size: vw(50);
+  color: $white_1;
+}
+
+.settlement-pizzaItemName {
+  color: $gray_5;
+  font-size: vw(14);
+  width: vw(140);
+  overflow: hidden;
+  margin: 0 vw(5) 0 0;
+  white-space: nowrap;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  font-weight: 400;
+}
+
+.settlement-pizzaItemNum {
+  width: vw(30);
+  font-size: vw(14);
+  color: $gray_5;
+  span {
+    font-size: vw(12);
+  }
+}
+
+.settlement-pizzaItemPrice {
+  width: vw(30);
+  font-size: vw(14);
+  color: $gray_5;
+  span {
+    font-size: vw(12);
+  }
+}
+
+.settlement-sum {
+  height: vw(50);
+  width: 100%;
+  background: $white_1;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.settlement-prompt {
+  padding: 0 0 0 vw(10);
+  font-size: vw(14);
+  color: $black_1;
+}
+
+.settlement-totalPrice {
+  font-size: vw(16);
+  color: $black_1;
+  flex: 1 1 auto;
+}
+
+.settlement-unit {
+  padding: 0 vw(5) 0 vw(10);
+  font-size: vw(16);
+  color: $black_1;
+}
+
+.settlement-order {
+  width: vw(120);
+  height: 100%;
+  color: $white_1;
+  background: $green_4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  -webkit-tap-highlight-color: transparent;
+}
