@@ -1,46 +1,44 @@
 package edu.ecnu.scsse.pizza.bussiness.server.model;
 
-import java.io.Serializable;
+import edu.ecnu.scsse.pizza.bussiness.server.exception.BusinessServerException;
 
-/**
- * File name：BaseJson
- * Author: Administrator
- * Description：JSON基础结构，包含响应码和响应消息，反馈给前台页面
- * Modify History:
- */
-public abstract class BaseResponse implements Serializable, Cloneable {
+public abstract class BaseResponse{
 
-    private String returnCode;//响应代码
-    private String errorMessage;//错误消息
-    private Object obj;
+    private ResultType resultType = ResultType.SUCCESS;
 
-    public BaseResponse() {
-        this.returnCode = "";
-        this.errorMessage = "成功";
+    private String errorMsg;
+
+    private Throwable cause;
+
+    public BaseResponse() {}
+
+    public BaseResponse(BusinessServerException e) {
+        this.setResultType(ResultType.FAILURE);
+        this.setErrorMsg(e.getHintMessage());
+        this.setCause(e);
     }
 
-
-    public String getReturnCode() {
-        return returnCode;
+    public ResultType getResultType() {
+        return resultType;
     }
 
-    public void setReturnCode(String returnCode) {
-        this.returnCode = returnCode;
+    public void setResultType(ResultType resultType) {
+        this.resultType = resultType;
     }
 
-    public String getErrorMessage() {
-        return errorMessage;
+    public String getErrorMsg() {
+        return errorMsg;
     }
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
     }
 
-    public Object getObj() {
-        return obj;
+    public Throwable getCause() {
+        return cause;
     }
 
-    public void setObj(Object obj) {
-        this.obj = obj;
+    public void setCause(Throwable cause) {
+        this.cause = cause;
     }
 }
