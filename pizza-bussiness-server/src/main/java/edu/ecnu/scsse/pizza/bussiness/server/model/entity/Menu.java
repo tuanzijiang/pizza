@@ -2,6 +2,8 @@ package edu.ecnu.scsse.pizza.bussiness.server.model.entity;
 
 import edu.ecnu.scsse.pizza.data.enums.PizzaStatus;
 
+import edu.ecnu.scsse.pizza.data.enums.PizzaStatus;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +17,17 @@ public class Menu {
     private int tag;
     private int count;
     private Map<Ingredient,Integer> ingredientIntegerMap;
+
+    public Menu() {
+        this.id = "";
+        this.name = "";
+        this.image = "";
+        this.description = "";
+        this.price = 0.0;
+        this.state = PizzaStatus.IN_SALE;
+        this.tag = -1;
+        this.count = 0;
+    }
 
     public String getId() {
         return id;
