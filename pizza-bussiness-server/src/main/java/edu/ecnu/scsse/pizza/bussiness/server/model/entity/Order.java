@@ -3,6 +3,7 @@ package edu.ecnu.scsse.pizza.bussiness.server.model.entity;
 import edu.ecnu.scsse.pizza.data.enums.OrderStatus;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Order {
@@ -11,7 +12,7 @@ public class Order {
     private String receivePhone;
     private String receiveAddress;
     private List<Menu> menuList;
-    private Double totalAmount;
+    private double totalAmount;
     private String buyPhone;
     private String commitTime;
     private String shopId;
@@ -22,6 +23,12 @@ public class Order {
     private String startDeliverTime;
     private String arriveTime;
     private OrderStatus state;
+
+    private Point mapPoint;
+    private int deliverPriority;
+    private Date finishTime;
+    private int latestLeaveTime;
+    
 
     public Order() {
         this.orderId = "";
