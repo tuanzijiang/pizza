@@ -14,6 +14,13 @@ import {MainComponent} from "./main.component";
 import {MainRoutingModule} from "./main-routing.module";
 import {BrowserModule} from "@angular/platform-browser";
 import {ElModule} from "element-angular/release/element-angular.module";
+import {TableModule} from 'primeng/table';
+import {MultiSelectModule} from "primeng/multiselect";
+import {InputTextModule} from 'primeng/inputtext';
+import {ButtonModule} from "primeng/button";
+import {DialogModule} from "primeng/dialog";
+import {CalendarModule, CardModule, DropdownModule} from "primeng/primeng";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -30,9 +37,18 @@ import {ElModule} from "element-angular/release/element-angular.module";
     OperationRecordComponent],
   imports: [
     BrowserModule,
+    FormsModule,
     CommonModule,
     ElModule,
-    MainRoutingModule
+    MainRoutingModule,
+    TableModule,
+    MultiSelectModule,
+    InputTextModule,
+    ButtonModule,
+    DialogModule,
+    DropdownModule,
+    CardModule,
+    CalendarModule
   ],
 })
 export class MainModule {

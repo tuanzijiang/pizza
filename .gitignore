@@ -32,4 +32,13 @@ hs_err_pid*
 out
 gen
 target
+
+# Vscode project file
+.history
+.todo
+/DS_Store
+/node_modules
+.idea
+/README.md
+code
 pizza-bussiness-server/pom.xml

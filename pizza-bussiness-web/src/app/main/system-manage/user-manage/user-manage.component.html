@@ -1,3 +1,50 @@
-<p>
-  user-manage works!
-</p>
+<div class="pt-lg-2 pl-lg-3 pr-lg-3 user-manage-page">
+  <div class="user-manage-title">
+    <h5>用户信息</h5>
+  </div>
+  <p-table #dt [value]="userList" [paginator]="true" [rows]="15"
+           [globalFilterFields]="['nickname', 'email', 'phone', 'receive_address', 'total_amount', 'create_time', 'state', 'operation']">
+    <ng-template pTemplate="caption">
+      <div style="text-align: right">
+        <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+        <input type="text" pInputText size="50" placeholder="搜索..."
+               (input)="dt.filterGlobal($event.target.value, 'contains')" style="width:auto">
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header" filterStyle="display:none">
+      <tr>
+        <th *ngFor="let col of cols" [pSortableColumn]="col.field">
+          {{col.header}}
+          <p-sortIcon *ngIf="col.field != 'operation'" [field]="col.field" ariaLabel="Activate to sort"
+                      ariaLabelDesc="Activate to sort in descending order"
+                      ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+        </th>
+        <th> 查看详情</th>
+      </tr>
+      <tr>
+        <th *ngFor="let col of cols" [ngSwitch]="col.field">
+          <input *ngSwitchCase="'order_id'" pInputText type="text" class="order-filter"
+                 (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+          <input *ngSwitchCase="'receive_name'" pInputText type="text" class="order-filter"
+                 (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+          <input *ngSwitchCase="'phone'" pInputText type="text" class="order-filter"
+                 (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+          <input *ngSwitchCase="'receive_address'" pInputText type="text" class="order-filter"
+                 (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+          <p-dropdown *ngSwitchCase="'state'" [options]="states" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
+        </th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-orders>
+      <tr>
+        <td *ngFor="let col of cols">
+          {{orders[col.field]}}
+        </td>
+        <td>
+          <p-button icon="pi pi-search" (click)="selectCarWithButton(orders)"></p-button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
