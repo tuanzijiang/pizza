@@ -13,7 +13,7 @@ public class Order {
     private String receivePhone;
     private String receiveAddress;
     private List<Menu> menuList;
-    private Double totalAmount;
+    private double totalAmount;
     private String buyPhone;
     private String commitTime;
     private String shopId;
@@ -27,11 +27,10 @@ public class Order {
 
     private int id;
     private Point mapPoint;
-    private int driver_id;
-    private Date commit_time;
-    private int delieve_order;
-    private Date finish_time;
-    private int latest_leave_time;
+    private int deliverPriority;
+    private Date finishTime;
+    private int latestLeaveTime;
+    
 
     public Order() {
         this.orderId = "";
