@@ -18,6 +18,9 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
     @Query("select id from OrderEntity where orderUuid=?1")
     Optional<Integer> findIdByOrderUuid(String orderId);
 
+    @Query("select id from OrderEntity where orderUuid=?1 and state=1")
+    Optional<Integer> findCartIdByOrderUuid(String orderId);
+
     Optional<OrderEntity> findFirstByUserIdAndStateOrderByIdDesc(Integer userId, Integer state);
 
     List<OrderEntity> findByUserIdAndStateInAndIdGreaterThan(Integer userId,
