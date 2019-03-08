@@ -11,6 +11,11 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.entity.SaleStatus;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
 import edu.ecnu.scsse.pizza.data.domain.*;
 import edu.ecnu.scsse.pizza.data.enums.OrderStatus;
+import edu.ecnu.scsse.pizza.bussiness.server.model.OrderManageResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order;
+import edu.ecnu.scsse.pizza.bussiness.server.model.entity.User;
+import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
+import edu.ecnu.scsse.pizza.data.domain.*;
 import edu.ecnu.scsse.pizza.data.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +26,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -130,6 +138,13 @@ public class OrderService {
         DateFormat df = new SimpleDateFormat(commitTimePattern);
 
         order.setOrderId(String.valueOf(orderEntity.getId()));
+
+        //设置购买人电话
+        Optional<UserEntity> userEntityOptional = userJpaRepository.findById(orderEntity.getUserId());
+        if(userEntityOptional.isPresent()) {
+            UserEntity userEntity = userEntityOptional.get();
+            order.setBuyPhone(userEntity.getPhone());
+        }
 
         //设置收货人信息
         Optional<UserAddressEntity> userAddressEntityOptional = userAddressJpaRepository.findByUserIdAndAddressId(orderEntity.getUserId(),orderEntity.getAddressId());
