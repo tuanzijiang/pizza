@@ -64,11 +64,10 @@ public class OrderService {
      * @param orderId order uuid.
      * @return order
      */
-    public FetchOrderResponse fetchOrder(String orderId) throws ConsumerServerException {
+    public Order fetchOrder(String orderId) throws ConsumerServerException {
         Optional<OrderEntity> orderEntityOptional = orderJpaRepository.findByOrderUuid(orderId);
         if (orderEntityOptional.isPresent()){
             OrderEntity entity = orderEntityOptional.get();
-            FetchOrderResponse response = new FetchOrderResponse();
             Order order = this.convert(entity);
             // query Address
             Future queryFuture = WORKER.submit(() -> this.supplementAddress(entity, order));
@@ -83,8 +82,7 @@ public class OrderService {
                         , e);
             }
 
-            response.setOrder(order);
-            return response;
+            return order;
         } else {
             throw new NotFoundException(String.format("Order with order id %s is not found.", orderId));
         }
@@ -97,7 +95,7 @@ public class OrderService {
      * @param orderStatuses order status list
      * @return order
      */
-    public FetchOrdersResponse fetchOrders(Integer userId, List<OrderStatus> orderStatuses, String lastOrderUuid, Integer count) throws NotFoundException, IllegalArgumentException {
+    public List<Order> fetchOrders(Integer userId, List<OrderStatus> orderStatuses, String lastOrderUuid, Integer count) throws NotFoundException, IllegalArgumentException {
         // arg check
         if (userId == null) {
             throw new IllegalArgumentException("userId can't be null.", null);
@@ -118,18 +116,15 @@ public class OrderService {
                     GSON.toJson(orderStatuses.toString())));
         }
 
-        FetchOrdersResponse response = new FetchOrdersResponse();
         Optional<Integer> lastOrderId = lastOrderUuid == null ?  Optional.of(0):
                 orderJpaRepository.findIdByOrderUuid(lastOrderUuid);
         if (lastOrderId.isPresent()) {
             List<OrderEntity> orderEntityList = orderJpaRepository.findByUserIdAndStateInAndIdGreaterThan(
                     userId, orderStatuesValue, lastOrderId.get(), PageRequestFactory.create().count(count).build());
-            response.setOrders(this.convert(orderEntityList));
+            return this.convert(orderEntityList);
         } else {
             throw new NotFoundException("There is no order where 'orderUuid'={%s}", lastOrderUuid);
         }
-
-        return response;
     }
 
     /**
@@ -142,27 +137,18 @@ public class OrderService {
         if (userId == null) {
             throw new IllegalArgumentException("userId must not be NULL.", null);
         }
+        OrderEntity orderEntity = new OrderEntity();
+        orderEntity.setState(OrderStatus.CART.getDbValue());
+        orderEntity.setUserId(userId);
+        orderEntity.setOrderUuid(UUID.randomUUID().toString());
 
-        Optional<OrderEntity> cart = orderJpaRepository.findFirstByUserIdAndStateOrderByIdDesc(
-                userId, OrderStatus.CART.getDbValue());
-        OrderEntity orderEntity = null;
-        if (!cart.isPresent()) {
-            orderEntity = new OrderEntity();
-            orderEntity.setState(OrderStatus.CART.getDbValue());
-            orderEntity.setUserId(userId);
-            orderEntity.setOrderUuid(UUID.randomUUID().toString());
-
-            orderEntity = orderJpaRepository.save(orderEntity);
-        } else {
-            orderEntity = cart.get();
-        }
-
+        orderEntity = orderJpaRepository.save(orderEntity);
         return this.convert(orderEntity);
     }
 
     /**
      * Query pizza menus.
-     *
+     * 
      * @return pizza menus.
      */
     public List<Pizza> getAllMenu() {
@@ -170,6 +156,9 @@ public class OrderService {
     }
 
 
+    public void updateOrder(String orderId, Integer menuId, Integer count) {
+
+    }
 
     // private methods
 

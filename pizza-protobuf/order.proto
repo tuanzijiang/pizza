@@ -27,7 +27,7 @@ message Order {
 }
 
 // 获取订单详情
-// [get] /fetchOrder
+// [post] /fetchOrder
 
 message FetchOrderReq {
   int32 user_id = 1;
@@ -39,8 +39,8 @@ message FetchOrderResp {
   Order order = 2;
 }
 
-// 获取订单详情
-// [get] /fetchOrders
+// 批量获取订单详情
+// [post] /fetchOrders
 
 message FetchOrdersReq {
   int32 user_id = 1;
@@ -55,7 +55,7 @@ message FetchOrdersResp {
 }
 
 // 获取menu
-// [get] /menu
+// [post] /fetchMenu
 
 message FetchMenuReq {
   int32 user_id = 1;
@@ -68,11 +68,10 @@ message FetchMenuResp {
 }
 
 // 下单
-// [put] /sendOrder
+// [post] /sendOrder
 
 message SendOrderReq {
-  int32 user_id = 1;
-  map<int32, int32> pizza_num = 2;
+  string order_id;
 }
 
 message SendOrderResp {
@@ -82,9 +81,6 @@ message SendOrderResp {
 
 // 更新当前用户的菜单
 // [post] /updateOrder
-// note: 能更新的菜单只能是cart，需要order_id？支付超时？
-// note: 配送信息是要能查看骑手电话吗？
-// note: 标签要不要弄，要怎么弄
 
 message UpdateOrderReq {
   string order_id = 1;
@@ -105,4 +101,17 @@ message CancelOrderReq {
 
 message CancelOrderResp {
   ResultType result_type = 1;
+}
+
+// 查看电话
+// [post] /fetchPhone
+message FetchPhoneReq {
+  string order_id = 1;
+}
+
+message FetchPhoneResp {
+  ResultType result_type = 1;
+  string deliveryman_phone = 2;
+  string shop_phone = 3;
+  string service_phone = 4;
 }
