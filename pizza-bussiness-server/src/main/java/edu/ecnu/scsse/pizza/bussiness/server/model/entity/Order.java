@@ -25,7 +25,6 @@ public class Order {
     private String arriveTime;
     private OrderStatus state;
 
-    private int id;
     private Point mapPoint;
     private int deliverPriority;
     private Date finishTime;

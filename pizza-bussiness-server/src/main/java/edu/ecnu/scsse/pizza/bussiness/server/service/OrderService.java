@@ -3,6 +3,8 @@ package edu.ecnu.scsse.pizza.bussiness.server.service;
 import edu.ecnu.scsse.pizza.bussiness.server.exception.NotFoundException;
 import edu.ecnu.scsse.pizza.bussiness.server.model.OrderDetailRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.OrderDetailResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.OrderDetailRequest;
+import edu.ecnu.scsse.pizza.bussiness.server.model.OrderDetailResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.OrderManageResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.SaleResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Menu;
@@ -12,8 +14,8 @@ import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
 import edu.ecnu.scsse.pizza.data.domain.*;
 import edu.ecnu.scsse.pizza.data.enums.OrderStatus;
 import edu.ecnu.scsse.pizza.bussiness.server.model.OrderManageResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Menu;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order;
-import edu.ecnu.scsse.pizza.bussiness.server.model.entity.User;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
 import edu.ecnu.scsse.pizza.data.domain.*;
 import edu.ecnu.scsse.pizza.data.repository.*;
@@ -27,6 +29,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -71,6 +74,22 @@ public class OrderService {
         }
 
         return orderManageResponse;
+    }
+
+    public OrderDetailResponse getOrderDetail(OrderDetailRequest orderDetailRequest){
+        OrderDetailResponse orderDetailResponse;
+        Optional<OrderEntity> orderEntityOptional = orderJpaRepository.findById(orderDetailRequest.getOrderId());
+        if(orderEntityOptional.isPresent()){
+            orderDetailResponse = new OrderDetailResponse();
+            OrderEntity orderEntity = orderEntityOptional.get();
+            orderDetailResponse.setOrder(convertDetail(orderEntity));
+        }
+        else{
+            NotFoundException e = new NotFoundException("Order detail is not found.");
+            orderDetailResponse = new OrderDetailResponse(e);
+            log.warn("Fail to find the order detail.", e);
+        }
+        return orderDetailResponse;
     }
 
     public OrderDetailResponse getOrderDetail(OrderDetailRequest orderDetailRequest){
@@ -138,13 +157,6 @@ public class OrderService {
         DateFormat df = new SimpleDateFormat(commitTimePattern);
 
         order.setOrderId(String.valueOf(orderEntity.getId()));
-
-        //设置购买人电话
-        Optional<UserEntity> userEntityOptional = userJpaRepository.findById(orderEntity.getUserId());
-        if(userEntityOptional.isPresent()) {
-            UserEntity userEntity = userEntityOptional.get();
-            order.setBuyPhone(userEntity.getPhone());
-        }
 
         //设置收货人信息
         Optional<UserAddressEntity> userAddressEntityOptional = userAddressJpaRepository.findByUserIdAndAddressId(orderEntity.getUserId(),orderEntity.getAddressId());
