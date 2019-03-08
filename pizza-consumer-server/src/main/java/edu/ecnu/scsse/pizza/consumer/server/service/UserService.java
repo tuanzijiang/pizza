@@ -8,8 +8,6 @@ import edu.ecnu.scsse.pizza.consumer.server.utils.EntityConverter;
 import edu.ecnu.scsse.pizza.data.domain.AddressEntity;
 import edu.ecnu.scsse.pizza.data.domain.UserAddressEntity;
 import edu.ecnu.scsse.pizza.data.domain.UserEntity;
-import edu.ecnu.scsse.pizza.data.enums.AddressTag;
-import edu.ecnu.scsse.pizza.data.enums.Sex;
 import edu.ecnu.scsse.pizza.data.repository.AddressJpaRepository;
 import edu.ecnu.scsse.pizza.data.repository.UserAddressJpaRepository;
 import edu.ecnu.scsse.pizza.data.repository.UserJpaRepository;
@@ -21,6 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 
 @Service
@@ -35,19 +34,20 @@ public class UserService {
 
     /**
      * 获取当前用户信息
+     *
      * @param userId
      * @return
      */
-    public FetchUserResponse getUserInfo(int userId){
-        FetchUserResponse fetchUserResponse=new FetchUserResponse();
+    public FetchUserResponse fetchUser(int userId) {
+        FetchUserResponse fetchUserResponse = new FetchUserResponse();
 
-        Optional<UserEntity> userEntity=userJpaRepository.findById(userId);
-        if(userEntity.isPresent()) {
+        Optional<UserEntity> userEntity = userJpaRepository.findById(userId);
+        if (userEntity.isPresent()) {
             User user=EntityConverter.convert(userEntity.get());
-            int addressId=userEntity.get().getDefaultUserAddressId();
-            Optional<UserAddressEntity> userAddressEntityOptional = userAddressJpaRepository.findByUserIdAndAddressId (
-                            user.getId(),
-                            addressId);
+            int addressId = userEntity.get().getDefaultUserAddressId();
+            Optional<UserAddressEntity> userAddressEntityOptional = userAddressJpaRepository.findByUserIdAndAddressId(
+                    user.getId(),
+                    addressId);
             Optional<AddressEntity> addressEntity = addressJpaRepository.findById(addressId);
             Address address=EntityConverter.convert(userAddressEntityOptional.get(), addressEntity.get());
             user.setAddress(address);
@@ -60,17 +60,19 @@ public class UserService {
         return fetchUserResponse;
     }
 
+
     /**
      * 更新当前用户信息
+     *
      * @param updateUserRequest
      * @return
      */
-    public UpdateUserResponse updateUserInfo(UpdateUserRequest updateUserRequest) {
+    public UpdateUserResponse updateUser(UpdateUserRequest updateUserRequest) {
         UpdateUserResponse updateUserResponse = new UpdateUserResponse();
         Optional<UserEntity> userEntityOptional = userJpaRepository.findById(updateUserRequest.getUserId());
-        if(userEntityOptional.isPresent()) {
-            UserEntity userEntity=userEntityOptional.get();
-            switch (updateUserRequest.getType()){
+        if (userEntityOptional.isPresent()) {
+            UserEntity userEntity = userEntityOptional.get();
+            switch (updateUserRequest.getType()) {
                 case NAME:
                     userEntity.setName(updateUserRequest.getValue());
                     break;
@@ -81,7 +83,7 @@ public class UserService {
                     userEntity.setEmail(updateUserRequest.getValue());
                     break;
                 case BIRTHDAY:
-                    DateFormat fmt =new SimpleDateFormat("yyyy-MM-dd");
+                    DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
                     Date date = null;
                     try {
                         date = fmt.parse(updateUserRequest.getValue());
@@ -107,27 +109,28 @@ public class UserService {
     /**
      * 登录
      * TODO: 格式校验, 手机验证码登录
+     *
      * @param loginRequest
      * @return
      */
     public LoginResponse login(LoginRequest loginRequest) {
-        LoginResponse loginResponse=new LoginResponse();
+        LoginResponse loginResponse = new LoginResponse();
         switch (loginRequest.getType()) {
             case PASSWORD:
-                Optional<UserEntity> userEntityOptional=userJpaRepository.findByEmail(loginRequest.getAccount());
+                Optional<UserEntity> userEntityOptional = userJpaRepository.findByEmail(loginRequest.getAccount());
 
-                if(userEntityOptional.isPresent()){
-                    UserEntity userEntity=userEntityOptional.get();
+                if (userEntityOptional.isPresent()) {
+                    UserEntity userEntity = userEntityOptional.get();
 
                     // verify password
                     if(userEntity.getPassword().equals(loginRequest.getPassword())) {
                         User user=EntityConverter.convert(userEntity);
                         loginResponse.setUser(user);
                     } else {
-                        // password incorrect.
+                        loginResponse.setResultType(ResultType.FAILURE);
                     }
                 } else {
-                    // account not present.
+                    loginResponse.setResultType(ResultType.FAILURE);
                 }
                 break;
             case VERIFICATION:
@@ -140,35 +143,43 @@ public class UserService {
 
     /**
      * 退出
-     * // TODO
+     *
      * @param logoutRequest
      * @return
      */
     public LogoutResponse logout(LogoutRequest logoutRequest) {
-        LogoutResponse logoutResponse=new LogoutResponse();
-
+        // Do nothing
+        LogoutResponse logoutResponse = new LogoutResponse();
         return logoutResponse;
     }
 
     /**
-     * TODO: 格式校验
+     * 注册
+     *
      * @param signUpRequest
      * @return
      */
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
-        SignUpResponse signUpResponse=new SignUpResponse();
-        // email格式校验
-        UserEntity userEntity=new UserEntity();
+        SignUpResponse signUpResponse = new SignUpResponse();
+
+        if(checkPasswordFormat(signUpRequest.getPassword())) {
+            signUpResponse.setResultType(ResultType.FAILURE);
+            return signUpResponse;
+        }
+
+        UserEntity userEntity = new UserEntity();
         userEntity.setPhone(signUpRequest.getPhone());
         userEntity.setPassword(signUpRequest.getPassword());
         userEntity.setEmail(signUpRequest.getEmail());
-        userEntity=userJpaRepository.save(userEntity);
+        userEntity = userJpaRepository.save(userEntity);
 
         User user = EntityConverter.convert(userEntity);
+
         signUpResponse.setUser(user);
 
         return signUpResponse;
     }
+
 
     /**
      * todo
@@ -188,6 +199,11 @@ public class UserService {
      */
     public FetchUserAddressesResponse fetchUserAddresses(FetchUserAddressesRequest fetchUserAddressesRequest) {
         return new FetchUserAddressesResponse();
+    }
+
+
+    private boolean checkPasswordFormat(String password) {
+        return Pattern.matches("^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,11}$", password);
     }
 
 }

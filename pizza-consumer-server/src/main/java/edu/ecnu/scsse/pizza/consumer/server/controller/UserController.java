@@ -19,32 +19,35 @@ public class UserController {
 
     /**
      * 获取当前用户信息
+     *
      * @param fetchUserRequest
      * @return
      */
-    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    @RequestMapping(value = "/fetchUser", method = RequestMethod.POST)
     @ResponseBody
-    FetchUserResponse getUserInfo(@RequestBody FetchUserRequest fetchUserRequest){
-        return userService.getUserInfo(fetchUserRequest.getUserId());
+    FetchUserResponse fetchUser(@RequestBody FetchUserRequest fetchUserRequest) {
+        return userService.fetchUser(fetchUserRequest.getUserId());
     }
 
     /**
      * 更新当前用户信息
+     *
      * @param updateUserRequest
      * @return
      */
-    @RequestMapping(value = "/user", method = RequestMethod.POST)
+    @RequestMapping(value = "/updateUser", method = RequestMethod.POST)
     @ResponseBody
-    UpdateUserResponse updateUserInfo(@RequestBody UpdateUserRequest updateUserRequest) {
-        return userService.updateUserInfo(updateUserRequest);
+    UpdateUserResponse updateUser(@RequestBody UpdateUserRequest updateUserRequest) {
+        return userService.updateUser(updateUserRequest);
     }
 
     /**
      * 登录
+     *
      * @param loginRequest
      * @return
      */
-    @RequestMapping(value = "/loginStatus",method = RequestMethod.POST)
+    @RequestMapping(value = "/fetchLoginStatus", method = RequestMethod.POST)
     @ResponseBody
     LoginResponse login(@RequestBody LoginRequest loginRequest) {
         return userService.login(loginRequest);
@@ -52,10 +55,11 @@ public class UserController {
 
     /**
      * 退出
+     *
      * @param logoutRequest
      * @return
      */
-    @RequestMapping(value = "/logoutStatus",method = RequestMethod.POST)
+    @RequestMapping(value = "/fetchLogoutStatus", method = RequestMethod.POST)
     @ResponseBody
     LogoutResponse logout(@RequestBody LogoutRequest logoutRequest) {
         return userService.logout(logoutRequest);
@@ -64,10 +68,11 @@ public class UserController {
 
     /**
      * 注册
+     *
      * @param signUpRequest
      * @return
      */
-    @RequestMapping(value = "/user",method = RequestMethod.PUT)
+    @RequestMapping(value = "/addUser", method = RequestMethod.POST)
     @ResponseBody
     SignUpResponse signUp(@RequestBody SignUpRequest signUpRequest) {
         return userService.signUp(signUpRequest);
