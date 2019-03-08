@@ -20,7 +20,7 @@ message Address {
 }
 
 // 获取当前用户的地址信息
-// [get] /addresses
+// [post] /addresses
 
 message FetchAddressReq {
   string user_id = 1;
