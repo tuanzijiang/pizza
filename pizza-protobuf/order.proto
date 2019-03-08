@@ -27,7 +27,7 @@ message Order {
 }
 
 // 获取订单详情
-// [get] /fetchOrder
+// [post] /fetchOrder
 
 message FetchOrderReq {
   int32 user_id = 1;
@@ -39,8 +39,8 @@ message FetchOrderResp {
   Order order = 2;
 }
 
-// 获取订单详情
-// [get] /fetchOrders
+// 批量获取订单详情
+// [post] /fetchOrders
 
 message FetchOrdersReq {
   int32 user_id = 1;
@@ -55,7 +55,7 @@ message FetchOrdersResp {
 }
 
 // 获取menu
-// [get] /menu
+// [post] /fetchMenu
 
 message FetchMenuReq {
   int32 user_id = 1;
@@ -67,7 +67,7 @@ message FetchMenuResp {
 }
 
 // 下单
-// [put] /sendOrder
+// [post] /sendOrder
 
 message SendOrderReq {
   int32 user_id = 1;
@@ -104,7 +104,7 @@ message CancelOrderResp {
 }
 
 // 查看电话
-// [get] /fetchPhone
+// [post] /fetchPhone
 message FetchPhoneReq {
   string order_id = 1;
 }
