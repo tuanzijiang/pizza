@@ -4,10 +4,13 @@ import edu.ecnu.scsse.pizza.bussiness.server.exception.NotFoundException;
 import edu.ecnu.scsse.pizza.bussiness.server.model.OrderDetailRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.OrderDetailResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.OrderManageResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.SaleResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Menu;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order;
+import edu.ecnu.scsse.pizza.bussiness.server.model.entity.SaleStatus;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
 import edu.ecnu.scsse.pizza.data.domain.*;
+import edu.ecnu.scsse.pizza.data.enums.OrderStatus;
 import edu.ecnu.scsse.pizza.data.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,10 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -77,6 +79,47 @@ public class OrderService {
             log.warn("Fail to find the order detail.", e);
         }
         return orderDetailResponse;
+    }
+
+    public SaleResponse getSaleStatusList(String startDate,String endDate) throws ParseException {
+        List<SaleStatus> saleStatusList = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        long end = sdf.parse(endDate).getTime();
+        long start = sdf.parse(startDate).getTime();
+        int days = (int)((end-start)/(1000 * 60 * 60 * 24))+1;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(sdf.parse(startDate));
+        for(int i=0;i<days;i++){
+            String date = sdf.format(calendar.getTime());
+            SaleStatus saleStatus = getDaySaleStatus(date);
+            if(saleStatus.getOrderNum()!=0)
+                saleStatusList.add(saleStatus);
+            calendar.add(Calendar.DATE,+1);
+        }
+        return new SaleResponse(saleStatusList);
+    }
+
+    private SaleStatus getDaySaleStatus(String date){
+        List<OrderEntity> orderEntityList = orderJpaRepository.findOrderByCommitTime(date);
+        int orderNum = orderEntityList.size();
+        int completeNum = 0;
+        int cancelNum = 0;
+        double totalAmount = 0;
+        for(OrderEntity orderEntity : orderEntityList){
+            switch (OrderStatus.fromDbValue(orderEntity.getState())){
+                case RECEIVED:
+                    completeNum++;
+                    break;
+                case CANCELED:
+                    cancelNum++;
+                    break;
+                default:
+                    break;
+            }
+            if(orderEntity.getTotalPrice()!=null)
+                totalAmount += orderEntity.getTotalPrice();
+        }
+        return new SaleStatus(date,orderNum, completeNum, cancelNum, totalAmount);
     }
 
     private Order convertSimple(OrderEntity orderEntity){

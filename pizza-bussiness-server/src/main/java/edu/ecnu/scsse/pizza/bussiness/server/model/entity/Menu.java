@@ -1,12 +1,14 @@
 package edu.ecnu.scsse.pizza.bussiness.server.model.entity;
 
+import edu.ecnu.scsse.pizza.data.enums.PizzaStatus;
+
 public class Menu {
     private String id;
     private String name;
     private String image;
     private String description;
     private double price;
-    private int state;
+    private PizzaStatus state;
     private int tag;
     private int count;
 
@@ -16,7 +18,7 @@ public class Menu {
         this.image = "";
         this.description = "";
         this.price = 0.0;
-        this.state = 0;
+        this.state = PizzaStatus.IN_SALE;
         this.tag = -1;
         this.count = 0;
     }
@@ -61,11 +63,11 @@ public class Menu {
         this.price = price;
     }
 
-    public int getState() {
+    public PizzaStatus getState() {
         return state;
     }
 
-    public void setState(int state) {
+    public void setState(PizzaStatus state) {
         this.state = state;
     }
 
