@@ -9,6 +9,7 @@ public class Address {
     private String address;
     private String addressDetail;
     private String phone;
+    private String tag;
 
     public Integer getId() {
         return id;
@@ -56,5 +57,13 @@ public class Address {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }

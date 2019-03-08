@@ -1,0 +1,103 @@
+@import '~@ui/base.scss';
+.pay-wrapper {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: $white_3;
+}
+
+.pay-middle {
+  color: $white_2;
+  font-size: vw(16);
+}
+
+.pay-content {
+  width: 100%;
+  position: relative;
+  top: $banner_height;
+  height: calc(100% - #{$banner_height});
+  overflow: auto;
+}
+
+.pay-content_status {
+  top: $banner_height_status;
+  height: calc(100% - #{$banner_height_status});
+}
+
+.pay-time {
+  width: 100%;
+  padding: vw(15) vw(10);
+  background: $white_1;
+}
+
+.pay-timePrompt {
+  color: $gray_4;
+  font-size: vw(12);
+  text-align: center;
+}
+
+.pay-timeDetail {
+  color: $gray_5;
+  text-align: center;
+  font-size: vw(26);
+  span {
+    padding: 0 vw(10);
+  }
+}
+
+.pay-info {
+  width: 100%;
+  height: vw(50);
+  background: $white_1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: vw(1) solid $white_3;
+  padding: 0 vw(10);
+  box-sizing: border-box;
+}
+
+.pay-price {
+  flex: 1 1 auto;
+  text-align: right;
+  color: $red_3;
+  span {
+    margin: 0 vw(5) 0 0;
+  }
+}
+
+.pay-name {
+  width: vw(140);
+  color: $gray_3;
+  font-size: vw(14);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: break-all;
+  margin: 0 vw(5) 0 0;
+  span {
+    margin: 0 0 0 vw(5);
+  }
+}
+
+.pay-prompt {
+  font-size: vw(14);
+  color: $gray_5;
+  padding: vw(10) vw(10) vw(5);
+}
+
+.pay-kindItem {
+  box-sizing: border-box;
+  padding: 0 vw(10);
+  background: $white_1;
+  height: vw(50);
+  border-bottom: vw(1) solid $white_3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: vw(16);
+}
+
+.pay-kindSuccess {
+  color: $green_4;
+}
