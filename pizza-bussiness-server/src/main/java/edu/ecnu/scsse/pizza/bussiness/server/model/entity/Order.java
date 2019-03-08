@@ -30,7 +30,7 @@ public class Order {
     private int deliverPriority;
     private Date finishTime;
     private int latestLeaveTime;
-    
+
 
     public Order() {
         this.orderId = "";
