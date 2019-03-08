@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ErrorMessage} from "ng-bootstrap-form-validation";
 import {ActivatedRoute, NavigationExtras, Router} from "@angular/router";
-import {AuthService} from "../services/auth.service";
+import {AuthService} from "../services/auth/auth.service";
 
 @Component({
   selector: 'app-login',

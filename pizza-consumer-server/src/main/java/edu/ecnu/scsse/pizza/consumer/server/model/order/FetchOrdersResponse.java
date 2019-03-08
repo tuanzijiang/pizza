@@ -3,9 +3,11 @@ package edu.ecnu.scsse.pizza.consumer.server.model.order;
 import edu.ecnu.scsse.pizza.consumer.server.exception.ConsumerServerException;
 import edu.ecnu.scsse.pizza.consumer.server.model.Response;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Order;
+import lombok.Data;
 
 import java.util.List;
 
+@Data
 public class FetchOrdersResponse extends Response {
 
     private List<Order> orders;
@@ -15,13 +17,5 @@ public class FetchOrdersResponse extends Response {
 
     public FetchOrdersResponse(ConsumerServerException e) {
         super(e);
-    }
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
     }
 }

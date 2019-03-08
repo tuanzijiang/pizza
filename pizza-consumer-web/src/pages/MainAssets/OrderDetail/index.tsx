@@ -145,7 +145,7 @@ export default class OrderDetail extends React.PureComponent<OrderDetailProps, O
             </div>
             <div className="orderDetail-addressInfoItem">
               <div className="orderDetail-addressInfoItemTitle">
-                {i18n('收获地址')}
+                {i18n('收货地址')}
               </div>
               <div className="orderDetail-addressInfoItemContent">
                 {currAddress.address}

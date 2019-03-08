@@ -13,10 +13,11 @@ message User {
   int64 birthday = 5;
   string city = 6;
   string img = 7;
+  Address address = 8;
 }
 
 // 获取当前用户信息
-// [get] /user
+// [post] /fetchUser
 
 message FetchUserReq {
   int32 user_id = 1;
@@ -28,7 +29,7 @@ message FetchUserResp {
 }
 
 // 更新当前用户信息
-// [post] /user
+// [post] /updateUser
 
 message UpdateUserReq {
   enum Type {
@@ -50,7 +51,7 @@ message UpdateUserResp {
 }
 
 // 登录
-// [post] /loginStatus
+// [post] /fetchLoginStatus
 
 message LoginReq {
   enum Type {
@@ -69,7 +70,7 @@ message LoginResp {
 }
 
 // 退出 
-// [post] /logoutStatus
+// [post] /fetchLogoutStatus
 
 message LogoutReq {
   int32 user_id = 1;
@@ -80,7 +81,7 @@ message LogoutResp {
 }
 
 // 注册
-// [put] /user
+// [post] /addUser
 
 message SignUpReq {
   string phone = 1;

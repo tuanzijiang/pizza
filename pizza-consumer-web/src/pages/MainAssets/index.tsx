@@ -3,6 +3,8 @@ import PageAssets, { OpenType } from '@biz-components/PageAssets';
 import './index.scss';
 import Main from './Main';
 import OrderDetail from './OrderDetail';
+import Settlement from './Settlement';
+import Pay from './Pay';
 import { connect } from 'react-redux';
 import { page as pageActionCreator } from '@store/action';
 import autobind from 'autobind-decorator';
@@ -18,11 +20,15 @@ interface LoginAssetsState { }
 export enum MainAssetName {
   Main = 0,
   OrderDetail = 1,
+  Settlement = 2,
+  Pay = 3,
 }
 
 const config = {
   [MainAssetName.Main]: 0,
   [MainAssetName.OrderDetail]: 1,
+  [MainAssetName.Settlement]: 2,
+  [MainAssetName.Pay]: 3,
 };
 
 const handleTouchMove = (e: TouchEvent) => {
@@ -74,6 +80,14 @@ export class MainAssets extends React.PureComponent<LoginAssetsProps, LoginAsset
           />
           <OrderDetail
             ref={this.orderDetailEl}
+            onPageChange={this.handlePageChange}
+            entityStore={entityStore}
+          />
+          <Settlement
+            onPageChange={this.handlePageChange}
+            entityStore={entityStore}
+          />
+          <Pay
             onPageChange={this.handlePageChange}
             entityStore={entityStore}
           />
