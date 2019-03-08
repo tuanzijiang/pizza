@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-edu.ecnu.scsse.pizza.data.ScanConfiguration
