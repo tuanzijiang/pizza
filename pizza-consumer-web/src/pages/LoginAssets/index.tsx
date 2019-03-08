@@ -45,7 +45,7 @@ const config = {
 };
 
 const handleTouchMove = (e: TouchEvent) => {
-  e.preventDefault();
+  // e.preventDefault();
 };
 
 export class LoginAssets extends React.PureComponent<LoginAssetsProps, LoginAssetsState> {
