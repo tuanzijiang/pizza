@@ -1,8 +1,7 @@
 package edu.ecnu.scsse.pizza.bussiness.server.controller;
 
-
-import edu.ecnu.scsse.pizza.bussiness.server.model.UserManageResponse;
-import edu.ecnu.scsse.pizza.bussiness.server.service.UserManageService;
+import edu.ecnu.scsse.pizza.bussiness.server.model.OrderManageResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,17 +9,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/user")
-public class UserManageController {
+@RequestMapping("/order")
+public class OrderController {
     @Autowired
-    private UserManageService userManageService;
+    private OrderService orderService;
 
     /**
      * 查看用户信息列表
      */
-    @RequestMapping(value = "/getUserList",method = RequestMethod.GET)
+    @RequestMapping(value = "/getOrderList",method = RequestMethod.GET)
     @ResponseBody
-    public UserManageResponse getUserList(){
-        return userManageService.getUserList();
+    public OrderManageResponse getOrderList(){
+        return orderService.getOrderList();
     }
 }
