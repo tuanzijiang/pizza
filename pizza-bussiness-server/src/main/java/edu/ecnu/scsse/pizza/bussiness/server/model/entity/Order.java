@@ -23,6 +23,12 @@ public class Order {
     private String arriveTime;
     private OrderStatus state;
 
+    private Point mapPoint;
+    private int delievePriority;
+    private Date finishTime;
+    private int latestLeaveTime;
+    
+
     public Order() {
         this.orderId = "";
         this.receiveName = "";
