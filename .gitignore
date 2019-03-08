@@ -38,6 +38,6 @@ target
 .todo
 /DS_Store
 /node_modules
-/.idea
+.idea
 /README.md
 code

@@ -9,6 +9,7 @@ import { setTheme } from 'ngx-bootstrap/utils';
 import {NgBootstrapFormValidationModule} from "ng-bootstrap-form-validation";
 import { ElModule } from 'element-angular'
 import {MainModule} from "./main/main.module";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import {MainModule} from "./main/main.module";
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    FormsModule,
     LoginModule,
     MainModule,
     ElModule.forRoot(),
