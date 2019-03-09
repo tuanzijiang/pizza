@@ -3,6 +3,7 @@ package edu.ecnu.scsse.pizza.bussiness.server.model.entity;
 import edu.ecnu.scsse.pizza.data.enums.OrderStatus;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Order {
