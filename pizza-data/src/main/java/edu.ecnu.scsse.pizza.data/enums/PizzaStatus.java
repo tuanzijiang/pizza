@@ -4,9 +4,8 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public enum  PizzaStatus {
-
-    // todo - add pizza status !
-    ;
+    IN_SALE(0, "售卖中"),
+    OFF_SHELF(1, "购物车");
 
     private int dbValue;
 
