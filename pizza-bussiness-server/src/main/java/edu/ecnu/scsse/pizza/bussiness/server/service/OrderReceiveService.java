@@ -6,6 +6,14 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.entity.*;
 import edu.ecnu.scsse.pizza.bussiness.server.model.gaode.GaoDeMapUtil;
 import edu.ecnu.scsse.pizza.data.domain.*;
 import edu.ecnu.scsse.pizza.data.repository.*;
+import edu.ecnu.scsse.pizza.bussiness.server.model.entity.MapPoint;
+import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Point;
+import edu.ecnu.scsse.pizza.data.domain.AddressEntity;
+import edu.ecnu.scsse.pizza.data.domain.PizzaShopEntity;
+import edu.ecnu.scsse.pizza.data.domain.UserAddressEntity;
+import edu.ecnu.scsse.pizza.data.repository.AddressJpaRepository;
+import edu.ecnu.scsse.pizza.data.repository.PizzaShopJpaRepository;
+import edu.ecnu.scsse.pizza.data.repository.UserAddressJpaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +21,8 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Order;
 import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderReceiveService {
@@ -102,15 +112,11 @@ public class OrderReceiveService {
 
             }
         }
-
         return orderReceiveResponse;
     }
 
-    public int getSuitableShopId(List<Shop> shopList){
-        return 1;
-    }
-
 }
+
 
 
 
