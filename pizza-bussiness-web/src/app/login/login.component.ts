@@ -20,6 +20,18 @@ export class LoginComponent implements OnInit {
     {
       error: 'required',
       format: (label, error) => `${label.toUpperCase()}不能为空！`
+    },
+    {
+      error: 'minlength',
+      format: (label, error) => `${label.toUpperCase()}长度至少为6位！`
+    },
+    {
+      error: 'maxlength',
+      format: (label, error) => `${label.toUpperCase()}长度最多为12位！`
+    },
+    {
+      error: 'pattern',
+      format: (label, error) => `${label.toUpperCase()}不能包含空格！`
     }
   ];
 
@@ -34,9 +46,13 @@ export class LoginComponent implements OnInit {
     this.formGroup = new FormGroup({
       UserName: new FormControl('', [
         Validators.required,
+        Validators.pattern(/^[^\s]*$/)
       ]),
       Password: new FormControl('', [
         Validators.required,
+        Validators.minLength(6),
+        Validators.maxLength(12),
+        Validators.pattern(/^[^\s]*$/)
       ])
     });
   }

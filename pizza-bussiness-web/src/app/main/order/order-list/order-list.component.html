@@ -1,9 +1,9 @@
-<div class="pt-lg-2 pl-lg-3 pr-lg-3 order-list-page">
+<div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 order-list-page">
   <div class="order-list-title">
     <h5>订单列表</h5>
   </div>
   <div class="mt-lg-2 pr-lg-2">
-    <p-table #dt [value]="orders" [paginator]="true" [rows]="15"
+    <p-table #dt [value]="orders" [paginator]="true" [rows]="10"
              [globalFilterFields]="['order_id', 'receive_name', 'phone', 'receive_address', 'total_amount', 'create_time', 'state', 'operation']">
       <ng-template pTemplate="caption">
         <div style="text-align: right">
@@ -32,7 +32,8 @@
                    (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
             <input *ngSwitchCase="'receive_address'" pInputText type="text" class="order-filter"
                    (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
-            <p-dropdown *ngSwitchCase="'state'" [options]="states" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
+            <p-dropdown *ngSwitchCase="'state'" [options]="states" [style]="{'width':'100%'}"
+                        (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
           </th>
           <th></th>
         </tr>

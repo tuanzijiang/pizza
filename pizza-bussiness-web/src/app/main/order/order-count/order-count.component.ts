@@ -14,7 +14,6 @@ export class OrderCountComponent implements OnInit {
   yesterdayOrder: YesterdayOrder;
   orderCount: any;
   cols: any[];
-  rangeDates: string;
   dateFilters: any;
 
   constructor() {

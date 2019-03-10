@@ -8,6 +8,6 @@ export interface Order {
   phone: string;
   receive_address: string;
   total_amount: number;
-  create_time: string;
+  commit_time: string;
   state: string;
 }

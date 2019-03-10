@@ -2,7 +2,6 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {Order} from "../../../modules/order/order";
 import {OrderDetail} from "../../../modules/order/orderDetail";
 import {TranslateService} from "../../../services/translate.service";
-import {Table} from "primeng/table";
 
 @Component({
   selector: 'app-order-list',
@@ -29,7 +28,7 @@ export class OrderListComponent implements OnInit {
       {field: 'phone', header: '联系方式'},
       {field: 'receive_address', header: '收货地址'},
       {field: 'total_amount', header: '订单总金额'},
-      {field: 'create_time', header: '建立时间'},
+      {field: 'commit_time', header: '建立时间'},
       {field: 'state', header: '状态'},
     ];
     this.states = [
@@ -45,7 +44,7 @@ export class OrderListComponent implements OnInit {
         phone: '15216607890',
         receive_address: 'ECNU',
         total_amount: 18.5,
-        create_time: '2016-09-30 14:23:16',
+        commit_time: '2016-09-30 14:23:16',
         state: '未接单'
       },
       {
@@ -54,7 +53,7 @@ export class OrderListComponent implements OnInit {
         phone: '15216658473',
         receive_address: 'Global Harber',
         total_amount: 20,
-        create_time: '2016-09-30 14:23:16',
+        commit_time: '2016-09-30 14:23:16',
         state: '配送中'
       },
       {
@@ -63,7 +62,7 @@ export class OrderListComponent implements OnInit {
         phone: '15216695860',
         receive_address: 'Changfeng Park',
         total_amount: 30.8,
-        create_time: '2016-09-30 14:23:16',
+        commit_time: '2016-09-30 14:23:16',
         state: '配送中'
       },
       {
@@ -72,7 +71,7 @@ export class OrderListComponent implements OnInit {
         phone: '15216616253',
         receive_address: 'Zhongshan Park',
         total_amount: 40.9,
-        create_time: '2016-09-30 14:23:16',
+        commit_time: '2016-09-30 14:23:16',
         state: '已送达'
       },
       {
@@ -81,7 +80,7 @@ export class OrderListComponent implements OnInit {
         phone: '15216612635',
         receive_address: 'iapm',
         total_amount: 105.4,
-        create_time: '2016-09-30 14:23:16',
+        commit_time: '2016-09-30 14:23:16',
         state: '未接单'
       }
     ];
