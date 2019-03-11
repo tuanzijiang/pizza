@@ -2,7 +2,7 @@
 * Define the details of the chosen order
 */
 
-export interface OrderDetail {
+export class OrderDetail {
   order_id: string;
   receive_name: string;
   receive_phone: string;
@@ -18,7 +18,7 @@ export interface OrderDetail {
   state: string;
 }
 
-interface OrderMenu {
+class OrderMenu {
   menu_name: string;
   menu_price: number;
   menu_count: number;

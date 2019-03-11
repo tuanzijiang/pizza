@@ -19,8 +19,16 @@ import {MultiSelectModule} from "primeng/multiselect";
 import {InputTextModule} from 'primeng/inputtext';
 import {ButtonModule} from "primeng/button";
 import {DialogModule} from "primeng/dialog";
-import {CalendarModule, CardModule, DropdownModule} from "primeng/primeng";
+import {
+  CalendarModule,
+  CardModule,
+  DropdownModule,
+  FileUploadModule,
+  PanelModule,
+  RadioButtonModule, TabViewModule
+} from "primeng/primeng";
 import {FormsModule} from "@angular/forms";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
@@ -37,6 +45,7 @@ import {FormsModule} from "@angular/forms";
     OperationRecordComponent],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     CommonModule,
     ElModule,
@@ -48,7 +57,11 @@ import {FormsModule} from "@angular/forms";
     DialogModule,
     DropdownModule,
     CardModule,
-    CalendarModule
+    CalendarModule,
+    FileUploadModule,
+    RadioButtonModule,
+    PanelModule,
+    TabViewModule
   ],
 })
 export class MainModule {

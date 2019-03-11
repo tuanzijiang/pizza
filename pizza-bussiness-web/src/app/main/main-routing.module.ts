@@ -12,10 +12,12 @@ import {FactoryManageComponent} from "./system-manage/factory-manage/factory-man
 import {MenuManageComponent} from "./system-manage/menu-manage/menu-manage.component";
 import {UserManageComponent} from "./system-manage/user-manage/user-manage.component";
 import {LoginComponent} from "../login/login.component";
+import {AuthGuard} from "../services/auth/auth.guard";
 const mainRoutes: Routes = [
   {
     path: '',
     component: MainComponent,
+    canActivate: [AuthGuard],
     children: [
       { path: '', redirectTo: '/order-list', pathMatch: 'full'},
       { path: 'order-list', component: OrderListComponent },
