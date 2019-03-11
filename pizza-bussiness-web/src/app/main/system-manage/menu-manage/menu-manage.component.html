@@ -1,3 +1,297 @@
-<p>
-  menu-manage works!
-</p>
+<div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 menu-manage-page">
+  <div class="menu-manage-title">
+    <h5>披萨菜单</h5>
+  </div>
+  <div class="mt-lg-2 pr-lg-2">
+    <p-table #dt [value]="menuList" [paginator]="true" [rows]="10"
+      [globalFilterFields]="['pizza_id', 'name', 'type', 'price', 'desc', 'status']">
+      <ng-template pTemplate="caption">
+        <div class="row">
+          <div class="col-lg-6" style="text-align: left">
+            <p-button icon="pi pi-plus" label="新增" (onClick)="addMenu()"></p-button>
+          </div>
+          <div class="col-lg-6" style="text-align: right">
+            <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+            <input type="text" pInputText size="50" placeholder="搜索..."
+              (input)="dt.filterGlobal($event.target.value, 'contains')" style="width:auto">
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header" filterStyle="display:none">
+        <tr>
+          <th *ngFor="let col of cols" [pSortableColumn]="col.field">
+            {{col.header}}
+            <p-sortIcon *ngIf="col.field != 'pic'" [field]="col.field" ariaLabel="Activate to sort"
+                                                                       ariaLabelDesc="Activate to sort in descending order"
+                                                                       ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+          </th>
+          <th></th>
+        </tr>
+        <tr>
+          <th *ngFor="let col of cols" [ngSwitch]="col.field">
+            <input *ngSwitchCase="'pizza_id'" pInputText type="text" class="menu-filter"
+              (input)="dt.filter($event.target.value, col.field, 'contains')">
+            <input *ngSwitchCase="'name'" pInputText type="text" class="menu-filter"
+              (input)="dt.filter($event.target.value, col.field, 'contains')">
+            <input *ngSwitchCase="'price'" pInputText type="text" class="menu-filter"
+              (input)="dt.filter($event.target.value, col.field, 'contains')">
+            <p-dropdown *ngSwitchCase="'type'" [options]="pizzaType" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
+            <p-dropdown *ngSwitchCase="'status'" [options]="states" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
+          </th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-menu>
+        <tr>
+          <td *ngFor="let col of cols" [ngSwitch]="true">
+            <span *ngSwitchCase="col.field ==='pic'">
+              <img src="{{menu[col.field]}}" alt="" style="width:50px; height:auto;">
+            </span>
+            <span *ngSwitchDefault>
+              {{menu[col.field]}}
+            </span>
+          </td>
+          <td class="menu-operation">
+            <div class="full-width">
+              <button pButton type="button" label="{{contraryStatus(menu)}}"
+                      class="ui-button-rounded" (click)="changeStatus(menu)"></button>
+            </div>
+            <div class="full-width mt-lg-2">
+              <button pButton type="button" label="修改"
+                      class="ui-button-rounded ui-button-success" (click)="alterMenu(menu)"></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<!--Dialog for changing selected menu!-->
+<p-dialog
+  header="菜品修改" [(visible)]="displayChangeDialog" [modal]="true" [responsive]="true"
+  [style]="{width: '80%', minWidth: '1000', minHeight: '1300'}"
+  [minY]="70"
+  [maximizable]="true" [baseZIndex]="10000">
+  <div class="mt-lg-2 ml-lg-2 mr-lg-2" *ngIf="tempMenu != null">
+    <div class="row">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">商品名称</h6>
+      </div>
+      <div class="col-lg-6">
+        <input class="form-control" type="text" [(ngModel)]="tempMenu.name">
+      </div>
+    </div>
+    <div class="row mt-lg-2">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">商品类别</h6>
+      </div>
+      <div class="col-lg-6">
+        <select class="custom-select" [(ngModel)]="tempMenu.type">
+          <option *ngFor="let type of pizzaType" value="{{type.value}}">{{type.value}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="row mt-lg-2">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">商品价格</h6>
+      </div>
+      <div class="col-lg-6">
+        <input class="form-control" type="text" [(ngModel)]="tempMenu.price">
+      </div>
+    </div>
+    <div class="mt-lg-2 pb-lg-2 ing-border">
+      <div class="row">
+        <div class="col">
+          <h6 class="control-label mt-lg-2">制作参数</h6>
+        </div>
+        <div class="col-lg-6 mt-lg-2">
+          <p-table [value]="tempMenu.ingridients" [scrollable]="true" scrollHeight="130px">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>原料名称</th>
+                <th [pSortableColumn]="'ig_num'">
+                  数量
+                  <p-sortIcon [field]="'ig_num'" ariaLabel="Activate to sort"
+                                                 ariaLabelDesc="Activate to sort in descending order"
+                                                 ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData>
+              <tr>
+                <td>
+                  {{rowData.ig_name}}
+                </td>
+                <td pEditableColumn>
+                  <p-cellEditor>
+                    <ng-template pTemplate="input">
+                      <input pInputText type="number" [(ngModel)]="rowData.ig_num" required>
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                      {{rowData.ig_num}}
+                    </ng-template>
+                  </p-cellEditor>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+        <div class="col-lg-3"></div>
+      </div>
+    </div>
+    <div class="mt-lg-2">
+      <div class="row">
+        <div class="col-lg-3">
+          <h6 class="control-label mt-lg-2">商品详情</h6>
+        </div>
+        <div class="col-lg-6 offset-lg-0">
+          <textarea class="form-control desc-area" [(ngModel)]="tempMenu.desc"
+                    style="resize:none; height: 150px"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="mt-lg-2 ing-border">
+      <div class="row mt-lg-2 mb-lg-2">
+        <div class="col-lg-3">
+          <h6 class="control-label mt-lg-2">缩略图</h6>
+        </div>
+        <div class="col-lg-6">
+          <input class="form-control-file" type='file' accept="image/*" (change)="onSelectFile($event)">
+          <img [src]="imgUrl" height="100" width="100" *ngIf="tempMenu.pic != null">
+        </div>
+      </div>
+    </div>
+    <div class="mt-lg-2">
+      <div class="row">
+        <div class="col-lg-3">
+          <h6 class="control-label mt-lg-2">上下架</h6>
+        </div>
+        <div class="col-lg-6 offset-lg-0">
+          <p-radioButton name="group1" value="上架" label="上架"  [(ngModel)]="tempMenu.status" inputId="opt1"></p-radioButton>
+          <p-radioButton name="group1" value="下架" label="下架" class="ml-lg-3" [(ngModel)]="tempMenu.status" inputId="opt2"></p-radioButton>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <button type="button" pButton icon="pi pi-check" (click)="submitChangedMenu()" label="提交"></button>
+    <button type="button" pButton icon="pi pi-times" (click)="closeChangeDialog()" label="关闭"
+            class="ui-button-secondary"></button>
+  </p-footer>
+</p-dialog>
+
+<!--Dialog for adding new menu!-->
+<p-dialog
+  header="菜品添加" [(visible)]="displayAddDialog" [modal]="true" [responsive]="true"
+  [style]="{width: '80%', minWidth: '1000px', minHeight: '1300'}"
+  [minY]="70"
+  [maximizable]="true" [baseZIndex]="10000">
+  <div class="mt-lg-2 ml-lg-2 mr-lg-2" *ngIf="tempMenu != null">
+    <div class="row">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">商品名称</h6>
+      </div>
+      <div class="col-lg-6">
+        <input class="form-control" type="text" [(ngModel)]="tempMenu.name">
+      </div>
+    </div>
+    <div class="row mt-lg-2">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">商品类别</h6>
+      </div>
+      <div class="col-lg-6">
+        <select class="custom-select" [(ngModel)]="tempMenu.type">
+          <option *ngFor="let type of pizzaType" value="{{type.value}}">{{type.value}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="row mt-lg-2">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">商品价格</h6>
+      </div>
+      <div class="col-lg-6">
+        <input class="form-control" type="text" [(ngModel)]="tempMenu.price">
+      </div>
+    </div>
+    <div class="mt-lg-2 pb-lg-2 ing-border">
+      <div class="row">
+        <div class="col">
+          <h6 class="control-label mt-lg-2">制作参数</h6>
+        </div>
+        <div class="col-lg-6 mt-lg-2">
+          <p-table [value]="tempMenu.ingridients" [scrollable]="true" scrollHeight="130px">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>原料名称</th>
+                <th [pSortableColumn]="'ig_num'">
+                  数量
+                  <p-sortIcon [field]="'ig_num'" ariaLabel="Activate to sort"
+                                                 ariaLabelDesc="Activate to sort in descending order"
+                                                 ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData>
+              <tr>
+                <td>
+                  {{rowData.ig_name}}
+                </td>
+                <td pEditableColumn>
+                  <p-cellEditor>
+                    <ng-template pTemplate="input">
+                      <input pInputText type="number" [(ngModel)]="rowData.ig_num" required>
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                      {{rowData.ig_num}}
+                    </ng-template>
+                  </p-cellEditor>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+        <div class="col-lg-3"></div>
+      </div>
+    </div>
+    <div class="mt-lg-2">
+      <div class="row">
+        <div class="col-lg-3">
+          <h6 class="control-label mt-lg-2">商品详情</h6>
+        </div>
+        <div class="col-lg-6 offset-lg-0">
+          <textarea class="form-control desc-area" [(ngModel)]="tempMenu.desc"
+                    style="resize:none; height: 150px"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="mt-lg-2 ing-border">
+      <div class="row mt-lg-2 mb-lg-2">
+        <div class="col-lg-3">
+          <h6 class="control-label mt-lg-2">缩略图</h6>
+        </div>
+        <div class="col-lg-6">
+          <input class="form-control-file" type='file' accept="image/*" (change)="onSelectFile($event)">
+          <img [src]="imgUrl" height="100" width="100" *ngIf="tempMenu.pic != null">
+        </div>
+      </div>
+    </div>
+    <div class="mt-lg-2">
+      <div class="row">
+        <div class="col-lg-3">
+          <h6 class="control-label mt-lg-2">上下架</h6>
+        </div>
+        <div class="col-lg-6 offset-lg-0">
+          <p-radioButton name="group1" value="上架" label="上架" [(ngModel)]="tempMenu.status" inputId="opt1"></p-radioButton>
+          <p-radioButton name="group1" value="下架" label="下架" class="ml-lg-3" [(ngModel)]="tempMenu.status" inputId="opt2"></p-radioButton>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <button type="button" pButton icon="pi pi-check" (click)="submitNewMenu()" label="提交"></button>
+    <button type="button" pButton icon="pi pi-times" (click)="closeNewMenuDialog()" label="关闭"
+            class="ui-button-secondary"></button>
+  </p-footer>
+</p-dialog>
+

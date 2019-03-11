@@ -1,4 +1,4 @@
-<div class="pt-lg-2 pl-lg-3 pr-lg-3 order-count-page">
+<div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 order-count-page">
   <div class="order-count-title">
     <h5>订单数据</h5>
   </div>
@@ -34,7 +34,7 @@
   </div>
   <div class="mt-lg-3 pr-lg-2">
     <p-card header="订单日统计" [style]="{width: '100%'}">
-      <p-table #myTable [columns]="cols" [value]="orderCount" [paginator]="true" [rows]="15">
+      <p-table #myTable [columns]="cols" [value]="orderCount" [paginator]="true" [rows]="10">
         <ng-template pTemplate="header" let-columns>
           <tr>
             <th *ngFor="let col of columns">{{col.header}}</th>
@@ -42,6 +42,8 @@
           <tr>
             <th *ngFor="let col of columns" [ngSwitch]="col.field">
               <p-calendar
+                [style]="{'width':'100%'}"
+                [inputStyle]="{'width':'100%'}"
                 [(ngModel)]="dateFilters"
                 appendTo="body"
                 *ngSwitchCase="'date'"

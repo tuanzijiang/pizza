@@ -1,3 +1,105 @@
-<p>
-  chargeback works!
-</p>
+<div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 chargeback-page">
+  <div class="chargeback-title">
+    <h5>退单管理</h5>
+  </div>
+  <div class="mt-lg-2 pr-lg-4 pl-lg-4">
+    <p-tabView>
+      <p-tabPanel header="待审核请求" [selected]="true">
+        <p-table #dt [value]="chargebackPendings" [paginator]="true" [rows]="10">
+          <ng-template pTemplate="header" filterStyle="display:none">
+            <tr>
+              <th *ngFor="let col of pendingCols" [pSortableColumn]="col.field">
+                {{col.header}}
+                <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                            ariaLabelDesc="Activate to sort in descending order"
+                            ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+              </th>
+              <th>是否审核通过</th>
+            </tr>
+            <tr>
+              <th *ngFor="let col of pendingCols" [ngSwitch]="col.field">
+                <input *ngSwitchCase="'order_id'" pInputText type="text" class="chargeback-filter"
+                       (input)="dt.filter($event.target.value, col.field, 'contains')">
+                <input *ngSwitchCase="'receiver'" pInputText type="text" class="chargeback-filter"
+                       (input)="dt.filter($event.target.value, col.field, 'contains')">
+                <input *ngSwitchCase="'phone'" pInputText type="text" class="chargeback-filter"
+                       (input)="dt.filter($event.target.value, col.field, 'contains')">
+              </th>
+              <th></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData>
+            <tr>
+              <td *ngFor="let col of pendingCols" [ngSwitch]="true">
+                <span *ngSwitchCase="col.field == 'commit_time' || col.field == 'cancel_time'">
+                  {{rowData[col.field] | date:'medium' }}
+                </span>
+                <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+              </td>
+              <td class="chargeback-operation">
+                <button pButton type="button" icon="pi pi-check" class="ui-button-success"
+                        (click)="agreeRequest(rowData)"></button>
+                <button pButton type="button" icon="pi pi-times" class="ui-button-danger ml-lg-3"
+                        (click)="disagreeRequest(rowData)"></button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-tabPanel>
+      <p-tabPanel header="历史退单">
+        <p-table #dtProcessed [columns]="processedCols" [value]="chargebackPro" [paginator]="true" [rows]="10">
+          <ng-template pTemplate="header" filterStyle="display:none" let-columns>
+            <tr>
+              <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                {{col.header}}
+                <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                            ariaLabelDesc="Activate to sort in descending order"
+                            ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+              </th>
+            </tr>
+            <tr>
+              <th *ngFor="let col of processedCols" [ngSwitch]="col.field">
+                <input *ngSwitchCase="'order_id'" pInputText type="text" class="chargeback-filter"
+                       (input)="dtProcessed.filter($event.target.value, col.field, 'contains')">
+                <input *ngSwitchCase="'receiver'" pInputText type="text" class="chargeback-filter"
+                       (input)="dtProcessed.filter($event.target.value, col.field, 'contains')">
+                <input *ngSwitchCase="'phone'" pInputText type="text" class="chargeback-filter"
+                       (input)="dtProcessed.filter($event.target.value, col.field, 'contains')">
+                <p-calendar
+                  [style]="{'width':'100%'}"
+                  [inputStyle]="{'width':'100%'}"
+                  [(ngModel)]="dateFilters"
+                  appendTo="body"
+                  *ngSwitchCase="'commit_time'"
+                  selectionMode="range"
+                  [readonlyInput]="false"
+                  dateFormat="yy-mm-dd"
+                  placeholder="请选择日期"
+                  (onSelect)="dtProcessed.filter($event, col.field, 'dateRangeFilter')">
+                </p-calendar>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr>
+              <td *ngFor="let col of columns" [ngSwitch]="true">
+                <span *ngSwitchCase="col.field == 'commit_time' || col.field == 'cancel_time'">
+                  {{rowData[col.field] | date:'medium' }}
+                </span>
+                <span *ngSwitchCase="col.field == 'result'">
+                  <span *ngIf="rowData[col.field] == '通过'" style="color: green">
+                    {{rowData[col.field]}}
+                  </span>
+                  <span *ngIf="rowData[col.field] == '未通过'" style="color: red">
+                    {{rowData[col.field]}}
+                  </span>
+                </span>
+                <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+</div>
