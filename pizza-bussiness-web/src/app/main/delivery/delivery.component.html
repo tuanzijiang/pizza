@@ -1,6 +1,6 @@
 <div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 delivery-page">
   <div class="delivery-title">
-    <h5>配送员列表</h5>
+    <h5>配送人员管理</h5>
   </div>
   <div class="mt-lg-2 pr-lg-2">
     <p-table #dt [value]="deliveries" [paginator]="true" [rows]="10"
@@ -30,13 +30,13 @@
         <tr>
           <th *ngFor="let col of cols" [ngSwitch]="col.field">
             <input *ngSwitchCase="'id'" pInputText type="text" class="del-filter"
-                   (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
             <input *ngSwitchCase="'name'" pInputText type="text" class="del-filter"
-                   (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
             <input *ngSwitchCase="'phone'" pInputText type="text" class="del-filter"
-                   (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
             <input *ngSwitchCase="'shop_id'" pInputText type="text" class="del-filter"
-                   (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
           </th>
           <th></th>
         </tr>
@@ -58,7 +58,7 @@
 
 <!--Dialog for changing selected delivery!-->
 <p-dialog
-  header="{{dialogHeader}}" [(visible)]="displayDialog" [modal]="true" [responsive]="true"
+  header="{{dialogHeader}}" [(visible)]="displayChangeDialog" [modal]="true" [responsive]="true"
   [style]="{width: '60%'}"
   [minY]="70" [maximizable]="true" [baseZIndex]="10000">
   <div class="mt-lg-2 ml-lg-2 mr-lg-2" *ngIf="tempDel != null">
@@ -96,7 +96,7 @@
 
 <!--Dialog for adding selected delivery!-->
 <p-dialog
-  header="{{dialogHeader}}" [(visible)]="displayDialog" [modal]="true" [responsive]="true"
+  header="{{dialogHeader}}" [(visible)]="displayAddDialog" [modal]="true" [responsive]="true"
   [style]="{width: '60%'}"
   [minY]="70" [maximizable]="true" [baseZIndex]="10000">
   <div class="mt-lg-2 ml-lg-2 mr-lg-2" *ngIf="tempDel != null">

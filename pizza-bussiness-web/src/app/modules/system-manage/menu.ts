@@ -1,4 +1,4 @@
-import {Ingredent} from "./ingredent";
+import {Ingredient} from "./ingredient";
 
 export class Menu {
   pizza_id: string;
@@ -8,5 +8,5 @@ export class Menu {
   price: number;
   desc: string;
   status: string;
-  ingridients: Ingredent[];
+  ingridients: Ingredient[];
 }

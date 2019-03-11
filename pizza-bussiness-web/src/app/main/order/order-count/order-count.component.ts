@@ -1,6 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {YesterdayOrder} from "../../../modules/order/yesterdayOrder";
-import {OrderCount} from "../../../modules/order/orderCount";
 import {Table} from "primeng/table";
 
 @Component({

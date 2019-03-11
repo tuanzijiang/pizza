@@ -25,7 +25,7 @@ import {
   DropdownModule,
   FileUploadModule,
   PanelModule,
-  RadioButtonModule
+  RadioButtonModule, TabViewModule
 } from "primeng/primeng";
 import {FormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
@@ -60,7 +60,8 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     CalendarModule,
     FileUploadModule,
     RadioButtonModule,
-    PanelModule
+    PanelModule,
+    TabViewModule
   ],
 })
 export class MainModule {

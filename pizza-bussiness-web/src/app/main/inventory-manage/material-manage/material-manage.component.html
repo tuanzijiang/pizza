@@ -1,3 +1,190 @@
-<p>
-  material-manage works!
-</p>
+<div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 material-page">
+  <div class="material-title">
+    <h5>原料列表</h5>
+  </div>
+  <div class="mt-lg-2 pr-lg-2">
+    <p-table #dt [value]="materials" [paginator]="true" [rows]="10"
+             [globalFilterFields]="['material_id', 'name', 'inventory', 'provider', 'threshold', 'status']">
+      <ng-template pTemplate="caption">
+        <div class="row">
+          <div class="col-lg-6" style="text-align: left">
+            <p-button icon="pi pi-plus" label="新增" (onClick)="addMaterial()"></p-button>
+            <p-button icon="pi pi-plus" class="ml-lg-3" label="批量导入原料清单" (onClick)="importMaterial()"></p-button>
+          </div>
+          <div class="col-lg-6" style="text-align: right">
+            <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+            <input type="text" pInputText size="50" placeholder="搜索..."
+                   (input)="dt.filterGlobal($event.target.value, 'contains')" style="width:auto">
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header" filterStyle="display:none">
+        <tr>
+          <th *ngFor="let col of cols" [pSortableColumn]="col.field">
+            {{col.header}}
+            <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                        ariaLabelDesc="Activate to sort in descending order"
+                        ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+          </th>
+          <th></th>
+        </tr>
+        <tr>
+          <th *ngFor="let col of cols" [ngSwitch]="col.field">
+            <input *ngSwitchCase="'material_id'" pInputText type="text" class="material-filter"
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
+            <input *ngSwitchCase="'name'" pInputText type="text" class="material-filter"
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
+            <input *ngSwitchCase="'provider'" pInputText type="text" class="material-filter"
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
+            <p-dropdown *ngSwitchCase="'status'" [options]="status" [style]="{'width':'100%'}"
+                        (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
+          </th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData>
+        <tr>
+          <td *ngFor="let col of cols" [ngSwitch]="true">
+            {{rowData[col.field]}}
+          </td>
+          <td class="deli-operation">
+            <button pButton type="button" icon="pi pi-pencil" class="ui-button-primary ml-lg-3"
+                    (click)="editMaterial(rowData)"></button>
+            <button pButton type="button" icon="pi pi-times" class="ui-button-danger ml-lg-3"
+                    (click)="onRowCancel(rowData)"></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+
+<!--Dialog for changing selected material!-->
+<p-dialog
+  header="{{dialogHeader}}" [(visible)]="displayChangeDialog" [modal]="true" [responsive]="true"
+  [style]="{width: '60%'}"
+  [minY]="70" [maximizable]="true" [baseZIndex]="10000">
+  <div class="mt-lg-2 ml-lg-2 mr-lg-2" *ngIf="tempMaterial != null">
+    <div class="row">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">原料名称</h6>
+      </div>
+      <div class="col-lg-6">
+        <input class="form-control" type="text" [(ngModel)]="tempMaterial.name">
+      </div>
+    </div>
+    <div class="row mt-lg-2">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">库存量</h6>
+      </div>
+      <div class="col-lg-6">
+        <input class="form-control" type="number" [(ngModel)]="tempMaterial.inventory">
+      </div>
+    </div>
+    <div class="row mt-lg-2">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">安全阈值</h6>
+      </div>
+      <div class="col-lg-6">
+        <input class="form-control" type="number" [(ngModel)]="tempMaterial.threshold">
+      </div>
+    </div>
+    <div class="row mt-lg-2">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">供应商</h6>
+      </div>
+      <div class="col-lg-6">
+        <input class="form-control" type="text" [(ngModel)]="tempMaterial.provider">
+      </div>
+    </div>
+    <div class="row mt-lg-2">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">状态</h6>
+      </div>
+      <div class="col-lg-6 offset-lg-0">
+        <p-radioButton name="group1" value="使用中" label="使用中" [(ngModel)]="tempMaterial.status" inputId="opt1"></p-radioButton>
+        <p-radioButton name="group1" value="停用中" label="停用中" class="ml-lg-3" [(ngModel)]="tempMaterial.status" inputId="opt2"></p-radioButton>
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <button type="button" pButton icon="pi pi-check" (click)="submitChangedMat()" label="提交"></button>
+    <button type="button" pButton icon="pi pi-times" (click)="closeDialog()" label="关闭"
+            class="ui-button-secondary"></button>
+  </p-footer>
+</p-dialog>
+
+<!--Dialog for adding  material!-->
+<p-dialog
+  header="{{dialogHeader}}" [(visible)]="displayAddDialog" [modal]="true" [responsive]="true"
+  [style]="{width: '60%'}"
+  [minY]="70" [maximizable]="true" [baseZIndex]="10000">
+  <div class="mt-lg-2 ml-lg-2 mr-lg-2" *ngIf="tempMaterial != null">
+    <div class="row">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">原料名称</h6>
+      </div>
+      <div class="col-lg-6">
+        <input class="form-control" type="text" [(ngModel)]="tempMaterial.name">
+      </div>
+    </div>
+    <div class="row mt-lg-2">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">库存量</h6>
+      </div>
+      <div class="col-lg-6">
+        <input class="form-control" type="number" [(ngModel)]="tempMaterial.inventory">
+      </div>
+    </div>
+    <div class="row mt-lg-2">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">安全阈值</h6>
+      </div>
+      <div class="col-lg-6">
+        <input class="form-control" type="number" [(ngModel)]="tempMaterial.threshold">
+      </div>
+    </div>
+    <div class="row mt-lg-2">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">供应商</h6>
+      </div>
+      <div class="col-lg-6">
+        <input class="form-control" type="text" [(ngModel)]="tempMaterial.provider">
+      </div>
+    </div>
+    <div class="row mt-lg-2">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">状态</h6>
+      </div>
+      <div class="col-lg-6 offset-lg-0">
+        <p-radioButton name="group1" value="使用中" label="使用中" [(ngModel)]="tempMaterial.status" inputId="opt1"></p-radioButton>
+        <p-radioButton name="group1" value="停用中" label="停用中" class="ml-lg-3" [(ngModel)]="tempMaterial.status" inputId="opt2"></p-radioButton>
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <button type="button" pButton icon="pi pi-check" (click)="submitAddMat()" label="提交"></button>
+    <button type="button" pButton icon="pi pi-times" (click)="closeDialog()" label="关闭"
+            class="ui-button-secondary"></button>
+  </p-footer>
+</p-dialog>
+
+
+<!--Dialog for importing material!-->
+<p-dialog
+  header="{{dialogHeader}}" [(visible)]="displayImportDialog" [modal]="true" [responsive]="true"
+  [style]="{width: '600px', minWidth: '200px'}"
+  [minY]="70" [maximizable]="true" [baseZIndex]="10000">
+  <div class="mt-lg-2 ml-lg-2 mr-lg-2">
+    <input class="form-control-file" type='file' accept=".xls, .xlsx, .xlsm" (change)="onSelectFile($event)">
+    <div class="alert alert-danger mt-lg-2" role="alert" *ngIf="showAlert">
+      文件不能为空！
+    </div>
+  </div>
+  <p-footer>
+    <button type="button" pButton icon="pi pi-check" (click)="submitImportMat()" label="提交"></button>
+    <button type="button" pButton icon="pi pi-times" (click)="closeDialog()" label="关闭"
+            class="ui-button-secondary"></button>
+  </p-footer>
+</p-dialog>

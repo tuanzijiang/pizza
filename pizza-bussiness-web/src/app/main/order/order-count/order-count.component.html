@@ -42,13 +42,14 @@
           <tr>
             <th *ngFor="let col of columns" [ngSwitch]="col.field">
               <p-calendar
+                [style]="{'width':'100%'}"
+                [inputStyle]="{'width':'100%'}"
                 [(ngModel)]="dateFilters"
                 appendTo="body"
                 *ngSwitchCase="'date'"
                 selectionMode="range"
                 [readonlyInput]="false"
                 dateFormat="yy-mm-dd"
-                [style]="{'width':'100%'}"
                 (onSelect)="myTable.filter($event, col.field, 'dateRangeFilter')">
               </p-calendar>
             </th>

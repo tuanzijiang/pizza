@@ -1,3 +1,304 @@
-<p>
-  factory-manage works!
-</p>
+<div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 factory-manage-page">
+  <div class="factory-manage-title">
+    <h5>披萨工厂</h5>
+  </div>
+  <div class="mt-lg-2 pr-lg-2">
+    <p-table #dt [value]="factories" [paginator]="true" [rows]="10"
+             [globalFilterFields]="['fac_id', 'name', 'address', 'area', 'open_hours', 'phone']">
+      <ng-template pTemplate="caption">
+        <div class="row">
+          <div class="col-lg-6" style="text-align: left">
+            <p-button icon="pi pi-plus" label="新增" (onClick)="addFactory()"></p-button>
+          </div>
+          <div class="col-lg-6" style="text-align: right">
+            <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+            <input type="text" pInputText size="50" placeholder="搜索..."
+                   (input)="dt.filterGlobal($event.target.value, 'contains')" style="width:auto">
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header" filterStyle="display:none">
+        <tr>
+          <th *ngFor="let col of cols" [pSortableColumn]="col.field">
+            {{col.header}}
+            <p-sortIcon *ngIf="col.field != 'pic'" [field]="col.field" ariaLabel="Activate to sort"
+                        ariaLabelDesc="Activate to sort in descending order"
+                        ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+          </th>
+          <th></th>
+        </tr>
+        <tr>
+          <th *ngFor="let col of cols" [ngSwitch]="col.field">
+            <input *ngSwitchCase="'name'" pInputText type="text" class="factory-filter"
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
+            <input *ngSwitchCase="'address'" pInputText type="text" class="factory-filter"
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
+            <input *ngSwitchCase="'phone'" pInputText type="text" class="factory-filter"
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
+            <p-dropdown *ngSwitchCase="'area'" [options]="areas" [style]="{'width':'100%'}"
+                        (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
+          </th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData>
+        <tr>
+          <td *ngFor="let col of cols" [ngSwitch]="true">
+            <span *ngSwitchCase="col.field ==='pic'">
+              <img src="{{rowData[col.field]}}" alt="" style="width:50px; height:auto;">
+            </span>
+            <span *ngSwitchDefault>
+              {{rowData[col.field]}}
+            </span>
+          </td>
+          <td class="factory-operation">
+            <div class="row">
+              <button pButton type="button" label="原料库"
+                      class="ui-button-raised ml-lg-2" (click)="checkIg(rowData)"></button>
+              <button pButton type="button" label="修改"
+                      class="ui-button-raised ui-button-success ml-lg-2" (click)="alterFactory(rowData)"></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<!--Material Inventory-->
+<p-dialog header="原料库" [(visible)]="checkIgDialog" [modal]="true" [responsive]="true"
+          [style]="{width: '600px', minWidth: '200px'}" [minY]="100"
+          [maximizable]="true">
+  <div class="mt-lg-2 ml-lg-2 mr-lg-2" *ngIf="tempFactory != null">
+    <span>
+      <span><b>工厂名称: </b>{{tempFactory.name}}</span><br>
+      <span><b>原料份数: </b></span><br>
+      <table>
+        <tr *ngFor="let ig of tempFactory.ingridients">
+          <td>{{ig.ig_name}}</td>
+          <td>{{ig.ig_num}}</td>
+        </tr>
+      </table>
+    </span>
+  </div>
+</p-dialog>
+
+<!--Edit factory attributes-->
+<p-dialog
+  header="{{header}}" [(visible)]="displayChangeDialog" [modal]="true" [responsive]="true"
+  [style]="{width: '80%', minWidth: '1000', minHeight: '1300'}"
+  [minY]="70"
+  [maximizable]="true" [baseZIndex]="10000">
+  <div class="mt-lg-2 ml-lg-2 mr-lg-2" *ngIf="tempFactory != null">
+    <div class="row">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">工厂名称</h6>
+      </div>
+      <div class="col-lg-6 offset-lg-0">
+        <input class="form-control" type="text" [(ngModel)]="tempFactory.name">
+      </div>
+    </div>
+    <div class="row mt-lg-2 ing-border">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">工厂地址</h6>
+      </div>
+      <div class="col-lg-6 offset-lg-0">
+        <div class="row mt-lg-2 full-width">
+          <div class="col-lg-3">
+            <span><b>区域: </b></span>
+          </div>
+          <div class="col-lg-6 offset-lg-0">
+            <select class="custom-select" [(ngModel)]="tempFactory.area">
+              <option *ngFor="let area of areas" value="{{area.value}}">{{area.value}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="mt-lg-2 full-width mt-lg-2">
+           <textarea class="form-control desc-area" [(ngModel)]="tempFactory.address"
+                     placeholder="请输入工厂地址" style="resize:none; height: 150px"></textarea>
+        </div>
+        <div class="row full-width mt-lg-2 mb-lg-2">
+          <div class="col-lg-3">
+            <span><b>经纬度信息:  </b></span>
+          </div>
+          <div class="col-lg-6 offset-lg-0">
+            <div class="row">
+              <div class="col">
+                <input class="form-control" type="text" placeholder="经度" [(ngModel)]="tempFactory.longitude">
+              </div>
+              <div class="col">
+                <input class="form-control ml-lg-2" type="text" placeholder="纬度"
+                       [(ngModel)]="tempFactory.latitude">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-lg-2">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">商家参数</h6>
+      </div>
+      <div class="col-lg-6">
+        <div class="row mt-lg-2">
+          <div class="col-lg-3">
+            <span><b>最大接单量: </b></span>
+          </div>
+          <div class="col-lg-6 offset-lg-0">
+            <input class="form-control" type="number" [(ngModel)]="tempFactory.max_orders">
+          </div>
+        </div>
+        <div class="row mt-lg-2">
+          <div class="col-lg-3">
+            <span><b>营业时间: </b></span>
+          </div>
+          <div class="col-lg-6 offset-lg-0">
+            <div class="row">
+              <div class="col-lg-5">
+                <p-calendar [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" placeholder="开始时间" [(ngModel)]="startDate" [timeOnly]="true"></p-calendar>
+              </div>
+              <div class="col-lg-2 text-center"><i class="pi pi-minus mt-lg-2"></i></div>
+              <div class="col-lg-5">
+                <p-calendar [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"  placeholder="结束时间"  [(ngModel)]="endDate" [timeOnly]="true"></p-calendar>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-lg-2">
+          <div class="col-lg-3">
+            <span><b>联系电话: </b></span>
+          </div>
+          <div class="col-lg-6 offset-lg-0">
+            <input class="form-control" type="text" [(ngModel)]="tempFactory.phone">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-lg-2 ing-border">
+      <div class="row mt-lg-2 mb-lg-2">
+        <div class="col-lg-3">
+          <h6 class="control-label mt-lg-2">缩略图</h6>
+        </div>
+        <div class="col-lg-6">
+          <input class="form-control-file" type='file' accept="image/*" (change)="onSelectFile($event)">
+          <img [src]="imgUrl" height="100" width="100" *ngIf="tempFactory.pic != null">
+        </div>
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <button type="button" pButton icon="pi pi-check" (click)="submitChangedFac()" label="提交"></button>
+    <button type="button" pButton icon="pi pi-times" (click)="closeDialog()" label="关闭"
+            class="ui-button-secondary"></button>
+  </p-footer>
+</p-dialog>
+
+<!--Create New Factory -->
+<p-dialog
+  header="{{header}}" [(visible)]="displayAddDialog" [modal]="true" [responsive]="true"
+  [style]="{width: '80%', minWidth: '1000', minHeight: '1300'}"
+  [minY]="70"
+  [maximizable]="true" [baseZIndex]="10000">
+  <div class="mt-lg-2 ml-lg-2 mr-lg-2" *ngIf="tempFactory != null">
+    <div class="row">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">工厂名称</h6>
+      </div>
+      <div class="col-lg-6 offset-lg-0">
+        <input class="form-control" type="text" [(ngModel)]="tempFactory.name">
+      </div>
+    </div>
+    <div class="row mt-lg-2 ing-border">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">工厂地址</h6>
+      </div>
+      <div class="col-lg-6 offset-lg-0">
+        <div class="row mt-lg-2 full-width">
+          <div class="col-lg-3">
+            <span><b>区域: </b></span>
+          </div>
+          <div class="col-lg-6 offset-lg-0">
+            <select class="custom-select" [(ngModel)]="tempFactory.area">
+              <option *ngFor="let area of areas" value="{{area.value}}">{{area.value}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="mt-lg-2 full-width mt-lg-2">
+           <textarea class="form-control desc-area" [(ngModel)]="tempFactory.address"
+                     placeholder="请输入工厂地址" style="resize:none; height: 150px"></textarea>
+        </div>
+        <div class="row full-width mt-lg-2 mb-lg-2">
+          <div class="col-lg-3">
+            <span><b>经纬度信息:  </b></span>
+          </div>
+          <div class="col-lg-6 offset-lg-0">
+            <div class="row">
+              <div class="col">
+                <input class="form-control" type="text" placeholder="经度" [(ngModel)]="tempFactory.longitude">
+              </div>
+              <div class="col">
+                <input class="form-control ml-lg-2" type="text" placeholder="纬度"
+                       [(ngModel)]="tempFactory.latitude">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-lg-2">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">商家参数</h6>
+      </div>
+      <div class="col-lg-6">
+        <div class="row mt-lg-2">
+          <div class="col-lg-3">
+            <span><b>最大接单量: </b></span>
+          </div>
+          <div class="col-lg-6 offset-lg-0">
+            <input class="form-control" type="number" [(ngModel)]="tempFactory.max_orders">
+          </div>
+        </div>
+        <div class="row mt-lg-2">
+          <div class="col-lg-3">
+            <span><b>营业时间: </b></span>
+          </div>
+          <div class="col-lg-6 offset-lg-0">
+            <div class="row">
+              <div class="col-lg-5">
+                <p-calendar [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" placeholder="开始时间" [(ngModel)]="startDate" [timeOnly]="true"></p-calendar>
+              </div>
+              <div class="col-lg-2 text-center"><i class="pi pi-minus mt-lg-2"></i></div>
+              <div class="col-lg-5">
+                <p-calendar [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"  placeholder="结束时间"  [(ngModel)]="endDate" [timeOnly]="true"></p-calendar>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-lg-2">
+          <div class="col-lg-3">
+            <span><b>联系电话: </b></span>
+          </div>
+          <div class="col-lg-6 offset-lg-0">
+            <input class="form-control" type="text" [(ngModel)]="tempFactory.phone">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-lg-2 ing-border">
+      <div class="row mt-lg-2 mb-lg-2">
+        <div class="col-lg-3">
+          <h6 class="control-label mt-lg-2">缩略图</h6>
+        </div>
+        <div class="col-lg-6">
+          <input class="form-control-file" type='file' accept="image/*" (change)="onSelectFile($event)">
+          <img [src]="imgUrl" height="100" width="100" *ngIf="tempFactory.pic != null">
+        </div>
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <button type="button" pButton icon="pi pi-check" (click)="submitAddFac()" label="提交"></button>
+    <button type="button" pButton icon="pi pi-times" (click)="closeDialog()" label="关闭"
+            class="ui-button-secondary"></button>
+  </p-footer>
+</p-dialog>
