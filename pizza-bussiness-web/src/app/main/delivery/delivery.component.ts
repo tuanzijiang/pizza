@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Delivery} from "../../modules/delivery/delivery";
 
 @Component({
@@ -12,13 +12,17 @@ export class DeliveryComponent implements OnInit {
   deliveries: Delivery[];
   tempDel: Delivery;
   dialogHeader: string;
-  displayDialog: boolean;
+  displayChangeDialog: boolean;
+  displayAddDialog: boolean;
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
     this.dialogHeader = '';
-    this.displayDialog = false;
+    this.displayChangeDialog = false;
+    this.displayAddDialog = false;
+
     this.cols = [
       {field: 'id', header: '配送员ID'},
       {field: 'name', header: '姓名'},
@@ -37,11 +41,11 @@ export class DeliveryComponent implements OnInit {
   addDelivery() {
     this.tempDel = new Delivery();
     this.dialogHeader = '新增配送员';
-    this.displayDialog = true;
+    this.displayAddDialog = true;
   }
 
   onRowCancel(del: Delivery) {
-    if(this.deliveries.find(obj => obj.id == del.id) != null) {
+    if (this.deliveries.find(obj => obj.id == del.id) != null) {
       this.deliveries = this.deliveries.filter(obj => obj.id != del.id);
     }
   }
@@ -49,21 +53,22 @@ export class DeliveryComponent implements OnInit {
   editDelivery(del: Delivery) {
     this.dialogHeader = '配送员基本信息修改';
     this.tempDel = del;
-    this.displayDialog = true;
+    this.displayChangeDialog = true;
   }
 
   submitChangedDel() {
-    this.displayDialog = false;
+    this.displayChangeDialog = false;
     this.tempDel = null;
   }
 
   submitAddedDel() {
-    this.displayDialog = false;
+    this.displayAddDialog = false;
     this.tempDel = null;
   }
 
   closeDialog() {
-    this.displayDialog = false;
+    this.displayChangeDialog = false;
+    this.displayAddDialog = false;
     this.tempDel = null;
   }
 

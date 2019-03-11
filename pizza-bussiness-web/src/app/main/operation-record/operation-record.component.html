@@ -24,11 +24,11 @@
         <tr>
           <th *ngFor="let col of cols" [ngSwitch]="col.field">
             <input *ngSwitchCase="'manager_id'" pInputText type="text" class="op-filter"
-                   (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
             <input *ngSwitchCase="'object'" pInputText type="text" class="op-filter"
-                   (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
             <input *ngSwitchCase="'time'" pInputText type="text" class="op-filter"
-                   (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
             <p-dropdown *ngSwitchCase="'type'" [options]="opType" [style]="{'width':'100%'}"
                         (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
           </th>

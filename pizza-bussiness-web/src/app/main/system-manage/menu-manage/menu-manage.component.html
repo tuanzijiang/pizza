@@ -30,11 +30,11 @@
         <tr>
           <th *ngFor="let col of cols" [ngSwitch]="col.field">
             <input *ngSwitchCase="'pizza_id'" pInputText type="text" class="menu-filter"
-              (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+              (input)="dt.filter($event.target.value, col.field, 'contains')">
             <input *ngSwitchCase="'name'" pInputText type="text" class="menu-filter"
-              (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+              (input)="dt.filter($event.target.value, col.field, 'contains')">
             <input *ngSwitchCase="'price'" pInputText type="text" class="menu-filter"
-              (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+              (input)="dt.filter($event.target.value, col.field, 'contains')">
             <p-dropdown *ngSwitchCase="'type'" [options]="pizzaType" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
             <p-dropdown *ngSwitchCase="'status'" [options]="states" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
           </th>
@@ -168,8 +168,8 @@
           <h6 class="control-label mt-lg-2">上下架</h6>
         </div>
         <div class="col-lg-6 offset-lg-0">
-          <p-radioButton name="group1" value="上架" label="上架" [(ngModel)]="tempMenu.status" inputId="opt1"></p-radioButton>
-          <p-radioButton name="group1" value="下架" label="下架" [(ngModel)]="tempMenu.status" inputId="opt2"></p-radioButton>
+          <p-radioButton name="group1" value="上架" label="上架"  [(ngModel)]="tempMenu.status" inputId="opt1"></p-radioButton>
+          <p-radioButton name="group1" value="下架" label="下架" class="ml-lg-3" [(ngModel)]="tempMenu.status" inputId="opt2"></p-radioButton>
         </div>
       </div>
     </div>
@@ -283,7 +283,7 @@
         </div>
         <div class="col-lg-6 offset-lg-0">
           <p-radioButton name="group1" value="上架" label="上架" [(ngModel)]="tempMenu.status" inputId="opt1"></p-radioButton>
-          <p-radioButton name="group1" value="下架" label="下架" [(ngModel)]="tempMenu.status" inputId="opt2"></p-radioButton>
+          <p-radioButton name="group1" value="下架" label="下架" class="ml-lg-3" [(ngModel)]="tempMenu.status" inputId="opt2"></p-radioButton>
         </div>
       </div>
     </div>

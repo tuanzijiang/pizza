@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Menu} from "../../../modules/system-manage/menu";
-import {Ingredent} from "../../../modules/system-manage/ingredent";
+import {Ingredient} from "../../../modules/system-manage/ingredient";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {ErrorMessage} from "ng-bootstrap-form-validation";
 
@@ -14,13 +14,12 @@ export class MenuManageComponent implements OnInit {
   cols: any[];
   igcols: any[];
   menuList: Menu[];
-  igList: Ingredent[];
+  igList: Ingredient[];
   states: any[];
   pizzaType: any[];
   displayAddDialog: boolean;
   displayChangeDialog: boolean;
   tempMenu: Menu;
-  uploadedImages: any[];
   imgUrl: string;
 
   constructor(private fb: FormBuilder) {
@@ -30,7 +29,6 @@ export class MenuManageComponent implements OnInit {
     this.displayAddDialog = false;
     this.displayChangeDialog = false;
     this.tempMenu = null;
-    this.uploadedImages = [];
 
     this.cols = [
       {field: 'pizza_id', header: '编号'},
@@ -161,7 +159,7 @@ export class MenuManageComponent implements OnInit {
       reader.readAsDataURL(event.target.files[0]); // read file as data url
       this.tempMenu.pic = event.target.files[0];
 
-      reader.onload = (event) => { // called once readAsDataURL is completed
+      reader.onload = (event : any) => { // called once readAsDataURL is completed
         this.imgUrl = event.target.result;
       }
     }

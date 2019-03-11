@@ -2,7 +2,7 @@
  * Define the Order making the order list
  */
 
-export interface Order {
+export class Order {
   order_id: string;
   receive_name: string;
   phone: string;

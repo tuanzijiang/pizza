@@ -1,4 +1,4 @@
-export interface UserManage {
+export class UserManage {
   user_pic: any;
   nickname: string;
   email: string;

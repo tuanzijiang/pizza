@@ -25,13 +25,13 @@
         <tr>
           <th *ngFor="let col of cols" [ngSwitch]="col.field">
             <input *ngSwitchCase="'order_id'" pInputText type="text" class="order-filter"
-                   (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
             <input *ngSwitchCase="'receive_name'" pInputText type="text" class="order-filter"
-                   (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
             <input *ngSwitchCase="'phone'" pInputText type="text" class="order-filter"
-                   (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
             <input *ngSwitchCase="'receive_address'" pInputText type="text" class="order-filter"
-                   (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
             <p-dropdown *ngSwitchCase="'state'" [options]="states" [style]="{'width':'100%'}"
                         (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
           </th>

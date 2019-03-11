@@ -24,17 +24,17 @@
         <tr>
           <th *ngFor="let col of cols" [ngSwitch]="col.field">
             <input *ngSwitchCase="'nickname'" pInputText type="text" class="user-filter"
-                   (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
             <input *ngSwitchCase="'email'" pInputText type="text" class="user-filter"
-                   (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
             <input *ngSwitchCase="'address'" pInputText type="text" class="user-filter"
-                   (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
             <input *ngSwitchCase="'distinct'" pInputText type="text" class="user-filter"
-                   (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
             <input *ngSwitchCase="'birthday'" pInputText type="text" class="user-filter"
-                   (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
             <input *ngSwitchCase="'latest_login'" pInputText type="text" class="user-filter"
-                   (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
           </th>
         </tr>
       </ng-template>
