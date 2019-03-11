@@ -25,7 +25,7 @@ export class MaterialManageComponent implements OnInit {
   ngOnInit() {
     this.displayChangeDialog = false;
     this.displayAddDialog = false;
-    this.displayImportDialog = true;
+    this.displayImportDialog = false;
     this.showAlert = false;
 
     this.cols = [
