@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "ingredient", schema = "pizza_project", catalog = "")
 public class IngredientEntity {
     private int id;
-    private Integer name;
+    private String name;
     private String supplierName;
     private Integer state;
     private Integer alermNum;
@@ -24,11 +24,11 @@ public class IngredientEntity {
 
     @Basic
     @Column(name = "name")
-    public Integer getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(Integer name) {
+    public void setName(String name) {
         this.name = name;
     }
 
