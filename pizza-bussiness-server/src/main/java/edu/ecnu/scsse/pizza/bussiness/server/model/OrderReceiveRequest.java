@@ -1,14 +1,14 @@
 package edu.ecnu.scsse.pizza.bussiness.server.model;
 
 public class OrderReceiveRequest {
-    private int orderUuid;
+    private String orderUuid;
     private int userAddressId;
 
-    public int getOrderUuid() {
+    public String getOrderUuid() {
         return orderUuid;
     }
 
-    public void setOrderUuid(int orderUuid) {
+    public void setOrderUuid(String orderUuid) {
         this.orderUuid = orderUuid;
     }
 
@@ -20,7 +20,7 @@ public class OrderReceiveRequest {
         this.userAddressId = userAddressId;
     }
 
-    public OrderReceiveRequest(int orderUuid, int userAddressId) {
+    public OrderReceiveRequest(String orderUuid, int userAddressId) {
         this.orderUuid = orderUuid;
         this.userAddressId = userAddressId;
     }
