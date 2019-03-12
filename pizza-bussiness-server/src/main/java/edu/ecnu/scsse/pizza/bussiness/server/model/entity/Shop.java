@@ -80,9 +80,5 @@ public class Shop {
         this.maxNum = maxNum;
         this.startTime = startTime;
         this.endTime = endTime;
-
-    public double get_distance(Point point){
-        MapUtil mapUtil=new MapUtil();
-        return mapUtil.distanceOf(point,mapPoint);
     }
 }
