@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -43,13 +45,13 @@ public class UserService {
 
         Optional<UserEntity> userEntity = userJpaRepository.findById(userId);
         if (userEntity.isPresent()) {
-            User user=EntityConverter.convert(userEntity.get());
+            User user = EntityConverter.convert(userEntity.get());
             int addressId = userEntity.get().getDefaultUserAddressId();
             Optional<UserAddressEntity> userAddressEntityOptional = userAddressJpaRepository.findByUserIdAndAddressId(
                     user.getId(),
                     addressId);
             Optional<AddressEntity> addressEntity = addressJpaRepository.findById(addressId);
-            Address address=EntityConverter.convert(userAddressEntityOptional.get(), addressEntity.get());
+            Address address = EntityConverter.convert(userAddressEntityOptional.get(), addressEntity.get());
             user.setAddress(address);
             fetchUserResponse.setUser(user);
             fetchUserResponse.setResultType(ResultType.SUCCESS);
@@ -108,7 +110,7 @@ public class UserService {
 
     /**
      * 登录
-     * TODO: 格式校验, 手机验证码登录
+     * TODO: 手机验证码登录
      *
      * @param loginRequest
      * @return
@@ -123,8 +125,8 @@ public class UserService {
                     UserEntity userEntity = userEntityOptional.get();
 
                     // verify password
-                    if(userEntity.getPassword().equals(loginRequest.getPassword())) {
-                        User user=EntityConverter.convert(userEntity);
+                    if (userEntity.getPassword().equals(loginRequest.getPassword())) {
+                        User user = EntityConverter.convert(userEntity);
                         loginResponse.setUser(user);
                     } else {
                         loginResponse.setResultType(ResultType.FAILURE);
@@ -162,7 +164,7 @@ public class UserService {
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
         SignUpResponse signUpResponse = new SignUpResponse();
 
-        if(checkPasswordFormat(signUpRequest.getPassword())) {
+        if (checkPasswordFormat(signUpRequest.getPassword())) {
             signUpResponse.setResultType(ResultType.FAILURE);
             return signUpResponse;
         }
@@ -182,27 +184,103 @@ public class UserService {
 
 
     /**
-     * todo
+     * 更新当前用户的地址信息
+     *
+     * @param addUserAddressRequest
+     * @return
+     */
+    public AddUserAddressResponse updateUserAddress(AddUserAddressRequest addUserAddressRequest) {
+        AddUserAddressResponse response = new AddUserAddressResponse();
+        Address address = addUserAddressRequest.getAddress();
+
+        if (address.getId() == null || address.getId() <= 0) {
+            response.setResultType(ResultType.FAILURE);
+            response.setErrorMsg("address id not defined");
+            return response;
+        }
+        try {
+            AddressEntity addressEntity = new AddressEntity();
+            addressEntity.setId(address.getId());
+            addressEntity.setAddress(address.getAddress());
+            addressEntity = addressJpaRepository.save(addressEntity);
+
+            UserAddressEntity userAddressEntity = new UserAddressEntity();
+            userAddressEntity.setAddressId(addressEntity.getId());
+            userAddressEntity.setUserId(addUserAddressRequest.getUserId());
+            userAddressEntity.setAddressDetail(address.getAddressDetail());
+            userAddressEntity.setName(address.getName());
+            userAddressEntity.setPhone(address.getPhone());
+            userAddressEntity.setSex(address.getSex().getDbValue());
+            userAddressEntity.setTag(address.getTag().getDbValue());
+            userAddressJpaRepository.updateByUserIdAndAddressId(userAddressEntity);
+        } catch (Exception e) {
+            response.setResultType(ResultType.FAILURE);
+        }
+
+        return response;
+    }
+
+    /**
+     * 添加地址信息
      *
      * @param addUserAddressRequest
      * @return
      */
     public AddUserAddressResponse addUserAddress(AddUserAddressRequest addUserAddressRequest) {
-        return new AddUserAddressResponse();
+        AddUserAddressResponse response = new AddUserAddressResponse();
+        Address address = addUserAddressRequest.getAddress();
+        AddressEntity addressEntity = new AddressEntity();
+        addressEntity.setAddress(address.getAddress());
+        try {
+            addressEntity = addressJpaRepository.save(addressEntity);
+        } catch (Exception e) {
+            response.setResultType(ResultType.FAILURE);
+            return response;
+        }
+
+        UserAddressEntity userAddressEntity = new UserAddressEntity();
+        userAddressEntity.setAddressId(addressEntity.getId());
+        userAddressEntity.setUserId(addUserAddressRequest.getUserId());
+        userAddressEntity.setAddressDetail(address.getAddressDetail());
+        userAddressEntity.setName(address.getName());
+        userAddressEntity.setPhone(address.getPhone());
+        userAddressEntity.setSex(address.getSex().getDbValue());
+        userAddressEntity.setTag(address.getTag().getDbValue());
+
+        try {
+            userAddressJpaRepository.save(userAddressEntity);
+        } catch (Exception e) {
+            response.setResultType(ResultType.FAILURE);
+        }
+
+
+        return response;
     }
 
     /**
-     * todo
+     * 获取当前用户的地址信息
      *
      * @param fetchUserAddressesRequest
      * @return
      */
     public FetchUserAddressesResponse fetchUserAddresses(FetchUserAddressesRequest fetchUserAddressesRequest) {
-        return new FetchUserAddressesResponse();
+        FetchUserAddressesResponse response = new FetchUserAddressesResponse();
+
+        List<UserAddressEntity> userAddressEntityList =
+                userAddressJpaRepository.findByUserId(fetchUserAddressesRequest.getUserId());
+        List<Address> addresses = new ArrayList<>();
+        for (UserAddressEntity userAddressEntity : userAddressEntityList) {
+            Address address = EntityConverter.convert(userAddressEntity,
+                    addressJpaRepository.findById(userAddressEntity.getAddressId()).get());
+            addresses.add(address);
+        }
+        response.setAddresses(addresses);
+
+        return response;
     }
 
 
-    private boolean checkPasswordFormat(String password) {
+    public boolean checkPasswordFormat(String password) {
         return Pattern.matches("^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,11}$", password);
     }
 

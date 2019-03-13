@@ -80,28 +80,45 @@ public class UserController {
 
 
 
-
-
-
     /**
-     * 添加地址簿
-     * todo
-     */
-    @RequestMapping("/addUserAddress")
-    @ResponseBody
-    public AddUserAddressResponse addUserAddress(@RequestBody AddUserAddressRequest request) {
-        return new AddUserAddressResponse();
-
-    }
-
-    /**
-     * 获取地址簿
-     * todo
+     * 获取当前用户的地址信息
+     *
+     * @param request
+     * @return
      */
     @RequestMapping("/fetchUserAddresses")
     @ResponseBody
     public FetchUserAddressesResponse fetchUserAddresses(@RequestBody FetchUserAddressesRequest request) {
-        return new FetchUserAddressesResponse();
+        return userService.fetchUserAddresses(request);
 
     }
+
+    /**
+     * 更新当前用户的地址信息
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updateUserAddress")
+    @ResponseBody
+    public AddUserAddressResponse updateUserAddress(@RequestBody AddUserAddressRequest request) {
+        return userService.updateUserAddress(request);
+
+    }
+
+
+    /**
+     * 添加地址信息
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/addUserAddress")
+    @ResponseBody
+    public AddUserAddressResponse addUserAddress(@RequestBody AddUserAddressRequest request) {
+        return userService.addUserAddress(request);
+
+    }
+
+
 }
