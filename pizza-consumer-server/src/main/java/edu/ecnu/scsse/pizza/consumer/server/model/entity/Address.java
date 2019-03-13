@@ -1,5 +1,6 @@
 package edu.ecnu.scsse.pizza.consumer.server.model.entity;
 
+import edu.ecnu.scsse.pizza.data.enums.AddressTag;
 import edu.ecnu.scsse.pizza.data.enums.Sex;
 
 public class Address {
@@ -9,7 +10,7 @@ public class Address {
     private String address;
     private String addressDetail;
     private String phone;
-    private String tag;
+    private AddressTag tag;
 
     public Integer getId() {
         return id;
@@ -59,11 +60,11 @@ public class Address {
         this.phone = phone;
     }
 
-    public String getTag() {
+    public AddressTag getTag() {
         return tag;
     }
 
-    public void setTag(String tag) {
+    public void setTag(AddressTag tag) {
         this.tag = tag;
     }
 }
