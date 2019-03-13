@@ -4,6 +4,7 @@ import edu.ecnu.scsse.pizza.consumer.server.model.ResultType;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Address;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.User;
 import edu.ecnu.scsse.pizza.consumer.server.model.user.*;
+import edu.ecnu.scsse.pizza.consumer.server.utils.EntityConverter;
 import edu.ecnu.scsse.pizza.data.domain.AddressEntity;
 import edu.ecnu.scsse.pizza.data.domain.UserAddressEntity;
 import edu.ecnu.scsse.pizza.data.domain.UserEntity;
@@ -42,13 +43,13 @@ public class UserService {
 
         Optional<UserEntity> userEntity=userJpaRepository.findById(userId);
         if(userEntity.isPresent()) {
-            User user=convertUserEntity(userEntity.get());
+            User user=EntityConverter.convert(userEntity.get());
             int addressId=userEntity.get().getDefaultUserAddressId();
             Optional<UserAddressEntity> userAddressEntityOptional = userAddressJpaRepository.findByUserIdAndAddressId (
                             user.getId(),
                             addressId);
             Optional<AddressEntity> addressEntity = addressJpaRepository.findById(addressId);
-            Address address=convertAddressEntity(userAddressEntityOptional.get(), addressEntity.get());
+            Address address=EntityConverter.convert(userAddressEntityOptional.get(), addressEntity.get());
             user.setAddress(address);
             fetchUserResponse.setUser(user);
             fetchUserResponse.setResultType(ResultType.SUCCESS);
@@ -120,7 +121,7 @@ public class UserService {
 
                     // verify password
                     if(userEntity.getPassword().equals(loginRequest.getPassword())) {
-                        User user=convertUserEntity(userEntity);
+                        User user=EntityConverter.convert(userEntity);
                         loginResponse.setUser(user);
                     } else {
                         // password incorrect.
@@ -163,36 +164,30 @@ public class UserService {
         userEntity.setEmail(signUpRequest.getEmail());
         userEntity=userJpaRepository.save(userEntity);
 
-        User user =convertUserEntity(userEntity);
+        User user = EntityConverter.convert(userEntity);
         signUpResponse.setUser(user);
 
         return signUpResponse;
     }
 
-
-    private User convertUserEntity (UserEntity userEntity) {
-        User user = new User(userEntity.getId(), userEntity.getName(), userEntity.getPhone(),
-                userEntity.getEmail(), userEntity.getBirthday(), userEntity.getCity(), userEntity.getImage());
-        return user;
+    /**
+     * todo
+     *
+     * @param addUserAddressRequest
+     * @return
+     */
+    public AddUserAddressResponse addUserAddress(AddUserAddressRequest addUserAddressRequest) {
+        return new AddUserAddressResponse();
     }
 
-    private Address convertAddressEntity (UserAddressEntity userAddressEntity, AddressEntity addressEntity) {
-        Address address = new Address();
-
-        address.setId(address.getId());
-        address.setAddress(addressEntity.getAddress());
-
-        address.setAddressDetail(userAddressEntity.getAddressDetail());
-        address.setName(userAddressEntity.getName());
-        address.setPhone(userAddressEntity.getPhone());
-
-        address.setSex(Sex.fromDbValue(userAddressEntity.getSex()));
-        AddressTag addressTag = AddressTag.fromDbValue(userAddressEntity.getTag());
-        if (addressTag != null) {
-            address.setTag(addressTag.getExpression());
-        }
-
-        return address;
+    /**
+     * todo
+     *
+     * @param fetchUserAddressesRequest
+     * @return
+     */
+    public FetchUserAddressesResponse fetchUserAddresses(FetchUserAddressesRequest fetchUserAddressesRequest) {
+        return new FetchUserAddressesResponse();
     }
 
 }

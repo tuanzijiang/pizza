@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class SendOrderRequest {
     private String orderId;
+    private Integer userAddressId;
 }

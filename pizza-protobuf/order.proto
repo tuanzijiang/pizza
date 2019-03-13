@@ -72,6 +72,7 @@ message FetchMenuResp {
 
 message SendOrderReq {
   string order_id;
+  int32 user_address_id;
 }
 
 message SendOrderResp {
@@ -114,4 +115,27 @@ message FetchPhoneResp {
   string deliveryman_phone = 2;
   string shop_phone = 3;
   string service_phone = 4;
+}
+
+// 保存地址簿信息
+// [post] /addUserAddress
+message AddUserAddressReq {
+  int32 user_id = 1;
+  Address address = 2;
+}
+
+message AddUserAddressResp {
+  ResultType result_type = 1;
+  Address address = 2;
+}
+
+// 获取地址簿信息
+// [post] /fetchUserAddresses
+message FetchUserAddressesReq {
+  int32 user_id = 1;
+}
+
+message FetchUserAddressesResp {
+  ResultType result_type = 1;
+  repeated Address addresses = 2;
 }
