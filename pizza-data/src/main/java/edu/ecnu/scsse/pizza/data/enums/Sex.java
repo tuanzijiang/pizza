@@ -12,6 +12,10 @@ public enum Sex {
 
     private int dbValue;
 
+    public int getDbValue() {
+        return this.dbValue;
+    }
+
     public static Sex fromDbValue(Integer dbStatusValue) {
         if (dbStatusValue == null) {
             return null;
