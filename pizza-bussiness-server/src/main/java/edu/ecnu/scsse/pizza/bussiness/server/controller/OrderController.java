@@ -46,14 +46,14 @@ public class OrderController {
      */
     @RequestMapping(value = "/getYesterdaySaleStatus",method = RequestMethod.GET)
     @ResponseBody
-    public SaleResponse getYesterdaySaleStatus() throws ParseException {
+    public YesterdaySaleResponse getYesterdaySaleStatus() throws ParseException {
         Date today = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(today);
         calendar.add(Calendar.DATE,-1);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String yesterday = sdf.format(calendar.getTime());
-        return orderService.getSaleStatusList(yesterday,yesterday);
+        return orderService.getYesterdaySaleStatus(yesterday);
     }
 
     /**
