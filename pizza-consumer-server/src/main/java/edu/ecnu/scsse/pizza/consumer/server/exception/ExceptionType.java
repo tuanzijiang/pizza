@@ -1,6 +1,6 @@
 package edu.ecnu.scsse.pizza.consumer.server.exception;
 
-public enum  ExceptionType {
+public enum ExceptionType {
     SERVICE,
     CONTROLLER,
     REPOSITORY,

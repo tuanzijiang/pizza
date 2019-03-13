@@ -3,6 +3,7 @@ package edu.ecnu.scsse.pizza.consumer.server.controller;
 import edu.ecnu.scsse.pizza.consumer.server.exception.ConsumerServerException;
 import edu.ecnu.scsse.pizza.consumer.server.exception.IllegalArgumentException;
 import edu.ecnu.scsse.pizza.consumer.server.exception.NotFoundException;
+import edu.ecnu.scsse.pizza.consumer.server.model.ResultType;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Order;
 import edu.ecnu.scsse.pizza.consumer.server.model.order.*;
 import edu.ecnu.scsse.pizza.consumer.server.model.order.FetchOrderRequest;
@@ -82,7 +83,12 @@ public class OrderController {
     @RequestMapping("/updateOrder")
     @ResponseBody
     public UpdateOrderResponse updateOrder(@RequestBody UpdateOrderRequest request) {
-        return new UpdateOrderResponse();
+        try {
+            orderService.updateOrder(request.getOrderId(), request.getPizzaId(), request.getCount());
+            return new UpdateOrderResponse();
+        } catch (ConsumerServerException e) {
+            return new UpdateOrderResponse(e);
+        }
     }
 
     /**
@@ -91,7 +97,14 @@ public class OrderController {
     @RequestMapping("/sendOrder")
     @ResponseBody
     public SendOrderResponse sendOrder(@RequestBody SendOrderRequest request) {
-        return new SendOrderResponse();
+        try {
+            Order order = orderService.sendOrder(request.getOrderId(), request.getUserAddressId());
+            SendOrderResponse response = new SendOrderResponse();
+            response.setOrder(order);
+            return response;
+        } catch (ConsumerServerException e) {
+            return new SendOrderResponse(e);
+        }
     }
 
     /**
@@ -100,7 +113,19 @@ public class OrderController {
     @RequestMapping("/cancelOrder")
     @ResponseBody
     public CancelOrderResponse cancelOrder(@RequestBody CancelOrderRequest request) {
-        return new CancelOrderResponse();
+        try {
+            if (orderService.cancelOrder(request.getOrderId())) {
+                return new CancelOrderResponse();
+            } else {
+                CancelOrderResponse response = new CancelOrderResponse();
+                response.setResultType(ResultType.FAILURE);
+                response.setErrorMsg("订单确认超过10分钟，无法取消。");
+                return response;
+            }
+
+        } catch (NotFoundException e) {
+            return new CancelOrderResponse(e);
+        }
     }
 
     /**
@@ -109,6 +134,16 @@ public class OrderController {
     @RequestMapping("/fetchPhone")
     @ResponseBody
     public FetchPhoneResponse fetchPhone(@RequestBody FetchPhoneRequest request) {
-        return new FetchPhoneResponse();
+        try {
+            OrderService.Phones phones = orderService.getPhones(request.getOrderId());
+            FetchPhoneResponse response = new FetchPhoneResponse();
+            response.setDeliverymanPhone(phones.getDeliverymanPhone());
+            response.setServicePhone(phones.getServicePhone());
+            response.setShopPhone(phones.getShopPhone());
+            return response;
+        } catch (NotFoundException e) {
+            return new FetchPhoneResponse(e);
+        }
+
     }
 }

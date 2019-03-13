@@ -73,4 +73,30 @@ public class UserController {
         return userService.signUp(signUpRequest);
     }
 
+
+
+
+
+
+    /**
+     * 添加地址簿
+     * todo
+     */
+    @RequestMapping("/addUserAddress")
+    @ResponseBody
+    public AddUserAddressResponse addUserAddress(@RequestBody AddUserAddressRequest request) {
+        return new AddUserAddressResponse();
+
+    }
+
+    /**
+     * 获取地址簿
+     * todo
+     */
+    @RequestMapping("/fetchUserAddresses")
+    @ResponseBody
+    public FetchUserAddressesResponse fetchUserAddresses(@RequestBody FetchUserAddressesRequest request) {
+        return new FetchUserAddressesResponse();
+
+    }
 }

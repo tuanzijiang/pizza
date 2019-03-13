@@ -28,4 +28,9 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
                                                                Integer lastOrderId,
                                                                Pageable pageable);
 
+
+    // update
+    @Query("update OrderEntity set state=?1 where orderUuid=?2")
+    int updateStateByOrderUuid(Integer state, String orderUuid);
+
 }
