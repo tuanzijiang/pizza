@@ -1,14 +1,15 @@
-package edu.ecnu.scsse.pizza.bussiness.server.model;
+package edu.ecnu.scsse.pizza.bussiness.server.model.request_response.order;
 
 import edu.ecnu.scsse.pizza.bussiness.server.exception.BusinessServerException;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Menu;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
 import edu.ecnu.scsse.pizza.data.enums.OrderStatus;
-import org.springframework.beans.BeanUtils;
 
 import java.util.List;
 
-public class OrderDetailResponse extends BaseResponse{
+public class OrderDetailResponse extends BaseResponse {
     private String orderId;
     private String receiveName;
     private String receivePhone;
@@ -31,7 +32,7 @@ public class OrderDetailResponse extends BaseResponse{
     }
 
     public OrderDetailResponse(Order order) {
-        BeanUtils.copyProperties(order,this);
+        CopyUtils.copyProperties(order,this);
     }
 
     public OrderDetailResponse(BusinessServerException e) {

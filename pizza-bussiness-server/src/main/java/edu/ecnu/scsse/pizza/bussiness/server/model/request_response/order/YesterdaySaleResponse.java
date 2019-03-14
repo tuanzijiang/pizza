@@ -1,12 +1,11 @@
-package edu.ecnu.scsse.pizza.bussiness.server.model;
+package edu.ecnu.scsse.pizza.bussiness.server.model.request_response.order;
 
 import edu.ecnu.scsse.pizza.bussiness.server.exception.BusinessServerException;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.SaleStatus;
-import org.springframework.beans.BeanUtils;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
 
-import java.util.List;
-
-public class YesterdaySaleResponse extends BaseResponse{
+public class YesterdaySaleResponse extends BaseResponse {
     private int orderNum;
     private int completeNum;
     private int cancelNum;
@@ -17,7 +16,7 @@ public class YesterdaySaleResponse extends BaseResponse{
 
 
     public YesterdaySaleResponse(SaleStatus saleStatus) {
-        BeanUtils.copyProperties(saleStatus,this);
+        CopyUtils.copyProperties(saleStatus,this);
     }
 
     public YesterdaySaleResponse(BusinessServerException e) {

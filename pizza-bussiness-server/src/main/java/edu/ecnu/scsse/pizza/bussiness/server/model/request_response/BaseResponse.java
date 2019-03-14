@@ -1,4 +1,4 @@
-package edu.ecnu.scsse.pizza.bussiness.server.model;
+package edu.ecnu.scsse.pizza.bussiness.server.model.request_response;
 
 import edu.ecnu.scsse.pizza.bussiness.server.exception.BusinessServerException;
 
