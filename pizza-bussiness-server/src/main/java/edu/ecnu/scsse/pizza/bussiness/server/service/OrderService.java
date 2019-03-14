@@ -1,7 +1,6 @@
 package edu.ecnu.scsse.pizza.bussiness.server.service;
 
 import edu.ecnu.scsse.pizza.bussiness.server.exception.NotFoundException;
-import edu.ecnu.scsse.pizza.bussiness.server.model.*;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Menu;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.SaleStatus;
