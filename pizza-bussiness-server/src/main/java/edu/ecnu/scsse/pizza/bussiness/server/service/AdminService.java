@@ -1,11 +1,9 @@
 package edu.ecnu.scsse.pizza.bussiness.server.service;
 
-import edu.ecnu.scsse.pizza.bussiness.server.exception.BusinessServerException;
-import edu.ecnu.scsse.pizza.bussiness.server.exception.ExceptionType;
 import edu.ecnu.scsse.pizza.bussiness.server.exception.NotFoundException;
-import edu.ecnu.scsse.pizza.bussiness.server.model.LoginRequest;
-import edu.ecnu.scsse.pizza.bussiness.server.model.LoginResponse;
-import edu.ecnu.scsse.pizza.bussiness.server.model.ResultType;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.admin.LoginRequest;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.admin.LoginResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ResultType;
 import edu.ecnu.scsse.pizza.data.domain.AdminEntity;
 import edu.ecnu.scsse.pizza.data.repository.AdminJpaRepository;
 import org.slf4j.Logger;

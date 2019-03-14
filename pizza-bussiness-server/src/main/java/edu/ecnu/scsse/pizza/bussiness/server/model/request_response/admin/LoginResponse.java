@@ -1,8 +1,9 @@
-package edu.ecnu.scsse.pizza.bussiness.server.model;
+package edu.ecnu.scsse.pizza.bussiness.server.model.request_response.admin;
 
 import edu.ecnu.scsse.pizza.bussiness.server.exception.BusinessServerException;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
 
-public class LoginResponse extends BaseResponse{
+public class LoginResponse extends BaseResponse {
     private int adminId;
 
     public LoginResponse(){
