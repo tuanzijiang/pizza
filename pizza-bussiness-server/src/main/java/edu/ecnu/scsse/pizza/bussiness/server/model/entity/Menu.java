@@ -157,6 +157,4 @@ public class Menu {
         this.tagName = menu.getTagName();
     }
 
-    public Menu() {
-    }
 }
