@@ -1,6 +1,7 @@
 package edu.ecnu.scsse.pizza.bussiness.server.service;
 
 import edu.ecnu.scsse.pizza.bussiness.server.exception.NotFoundException;
+import edu.ecnu.scsse.pizza.bussiness.server.model.*;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Menu;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.SaleStatus;
@@ -99,8 +100,8 @@ public class OrderService {
         for(int i=0;i<days;i++){
             String date = sdf.format(calendar.getTime());
             SaleStatus saleStatus = getDaySaleStatus(date);
-            if(saleStatus.getOrderNum()!=0)
-                saleStatusList.add(saleStatus);
+            //if(saleStatus.getOrderNum()!=0)
+            saleStatusList.add(saleStatus);
             calendar.add(Calendar.DATE,+1);
         }
         return new SaleResponse(saleStatusList);
