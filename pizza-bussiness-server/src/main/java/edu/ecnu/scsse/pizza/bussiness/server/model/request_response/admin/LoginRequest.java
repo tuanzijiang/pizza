@@ -1,4 +1,4 @@
-package edu.ecnu.scsse.pizza.bussiness.server.model;
+package edu.ecnu.scsse.pizza.bussiness.server.model.request_response.admin;
 
 public class LoginRequest{
     private String adminName;

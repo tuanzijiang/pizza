@@ -1,7 +1,7 @@
 package edu.ecnu.scsse.pizza.bussiness.server.controller;
 
-import edu.ecnu.scsse.pizza.bussiness.server.model.LoginRequest;
-import edu.ecnu.scsse.pizza.bussiness.server.model.LoginResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.admin.LoginRequest;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.admin.LoginResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.service.AdminService;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package edu.ecnu.scsse.pizza.bussiness.server.controller;
 
-import edu.ecnu.scsse.pizza.bussiness.server.model.OrderReceiveRequest;
-import edu.ecnu.scsse.pizza.bussiness.server.model.OrderReceiveResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.order.OrderReceiveRequest;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.order.OrderReceiveResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.service.OrderReceiveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
