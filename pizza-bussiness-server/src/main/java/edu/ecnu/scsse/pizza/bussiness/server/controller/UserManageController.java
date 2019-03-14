@@ -1,7 +1,7 @@
 package edu.ecnu.scsse.pizza.bussiness.server.controller;
 
 
-import edu.ecnu.scsse.pizza.bussiness.server.model.UserManageResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.user.UserManageResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.service.UserManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,7 +20,7 @@ public class UserManageController {
      */
     @RequestMapping(value = "/getUserList",method = RequestMethod.GET)
     @ResponseBody
-    public UserManageResponse adminLogin(){
+    public UserManageResponse getUserList(){
         return userManageService.getUserList();
     }
 }
