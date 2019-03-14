@@ -1,13 +1,14 @@
-package edu.ecnu.scsse.pizza.bussiness.server.model.entity;
+package edu.ecnu.scsse.pizza.bussiness.server.model;
 
-import edu.ecnu.scsse.pizza.bussiness.server.model.enums.OrderState;
+import edu.ecnu.scsse.pizza.bussiness.server.exception.BusinessServerException;
+import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Menu;
+import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order;
 import edu.ecnu.scsse.pizza.data.enums.OrderStatus;
+import org.springframework.beans.BeanUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class Order {
+public class OrderDetailResponse extends BaseResponse{
     private String orderId;
     private String receiveName;
     private String receivePhone;
@@ -25,28 +26,16 @@ public class Order {
     private String arriveTime;
     private OrderStatus state;
 
-    private Point mapPoint;
-    private int deliverPriority;
-    private Date finishTime;
-    private int latestLeaveTime;
+    public OrderDetailResponse(){
 
-    public Order() {
-        this.orderId = "";
-        this.receiveName = "";
-        this.receivePhone = "";
-        this.receiveAddress = "";
-        this.menuList = new ArrayList<>();
-        this.totalAmount = 0.0;
-        this.buyPhone = "";
-        this.commitTime = "";
-        this.shopId = "";
-        this.shopName = "";
-        this.driverId = "";
-        this.driverName = "";
-        this.driverPhone = "";
-        this.startDeliverTime = "";
-        this.arriveTime = "";
-        this.state = OrderStatus.UNKNOWN;
+    }
+
+    public OrderDetailResponse(Order order) {
+        BeanUtils.copyProperties(order,this);
+    }
+
+    public OrderDetailResponse(BusinessServerException e) {
+        super(e);
     }
 
     public String getOrderId() {
@@ -89,11 +78,11 @@ public class Order {
         this.menuList = menuList;
     }
 
-    public Double getTotalAmount() {
+    public double getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(Double totalAmount) {
+    public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
     }
 
@@ -145,6 +134,14 @@ public class Order {
         this.driverName = driverName;
     }
 
+    public String getDriverPhone() {
+        return driverPhone;
+    }
+
+    public void setDriverPhone(String driverPhone) {
+        this.driverPhone = driverPhone;
+    }
+
     public String getStartDeliverTime() {
         return startDeliverTime;
     }
@@ -167,13 +164,5 @@ public class Order {
 
     public void setState(OrderStatus state) {
         this.state = state;
-    }
-
-    public String getDriverPhone() {
-        return driverPhone;
-    }
-
-    public void setDriverPhone(String driverPhone) {
-        this.driverPhone = driverPhone;
     }
 }

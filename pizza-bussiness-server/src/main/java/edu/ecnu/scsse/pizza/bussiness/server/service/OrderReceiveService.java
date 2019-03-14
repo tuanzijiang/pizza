@@ -6,10 +6,6 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.entity.*;
 import edu.ecnu.scsse.pizza.bussiness.server.model.gaode.GaoDeMapUtil;
 import edu.ecnu.scsse.pizza.data.domain.*;
 import edu.ecnu.scsse.pizza.data.repository.*;
-import edu.ecnu.scsse.pizza.bussiness.server.model.entity.*;
-import edu.ecnu.scsse.pizza.bussiness.server.model.gaode.GaoDeMapUtil;
-import edu.ecnu.scsse.pizza.data.domain.*;
-import edu.ecnu.scsse.pizza.data.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,10 +110,6 @@ public class OrderReceiveService {
     public int getSuitableShopId(List<Shop> shopList){
         return 1;
     }
-
-
-
-
 
 }
 
