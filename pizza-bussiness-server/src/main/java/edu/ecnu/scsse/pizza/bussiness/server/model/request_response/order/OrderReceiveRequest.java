@@ -1,4 +1,4 @@
-package edu.ecnu.scsse.pizza.bussiness.server.model;
+package edu.ecnu.scsse.pizza.bussiness.server.model.request_response.order;
 
 public class OrderReceiveRequest {
     private String orderUuid;

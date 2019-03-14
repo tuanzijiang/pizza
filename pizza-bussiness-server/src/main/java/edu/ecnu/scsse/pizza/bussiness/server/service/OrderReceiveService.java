@@ -1,7 +1,7 @@
 package edu.ecnu.scsse.pizza.bussiness.server.service;
 
-import edu.ecnu.scsse.pizza.bussiness.server.model.OrderReceiveRequest;
-import edu.ecnu.scsse.pizza.bussiness.server.model.OrderReceiveResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.order.OrderReceiveRequest;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.order.OrderReceiveResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.*;
 import edu.ecnu.scsse.pizza.bussiness.server.model.gaode.GaoDeMapUtil;
 import edu.ecnu.scsse.pizza.data.domain.*;

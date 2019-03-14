@@ -4,10 +4,12 @@ import static edu.ecnu.scsse.pizza.consumer.server.exception.ExceptionType.BUSSI
 
 public class NotFoundException extends ConsumerServerException {
 
+    private static final String HINT = "未找到相应数据！";
+
     public NotFoundException(String message) {
-        super(BUSSINESS, "未找到相应数据！", message, null);
+        super(BUSSINESS, HINT, message, null);
     }
     public NotFoundException(String messageTemplate, Object... args) {
-        super(BUSSINESS, "未找到相应数据！", String.format(messageTemplate, args), null);
+        super(BUSSINESS, HINT, String.format(messageTemplate, args), null);
     }
 }

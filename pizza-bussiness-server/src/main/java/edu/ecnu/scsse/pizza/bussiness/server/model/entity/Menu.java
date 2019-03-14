@@ -1,5 +1,9 @@
 package edu.ecnu.scsse.pizza.bussiness.server.model.entity;
 
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDetailRequest;
+import edu.ecnu.scsse.pizza.data.enums.PizzaStatus;
+import edu.ecnu.scsse.pizza.data.enums.PizzaTag;
+
 import edu.ecnu.scsse.pizza.data.enums.PizzaStatus;
 
 import java.util.List;
@@ -13,8 +17,21 @@ public class Menu {
     private double price;
     private PizzaStatus state;
     private int tag;
+    private PizzaTag tagName;
     private int count;
+    private List<Ingredient> ingredients;
     private Map<Ingredient,Integer> ingredientIntegerMap;
+
+    public Menu() {
+        this.id = "";
+        this.name = "";
+        this.image = "";
+        this.description = "";
+        this.price = 0.0;
+        this.state = PizzaStatus.IN_SALE;
+        this.tag = -1;
+        this.count = 0;
+    }
 
     public String getId() {
         return id;
@@ -80,12 +97,28 @@ public class Menu {
         this.count = count;
     }
 
+    public List<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
+    }
+
     public Map<Ingredient, Integer> getIngredientIntegerMap() {
         return ingredientIntegerMap;
     }
 
     public void setIngredientIntegerMap(Map<Ingredient, Integer> ingredientIntegerMap) {
         this.ingredientIntegerMap = ingredientIntegerMap;
+    }
+
+    public PizzaTag getTagName() {
+        return tagName;
+    }
+
+    public void setTagName(PizzaTag tagName) {
+        this.tagName = tagName;
     }
 
     public Menu(String id, String name, String image, String description, double price, PizzaStatus state, int tag, int count, Map<Ingredient, Integer> ingredientIntegerMap) {
@@ -100,6 +133,25 @@ public class Menu {
         this.ingredientIntegerMap = ingredientIntegerMap;
     }
 
-    public Menu() {
+    public Menu(String id, String name, String image, String description, double price, PizzaStatus state, PizzaTag tagName, List<Ingredient> ingredients) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.description = description;
+        this.price = price;
+        this.state = state;
+        this.tagName = tagName;
+        this.ingredients = ingredients;
     }
+
+    public Menu(MenuDetailRequest menu){
+        this.id = menu.getId();
+        this.name = menu.getName();
+        this.image = menu.getImage();
+        this.description = menu.getDescription();
+        this.price = menu.getPrice();
+        this.state = menu.getState();
+        this.tagName = menu.getTagName();
+    }
+
 }

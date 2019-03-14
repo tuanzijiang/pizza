@@ -1,16 +1,13 @@
 package edu.ecnu.scsse.pizza.bussiness.server.service;
 
 import edu.ecnu.scsse.pizza.bussiness.server.exception.NotFoundException;
-import edu.ecnu.scsse.pizza.bussiness.server.model.OrderDetailRequest;
-import edu.ecnu.scsse.pizza.bussiness.server.model.OrderDetailResponse;
-import edu.ecnu.scsse.pizza.bussiness.server.model.OrderManageResponse;
-import edu.ecnu.scsse.pizza.bussiness.server.model.SaleResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Menu;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.SaleStatus;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
 import edu.ecnu.scsse.pizza.data.domain.*;
 import edu.ecnu.scsse.pizza.data.enums.OrderStatus;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.order.*;
 import edu.ecnu.scsse.pizza.data.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,16 +66,26 @@ public class OrderService {
         OrderDetailResponse orderDetailResponse;
         Optional<OrderEntity> orderEntityOptional = orderJpaRepository.findById(orderDetailRequest.getOrderId());
         if(orderEntityOptional.isPresent()){
-            orderDetailResponse = new OrderDetailResponse();
             OrderEntity orderEntity = orderEntityOptional.get();
-            orderDetailResponse.setOrder(convertDetail(orderEntity));
-        }
+            orderDetailResponse = new OrderDetailResponse(convertDetail(orderEntity));        }
         else{
             NotFoundException e = new NotFoundException("Order detail is not found.");
             orderDetailResponse = new OrderDetailResponse(e);
             log.warn("Fail to find the order detail.", e);
         }
         return orderDetailResponse;
+    }
+
+    public YesterdaySaleResponse getYesterdaySaleStatus(String yesterday) throws ParseException{
+        SaleResponse saleResponse = getSaleStatusList(yesterday,yesterday);
+        List<SaleStatus> saleStatusList = saleResponse.getSaleStatusList();
+        if(saleStatusList.size()!=0)
+            return new YesterdaySaleResponse(saleResponse.getSaleStatusList().get(0));
+        else{
+            NotFoundException e = new NotFoundException("Data is not found.");
+            log.warn("Fail to find yesterday order data.", e);
+            return new YesterdaySaleResponse(e);
+        }
     }
 
     public SaleResponse getSaleStatusList(String startDate,String endDate) throws ParseException {
@@ -92,8 +99,8 @@ public class OrderService {
         for(int i=0;i<days;i++){
             String date = sdf.format(calendar.getTime());
             SaleStatus saleStatus = getDaySaleStatus(date);
-            if(saleStatus.getOrderNum()!=0)
-                saleStatusList.add(saleStatus);
+            //if(saleStatus.getOrderNum()!=0)
+            saleStatusList.add(saleStatus);
             calendar.add(Calendar.DATE,+1);
         }
         return new SaleResponse(saleStatusList);
