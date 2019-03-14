@@ -1,8 +1,9 @@
-package edu.ecnu.scsse.pizza.bussiness.server.model;
+package edu.ecnu.scsse.pizza.bussiness.server.model.request_response.order;
 
 import edu.ecnu.scsse.pizza.bussiness.server.exception.BusinessServerException;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
 
-public class OrderReceiveResponse extends BaseResponse{
+public class OrderReceiveResponse extends BaseResponse {
     private int shopId;
 
     public OrderReceiveResponse() {

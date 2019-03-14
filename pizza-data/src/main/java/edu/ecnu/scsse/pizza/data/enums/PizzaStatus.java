@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public enum  PizzaStatus {
     IN_SALE(0, "售卖中"),
-    OFF_SHELF(1, "购物车");
+    OFF_SHELF(1, "已下架");
 
     private int dbValue;
 

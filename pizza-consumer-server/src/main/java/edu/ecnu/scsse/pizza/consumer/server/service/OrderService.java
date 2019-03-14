@@ -1,15 +1,15 @@
 package edu.ecnu.scsse.pizza.consumer.server.service;
 
 import com.google.gson.Gson;
-import edu.ecnu.scsse.pizza.consumer.server.exception.ConsumerServerException;
-import edu.ecnu.scsse.pizza.consumer.server.exception.ExceptionType;
+import edu.ecnu.scsse.pizza.consumer.server.exception.*;
 import edu.ecnu.scsse.pizza.consumer.server.exception.IllegalArgumentException;
-import edu.ecnu.scsse.pizza.consumer.server.exception.NotFoundException;
 import edu.ecnu.scsse.pizza.consumer.server.model.ResultType;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Address;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Order;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Pizza;
 import edu.ecnu.scsse.pizza.consumer.server.model.order.FetchOrdersResponse;
+import edu.ecnu.scsse.pizza.consumer.server.utils.EntityConverter;
+import edu.ecnu.scsse.pizza.consumer.server.utils.HttpUtils;
 import edu.ecnu.scsse.pizza.data.domain.*;
 import edu.ecnu.scsse.pizza.data.enums.*;
 import edu.ecnu.scsse.pizza.consumer.server.model.order.FetchOrderResponse;
@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -35,6 +36,10 @@ public class OrderService {
     private static final Logger log = LoggerFactory.getLogger(OrderService.class);
 
     private final AtomicInteger WORKER_COUNTER = new AtomicInteger();
+
+    private static final long TEM_MIN = 10 * 60 * 1000;
+
+    private static final String SERVICE_PHONE = "021-9999-9999";
 
     private final ExecutorService WORKER = Executors.newFixedThreadPool(8, r -> {
         Thread thread = new Thread(r);
@@ -58,6 +63,12 @@ public class OrderService {
     @Autowired
     private MenuJpaRepository menuJpaRepository;
 
+    @Autowired
+    private DriverJpaRepository driverJpaRepository;
+
+    @Autowired
+    private PizzaShopJpaRepository pizzaShopJpaRepository;
+
     /**
      * Query order by order uuid.
      *
@@ -68,7 +79,7 @@ public class OrderService {
         Optional<OrderEntity> orderEntityOptional = orderJpaRepository.findByOrderUuid(orderId);
         if (orderEntityOptional.isPresent()){
             OrderEntity entity = orderEntityOptional.get();
-            Order order = this.convert(entity);
+            Order order = EntityConverter.convert(entity);
             // query Address
             Future queryFuture = WORKER.submit(() -> this.supplementAddress(entity, order));
             // query Pizzas
@@ -98,13 +109,13 @@ public class OrderService {
     public List<Order> fetchOrders(Integer userId, List<OrderStatus> orderStatuses, String lastOrderUuid, Integer count) throws NotFoundException, IllegalArgumentException {
         // arg check
         if (userId == null) {
-            throw new IllegalArgumentException("userId can't be null.", null);
+            throw new IllegalArgumentException("userId can't be null.");
         }
         if (CollectionUtils.isEmpty(orderStatuses)) {
-            throw new IllegalArgumentException("orderStatuses can't be empty.", null);
+            throw new IllegalArgumentException("orderStatuses can't be empty.");
         }
-        if (count == null || count < 0) {
-            throw new IllegalArgumentException("count must be positive.", null);
+        if (!this.isPositive(count)) {
+            throw new IllegalArgumentException("count must be positive.");
         }
 
         // translate order statues values in db.
@@ -135,7 +146,7 @@ public class OrderService {
      */
     public Order getCartOrder(Integer userId) throws IllegalArgumentException {
         if (userId == null) {
-            throw new IllegalArgumentException("userId must not be NULL.", null);
+            throw new IllegalArgumentException("userId must not be NULL.");
         }
         OrderEntity orderEntity = new OrderEntity();
         orderEntity.setState(OrderStatus.CART.getDbValue());
@@ -143,7 +154,7 @@ public class OrderService {
         orderEntity.setOrderUuid(UUID.randomUUID().toString());
 
         orderEntity = orderJpaRepository.save(orderEntity);
-        return this.convert(orderEntity);
+        return EntityConverter.convert(orderEntity);
     }
 
     /**
@@ -152,15 +163,145 @@ public class OrderService {
      * @return pizza menus.
      */
     public List<Pizza> getAllMenu() {
-        return menuJpaRepository.findAll().stream().map(this::convert).collect(Collectors.toList());
+        return menuJpaRepository.findAll().stream().map(EntityConverter::convert).collect(Collectors.toList());
+    }
+
+    /**
+     * Update order.
+     *
+     * @param orderUuid orderUuid
+     * @param menuId menuId
+     * @param count count
+     * @throws NotFoundException
+     * @throws IllegalArgumentException
+     */
+    public void updateOrder(String orderUuid, Integer menuId, Integer count) throws NotFoundException, IllegalArgumentException {
+        if (orderUuid == null || !this.isPositive(menuId) || !this.isPositive(count)) {
+            throw new IllegalArgumentException("IllegalArgument orderUuid[%s], menuId[%s], count[%s]", orderUuid, menuId, count);
+        }
+        Integer orderId = orderJpaRepository.findCartIdByOrderUuid(orderUuid)
+                .orElseThrow(() -> new NotFoundException("Fail to find cart order with orderUuid=[%s]", orderUuid));
+        OrderMenuEntity orderMenuEntity = new OrderMenuEntity();
+        orderMenuEntity.setOrderId(orderId);
+        orderMenuEntity.setMenuId(menuId);
+        orderMenuEntity.setCount(count);
+        orderMenuJpaRepository.save(orderMenuEntity);
+    }
+
+    /**
+     * Cancel order.
+     *
+     * @param orderUuid orderUuid
+     */
+    public boolean cancelOrder(String orderUuid) throws NotFoundException {
+        OrderEntity order = orderJpaRepository.findByOrderUuid(orderUuid)
+                .orElseThrow(() -> new NotFoundException("No order found with orderUuid[%s]", orderUuid));
+        if (this.canOrderCancel(order)) {
+            orderJpaRepository.updateStateByOrderUuid(OrderStatus.CANCEL_CHECKING.getDbValue(), orderUuid);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Get phones.
+     *
+     * @param orderUuid orderUuid
+     * @return phones
+     * @throws NotFoundException
+     */
+    public Phones getPhones(String orderUuid) throws NotFoundException {
+        OrderEntity order = orderJpaRepository.findByOrderUuid(orderUuid)
+                .orElseThrow(() -> new NotFoundException("No order found with orderUuid[%s]", orderUuid));
+        Phones phones = new Phones();
+        if (this.isPositive(order.getDriverId())) {
+            DriverEntity driverEntity = driverJpaRepository.findById(order.getDriverId())
+                    .orElseThrow(() -> new NotFoundException("No driver found with id[%s]", order.getDriverId()));
+            phones.deliverymanPhone = driverEntity.getPhone();
+        }
+
+        if (this.isPositive(order.getShopId())) {
+             PizzaShopEntity shopEntity = pizzaShopJpaRepository.findById(order.getShopId())
+                    .orElseThrow(() -> new NotFoundException("No shop found with id[%s]", order.getShopId()));
+            phones.shopPhone = shopEntity.getPhone();
+        }
+        return phones;
+    }
+
+    /**
+     * Send an order to business service.
+     * 
+     * @param orderUuid
+     * @param userAddressId
+     * @return
+     * @throws IllegalArgumentException
+     * @throws ServiceException
+     */
+    public Order sendOrder(String orderUuid, Integer userAddressId) throws IllegalArgumentException, ServiceException {
+        // arg check
+        if (orderUuid == null) {
+            throw new IllegalArgumentException("orderUuid can't be null.");
+        }
+        if (!this.isPositive(userAddressId)) {
+            throw new IllegalArgumentException("userAddressId must be positive.");
+        }
+
+        OrderEntity orderEntity = null;
+        try {
+            orderEntity = HttpUtils.commitOrder(orderUuid, userAddressId);
+        } catch (IOException e) {
+            throw new ServiceException("I/O Exception while sending http request to Business Server.", e);
+        }
+        return EntityConverter.convert(orderEntity);
     }
 
 
-    public void updateOrder(String orderId, Integer menuId, Integer count) {
 
+    public static class Phones {
+        private String servicePhone = SERVICE_PHONE;
+        private String deliverymanPhone;
+        private String shopPhone;
+
+        public String getServicePhone() {
+            return servicePhone;
+        }
+
+        public void setServicePhone(String servicePhone) {
+            this.servicePhone = servicePhone;
+        }
+
+        public String getDeliverymanPhone() {
+            return deliverymanPhone;
+        }
+
+        public void setDeliverymanPhone(String deliverymanPhone) {
+            this.deliverymanPhone = deliverymanPhone;
+        }
+
+        public String getShopPhone() {
+            return shopPhone;
+        }
+
+        public void setShopPhone(String shopPhone) {
+            this.shopPhone = shopPhone;
+        }
     }
+
 
     // private methods
+
+    private boolean canOrderCancel(OrderEntity order) {
+        if (order.getCommitTime() != null) {
+            long interval = System.currentTimeMillis() - order.getCommitTime().getTime();
+            return interval <= TEM_MIN;
+        }
+        log.error("Find an uncommitted order while canceling order, orderId=[]", order.getId());
+        return false;
+    }
+
+    private boolean isPositive(Integer num) {
+        return num != null && num > 0;
+    }
 
     /**
      * Assemble orders with out address info.
@@ -192,12 +333,12 @@ public class OrderService {
 
             List<Order> result = new ArrayList<>();
             entityList.forEach(e -> {
-                Order order = this.convert(e);
+                Order order = EntityConverter.convert(e);
                 OrderMenuEntity om = omMapping.get(e.getId());
                 Set<Integer> pizzaIds = mMapping.get(e.getId());
                 List<Pizza> pizzas = menuEntities.stream()
                         .filter(m -> pizzaIds.contains(m.getId()))
-                        .map(m -> this.convert(om, m))
+                        .map(m -> EntityConverter.convert(om, m))
                         .collect(Collectors.toList());
                 order.setPizzas(pizzas);
                 result.add(order);
@@ -207,23 +348,6 @@ public class OrderService {
         }
 
         return Collections.EMPTY_LIST;
-    }
-
-    /**
-     * Assemble basic order info.
-     *
-     * @param entity order db entity.
-     * @return Order
-     */
-    private Order convert(OrderEntity entity) {
-        Order order = new Order();
-        order.setId(entity.getOrderUuid());
-        order.setStatus(OrderStatus.fromDbValue(entity.getState()));
-
-        if (entity.getCommitTime() != null) {
-            order.setStartTime(entity.getCommitTime().getTime());
-        }
-        return order;
     }
 
     /**
@@ -240,11 +364,11 @@ public class OrderService {
 
             Optional<AddressEntity> addressEntityOptional =
                     addressJpaRepository.findById(userAddressEntity.getAddressId());
-            addressEntityOptional.ifPresent(addressEntity -> order.setAddress(this.convert(userAddressEntity, addressEntity)));
+            addressEntityOptional.ifPresent(addressEntity -> order.setAddress(EntityConverter.convert(userAddressEntity, addressEntity)));
 
             if (addressEntityOptional.isPresent()) {
                 AddressEntity addressEntity = addressEntityOptional.get();
-                order.setAddress(this.convert(userAddressEntity, addressEntity));
+                order.setAddress(EntityConverter.convert(userAddressEntity, addressEntity));
             }
         }
     }
@@ -266,68 +390,12 @@ public class OrderService {
                 menuEntities.stream()
                         .filter(m -> Objects.equals(m.getId(), om.getMenuId()))
                         .findFirst()
-                        .ifPresent(m -> pizzas.add(this.convert(om, m)));
+                        .ifPresent(m -> pizzas.add(EntityConverter.convert(om, m)));
             });
             order.setPizzas(pizzas);
         }
     }
 
-    /**
-     * Construct Address.
-     *
-     * @param userAddressEntity userAddressEntity
-     * @param addressEntity addressEntity
-     * @return Address
-     */
-    private Address convert(UserAddressEntity userAddressEntity, AddressEntity addressEntity) {
-        Address address = new Address();
+    
 
-        address.setId(address.getId());
-        address.setAddress(addressEntity.getAddress());
-
-        address.setAddressDetail(userAddressEntity.getAddressDetail());
-        address.setName(userAddressEntity.getName());
-        address.setPhone(userAddressEntity.getPhone());
-
-        address.setSex(Sex.fromDbValue(userAddressEntity.getSex()));
-
-        return address;
-    }
-
-    /**
-     * Construct Pizza Menu.
-     *
-     * @param menuEntity menuEntity
-     * @return Pizza
-     */
-    private Pizza convert(MenuEntity menuEntity) {
-        return this.convert(null, menuEntity);
-    }
-
-    /**
-     * Construct Pizza.
-     *
-     * @param orderMenuEntity orderMenuEntity
-     * @param menuEntity menuEntity
-     * @return Pizza
-     */
-    private Pizza convert(OrderMenuEntity orderMenuEntity, MenuEntity menuEntity) {
-        Pizza pizza = new Pizza();
-
-        if (orderMenuEntity != null) {
-            pizza.setCount(orderMenuEntity.getCount());
-        }
-
-        if (menuEntity != null) {
-            pizza.setId(menuEntity.getId());
-            pizza.setName(menuEntity.getName());
-            pizza.setDescription(menuEntity.getDescription());
-            pizza.setImg(menuEntity.getImage());
-            pizza.setPrice(menuEntity.getPrice());
-            pizza.setState(PizzaStatus.fromDbValue(menuEntity.getState()));
-            pizza.setTag(PizzaTag.fromDbValue(menuEntity.getTag()).getExpression());
-        }
-
-        return pizza;
-    }
 }

@@ -1,5 +1,6 @@
 package edu.ecnu.scsse.pizza.bussiness.server.model.entity;
 
+import edu.ecnu.scsse.pizza.bussiness.server.model.enums.OrderState;
 import edu.ecnu.scsse.pizza.data.enums.OrderStatus;
 
 import java.util.ArrayList;
@@ -28,7 +29,6 @@ public class Order {
     private int deliverPriority;
     private Date finishTime;
     private int latestLeaveTime;
-    
 
     public Order() {
         this.orderId = "";

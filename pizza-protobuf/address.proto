@@ -20,7 +20,7 @@ message Address {
 }
 
 // 获取当前用户的地址信息
-// [post] /addresses
+// [post] /fetchUserAddresses
 
 message FetchAddressReq {
   string user_id = 1;
@@ -31,7 +31,7 @@ message FetchAddressResp {
 }
 
 // 更新当前用户的地址信息
-// [post] /address
+// [post] /updateUserAddress
 
 message UpdateAddressReq {
   string user_id = 1;
@@ -39,5 +39,17 @@ message UpdateAddressReq {
 }
 
 message UpdateAddressResp {
+  ResultType result_type = 1;
+}
+
+// 添加地址信息
+// [post] /addUserAddress
+
+message AddAddressReq {
+  string user_id = 1;
+  Address address = 2;
+}
+
+message AddAddressResp {
   ResultType result_type = 1;
 }

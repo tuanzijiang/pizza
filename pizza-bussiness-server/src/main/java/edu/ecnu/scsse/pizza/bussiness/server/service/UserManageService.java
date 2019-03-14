@@ -1,7 +1,7 @@
 package edu.ecnu.scsse.pizza.bussiness.server.service;
 
 import edu.ecnu.scsse.pizza.bussiness.server.exception.NotFoundException;
-import edu.ecnu.scsse.pizza.bussiness.server.model.UserManageResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.user.UserManageResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.User;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
 import edu.ecnu.scsse.pizza.data.domain.UserAddressEntity;
@@ -10,14 +10,11 @@ import edu.ecnu.scsse.pizza.data.repository.UserAddressJpaRepository;
 import edu.ecnu.scsse.pizza.data.repository.UserJpaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.CopyOption;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
