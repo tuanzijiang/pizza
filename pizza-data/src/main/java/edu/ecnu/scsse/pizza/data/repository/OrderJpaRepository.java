@@ -27,5 +27,8 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
                                                                List<Integer> states,
                                                                Integer lastOrderId,
                                                                Pageable pageable);
-
+    @Query(value="select *\n" +
+            "    from pizza_order\n" +
+            "    where DATEDIFF(DATE(commit_time),?1)=0",nativeQuery = true)
+    List<OrderEntity> findOrderByCommitTime(String date);
 }
