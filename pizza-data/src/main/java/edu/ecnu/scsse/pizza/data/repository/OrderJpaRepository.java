@@ -4,8 +4,10 @@ import edu.ecnu.scsse.pizza.data.domain.OrderEntity;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -34,6 +36,8 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
     List<OrderEntity> findOrderByCommitTime(String date);
 
     // update
+    @Transactional
+    @Modifying
     @Query("update OrderEntity set state=?1 where orderUuid=?2")
     int updateStateByOrderUuid(Integer state, String orderUuid);
 
