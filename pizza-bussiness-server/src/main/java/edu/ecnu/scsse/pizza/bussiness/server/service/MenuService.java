@@ -2,9 +2,10 @@ package edu.ecnu.scsse.pizza.bussiness.server.service;
 
 import edu.ecnu.scsse.pizza.bussiness.server.exception.BusinessServerException;
 import edu.ecnu.scsse.pizza.bussiness.server.exception.ExceptionType;
-import edu.ecnu.scsse.pizza.bussiness.server.exception.IllegalArgumentException;
 import edu.ecnu.scsse.pizza.bussiness.server.exception.NotFoundException;
-import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.enums.OperateObject;
+import edu.ecnu.scsse.pizza.bussiness.server.model.enums.OperateResult;
+import edu.ecnu.scsse.pizza.bussiness.server.model.enums.OperateType;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ResultType;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDetailRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDetailResponse;
@@ -26,14 +27,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class MenuService {
-    private static final Logger log = LoggerFactory.getLogger(AdminService.class);
+public class MenuService extends SessionService {
+    private static final Logger log = LoggerFactory.getLogger(MenuService.class);
 
     @Autowired
     MenuJpaRepository menuJpaRepository;
@@ -43,6 +42,9 @@ public class MenuService {
 
     @Autowired
     IngredientJpaRepository ingredientJpaRepository;
+
+    @Autowired
+    OperateLoggerService operateLoggerService;
 
     public MenuManageResponse getMenuList(){
         MenuManageResponse menuManageResponse;
@@ -64,21 +66,20 @@ public class MenuService {
     public MenuDetailResponse editMenuStatus(int menuId){
         MenuDetailResponse simpleResponse;
         Optional<MenuEntity> menuEntityOptional = menuJpaRepository.findById(menuId);
-        if(menuEntityOptional.isPresent()){
+        String type = OperateType.UPDATE.getExpression();//操作类型
+        String object = OperateObject.MENU.getExpression()+menuId;//操作对象
+        if (menuEntityOptional.isPresent()) {
             simpleResponse = new MenuDetailResponse();
             MenuEntity menuEntity = menuEntityOptional.get();
             int currentState = menuEntity.getState();
-            switch (PizzaStatus.fromDbValue(currentState)){
+            switch (PizzaStatus.fromDbValue(currentState)) {
                 case IN_SALE:
                     menuEntity.setState(PizzaStatus.OFF_SHELF.getDbValue());
                     menuJpaRepository.saveAndFlush(menuEntity);
-                    //menuJpaRepository.updateStatusById(menuId,PizzaStatus.OFF_SHELF.getDbValue());
-
                     break;
                 case OFF_SHELF:
                     menuEntity.setState(PizzaStatus.IN_SALE.getDbValue());
                     menuJpaRepository.saveAndFlush(menuEntity);
-                    //menuJpaRepository.updateStatusById(menuId,PizzaStatus.IN_SALE.getDbValue());
                     break;
                 default:
                     simpleResponse.setResultType(ResultType.FAILURE);
@@ -86,11 +87,12 @@ public class MenuService {
                     log.error("Status error.");
                     break;
             }
-        }
-        else{
+            operateLoggerService.addOperateLogger(type, object, OperateResult.SUCCESS.getExpression());
+        } else {
             NotFoundException e = new NotFoundException(String.format("menuId %s is not found.", menuId));
             simpleResponse = new MenuDetailResponse(e);
             log.warn("Menu {} is not found.", menuId, e);
+            operateLoggerService.addOperateLogger(type, object, OperateResult.FAILURE.getExpression() + " :Menu" + menuId + " is not found.");
         }
         return simpleResponse;
     }
@@ -100,6 +102,8 @@ public class MenuService {
         MenuDetailResponse response;
         Menu menu = new Menu(request);
         int menuId = Integer.parseInt(request.getId());
+        String type = OperateType.UPDATE.getExpression();//操作类型
+        String object = OperateObject.MENU.getExpression()+menuId;//操作对象
         try {
             //更新菜品信息
             Optional<MenuEntity> menuEntityOptional = menuJpaRepository.findById(menuId);
@@ -110,7 +114,6 @@ public class MenuService {
                 menuEntity.setState(menu.getState().getDbValue());
                 menuEntity.setTag(menu.getTagName().getDbValue());
                 menuJpaRepository.saveAndFlush(menuEntity);
-                //menuJpaRepository.updateByMenuEntity(menuEntity);
                 //更新菜品原料信息
                 List<Ingredient> ingredientList = request.getIngredients();//披萨的原料列表
                 for(Ingredient ingredient:ingredientList) {
@@ -136,11 +139,13 @@ public class MenuService {
                         menuIngredientJpaRepository.saveAndFlush(entity);
                     }
                 }
+                operateLoggerService.addOperateLogger(type, object, OperateResult.SUCCESS.getExpression());
             }
             else{
                 NotFoundException e = new NotFoundException(String.format("menuId %s is not found.", menuId));
                 response = new MenuDetailResponse(e);
                 log.warn("Menu {} is not found.", menuId, e);
+                operateLoggerService.addOperateLogger(type, object, OperateResult.FAILURE.getExpression() + " :Menu" + menuId + " is not found.");
             }
         }catch (Exception e){
             log.error("Fail to update menu.",e);
