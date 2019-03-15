@@ -1,6 +1,7 @@
 package edu.ecnu.scsse.pizza.data.repository;
 
 import edu.ecnu.scsse.pizza.data.domain.AddressEntity;
+import edu.ecnu.scsse.pizza.data.domain.UserAddressEntity;
 import edu.ecnu.scsse.pizza.data.repository.AddressJpaRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,11 +18,24 @@ public class RepositoryUnitTest {
     @Autowired
     AddressJpaRepository addressJpaRepository;
 
+    @Autowired
+    UserAddressJpaRepository userAddressJpaRepository;
+
 
     @Test
     public void contextLoads() {
         List<AddressEntity> addressEntity=addressJpaRepository.findAll();
         System.out.println(addressEntity.get(0).getAddress());
+    }
+
+    @Test
+    public void updateUserAddressTest() {
+        UserAddressEntity userAddressEntity=new UserAddressEntity();
+        userAddressEntity.setUserId(1);
+        userAddressEntity.setAddressId(10);
+        userAddressEntity.setTag(0);
+        userAddressEntity.setAddressDetail("change detail!!");
+        userAddressJpaRepository.updateByUserIdAndAddressId(userAddressEntity);
     }
 
 }
