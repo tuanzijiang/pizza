@@ -68,7 +68,7 @@ public class OrderController {
     @ResponseBody
     public FetchMenuResponse fetchMenu(@RequestBody FetchMenuRequest request) {
         FetchMenuResponse response = new FetchMenuResponse();
-        response.setPizzas(orderService.getAllMenu());
+        response.setPizzas(orderService.getInSaleMenu());
         try {
             response.setCart(orderService.getCartOrder(request.getUserId()));
         } catch (IllegalArgumentException e) {
@@ -83,12 +83,16 @@ public class OrderController {
     @RequestMapping("/updateOrder")
     @ResponseBody
     public UpdateOrderResponse updateOrder(@RequestBody UpdateOrderRequest request) {
+        UpdateOrderResponse response = new UpdateOrderResponse();
         try {
-            orderService.updateOrder(request.getOrderId(), request.getPizzaId(), request.getCount());
-            return new UpdateOrderResponse();
+            if (orderService.updateOrder(request.getOrderId(), request.getPizzaId(), request.getCount()) <= 0) {
+                response.setResultType(ResultType.FAILURE);
+                response.setErrorMsg("无法更改商品数量。");
+            }
         } catch (ConsumerServerException e) {
-            return new UpdateOrderResponse(e);
+            response.setException(e);
         }
+        return response;
     }
 
     /**

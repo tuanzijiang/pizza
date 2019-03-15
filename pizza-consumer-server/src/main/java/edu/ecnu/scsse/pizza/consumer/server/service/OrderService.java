@@ -83,7 +83,7 @@ public class OrderService {
             // query Address
             Future queryFuture = WORKER.submit(() -> this.supplementAddress(entity, order));
             // query Pizzas
-            this.supplementPizzas(entity, order);
+            this.supplementPizzas(entity, order, order.getStatus() == OrderStatus.CART);
 
             try {
                 queryFuture.get(1, TimeUnit.SECONDS);
@@ -131,7 +131,9 @@ public class OrderService {
                 orderJpaRepository.findIdByOrderUuid(lastOrderUuid);
         if (lastOrderId.isPresent()) {
             List<OrderEntity> orderEntityList = orderJpaRepository.findByUserIdAndStateInAndIdGreaterThan(
-                    userId, orderStatuesValue, lastOrderId.get(), PageRequestFactory.create().count(count).build());
+                    userId, orderStatuesValue,
+                    lastOrderId.get(),
+                    PageRequestFactory.create().count(count).asc("id").build());
             return this.convert(orderEntityList);
         } else {
             throw new NotFoundException("There is no order where 'orderUuid'={%s}", lastOrderUuid);
@@ -148,13 +150,24 @@ public class OrderService {
         if (userId == null) {
             throw new IllegalArgumentException("userId must not be NULL.");
         }
-        OrderEntity orderEntity = new OrderEntity();
-        orderEntity.setState(OrderStatus.CART.getDbValue());
-        orderEntity.setUserId(userId);
-        orderEntity.setOrderUuid(UUID.randomUUID().toString());
 
-        orderEntity = orderJpaRepository.save(orderEntity);
-        return EntityConverter.convert(orderEntity);
+        OrderEntity orderEntity = null;
+        Order result = null;
+        Optional<OrderEntity> optionalOrderEntity = orderJpaRepository.
+                findFirstByUserIdAndStateOrderByIdDesc(userId, OrderStatus.CART.getDbValue());
+        if (optionalOrderEntity.isPresent()) {
+            orderEntity = optionalOrderEntity.get();
+            result = EntityConverter.convert(orderEntity);
+            this.supplementPizzas(orderEntity, result, true);
+        } else {
+            orderEntity = new OrderEntity();
+            orderEntity.setState(OrderStatus.CART.getDbValue());
+            orderEntity.setUserId(userId);
+            orderEntity.setOrderUuid(UUID.randomUUID().toString());
+            orderEntity = orderJpaRepository.save(orderEntity);
+            result = EntityConverter.convert(orderEntity);
+        }
+        return result;
     }
 
     /**
@@ -162,8 +175,9 @@ public class OrderService {
      * 
      * @return pizza menus.
      */
-    public List<Pizza> getAllMenu() {
-        return menuJpaRepository.findAll().stream().map(EntityConverter::convert).collect(Collectors.toList());
+    public List<Pizza> getInSaleMenu() {
+        return menuJpaRepository.findAllByState(PizzaStatus.IN_SALE.getDbValue())
+                .stream().map(EntityConverter::convert).collect(Collectors.toList());
     }
 
     /**
@@ -175,17 +189,14 @@ public class OrderService {
      * @throws NotFoundException
      * @throws IllegalArgumentException
      */
-    public void updateOrder(String orderUuid, Integer menuId, Integer count) throws NotFoundException, IllegalArgumentException {
+    public int updateOrder(String orderUuid, Integer menuId, Integer count) throws NotFoundException, IllegalArgumentException {
         if (orderUuid == null || !this.isPositive(menuId) || !this.isPositive(count)) {
             throw new IllegalArgumentException("IllegalArgument orderUuid[%s], menuId[%s], count[%s]", orderUuid, menuId, count);
         }
         Integer orderId = orderJpaRepository.findCartIdByOrderUuid(orderUuid)
                 .orElseThrow(() -> new NotFoundException("Fail to find cart order with orderUuid=[%s]", orderUuid));
-        OrderMenuEntity orderMenuEntity = new OrderMenuEntity();
-        orderMenuEntity.setOrderId(orderId);
-        orderMenuEntity.setMenuId(menuId);
-        orderMenuEntity.setCount(count);
-        orderMenuJpaRepository.save(orderMenuEntity);
+
+        return orderMenuJpaRepository.updateCount(count, orderId, menuId);
     }
 
     /**
@@ -324,7 +335,7 @@ public class OrderService {
             Map<Integer, Set<Integer>> mMapping = new HashMap<>();
 
             orderMenuEntities.forEach(om -> {
-                menuIds.add(om.getOrderId());
+                menuIds.add(om.getMenuId());
                 omMapping.put(om.getOrderId(), om);
                 mMapping.computeIfAbsent(om.getOrderId(), k -> new HashSet<>()).add(om.getMenuId());
             });
@@ -336,12 +347,14 @@ public class OrderService {
                 Order order = EntityConverter.convert(e);
                 OrderMenuEntity om = omMapping.get(e.getId());
                 Set<Integer> pizzaIds = mMapping.get(e.getId());
-                List<Pizza> pizzas = menuEntities.stream()
-                        .filter(m -> pizzaIds.contains(m.getId()))
-                        .map(m -> EntityConverter.convert(om, m))
-                        .collect(Collectors.toList());
-                order.setPizzas(pizzas);
-                result.add(order);
+                if (!CollectionUtils.isEmpty(pizzaIds)) {
+                    List<Pizza> pizzas = menuEntities.stream()
+                            .filter(m -> pizzaIds.contains(m.getId()))
+                            .map(m -> EntityConverter.convert(om, m))
+                            .collect(Collectors.toList());
+                    order.setPizzas(pizzas);
+                    result.add(order);
+                }
             });
 
             return result;
@@ -379,19 +392,29 @@ public class OrderService {
      * @param entity order db entity.
      * @param order order to supplement.
      */
-    private void supplementPizzas(OrderEntity entity, Order order) {
+    private void supplementPizzas(OrderEntity entity, Order order, boolean onlyOnSale) {
         List<OrderMenuEntity> orderMenuEntities = orderMenuJpaRepository.findByOrderId(entity.getId());
         if (!CollectionUtils.isEmpty(orderMenuEntities)) {
-            List<MenuEntity> menuEntities = menuJpaRepository.findAllById(orderMenuEntities.stream()
-                    .mapToInt(OrderMenuEntity::getMenuId)
-                    .boxed().collect(Collectors.toSet()));
+            List<MenuEntity> menuEntities = null;
+            if (onlyOnSale) {
+                menuEntities = menuJpaRepository.findAllByStateAndIdIn(
+                        PizzaStatus.IN_SALE.getDbValue(),
+                        orderMenuEntities.stream()
+                                .mapToInt(OrderMenuEntity::getMenuId)
+                                .boxed().collect(Collectors.toSet()));
+            } else {
+                menuEntities = menuJpaRepository.findAllById(
+                        orderMenuEntities.stream()
+                                .mapToInt(OrderMenuEntity::getMenuId)
+                                .boxed().collect(Collectors.toSet()));
+            }
             List<Pizza> pizzas = new ArrayList<>();
-            orderMenuEntities.forEach( om -> {
+            for (OrderMenuEntity om : orderMenuEntities) {
                 menuEntities.stream()
                         .filter(m -> Objects.equals(m.getId(), om.getMenuId()))
                         .findFirst()
                         .ifPresent(m -> pizzas.add(EntityConverter.convert(om, m)));
-            });
+            }
             order.setPizzas(pizzas);
         }
     }
