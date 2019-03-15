@@ -6,7 +6,8 @@ public enum UpdateUserType {
     EMAIL(2),
     BIRTHDAY(3),
     CITY(4),
-    IMGAE(5);
+    IMGAE(5),
+    ADDRESSID(6);
 
     int value;
 
