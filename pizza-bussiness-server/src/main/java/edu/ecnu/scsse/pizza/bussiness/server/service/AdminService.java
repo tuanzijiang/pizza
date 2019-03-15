@@ -12,12 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-
+import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 @Service
-public class AdminService {
-    private static final Logger log = LoggerFactory.getLogger(AdminService.class);
+public class AdminService extends SessionService {
+    private static final Logger log = LoggerFactory.getLogger(SessionService.class);
 
     @Autowired
     private AdminJpaRepository adminJpaRepository;
@@ -34,10 +34,13 @@ public class AdminService {
                     loginResponse.setResultType(ResultType.SUCCESS);
                     loginResponse.setAdminId(admin.getId());
                     log.info("Admin {} success to login.",admin.getUsername());
+                    HttpSession session = request.getSession();
+                    session.setAttribute("adminId", admin.getId());
                 }
                 else{
                     loginResponse.setResultType(ResultType.FAILURE);
                     loginResponse.setErrorMsg("密码错误");
+                    log.info("Wrong password for admin {}.",admin.getUsername());
 
                 }
             /*} catch (BusinessServerException e) {
