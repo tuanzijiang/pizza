@@ -5,7 +5,7 @@ import edu.ecnu.scsse.pizza.data.enums.OrderStatus;
 
 import java.util.*;
 
-public class Order {
+public class Order implements Comparable<Order>{
     private String orderId;
     private String receiveName;
     private String receivePhone;
@@ -25,9 +25,15 @@ public class Order {
     private String orderUuid;
 
     private Point mapPoint;
-    private int deliverPriority;
+    private int deliveryOrder;
+    private int deliveryPriority;
     private Date finishTime;
     private int latestLeaveTime;
+
+    @Override
+    public int compareTo(Order o) {
+        return this.deliveryPriority > o.deliveryPriority ? -1 : 1;
+    }
 
     public Order() {
         this.orderId = "";
@@ -62,13 +68,6 @@ public class Order {
             }
         }
         return ingredientNumMap;
-    }
-
-    @Override
-    public String toString() {
-        return "Order{" +
-                "menuList=" + menuList +
-                '}';
     }
 
     public String getOrderId() {

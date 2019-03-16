@@ -1,12 +1,16 @@
 package edu.ecnu.scsse.pizza.bussiness.server.utils;
 
+import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Driver;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Ingredient;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.MapPoint;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Shop;
+import edu.ecnu.scsse.pizza.bussiness.server.service.DeliveryService;
 import edu.ecnu.scsse.pizza.bussiness.server.service.OrderReceiveService;
+import edu.ecnu.scsse.pizza.data.domain.DriverEntity;
 import edu.ecnu.scsse.pizza.data.domain.OrderEntity;
 import edu.ecnu.scsse.pizza.data.domain.PizzaShopEntity;
 import edu.ecnu.scsse.pizza.data.domain.ShopIngredientEntity;
+import edu.ecnu.scsse.pizza.data.repository.DriverJpaRepository;
 import edu.ecnu.scsse.pizza.data.repository.OrderJpaRepository;
 import edu.ecnu.scsse.pizza.data.repository.PizzaShopJpaRepository;
 import edu.ecnu.scsse.pizza.data.repository.ShopIngredientJpaRepository;
@@ -31,13 +35,17 @@ public class InitSystemConfig implements CommandLineRunner{
     private OrderJpaRepository orderJpaRepository;
     @Autowired
     private OrderReceiveService orderReceiveService;
+    @Autowired
+    private DriverJpaRepository driverJpaRepository;
+    @Autowired
+    private DeliveryService deliveryService;
 
     @Override
     public void run(String... args) throws Exception{
         initOrderReceiveShopOrderNumMap();
     }
 
-    public void initOrderReceiveShopOrderNumMap(){
+    private void initOrderReceiveShopOrderNumMap(){
         Map<Integer,Integer> shopOrderNumMap= new HashMap<>();
         List<PizzaShopEntity> pizzaShopEntityList = pizzaShopJpaRepository.findAll();
         for(PizzaShopEntity pizzaShopEntity:pizzaShopEntityList){
@@ -50,5 +58,13 @@ public class InitSystemConfig implements CommandLineRunner{
             }
         }
         orderReceiveService.setShopOrderNumMap(shopOrderNumMap);
+    }
+
+    private void initDriverListinDeliveryService(){
+        List<DriverEntity> driverEntityList = driverJpaRepository.findAll();
+        List<Driver> driverList = new ArrayList<>();
+        for(DriverEntity driverEntity:driverEntityList){
+            Driver driver = new Driver();
+        }
     }
 }
