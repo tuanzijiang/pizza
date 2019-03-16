@@ -39,6 +39,7 @@ message UpdateUserReq {
     BIRTHDAY = 3;
     CITY = 4;
     IMGAE = 5;
+    ADDRESSID = 6;
   }
 
   int32 user_id = 1;

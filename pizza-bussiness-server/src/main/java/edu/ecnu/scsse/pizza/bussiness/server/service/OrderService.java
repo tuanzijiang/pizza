@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
-    private static final Logger log = LoggerFactory.getLogger(AdminService.class);
+    private static final Logger log = LoggerFactory.getLogger(SessionService.class);
 
     @Autowired
     private OrderJpaRepository orderJpaRepository;
@@ -90,7 +90,7 @@ public class OrderService {
 
     public SaleResponse getSaleStatusList(String startDate,String endDate) throws ParseException {
         List<SaleStatus> saleStatusList = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         long end = sdf.parse(endDate).getTime();
         long start = sdf.parse(startDate).getTime();
         int days = (int)((end-start)/(1000 * 60 * 60 * 24))+1;
@@ -133,9 +133,7 @@ public class OrderService {
         Order order = new Order();
         CopyUtils.copyProperties(orderEntity, order);
 
-        String commitTimePattern = "yyyy/MM/dd hh/MM/ss";
-        DateFormat df = new SimpleDateFormat(commitTimePattern);
-
+        order.setState(OrderStatus.fromDbValue(orderEntity.getState()));
         order.setOrderId(String.valueOf(orderEntity.getId()));
 
         //设置收货人信息
@@ -148,6 +146,8 @@ public class OrderService {
         }
 
         //下单时间的格式转换
+        String commitTimePattern = "yyyy/MM/dd hh/MM/ss";
+        DateFormat df = new SimpleDateFormat(commitTimePattern);
         if(orderEntity.getCommitTime()!=null)
             order.setCommitTime(df.format(orderEntity.getCommitTime()));
         return order;
@@ -202,9 +202,9 @@ public class OrderService {
                 order.setDriverName(driverEntity.getName());
                 order.setDriverPhone(driverEntity.getPhone());
             }
-            if(order.getStartDeliverTime()!=null)
+            if(orderEntity.getDeliverStartTime()!=null)
                 order.setStartDeliverTime(df.format(orderEntity.getDeliverStartTime()));
-            if(order.getArriveTime()!=null)
+            if(orderEntity.getDeliverEndTime()!=null)
                 order.setArriveTime(df.format(orderEntity.getDeliverEndTime()));
         }
         return order;
