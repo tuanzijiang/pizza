@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
