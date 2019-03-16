@@ -84,4 +84,17 @@ public class Ingredient {
         CopyUtils.copyProperties(ingredientEntity,this);
         this.menuNeedCount = 0;
     }
+
+    @Override
+    public String toString() {
+        return "Ingredient{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", supplierName='" + supplierName + '\'' +
+                ", state=" + state +
+                ", alermNum=" + alermNum +
+                ", count=" + count +
+                ", menuNeedCount=" + menuNeedCount +
+                '}';
+    }
 }
