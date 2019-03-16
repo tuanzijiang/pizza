@@ -1,5 +1,7 @@
 package edu.ecnu.scsse.pizza.bussiness.server.model.request_response.admin;
 
+import javax.servlet.http.HttpServletRequest;
+
 public class LoginRequest{
     private String adminName;
     private String password;

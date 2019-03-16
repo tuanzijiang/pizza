@@ -1,5 +1,8 @@
 package edu.ecnu.scsse.pizza.bussiness.server.model.entity;
 
+import com.alibaba.fastjson.JSONObject;
+import jdk.nashorn.internal.parser.JSONParser;
+
 public class SaleStatus{
     private String date;
     private int orderNum;
@@ -56,5 +59,10 @@ public class SaleStatus{
 
     public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    @Override
+    public String toString(){
+        return JSONObject.toJSONString(this);
     }
 }

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserManageService {
-    private static final Logger log = LoggerFactory.getLogger(AdminService.class);
+    private static final Logger log = LoggerFactory.getLogger(SessionService.class);
 
     @Autowired
     private UserJpaRepository userJpaRepository;
