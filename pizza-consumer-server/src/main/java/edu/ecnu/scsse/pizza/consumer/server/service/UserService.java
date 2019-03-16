@@ -46,13 +46,15 @@ public class UserService {
         Optional<UserEntity> userEntity = userJpaRepository.findById(userId);
         if (userEntity.isPresent()) {
             User user = EntityConverter.convert(userEntity.get());
-            int addressId = userEntity.get().getDefaultUserAddressId();
-            Optional<UserAddressEntity> userAddressEntityOptional = userAddressJpaRepository.findByUserIdAndAddressId(
-                    user.getId(),
-                    addressId);
-            Optional<AddressEntity> addressEntity = addressJpaRepository.findById(addressId);
-            Address address = EntityConverter.convert(userAddressEntityOptional.get(), addressEntity.get());
-            user.setAddress(address);
+            Integer addressId = userEntity.get().getDefaultUserAddressId();
+            if (addressId != null) {
+                Optional<UserAddressEntity> userAddressEntityOptional = userAddressJpaRepository.findByUserIdAndAddressId(
+                        user.getId(),
+                        addressId);
+                Optional<AddressEntity> addressEntity = addressJpaRepository.findById(addressId);
+                Address address = EntityConverter.convert(userAddressEntityOptional.get(), addressEntity.get());
+                user.setAddress(address);
+            }
             fetchUserResponse.setUser(user);
             fetchUserResponse.setResultType(ResultType.SUCCESS);
         } else {
@@ -99,6 +101,9 @@ public class UserService {
                     break;
                 case IMGAE:
                     userEntity.setImage(updateUserRequest.getValue());
+                    break;
+                case ADDRESSID:
+                    userEntity.setDefaultUserAddressId(Integer.valueOf(updateUserRequest.getValue()));
             }
             userJpaRepository.save(userEntity);
             updateUserResponse.setResultType(ResultType.SUCCESS);
@@ -164,7 +169,7 @@ public class UserService {
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
         SignUpResponse signUpResponse = new SignUpResponse();
 
-        if (checkPasswordFormat(signUpRequest.getPassword())) {
+        if (!checkPasswordFormat(signUpRequest.getPassword())) {
             signUpResponse.setResultType(ResultType.FAILURE);
             return signUpResponse;
         }
@@ -173,11 +178,15 @@ public class UserService {
         userEntity.setPhone(signUpRequest.getPhone());
         userEntity.setPassword(signUpRequest.getPassword());
         userEntity.setEmail(signUpRequest.getEmail());
-        userEntity = userJpaRepository.save(userEntity);
+        userEntity.setName("user" + userEntity.getPhone());
+        try {
+            userEntity = userJpaRepository.save(userEntity);
+            User user = EntityConverter.convert(userEntity);
 
-        User user = EntityConverter.convert(userEntity);
-
-        signUpResponse.setUser(user);
+            signUpResponse.setUser(user);
+        } catch (Exception e) {
+            signUpResponse.setResultType(ResultType.FAILURE);
+        }
 
         return signUpResponse;
     }
@@ -219,6 +228,7 @@ public class UserService {
 
         return response;
     }
+
 
     /**
      * 添加地址信息
@@ -266,15 +276,21 @@ public class UserService {
     public FetchUserAddressesResponse fetchUserAddresses(FetchUserAddressesRequest fetchUserAddressesRequest) {
         FetchUserAddressesResponse response = new FetchUserAddressesResponse();
 
-        List<UserAddressEntity> userAddressEntityList =
-                userAddressJpaRepository.findByUserId(fetchUserAddressesRequest.getUserId());
-        List<Address> addresses = new ArrayList<>();
-        for (UserAddressEntity userAddressEntity : userAddressEntityList) {
-            Address address = EntityConverter.convert(userAddressEntity,
-                    addressJpaRepository.findById(userAddressEntity.getAddressId()).get());
-            addresses.add(address);
+        try {
+
+            List<UserAddressEntity> userAddressEntityList =
+                    userAddressJpaRepository.findByUserId(fetchUserAddressesRequest.getUserId());
+            List<Address> addresses = new ArrayList<>();
+            for (UserAddressEntity userAddressEntity : userAddressEntityList) {
+                Address address = EntityConverter.convert(userAddressEntity,
+                        addressJpaRepository.findById(userAddressEntity.getAddressId()).get());
+                addresses.add(address);
+            }
+
+            response.setAddresses(addresses);
+        }catch (Exception e) {
+            response.setResultType(ResultType.FAILURE);
         }
-        response.setAddresses(addresses);
 
         return response;
     }
