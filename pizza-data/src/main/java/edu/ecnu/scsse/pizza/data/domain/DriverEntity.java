@@ -1,19 +1,15 @@
 package edu.ecnu.scsse.pizza.data.domain;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
-import java.sql.Timestamp;
 
 @Entity
 @Table(name = "driver", schema = "pizza_project", catalog = "")
 public class DriverEntity {
     private int id;
     private String name;
-    private BigDecimal lat;
-    private BigDecimal lon;
     private String phone;
     private int state;
-    private Timestamp latestDepartTime;
+    private Integer shopId;
 
     @Id
     @Column(name = "id")
@@ -33,26 +29,6 @@ public class DriverEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Basic
-    @Column(name = "lat")
-    public BigDecimal getLat() {
-        return lat;
-    }
-
-    public void setLat(BigDecimal lat) {
-        this.lat = lat;
-    }
-
-    @Basic
-    @Column(name = "lon")
-    public BigDecimal getLon() {
-        return lon;
-    }
-
-    public void setLon(BigDecimal lon) {
-        this.lon = lon;
     }
 
     @Basic
@@ -76,13 +52,13 @@ public class DriverEntity {
     }
 
     @Basic
-    @Column(name = "latest_depart_time")
-    public Timestamp getLatestDepartTime() {
-        return latestDepartTime;
+    @Column(name = "shop_id")
+    public Integer getShopId() {
+        return shopId;
     }
 
-    public void setLatestDepartTime(Timestamp latestDepartTime) {
-        this.latestDepartTime = latestDepartTime;
+    public void setShopId(Integer shopId) {
+        this.shopId = shopId;
     }
 
     @Override
@@ -95,11 +71,8 @@ public class DriverEntity {
         if (id != that.id) return false;
         if (state != that.state) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (lat != null ? !lat.equals(that.lat) : that.lat != null) return false;
-        if (lon != null ? !lon.equals(that.lon) : that.lon != null) return false;
         if (phone != null ? !phone.equals(that.phone) : that.phone != null) return false;
-        if (latestDepartTime != null ? !latestDepartTime.equals(that.latestDepartTime) : that.latestDepartTime != null)
-            return false;
+        if (shopId != null ? !shopId.equals(that.shopId) : that.shopId != null) return false;
 
         return true;
     }
@@ -108,11 +81,9 @@ public class DriverEntity {
     public int hashCode() {
         int result = id;
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (lat != null ? lat.hashCode() : 0);
-        result = 31 * result + (lon != null ? lon.hashCode() : 0);
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         result = 31 * result + state;
-        result = 31 * result + (latestDepartTime != null ? latestDepartTime.hashCode() : 0);
+        result = 31 * result + (shopId != null ? shopId.hashCode() : 0);
         return result;
     }
 }
