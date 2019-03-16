@@ -8,6 +8,8 @@ public abstract class BaseResponse{
 
     private String errorMsg;
 
+    private String successMsg;
+
     private Throwable cause;
 
     public BaseResponse() {}
@@ -40,5 +42,13 @@ public abstract class BaseResponse{
 
     public void setCause(Throwable cause) {
         this.cause = cause;
+    }
+
+    public String getSuccessMsg() {
+        return successMsg;
+    }
+
+    public void setSuccessMsg(String successMsg) {
+        this.successMsg = successMsg;
     }
 }

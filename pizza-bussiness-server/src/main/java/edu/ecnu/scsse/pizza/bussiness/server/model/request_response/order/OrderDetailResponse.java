@@ -32,7 +32,23 @@ public class OrderDetailResponse extends BaseResponse {
     }
 
     public OrderDetailResponse(Order order) {
-        CopyUtils.copyProperties(order,this);
+        //CopyUtils.copyProperties(order,this);
+        this.orderId = order.getOrderId();
+        this.receiveName = order.getReceiveName();
+        this.receivePhone = order.getReceivePhone();
+        this.receiveAddress = order.getReceiveAddress();
+        this.menuList = order.getMenuList();
+        this.totalAmount = order.getTotalAmount();
+        this.buyPhone = order.getBuyPhone();
+        this.commitTime = order.getCommitTime();
+        this.shopId = order.getShopId();
+        this.shopName = order.getShopName();
+        this.driverId = order.getDriverId();
+        this.driverName = order.getDriverName();
+        this.driverPhone = order.getDriverPhone();
+        this.startDeliverTime = order.getStartDeliverTime();
+        this.arriveTime= order.getArriveTime();
+        this.state = order.getState();
     }
 
     public OrderDetailResponse(BusinessServerException e) {
