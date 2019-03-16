@@ -20,7 +20,6 @@ public class Menu {
     private PizzaTag tagName;
     private int count;
     private List<Ingredient> ingredients;
-    private Map<Ingredient,Integer> ingredientIntegerMap;
 
     public Menu() {
         this.id = "";
@@ -105,14 +104,6 @@ public class Menu {
         this.ingredients = ingredients;
     }
 
-    public Map<Ingredient, Integer> getIngredientIntegerMap() {
-        return ingredientIntegerMap;
-    }
-
-    public void setIngredientIntegerMap(Map<Ingredient, Integer> ingredientIntegerMap) {
-        this.ingredientIntegerMap = ingredientIntegerMap;
-    }
-
     public PizzaTag getTagName() {
         return tagName;
     }
@@ -121,7 +112,7 @@ public class Menu {
         this.tagName = tagName;
     }
 
-    public Menu(String id, String name, String image, String description, double price, PizzaStatus state, int tag, int count, Map<Ingredient, Integer> ingredientIntegerMap) {
+    public Menu(String id, String name, String image, String description, double price, PizzaStatus state, int tag, int count) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -130,7 +121,6 @@ public class Menu {
         this.state = state;
         this.tag = tag;
         this.count = count;
-        this.ingredientIntegerMap = ingredientIntegerMap;
     }
 
     public Menu(String id, String name, String image, String description, double price, PizzaStatus state, PizzaTag tagName, List<Ingredient> ingredients) {
@@ -154,4 +144,10 @@ public class Menu {
         this.tagName = menu.getTagName();
     }
 
+    @Override
+    public String toString() {
+        return "Menu{" +
+                "ingredients=" + ingredients +
+                '}';
+    }
 }
