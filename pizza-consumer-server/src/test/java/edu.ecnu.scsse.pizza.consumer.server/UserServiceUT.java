@@ -162,29 +162,63 @@ public class UserServiceUT {
     }
 
     @Test
-    public void addAndUpdateAddressTest() {
-        AddUserAddressRequest request=new AddUserAddressRequest();
+    public void testAddAddressSuccess() {
+        AddUserAddressRequest addUserAddressRequest=new AddUserAddressRequest();
         Address address=new Address();
-        address.setAddress("address");
-        address.setAddressDetail("address detail");
+        address.setAddress("华东师范大学（闵行校区）");
+        address.setAddressDetail("第三宿舍");
         address.setName("cao miao");
         address.setPhone("123");
         address.setSex(Sex.FEMALE);
         address.setTag(AddressTag.COMMON);
+
+        addUserAddressRequest.setAddress(address);
+        addUserAddressRequest.setUserId(1);
+
+        AddUserAddressResponse response=userService.addUserAddress(addUserAddressRequest);
+        Assert.assertEquals(ResultType.SUCCESS, response.getResultType());
+    }
+
+    @Test
+    public void testAddAddressGetLocationFailure() {
+        AddUserAddressRequest addUserAddressRequest=new AddUserAddressRequest();
+        Address address=new Address();
+        address.setAddress("啦啦啦xxxx");
+        address.setAddressDetail("第三宿舍");
+        address.setName("cao miao");
+        address.setPhone("123");
+        address.setSex(Sex.FEMALE);
+        address.setTag(AddressTag.COMMON);
+
+        addUserAddressRequest.setAddress(address);
+        addUserAddressRequest.setUserId(1);
+
+        AddUserAddressResponse response=userService.addUserAddress(addUserAddressRequest);
+        Assert.assertEquals(ResultType.FAILURE, response.getResultType());
+    }
+
+
+    @Test
+    public void testUpdateAddressSuccess() {
+        AddUserAddressRequest request=new AddUserAddressRequest();
+        Address address=new Address();
+        address.setId(10);
+        address.setAddress("address");
+        address.setAddressDetail("detail changed!");
+        address.setName("jiang");
+        address.setPhone("12312312223");
+        address.setSex(Sex.FEMALE);
+        address.setTag(AddressTag.COMMON);
         request.setAddress(address);
         request.setUserId(1);
-        AddUserAddressResponse response=userService.addUserAddress(request);
-        Assert.assertEquals(response.getResultType(), ResultType.SUCCESS);
 
-        address.setId(10);
-        address.setAddressDetail("change detail");
         request.setAddress(address);
         AddUserAddressResponse response1=userService.updateUserAddress(request);
         Assert.assertEquals(response1.getResultType(), ResultType.SUCCESS);
     }
 
     @Test
-    public void fetchAddressesTest() {
+    public void testFetchAddressesSuccess() {
         FetchUserAddressesRequest request=new FetchUserAddressesRequest();
         request.setUserId(1);
         FetchUserAddressesResponse response=userService.fetchUserAddresses(request);
