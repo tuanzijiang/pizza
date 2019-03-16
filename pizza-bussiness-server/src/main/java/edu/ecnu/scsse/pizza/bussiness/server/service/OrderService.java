@@ -160,11 +160,11 @@ public class OrderService {
 
         //设置订购的披萨信息
         List<Menu> menuList = new ArrayList<>();
-        List<OrderMenuEntity> orderMenuEntityOptional = orderMenuJpaRepository.findByOrderId(orderEntity.getId());
-        for(OrderMenuEntity orderMenuEntity : orderMenuEntityOptional){
+        List<OrderMenuEntity> orderMenuEntityList = orderMenuJpaRepository.findByOrderId(orderEntity.getId());
+        for(OrderMenuEntity orderMenuEntity : orderMenuEntityList){
             Menu menu = new Menu();
             menu.setCount(orderMenuEntity.getCount());
-            Optional<MenuEntity> menuEntityOptional = menuJpaRepository.findById(orderMenuEntity.getId());
+            Optional<MenuEntity> menuEntityOptional = menuJpaRepository.findById(orderMenuEntity.getMenuId());
             if(menuEntityOptional.isPresent()){
                 MenuEntity menuEntity = menuEntityOptional.get();
                 CopyUtils.copyProperties(menuEntity,menu);
@@ -172,9 +172,9 @@ public class OrderService {
             }
             menuList.add(menu);
         }
-        if(menuList.size()!=0){
-            order.setMenuList(menuList);
-        }
+        //if(menuList.size()!=0){
+        order.setMenuList(menuList);
+        //}
 
         //设置购买人电话
         Optional<UserEntity> userEntityOptional = userJpaRepository.findById(orderEntity.getUserId());
