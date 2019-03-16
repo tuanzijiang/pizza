@@ -8,6 +8,7 @@ public class Shop {
     private int id;
     private List<Driver> driverList;
     private List<Order> orderList;
+    private List<Ingredient> ingredientList;
     private Point mapPoint;
     private int maxNum;
     private Timestamp startTime;
@@ -40,6 +41,14 @@ public class Shop {
 
     public void setOrderList(List<Order> orderList) {
         this.orderList = orderList;
+    }
+
+    public List<Ingredient> getIngredientList() {
+        return ingredientList;
+    }
+
+    public void setIngredientList(List<Ingredient> ingredientList) {
+        this.ingredientList = ingredientList;
     }
 
     public Point getMapPoint() {
@@ -109,10 +118,11 @@ public class Shop {
     public Shop() {
     }
 
-    public Shop(int id, List<Driver> driverList, List<Order> orderList, Point mapPoint, int maxNum, Timestamp startTime, Timestamp endTime) {
+    public Shop(int id, List<Driver> driverList, List<Order> orderList, List<Ingredient> ingredientList, Point mapPoint, int maxNum, Timestamp startTime, Timestamp endTime) {
         this.id = id;
         this.driverList = driverList;
         this.orderList = orderList;
+        this.ingredientList = ingredientList;
         this.mapPoint = mapPoint;
         this.maxNum = maxNum;
         this.startTime = startTime;
