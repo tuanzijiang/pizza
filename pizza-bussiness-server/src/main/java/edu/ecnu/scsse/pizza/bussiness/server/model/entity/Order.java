@@ -3,9 +3,7 @@ package edu.ecnu.scsse.pizza.bussiness.server.model.entity;
 import edu.ecnu.scsse.pizza.bussiness.server.model.enums.OrderState;
 import edu.ecnu.scsse.pizza.data.enums.OrderStatus;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class Order {
     private String orderId;
@@ -24,6 +22,7 @@ public class Order {
     private String startDeliverTime;
     private String arriveTime;
     private OrderStatus state;
+    private String orderUuid;
 
     private Point mapPoint;
     private int deliverPriority;
@@ -47,6 +46,29 @@ public class Order {
         this.startDeliverTime = "";
         this.arriveTime = "";
         this.state = OrderStatus.UNKNOWN;
+    }
+
+
+    public Map<Integer,Integer> getOrderIngredientMap(){
+        Map<Integer,Integer> ingredientNumMap=new HashMap<>();
+        for(Menu menu:menuList){
+            List<Ingredient> ingredientList=menu.getIngredients();
+            for(Ingredient ingredient:ingredientList){
+                if(ingredientNumMap.containsKey(ingredient.getId())){
+                    ingredientNumMap.put(ingredient.getId(),ingredientNumMap.get(ingredient.getId())+ingredient.getCount()*menu.getCount());
+                }else{
+                    ingredientNumMap.put(ingredient.getId(),ingredient.getCount()*menu.getCount());
+                }
+            }
+        }
+        return ingredientNumMap;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "menuList=" + menuList +
+                '}';
     }
 
     public String getOrderId() {
@@ -175,5 +197,13 @@ public class Order {
 
     public void setDriverPhone(String driverPhone) {
         this.driverPhone = driverPhone;
+    }
+
+    public String getOrderUuid() {
+        return orderUuid;
+    }
+
+    public void setOrderUuid(String orderUuid) {
+        this.orderUuid = orderUuid;
     }
 }

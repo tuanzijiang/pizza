@@ -4,6 +4,10 @@ public class OrderReceiveRequest {
     private String orderUuid;
     private int userAddressId;
 
+
+    public OrderReceiveRequest() {
+    }
+
     public String getOrderUuid() {
         return orderUuid;
     }
