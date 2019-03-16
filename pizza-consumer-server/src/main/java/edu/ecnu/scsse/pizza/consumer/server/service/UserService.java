@@ -4,7 +4,9 @@ import edu.ecnu.scsse.pizza.consumer.server.model.ResultType;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Address;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.User;
 import edu.ecnu.scsse.pizza.consumer.server.model.user.*;
+import edu.ecnu.scsse.pizza.consumer.server.utils.AmapLocation;
 import edu.ecnu.scsse.pizza.consumer.server.utils.EntityConverter;
+import edu.ecnu.scsse.pizza.consumer.server.utils.HttpUtils;
 import edu.ecnu.scsse.pizza.data.domain.AddressEntity;
 import edu.ecnu.scsse.pizza.data.domain.UserAddressEntity;
 import edu.ecnu.scsse.pizza.data.domain.UserEntity;
@@ -14,6 +16,7 @@ import edu.ecnu.scsse.pizza.data.repository.UserJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -240,7 +243,21 @@ public class UserService {
         AddUserAddressResponse response = new AddUserAddressResponse();
         Address address = addUserAddressRequest.getAddress();
         AddressEntity addressEntity = new AddressEntity();
-        addressEntity.setAddress(address.getAddress());
+        try {
+            AmapLocation.Geocode geocode=HttpUtils.queryGeo(address.getAddress());
+            if(geocode!=null) {
+                addressEntity=EntityConverter.convert(geocode);
+            }
+            else {
+                response.setResultType(ResultType.FAILURE);
+                return response;
+            }
+        } catch (IOException e) {
+            response.setResultType(ResultType.FAILURE);
+            return response;
+        }
+
+
         try {
             addressEntity = addressJpaRepository.save(addressEntity);
         } catch (Exception e) {

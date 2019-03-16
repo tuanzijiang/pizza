@@ -10,6 +10,8 @@ import edu.ecnu.scsse.pizza.data.enums.PizzaStatus;
 import edu.ecnu.scsse.pizza.data.enums.PizzaTag;
 import edu.ecnu.scsse.pizza.data.enums.Sex;
 
+import java.math.BigDecimal;
+
 public class EntityConverter {
 
     /**
@@ -92,5 +94,13 @@ public class EntityConverter {
         User user = new User(userEntity.getId(), userEntity.getName(), userEntity.getPhone(),
                 userEntity.getEmail(), userEntity.getBirthday(), userEntity.getCity(), userEntity.getImage());
         return user;
+    }
+
+    public static AddressEntity convert(AmapLocation.Geocode geocode) {
+        AddressEntity addressEntity=new AddressEntity();
+        addressEntity.setAddress(geocode.getFormattedAddress());
+        addressEntity.setLat(new BigDecimal(geocode.getLocation().split(",")[0]));
+        addressEntity.setLon(new BigDecimal(geocode.getLocation().split(",")[1]));
+        return addressEntity;
     }
 }
