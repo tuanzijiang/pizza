@@ -1,13 +1,15 @@
 package edu.ecnu.scsse.pizza.bussiness.server.model.entity;
 
-import edu.ecnu.scsse.pizza.bussiness.server.model.enums.DriverState;
+
+import edu.ecnu.scsse.pizza.data.enums.DriverStatus;
 
 import java.util.Date;
 import java.util.List;
 
 public class Driver {
     private int id;
-    private DriverState state;
+    private String name;
+    private DriverStatus state;
     private List<Order> orderList;
     private int max_delieve_num;
     private int shop_id;
