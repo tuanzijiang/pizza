@@ -71,8 +71,8 @@ message FetchMenuResp {
 // [post] /sendOrder
 
 message SendOrderReq {
-  string order_id;
-  int32 user_address_id;
+  string order_id = 1;
+  int32 user_address_id = 2;
 }
 
 message SendOrderResp {
