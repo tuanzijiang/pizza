@@ -1,4 +1,6 @@
 dist
 node_modules
+mock/proto.json
+src/net/proto.json
 
 *.log
