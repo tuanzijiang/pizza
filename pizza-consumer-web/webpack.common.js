@@ -69,6 +69,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(['dist']),
     new HtmlWebpackPlugin({
+      filename: 'index.template.html',
       template: path.resolve(__dirname, './src/templates/index.template.html'),
       favicon: path.resolve(__dirname, './src/assets/logo.ico'),
     }),

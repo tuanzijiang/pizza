@@ -9,7 +9,7 @@ import Register from './Register';
 import RegisterEmail from './RegisterEmail';
 import BindTel from './BindTel';
 import { connect } from 'react-redux';
-import { page as pageActionCreator } from '@store/action';
+import { pageMobile as pageActionCreator } from '@store/action';
 import autobind from 'autobind-decorator';
 
 interface LoginAssetsProps {
@@ -138,7 +138,7 @@ export class LoginAssets extends React.PureComponent<LoginAssetsProps, LoginAsse
 
 export default connect((state: any) => {
   return {
-    loginStore: state.page.login,
+    loginStore: state.pageMobile.login,
   };
 }, (dispatch) => {
   return {
