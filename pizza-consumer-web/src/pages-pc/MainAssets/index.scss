@@ -1,6 +1,55 @@
 @import '~@ui/base.scss';
-
-.loginAssets {
+.mainAssets {
   height: 100%;
   width: 100%;
+  overflow: auto;
+}
+
+.mainAssets-wrapper {
+  height: 100%;
+  width: 100%;
+  min-width: rem(1280);
+  .mainAssets-avatar_default {
+    font-size: rem(30);
+    color: $white_1;
+    margin: 0 rem(20) 0 0;
+  }
+  .mainAssets-header {
+    height: rem(50);
+    color: $white_1;
+    background: $blue_3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 rem(150);
+    box-sizing: border-box;
+  }
+  .mainAssets-logo {
+    display: flex;
+    align-items: center;
+  }
+  .mainAssets-userInfo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  .mainAssets-button {
+    margin: 0 0 0 rem(50);
+    cursor: pointer;
+    opacity: .5;
+  }
+  .mainAssets-button_active {
+    opacity: 1;
+  }
+  .mainAssets-userName {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: rem(100);
+    white-space: nowrap;
+  }
+  .mainAssets-content {
+    height: calc(100% - #{rem(50)});
+    padding: rem(50) 0 0;
+    box-sizing: border-box;
+  }
 }

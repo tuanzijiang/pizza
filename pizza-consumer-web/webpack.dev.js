@@ -6,9 +6,13 @@ const os = require('os');
 const argv = require('yargs').argv;
 
 const networkInfo = os.networkInterfaces()['en0'];
-let address;
+let address = null;
 if (networkInfo) {
-  address = networkInfo[1].address
+  networkInfo.forEach(v => {
+    if (v.family === 'IPv4') {
+      address = v.address
+    }
+  });
 }
 
 module.exports = merge(common, {

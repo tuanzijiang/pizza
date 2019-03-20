@@ -1,5 +1,5 @@
 @import '~@ui/base.scss';
-.login-wrapper {
+.register-wrapper {
   position: relative;
   height: 100%;
   width: 100%;
@@ -16,14 +16,14 @@
   }
 }
 
-.login-header {
+.register-header {
   color: $gray_5;
   font-size: rem(25);
   text-align: center;
   width: 100%;
 }
 
-.login-kinds {
+.register-kinds {
   box-sizing: border-box;
   padding: 0 rem(50);
   width: 100%;
@@ -31,7 +31,7 @@
   margin: rem(15) 0 rem(10) 0;
 }
 
-.login-button {
+.register-button {
   position: absolute;
   bottom: rem(90);
   width: calc(100% - #{rem(50 * 2)});
@@ -44,7 +44,7 @@
   color: white;
 }
 
-.login-kind {
+.register-kind {
   flex: 1;
   font-size: rem(18);
   margin: 0 rem(15);
@@ -55,16 +55,16 @@
   height: rem(35);
 }
 
-.login-kind_active {
+.register-kind_active {
   color: $blue_2;
   box-shadow: 0 rem(-2) 0 0 $blue_2 inset;
 }
 
-.login-inputs {
+.register-inputs {
   padding: rem(20) 0 0;
 }
 
-.login-account {
+.register-account {
   height: rem(40);
   width: calc(100% - #{rem(55 * 2)});
   margin: 0 rem(55);
@@ -72,7 +72,7 @@
   box-shadow: 0 0 0 rem(1) $gray_3;
 }
 
-.login-pw {
+.register-pw {
   height: rem(40);
   width: calc(100% - #{rem(55 * 2)});
   margin: rem(20) rem(55);
@@ -80,7 +80,7 @@
   box-shadow: 0 0 0 rem(1) $gray_3;
 }
 
-.login-varify {
+.register-varify {
   flex: 1;
   border-radius: rem(2);
   box-shadow: 0 0 0 rem(1) $gray_3;
@@ -88,7 +88,7 @@
   align-items: center;
 }
 
-.login-varifyLine {
+.register-varifyLine {
   height: rem(40);
   width: calc(100% - #{rem(55 * 2)});
   margin: rem(20) rem(55);
@@ -97,7 +97,7 @@
   justify-content: space-between;
 }
 
-.login-varifyButton {
+.register-varifyButton {
   height: rem(40);
   width: rem(80);
   font-size: rem(12);
@@ -110,7 +110,7 @@
   cursor: pointer;
 }
 
-.login-extraInfo {
+.register-extraInfo {
   position: absolute;
   bottom: rem(40);
   width: calc(100% - #{rem(50 * 2)});
@@ -120,7 +120,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  .login-toRegister {
+  .register-toRegister {
     color: $blue_2;
     cursor: pointer;
   }
