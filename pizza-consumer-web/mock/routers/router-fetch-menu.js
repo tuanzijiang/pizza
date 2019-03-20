@@ -22,7 +22,7 @@ router.post('/', async (ctx, next) => {
   const { userId } = result;
   const body = {
     resultType: 1,
-    pizzas: _.range(5).map(v => Pizza.random()),
+    pizzas: _.range(15).map(v => Pizza.random()),
   }
 
   log.info('[fetch_menu_resp]:', body);
