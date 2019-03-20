@@ -5,7 +5,6 @@ import i18n from '@src/utils/i18n';
 import autobind from 'autobind-decorator';
 import { timerFormater } from '@utils/time';
 import { PageName } from '..';
-import history from '@utils/history';
 
 interface LoginProps {
   currentTime: number;
@@ -38,13 +37,8 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
 
   @autobind
   handleLoginClick() {
-    history.push('./MainAssets');
-  }
-
-  @autobind
-  handleRegisterClick() {
     const { handlePageChange } = this.props;
-    handlePageChange(PageName.REGISTER);
+    handlePageChange(PageName.LOGIN);
   }
 
   @autobind
@@ -104,15 +98,15 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
   renderAccountInput() {
     const { account, pw } = this.state;
 
-    return <div className="login-inputs">
-      <div className="login-account">
+    return <div className="register-inputs">
+      <div className="register-account">
         <input
           value={account}
-          placeholder={i18n('手机号/邮箱')}
+          placeholder={i18n('邮箱')}
           onChange={this.handleAccountChange}
         />
       </div>
-      <div className="login-pw">
+      <div className="register-pw">
         <input
           value={pw}
           placeholder={i18n('密码')}
@@ -126,23 +120,23 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
   renderVarifyInput() {
     const { varify, tel } = this.state;
 
-    return <div className="login-inputs">
-      <div className="login-account">
+    return <div className="register-inputs">
+      <div className="register-account">
         <input
           value={tel}
           placeholder={i18n('手机号')}
           onChange={this.handleTelChange}
         />
       </div>
-      <div className="login-varifyLine">
-        <div className="login-varify">
+      <div className="register-varifyLine">
+        <div className="register-varify">
           <input
             value={varify}
             placeholder={i18n('验证码')}
             onChange={this.handleVarifyChange}
           />
         </div>
-        <div className="login-varifyButton">
+        <div className="register-varifyButton">
           {this.renderVarifyCode()}
         </div>
       </div>
@@ -157,7 +151,7 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
     if (!varifyTime || varifyTime - currentTime < 0) {
       return (
         <div
-          className="login-varigyCode"
+          className="register-varigyCode"
           onClick={this.handleVarifyClick}
         >
           {text}
@@ -166,7 +160,7 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
     } else {
       const { second } = timerFormater(varifyTime - currentTime);
       return (
-        <div className="login-varigyCode">
+        <div className="register-varigyCode">
           <span>{i18n('已发送:')}</span>
           <span>{second}</span>
           <span>{i18n('s')}</span>
@@ -178,40 +172,40 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
   render() {
     const { navIdx } = this.state;
     return (
-      <div className="login-wrapper">
-        <div className="login-header">{i18n('登录')}</div>
-        <div className="login-kinds">
+      <div className="register-wrapper">
+        <div className="register-header">{i18n('注册')}</div>
+        <div className="register-kinds">
           <span
             className={cx({
-              'login-kind': true,
-              'login-kind_active': navIdx === 0,
+              'register-kind': true,
+              'register-kind_active': navIdx === 0,
             })}
             onClick={this.handleNavClick(0)}
           >
-            {i18n('账号登录')}
+            {i18n('邮箱注册')}
           </span>
           <span
             className={cx({
-              'login-kind': true,
-              'login-kind_active': navIdx === 1,
+              'register-kind': true,
+              'register-kind_active': navIdx === 1,
             })}
             onClick={this.handleNavClick(1)}
           >
-            {i18n('手机号登录')}
+            {i18n('手机注册')}
           </span>
         </div>
-        <div className="login-content">
+        <div className="register-content">
           {navIdx === 0 && this.renderAccountInput()}
           {navIdx === 1 && this.renderVarifyInput()}
         </div>
-        <div className="login-button" onClick={this.handleLoginClick}>{i18n('登录')}</div>
-        <div className="login-extraInfo">
-          <div>{i18n('第三方登录')}</div>
+        <div className="register-button">{i18n('注册')}</div>
+        <div className="register-extraInfo">
+          <div></div>
           <div>
-            {i18n('没有账号？')}
+            {i18n('已有账号？')}
             <span
-              className="login-toRegister" onClick={this.handleRegisterClick}
-            >{i18n('注册')}</span>
+              className="register-toRegister" onClick={this.handleLoginClick}
+            >{i18n('登录')}</span>
           </div>
         </div>
       </div>

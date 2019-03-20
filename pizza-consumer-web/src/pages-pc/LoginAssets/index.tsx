@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { pagePc as pageActionCreator } from '@store/action';
 import BlurBg from '@biz-components/BlurBg';
 import Login from './Login';
+import Register from './Register';
+import autobind from 'autobind-decorator';
 
 interface LoginAssetsProps {
   loginStore: any;
@@ -11,8 +13,14 @@ interface LoginAssetsProps {
   updateVarifyTime: (varifyTime: number) => void;
 }
 
+export enum PageName {
+  LOGIN = 0,
+  REGISTER = 1,
+}
+
 interface LoginAssetsState {
   currentTime: number;
+  navIdx: number;
 }
 
 export class LoginAssets extends React.PureComponent<LoginAssetsProps, LoginAssetsState> {
@@ -21,6 +29,7 @@ export class LoginAssets extends React.PureComponent<LoginAssetsProps, LoginAsse
     super(props);
     this.state = {
       currentTime: new Date().valueOf(),
+      navIdx: PageName.LOGIN,
     };
   }
 
@@ -36,8 +45,15 @@ export class LoginAssets extends React.PureComponent<LoginAssetsProps, LoginAsse
     clearInterval(this.varifyTimer);
   }
 
+  @autobind
+  handleChange(pagename: PageName) {
+    this.setState({
+      navIdx: pagename,
+    });
+  }
+
   render() {
-    const { currentTime } = this.state;
+    const { currentTime, navIdx } = this.state;
     const { loginStore, updateVarifyTime } = this.props;
     return (
       <div className="loginAssets">
@@ -49,9 +65,18 @@ export class LoginAssets extends React.PureComponent<LoginAssetsProps, LoginAsse
               <div className="loginAssets-info">Pizza Express将为您提供30分钟必达配送服务</div>
             </div>
             <div className="loginAssets-box">
-              <Login
-                currentTime={currentTime} loginStore={loginStore} onVarifyClick={updateVarifyTime}
-              />
+              {
+                navIdx === PageName.LOGIN && <Login
+                  currentTime={currentTime} loginStore={loginStore} onVarifyClick={updateVarifyTime}
+                  handlePageChange={this.handleChange}
+                />
+              }
+              {
+                navIdx === PageName.REGISTER && <Register
+                  currentTime={currentTime} loginStore={loginStore} onVarifyClick={updateVarifyTime}
+                  handlePageChange={this.handleChange}
+                />
+              }
             </div>
           </div>
         </div>
