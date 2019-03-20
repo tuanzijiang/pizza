@@ -6,14 +6,16 @@
   "license": "MIT",
   "scripts": {
     "watch": "yarn pb && webpack --watch --config webpack.dev.js",
-    "dev": "yarn pb && webpack-dev-server --open --config webpack.dev.js",
+    "dev": "yarn dev:pc",
+    "dev:pc": "yarn pb && webpack-dev-server --open --config webpack.dev.js --isPc true",
+    "dev:mobile": "yarn pb && webpack-dev-server --open --config webpack.dev.js --isPc false",
     "build": "yarn pb && webpack --config webpack.prod.js",
     "analysis": "webpack --config webpack.dev.js --profile --json > stats.json",
     "lint": "tslint --project . src/**/*.ts src/**/*.tsx",
     "mock": "nodemon mock/server",
-    "pb": "yarn pb-web && yarn pb-server",
-    "pb-server": "pbjs -t json ../pizza-protobuf/user.proto ../pizza-protobuf/order.proto > mock/proto.json",
-    "pb-web": "pbjs -t json ../pizza-protobuf/user.proto ../pizza-protobuf/order.proto > src/net/proto.json"
+    "pb": "yarn pb:web && yarn pb:server",
+    "pb:server": "pbjs -t json ../pizza-protobuf/user.proto ../pizza-protobuf/order.proto > mock/proto.json",
+    "pb:web": "pbjs -t json ../pizza-protobuf/user.proto ../pizza-protobuf/order.proto > src/net/proto.json"
   },
   "devDependencies": {
     "@types/autobind-decorator": "^2.1.0",
@@ -70,6 +72,7 @@
   "dependencies": {
     "koa-protobuf": "^0.1.1",
     "protobufjs": "^6.8.8",
-    "raw-body": "^2.3.3"
+    "raw-body": "^2.3.3",
+    "yargs": "^13.2.2"
   }
 }

@@ -3,8 +3,15 @@ import { Router, Route, Switch, Redirect } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store';
 import history from '@utils/history';
-import { LoginAssets, MainAssets } from './pages';
-import { neetStatusBar } from '@utils/device';
+import {
+  LoginAssets as LoginPagePc,
+  MainAssets as MainPagePc,
+} from './pages-pc';
+import {
+  LoginAssets as LoginPageMobile,
+  MainAssets as MainPageMobile,
+} from './pages-mobile';
+import { neetStatusBar, isPc } from '@utils/device';
 
 // @ts-ignore
 window.__STORE__ = store;
@@ -31,10 +38,10 @@ export default class App extends React.PureComponent<AppProps, AppState> {
       <Provider store={store}>
         <Router history={history}>
           <Switch>
-            <Route component={LoginAssets} path="/LoginAssets" />
-            <Route component={MainAssets} path="/MainAssets" />
+            <Route component={isPc ? LoginPagePc : LoginPageMobile} path="/LoginAssets" />
+            <Route component={isPc ? MainPagePc : MainPageMobile} path="/MainAssets" />
             <Redirect to={{
-              pathname: '/MainAssets',
+              pathname: '/LoginAssets',
             }} />
           </Switch>
         </Router>

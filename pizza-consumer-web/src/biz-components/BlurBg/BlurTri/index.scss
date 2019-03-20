@@ -1,0 +1,28 @@
+@import '~@ui/base.scss';
+@keyframes triMove {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  25% {
+    transform: translate3d(vw(50), vw(-50), 0);
+  }
+  60% {
+    transform: translate3d(vw(60), vw(30), 0);
+  }
+  100% {
+    transform: translate3d(vw(50), vw(30), 0);
+  }
+}
+
+.blurTri-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 0;
+  width: 0;
+  border: vw(40) solid transparent;
+  border-bottom: vw(60) solid $red_1;
+  filter: blur(vw(12));
+  transform-style: preserve-3d;
+  animation: triMove 15s infinite alternate;
+}

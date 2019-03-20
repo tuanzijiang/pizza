@@ -1,0 +1,44 @@
+@import '~@ui/base.scss';
+.loginAssets {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+
+.loginAssets-wrapper {
+  height: 100%;
+  width: 100%;
+  min-width: rem(1280);
+}
+
+.loginAssets-main {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+}
+
+.loginAssets-slogan {
+  height: rem(300);
+  flex: 1;
+  .loginAssets-header {
+    font-size: rem(40);
+    color: $black_2;
+    margin: rem(50) 0 0 rem(200);
+  }
+  .loginAssets-info {
+    font-size: rem(20);
+    margin: rem(20) 0 0 rem(200);
+    color: $gray_5;
+  }
+}
+
+.loginAssets-box {
+  height: rem(420);
+  width: rem(370);
+  background: $white_1;
+  box-shadow: 0 0 rem(24) 0 $gray_2;
+  margin: 0 rem(150) 0 0;
+}
