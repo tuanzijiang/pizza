@@ -1,0 +1,22 @@
+@import '~@ui/base.scss';
+@keyframes circleMove {
+  0% {
+    transform: translate3d(vw(-40), 0, 0);
+  }
+  100% {
+    transform: translate3d(vw(-180), vw(-10), 0);
+  }
+}
+
+.blurCircle-wrapper {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  height: vw(50);
+  width: vw(50);
+  border-radius: 50% 50%;
+  background: $green_2;
+  filter: blur(vw(15));
+  transform-style: preserve-3d;
+  animation: circleMove 10s infinite alternate;
+}

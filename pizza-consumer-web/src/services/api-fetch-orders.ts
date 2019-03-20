@@ -4,7 +4,7 @@ import { OrderStatusSchema } from '@entity/Order/schema';
 import { Address } from '@entity/Address';
 import { Pizza } from '@entity/Pizza';
 import store from '@store/index';
-import { entity, page } from '@store/action';
+import { entity, pageMobile } from '@store/action';
 import { FetchOrdersReq, FetchOrdersResp } from '@src/net/fetch-orders';
 import { AddressWeakSchema } from '@src/entity/schema';
 
@@ -54,7 +54,7 @@ export const fetchOrdersApi = async (param: FetchOrdersReq) => {
     store.dispatch(entity.pizzas.updatePizzas(updatePizzas));
     store.dispatch(entity.addresses.updateAddresses(updateAddress));
     store.dispatch(entity.orders.updateOrders(updateOrders));
-    store.dispatch(page.main.updateOrdersId(currOrdersIds));
+    store.dispatch(pageMobile.main.updateOrdersId(currOrdersIds));
   }
 
   return resp;

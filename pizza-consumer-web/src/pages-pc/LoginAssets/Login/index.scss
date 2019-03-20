@@ -1,0 +1,113 @@
+@import '~@ui/base.scss';
+
+.login-wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  padding: rem(30) 0 0 0;
+  box-sizing: border-box;
+
+  input {
+    height: 100%;
+    box-sizing: border-box;
+    padding: rem(5);
+    width: 100%;
+    outline: none;
+    margin: 0;
+    border: none;
+  }
+}
+
+.login-header {
+  color: $gray_5;
+  font-size: rem(25);
+  text-align: center;
+  width: 100%;
+}
+
+.login-kinds {
+  box-sizing: border-box;
+  padding: 0 rem(50);
+  width: 100%;
+  display: flex;
+  margin: rem(15) 0 rem(10) 0;
+}
+
+.login-button {
+  position: absolute;
+  bottom: rem(50);
+  width: calc(100% - #{rem(50 * 2)});
+  margin: 0 rem(50);
+  height: rem(45);
+  line-height: rem(45);
+  text-align: center;
+  border-radius: rem(5);
+  background: $blue_2;
+  color: white;
+}
+
+.login-kind {
+  flex: 1;
+  font-size: rem(18);
+  margin: 0 rem(15);
+  text-align: center;
+  color: $gray_4;
+  cursor: pointer;
+  display: inline-block;
+  height: rem(35);
+}
+
+.login-kind_active {
+  color: $blue_2;
+  box-shadow: 0 rem(-2) 0 0 $blue_2 inset;
+}
+
+.login-inputs {
+  padding: rem(40) 0 0;
+}
+
+.login-account {
+  height: rem(40);
+  width: calc(100% - #{rem(55 * 2)});
+  margin: 0 rem(55);
+  border-radius: rem(2);
+  box-shadow: 0 0 0 rem(1) $gray_3;
+}
+
+.login-pw {
+  height: rem(40);
+  width: calc(100% - #{rem(55 * 2)});
+  margin: rem(20) rem(55);
+  border-radius: rem(2);
+  box-shadow: 0 0 0 rem(1) $gray_3;
+}
+
+.login-varify {
+  flex: 1;
+  border-radius: rem(2);
+  box-shadow: 0 0 0 rem(1) $gray_3;
+  display: flex;
+  align-items: center;
+}
+
+.login-varifyLine {
+  height: rem(40);
+  width: calc(100% - #{rem(55 * 2)});
+  margin: rem(20) rem(55);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.login-varifyButton {
+  height: rem(40);
+  width: rem(80);
+  font-size: rem(12);
+  color: $gray_4;
+  margin: 0 0 0 rem(10);
+  box-shadow: 0 0 0 rem(1) $gray_3;
+  line-height: rem(40);
+  text-align: center;
+  border-radius: rem(1);
+  cursor: pointer;
+}

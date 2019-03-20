@@ -1,0 +1,21 @@
+@import '~@ui/base.scss';
+@keyframes blockMove {
+  0% {
+    transform: translate3d(vw(-100), vw(2), 0);
+  }
+  100% {
+    transform: translate3d(0, vw(2), 0);
+  }
+}
+
+.blurBlock-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: vw(50);
+  width: vw(50);
+  background: $blue_3;
+  filter: blur(vw(8));
+  transform-style: preserve-3d;
+  animation: blockMove 20s infinite alternate;
+}

@@ -1,4 +1,5 @@
 export {
-  page,
+  pageMobile,
   entity,
+  pagePc,
 } from './reducers/action';

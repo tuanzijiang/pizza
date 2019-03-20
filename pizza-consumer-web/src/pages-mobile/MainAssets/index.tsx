@@ -6,7 +6,7 @@ import OrderDetail from './OrderDetail';
 import Settlement from './Settlement';
 import Pay from './Pay';
 import { connect } from 'react-redux';
-import { page as pageActionCreator } from '@store/action';
+import { pageMobile as pageActionCreator } from '@store/action';
 import autobind from 'autobind-decorator';
 
 interface LoginAssetsProps {
@@ -99,7 +99,7 @@ export class MainAssets extends React.PureComponent<LoginAssetsProps, LoginAsset
 
 export default connect((state: any) => {
   return {
-    mainStore: state.page.main,
+    mainStore: state.pageMobile.main,
     entityStore: state.entity,
   };
 }, (dispatch) => {

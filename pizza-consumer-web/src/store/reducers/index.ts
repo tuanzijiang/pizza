@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
-import page from './page/reducer';
+import pagePc from './page-pc/reducer';
+import pageMobile from './page-mobile/reducer';
 import entity from './entity/reducer';
 
 export default combineReducers({
-  page,
   entity,
+  pageMobile,
+  pagePc,
 });
