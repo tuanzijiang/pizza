@@ -1,0 +1,159 @@
+@import '~@ui/base.scss';
+.orderDetail-wrapper {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.orderDetail-main {
+  height: 100%;
+  width: calc(100% - #{rem(250 * 2)});
+  display: flex;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.orderDetail-back {
+  color: $gray_4;
+  cursor: pointer;
+  margin: 0 0 rem(20) 0;
+}
+
+.orderDetail-info {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  margin: 0 0 rem(50);
+}
+
+.orderDetail-item {
+  position: absolute;
+  border: rem(1) solid $gray_3;
+  width: 45%;
+  box-sizing: border-box;
+  padding: rem(20);
+}
+
+.orderDetail-itemHeader {
+  border-bottom: rem(1) solid $gray_3;
+  padding: 0 0 rem(10) 0;
+  margin: 0 0 rem(10) 0;
+}
+
+.orderDetail-list {
+  top: 0;
+  left: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .orderDetail-itemBody {
+    flex: 1;
+    width: 100%;
+    overflow: auto;
+  }
+  .orderDetail-itemFooter {
+    border-top: rem(1) solid $gray_3;
+    padding: rem(10) 0 0;
+    margin: rem(10) 0 0;
+    text-align: right;
+  }
+}
+
+.orderDetail-pizzaItem {
+  display: flex;
+  height: rem(50);
+  width: 100%;
+  margin: rem(10) 0;
+  align-items: center;
+  .orderDetail-pizzaItemImage {
+    height: rem(50);
+    width: rem(50);
+    background: $gray_3;
+    color: $white_1;
+    border-radius: rem(3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 rem(10) 0 0;
+    flex: 0 0 rem(50);
+    .icon-pisa {
+      font-size: rem(20);
+    }
+  }
+  .orderDetail-pizzaItemName {
+    flex: 1 1 auto;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .orderDetail-pizzaItemInfo {
+    width: rem(30);
+    margin: 0 rem(10);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: rem(70);
+    flex: 0 0 rem(70);
+  }
+  .orderDetail-pizzaItemNum {
+    font-size: rem(12);
+    color: $gray_4;
+    margin: 0 rem(10);
+  }
+}
+
+.orderDetail-kinds {
+  bottom: 0;
+  right: 0;
+  height: 48%;
+  display: flex;
+  flex-direction: column;
+  .orderDetail-itemBody {
+    flex: 1;
+    width: 100%;
+    overflow: auto;
+  }
+  .orderDetail-itemFooter {
+    border-top: rem(1) solid $gray_3;
+    padding: rem(10) 0 0;
+    margin: rem(10) 0 0;
+  }
+  .orderDetail-button {
+    width: 100%;
+    height: rem(40);
+    background: $green_4;
+    display: flex;
+    border-radius: rem(3);
+    color: $white_1;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+  }
+  .orderDetail-kindItem {
+    box-sizing: border-box;
+    padding: 0 rem(10);
+    background: $white_1;
+    height: rem(50);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: rem(16);
+  }
+  .orderDetail-kindSuccess {
+    color: $green_4;
+  }
+}
+
+.orderDetail-itemText1 {
+  font-size: rem(25);
+  font-weight: 600;
+  color: $black_1;
+  margin: rem(10) 0 0;
+}
+
+.orderDetail-itemText2 {
+  font-size: rem(15);
+  color: $gray_3;
+  margin: rem(10) 0 0;
+}

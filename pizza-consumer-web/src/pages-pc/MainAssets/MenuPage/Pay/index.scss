@@ -1,0 +1,146 @@
+@import '~@ui/base.scss';
+.pay-wrapper {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.pay-main {
+  height: 100%;
+  width: calc(100% - #{rem(250 * 2)});
+  display: flex;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.pay-back {
+  color: $gray_4;
+  cursor: pointer;
+  margin: 0 0 rem(20) 0;
+}
+
+.pay-info {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  margin: 0 0 rem(50);
+}
+
+.pay-item {
+  position: absolute;
+  border: rem(1) solid $gray_3;
+  width: 45%;
+  box-sizing: border-box;
+  padding: rem(20);
+}
+
+.pay-itemHeader {
+  border-bottom: rem(1) solid $gray_3;
+  padding: 0 0 rem(10) 0;
+  margin: 0 0 rem(10) 0;
+}
+
+.pay-list {
+  top: 0;
+  left: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .pay-itemBody {
+    flex: 1;
+    width: 100%;
+    overflow: auto;
+  }
+  .pay-itemFooter {
+    border-top: rem(1) solid $gray_3;
+    padding: rem(10) 0 0;
+    margin: rem(10) 0 0;
+    text-align: right;
+  }
+}
+
+.pay-pizzaItem {
+  display: flex;
+  height: rem(50);
+  width: 100%;
+  margin: rem(10) 0;
+  align-items: center;
+  .pay-pizzaItemImage {
+    height: rem(50);
+    width: rem(50);
+    background: $gray_3;
+    color: $white_1;
+    border-radius: rem(3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 rem(10) 0 0;
+    flex: 0 0 rem(50);
+    .icon-pisa {
+      font-size: rem(20);
+    }
+  }
+  .pay-pizzaItemName {
+    flex: 1 1 auto;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .pay-pizzaItemInfo {
+    width: rem(30);
+    margin: 0 rem(10);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: rem(70);
+    flex: 0 0 rem(70);
+  }
+  .pay-pizzaItemNum {
+    font-size: rem(12);
+    color: $gray_4;
+    margin: 0 rem(10);
+  }
+}
+
+.pay-kinds {
+  bottom: 0;
+  right: 0;
+  height: 48%;
+  display: flex;
+  flex-direction: column;
+  .pay-itemBody {
+    flex: 1;
+    width: 100%;
+    overflow: auto;
+  }
+  .pay-itemFooter {
+    border-top: rem(1) solid $gray_3;
+    padding: rem(10) 0 0;
+    margin: rem(10) 0 0;
+  }
+  .pay-button {
+    width: 100%;
+    height: rem(40);
+    background: $green_4;
+    display: flex;
+    border-radius: rem(3);
+    color: $white_1;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+  }
+  .pay-kindItem {
+    box-sizing: border-box;
+    padding: 0 rem(10);
+    background: $white_1;
+    height: rem(50);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: rem(16);
+  }
+  .pay-kindSuccess {
+    color: $green_4;
+  }
+}

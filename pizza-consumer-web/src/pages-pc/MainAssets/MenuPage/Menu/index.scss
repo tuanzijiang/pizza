@@ -1,0 +1,176 @@
+@import '~@ui/base.scss';
+.menu-wrapper {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.menu-main {
+  height: 100%;
+  width: calc(100% - #{rem(220 * 2)});
+  display: flex;
+  margin: 0 auto;
+}
+
+.menu-subMenu {
+  width: rem(180);
+  flex: 0 0 rem(180);
+  height: 100%;
+}
+
+.menu-pizzaItems {
+  flex: 1 1 auto;
+  box-sizing: border-box;
+  height: 100%;
+  overflow: auto;
+  flex-wrap: wrap;
+  display: flex;
+}
+
+.menu-pizzaItem {
+  width: rem(350);
+  height: rem(100);
+  overflow: hidden;
+  position: relative;
+  border: rem(1) solid $gray_3;
+  margin: 0 rem(30) rem(20) 0;
+  border-radius: rem(3);
+  position: relative;
+}
+
+.menu-pizzaItemTag {
+  width: 100%;
+  margin: 0 0 rem(20);
+  font-weight: 600;
+  color: $black_1;
+}
+
+.menu-pizzaItemImage {
+  position: absolute;
+  height: rem(100);
+  width: rem(100);
+  background: $gray_3;
+  border-radius: rem(3);
+  overflow: hidden; // opacity: 0; // todo: clear
+  .menu-pizzaItemPisa {
+    font-size: rem(100);
+    color: $white_1;
+  }
+}
+
+.menu-pizzaItemTitle {
+  position: relative;
+  width: calc(100% - #{rem(120)});
+  line-height: rem(30);
+  font-weight: 700;
+  left: rem(110);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menu-pizzaItemDesc {
+  position: relative;
+  width: calc(100% - #{rem(120)});
+  line-height: rem(20);
+  color: $gray_3;
+  font-size: rem(12);
+  left: rem(110);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menu-pizzaItemPrice {
+  position: absolute;
+  font-size: rem(15);
+  left: rem(110);
+  bottom: rem(10);
+  color: $red_3;
+}
+
+.menu-pizzaItemCount {
+  position: absolute;
+  bottom: rem(10);
+  right: rem(10);
+  height: rem(20);
+  width: rem(55);
+  color: $blue_3;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.menu-pizzaItemCountFont {
+  color: $gray_5;
+  display: inline-block;
+  text-align: center;
+  width: rem(30);
+}
+
+.menu-tags {
+  width: 80%;
+  position: relative;
+  &::before {
+    content: ' ';
+    position: absolute;
+    top: rem(-20);
+    right: 0;
+    height: rem(20);
+    width: rem(1);
+    background: $gray_3;
+  }
+  &::after {
+    content: ' ';
+    position: absolute;
+    bottom: rem(-20);
+    right: 0;
+    height: rem(20);
+    width: rem(1);
+    background: $gray_3;
+  }
+}
+
+.menu-tag {
+  line-height: rem(40);
+  text-align: right;
+  padding: 0 rem(15) 0 0;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: rem(-1) 0 0 0 $gray_3 inset;
+}
+
+.menu-tag_active {
+  color: $blue_3;
+  font-weight: 600;
+  box-shadow: rem(-3) 0 0 0 $blue_3 inset;
+  background: rgba($blue_1, .5);
+}
+
+.menu-shopping {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: rem(280);
+  box-shadow: 0 0 rem(24) 0 $gray_2;
+  background: $white_1;
+}
+
+.menu-shoppingContent {
+  width: 100%;
+  max-height: rem(300);
+  min-height: rem(200);
+  overflow: auto;
+}
+
+.menu-shoppingHeader {
+  width: 100%;
+  height: rem(40);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: rem(1) solid $gray_5;
+  background: $gray_1;
+  color: $gray_5;
+  font-size: rem(13);
+}

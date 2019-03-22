@@ -16,7 +16,6 @@
   position: relative;
   top: $banner_height;
   height: calc(100% - #{$banner_height});
-  overflow: auto;
 }
 
 .settlement-content_status {
@@ -27,9 +26,11 @@
 .settlement-pizzas {
   box-sizing: border-box;
   width: 100%;
+  height: calc(100% - #{vw(50)});
   padding: vw(10);
   background: $white_1;
   margin: 0 0 vw(10);
+  overflow: auto;
 }
 
 .settlement-pizzasTitle {

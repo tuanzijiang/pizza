@@ -6,7 +6,7 @@ import i18n from '@src/utils/i18n';
 import Icon from '@biz-components/Icon';
 import { fetchUserApi } from '@src/services/api-fetch-user';
 import autobind from 'autobind-decorator';
-import Menu from './Menu';
+import MenuPage from './MenuPage';
 import Order from './Order';
 import { CART_ORDER_ID } from '@src/entity/Order';
 
@@ -16,7 +16,7 @@ export enum PageName {
 }
 
 interface MainAssetsProps {
-  loginStore: any;
+  mainStore: any;
   entityStore: any;
 }
 
@@ -28,7 +28,7 @@ export class MainAssets extends React.PureComponent<MainAssetsProps, MainAssetsS
   constructor(props: MainAssetsProps) {
     super(props);
     this.state = {
-      navIdx: PageName.MENU,
+      navIdx: PageName.ORDER,
     };
   }
 
@@ -48,8 +48,9 @@ export class MainAssets extends React.PureComponent<MainAssetsProps, MainAssetsS
   }
 
   render() {
-    const { entityStore } = this.props;
+    const { entityStore, mainStore } = this.props;
     const { pizzas, addresses, orders, user } = entityStore;
+    const { orderIds } = mainStore;
     const { navIdx } = this.state;
     const menu = orders[CART_ORDER_ID];
 
@@ -84,8 +85,11 @@ export class MainAssets extends React.PureComponent<MainAssetsProps, MainAssetsS
             </div>
           </div>
           <div className="mainAssets-content">
-            {navIdx === PageName.MENU && <Menu menu={menu} pizzas={pizzas} />}
-            {navIdx === PageName.ORDER && <Order entityStore={entityStore} />}
+            {navIdx === PageName.MENU && <MenuPage menu={menu} pizzas={pizzas} />}
+            {navIdx === PageName.ORDER && <Order
+              orders={orders} addresses={addresses} orderIds={orderIds}
+              pizzas={pizzas}
+            />}
           </div>
         </div>
       </div>
@@ -95,7 +99,7 @@ export class MainAssets extends React.PureComponent<MainAssetsProps, MainAssetsS
 
 export default connect((state: any) => {
   return {
-    loginStore: state.pageMobile.login,
+    mainStore: state.pagePc.main,
     entityStore: state.entity,
   };
 }, (dispatch) => {

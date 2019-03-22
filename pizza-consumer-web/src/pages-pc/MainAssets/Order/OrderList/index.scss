@@ -1,0 +1,52 @@
+@import '~@ui/base.scss';
+.orderList-wrapper {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.orderList-main {
+  height: calc(100% - #{rem(50)});
+  width: calc(100% - #{rem(400 * 2)});
+  margin: 0 auto;
+  overflow: auto;
+}
+
+.orderList-item {
+  position: relative;
+  height: rem(100);
+  padding: rem(10);
+  box-sizing: border-box;
+  width: 95%;
+  overflow: hidden;
+  border-bottom: rem(1) solid $gray_4;
+}
+
+.orderList-itemName {
+  font-weight: 600;
+  span {
+    margin: 0 rem(10) 0 0;
+  }
+}
+
+.orderList-itemPrice {
+  font-size: rem(15);
+  margin: rem(5) 0 0;
+}
+
+.orderList-itemOther {
+  font-size: rem(15);
+  color: $gray_3;
+  margin: rem(5) 0 0;
+}
+
+.orderList-itemScan {
+  position: absolute;
+  font-size: rem(12);
+  bottom: rem(30);
+  right: 0;
+  padding: rem(5) rem(10);
+  border: rem(1) solid $gray_4;
+  border-radius: rem(3);
+  cursor: pointer;
+}

@@ -22,7 +22,7 @@ message Order {
   int64 start_time = 2;
   repeated Pizza pizzas = 3;
   Address address = 4;
-  OrderStatus status = 5;
+  OrderStatus status = 5;// todo：需要拉起所有的，这个字段暂时没用
   int32 userId = 6;
 }
 

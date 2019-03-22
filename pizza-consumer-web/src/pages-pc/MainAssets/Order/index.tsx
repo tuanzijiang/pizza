@@ -1,44 +1,80 @@
 import * as React from 'react';
 import './index.scss';
-import { connect } from 'react-redux';
-import cx from 'classnames';
-import i18n from '@src/utils/i18n';
-import Icon from '@biz-components/Icon';
-import { fetchUserApi } from '@src/services/api-fetch-user';
+import { fetchOrdersApi } from '@src/services/api-fetch-orders';
+import { Order as OrderEntity, Address, Pizza } from '@src/entity';
+import { OrderStatus } from '@net/common';
+import OrderList from './OrderList';
+import OrderDetail from './OrderDetail';
 import autobind from 'autobind-decorator';
 
-export enum PageName {
-  MENU = 1,
-  ORDER = 2,
+interface OrderProps {
+  orderIds: string[];
+  addresses: {
+    [key: number]: Address;
+  };
+  pizzas: {
+    [key: number]: Pizza;
+  };
+  orders: {
+    [key: string]: OrderEntity;
+  };
 }
 
-interface MenuProps {
-  entityStore: any;
+interface OrderState {
+  navIdx: number;
+  currOrderId: string;
 }
 
-interface MenuState {
-}
+export default class Order extends React.PureComponent<OrderProps, OrderState> {
+  constructor(props: OrderProps) {
+    super(props);
+    this.state = {
+      navIdx: 0,
+      currOrderId: '',
+    };
+  }
 
-export default class Menu extends React.PureComponent<MenuProps, MenuState> {
   componentDidMount() {
+    fetchOrdersApi({
+      userId: 123,
+      lastOrderId: '',
+      num: 10,
+      status: OrderStatus.PAID,
+    });
+  }
 
+  @autobind
+  handleNavChange(navIdx: number) {
+    return () => {
+      this.setState({
+        navIdx,
+      });
+    };
+  }
+
+  @autobind
+  handleSetCurrentId(currOrderId: string) {
+    this.setState({
+      currOrderId,
+    });
   }
 
   render() {
-    const { entityStore } = this.props;
-    const { menu } = entityStore;
-    console.warn(1111, menu);
-
+    const { orders, pizzas, orderIds } = this.props;
+    const { navIdx, currOrderId } = this.state;
     return (
-      <div className="menu-wrapper">
-        {
-          menu &&
-          <>
-            <div className="menu-subMenu">
-            </div>
-            <div className="menu-pizzaItems">
-            </div>
-          </>
+      <div className="order-wrapper">
+        {navIdx === 0 && <OrderList
+          orders={orders}
+          orderIds={orderIds}
+          pizzas={pizzas}
+          handleToOrderDetail={this.handleNavChange(1)}
+          handleSetCurrentId={this.handleSetCurrentId}
+        />
+        }
+        {navIdx === 1 && <OrderDetail
+          menu={orders[currOrderId]} pizzas={pizzas}
+          handleToOrderList={this.handleNavChange(0)} />
         }
       </div>
     );

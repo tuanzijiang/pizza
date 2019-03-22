@@ -1,6 +1,5 @@
 import * as React from 'react';
 import './index.scss';
-import { fetchMenuApi } from '@services/api-fetch-menu';
 import { updateOrderApi } from '@services/api-update-order';
 import { Order, Pizza } from '@src/entity';
 import { CART_ORDER_ID } from '@entity/Order';
@@ -8,16 +7,22 @@ import Icon from '@biz-components/Icon';
 import i18n from '@src/utils/i18n';
 import autobind from 'autobind-decorator';
 import cx from 'classnames';
+import Shopping from './Shopping';
+import { fetchMenuApi } from '@services/api-fetch-menu';
 
 interface MenuProps {
   menu: Order;
   pizzas: Pizza[];
+  handleToPay: () => void;
 }
 
 interface MenuState {
   currTag: number;
   tags: number[];
+  navIdx: number;
 }
+
+const TOP_DIST = 100; // 到顶部的距离
 
 export const getTagAndCurrentTag: (menu: Order, pizzas: Pizza[]) => ({
   tags: number[],
@@ -59,6 +64,7 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
     this.state = {
       currTag: 0,
       tags: [],
+      navIdx: 0,
     };
   }
 
@@ -71,13 +77,14 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
   componentDidUpdate(prevProps: MenuProps, prevState: MenuState) {
     const { pizzas, menu } = this.props;
     const { currTag } = prevState;
+
     const { pizzas: prevPizzas, menu: prevMenu } = prevProps;
     if (pizzas !== prevPizzas || menu !== prevMenu) {
       const { tags } = getTagAndCurrentTag(menu, pizzas);
       this.setState({
         tags,
       });
-      if (currTag === 0) {
+      if (currTag === 0 || tags[0] !== currTag) {
         this.setState({
           currTag: tags[0] || 0,
         });
@@ -86,7 +93,7 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
 
     Object.entries(this.tagEls).map(([key, el]) => {
       if (el) {
-        this.tagElsTop[key] = el.offsetTop;
+        this.tagElsTop[key] = el.offsetTop - TOP_DIST;
       }
     });
   }
@@ -109,7 +116,6 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
         currTag: nextTag,
       });
     }
-
   }
 
   @autobind
@@ -179,21 +185,19 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
             const count = menu.num[pizzaId];
 
             return (
-              <>
+              <React.Fragment key={pizzaId}>
                 {
                   needTag && <div
                     className="menu-pizzaItemTag"
                     ref={tagEl => {
                       this.tagEls[pizzaId] = tagEl;
                     }}
+                    id={`${pizzaId}`}
                   >
                     {currTag}
                   </div>
                 }
-                <div
-                  className="menu-pizzaItem"
-                  key={pizzaId}
-                >
+                <div className="menu-pizzaItem">
                   <div className="menu-pizzaItemImage">
                     <Icon name="pisa" classnames="menu-pizzaItemPisa" />
                   </div>
@@ -225,7 +229,7 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
                     </div>
                   </div>
                 </div>
-              </>
+              </React.Fragment>
             );
           })
         }
@@ -234,7 +238,7 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
   }
 
   render() {
-    const { menu } = this.props;
+    const { menu, pizzas, handleToPay } = this.props;
     return (
       <div className="menu-wrapper">
         <div className="menu-main">
@@ -253,6 +257,12 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
               </div>
             </>
           }
+        </div>
+        <div className="menu-shopping">
+          <div className="menu-shoppingHeader">{i18n('购物车')}</div>
+          <div className="menu-shoppingContent">
+            <Shopping menu={menu} pizzas={pizzas} handleToPay={handleToPay}/>
+          </div>
         </div>
       </div>
     );

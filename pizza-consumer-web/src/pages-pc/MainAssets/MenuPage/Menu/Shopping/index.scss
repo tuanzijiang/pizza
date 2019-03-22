@@ -1,0 +1,130 @@
+@import '~@ui/base.scss';
+.shoppingCart-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.shoppingCart-content {
+  width: 100%;
+  height: calc(100% - #{rem(50)});
+  overflow: auto;
+  padding: 0 0 rem(50) 0;
+}
+
+.shoppingCart-sum {
+  height: rem(50);
+  width: 100%;
+  background: $white_1;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.shoppingCart-prompt {
+  padding: 0 0 0 rem(10);
+  font-size: rem(14);
+  color: $black_1;
+}
+
+.shoppingCart-totalPrice {
+  font-size: rem(16);
+  color: $black_1;
+  flex: 1 1 auto;
+}
+
+.shoppingCart-unit {
+  padding: 0 rem(5) 0 rem(10);
+  font-size: rem(16);
+  color: $black_1;
+}
+
+.shoppingCart-order {
+  width: rem(120);
+  height: 100%;
+  color: $white_1;
+  background: $green_4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.shoppingCart-pizzaItem {
+  width: 100%;
+  height: rem(70);
+  box-sizing: border-box;
+  padding: rem(10) rem(10);
+  display: flex; 
+  align-items: center;
+  background: $white_1;
+  margin: 0 0 rem(1);
+}
+
+.shoppingCart-pizzaItemImg {
+  height: rem(50);
+  width: rem(50);
+  background: $gray_1;
+  border-radius: rem(3);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 rem(10) 0 0;
+  flex: 0 0 auto;
+}
+
+.shoppingCart-pizzaItemPisa {
+  font-size: rem(25);
+  color: $white_1;
+}
+
+.shoppingCart-pizzaItemCount {
+  height: rem(20);
+  width: rem(65);
+  color: $blue_3;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex: 0 0 auto;
+  margin: 0 0 0 rem(10);
+}
+
+.shoppingCart-pizzaItemCountFont {
+  color: $gray_5;
+  display: inline-block;
+  text-align: center;
+  width: rem(30);
+}
+
+.shoppingCart-pizzaItemContent {
+  height: 100%;
+  flex: 1 1 auto;
+  font-size: rem(14);
+  overflow: hidden;
+  position: relative;
+  color: $black_1;
+}
+
+.shoppingCart-pizzaItemName {
+  word-break: break-all;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+  text-overflow: ellipsis;
+}
+
+.shoppingCart-pizzaItemPrice {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  span {
+    margin: 0 rem(1) 0 0;
+    font-size: 60%;
+  }
+}
