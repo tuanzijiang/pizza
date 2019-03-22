@@ -30,7 +30,7 @@ export interface Address {
   name: string;
   sex: Sex;
   address: string;
-  address_detail: string;
+  addressDetail: string;
   phone: string;
   tag: string;
 }
@@ -43,6 +43,7 @@ export interface User {
   birthday: number;
   city: string;
   img: string;
+  address: Address;
 }
 
 export interface Pizza {

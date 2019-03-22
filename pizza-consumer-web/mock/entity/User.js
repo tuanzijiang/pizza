@@ -1,4 +1,5 @@
 const { getRandomNum, getRandomStr } = require('../utils/random');
+const Address = require('./Address');
 const _ = require('lodash');
 
 const USER_NAME_ARR = [
@@ -24,6 +25,7 @@ class User {
       this.birthday = user.birthday || 0;
       this.city = user.city || '';
       this.img = user.img || '';
+      this.address = user.address || {};
     }
   }
 
@@ -40,6 +42,7 @@ class User {
       birthday: new Date().valueOf(),
       city: USER_TEL_ARR[_.random(0, 1)],
       img: `img_${getRandomStr(2)}`,
+      address: Address.random(),
     });
   }
 }

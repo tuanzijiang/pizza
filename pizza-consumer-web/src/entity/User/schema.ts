@@ -6,6 +6,8 @@ export interface UserSchema {
   birthday: number;
   city: string;
   img: string;
+  address: number;
+  addresses: number[];
 }
 
 export interface UserWeakSchema {
@@ -16,4 +18,6 @@ export interface UserWeakSchema {
   birthday?: number;
   city?: string;
   img?: string;
+  address?: number;
+  addresses?: number[];
 }

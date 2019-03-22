@@ -1,6 +1,7 @@
 import * as React from 'react';
 import './index.scss';
 import { fetchOrdersApi } from '@src/services/api-fetch-orders';
+import { fetchAddressApi } from '@src/services/api-fetch-address';
 import { Order as OrderEntity, Address, Pizza } from '@src/entity';
 import { OrderStatus } from '@net/common';
 import OrderList from './OrderList';
@@ -41,6 +42,9 @@ export default class Order extends React.PureComponent<OrderProps, OrderState> {
       num: 10,
       status: OrderStatus.PAID,
     });
+    fetchAddressApi({
+      userId: 123,
+    });
   }
 
   @autobind
@@ -60,7 +64,7 @@ export default class Order extends React.PureComponent<OrderProps, OrderState> {
   }
 
   render() {
-    const { orders, pizzas, orderIds } = this.props;
+    const { orders, pizzas, orderIds, addresses } = this.props;
     const { navIdx, currOrderId } = this.state;
     return (
       <div className="order-wrapper">
@@ -74,6 +78,7 @@ export default class Order extends React.PureComponent<OrderProps, OrderState> {
         }
         {navIdx === 1 && <OrderDetail
           menu={orders[currOrderId]} pizzas={pizzas}
+          addresses={addresses}
           handleToOrderList={this.handleNavChange(0)} />
         }
       </div>

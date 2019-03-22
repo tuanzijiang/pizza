@@ -1,0 +1,69 @@
+@import '~@ui/base.scss';
+.address-wrapper {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: $white_3;
+}
+
+.address-middle {
+  color: $white_2;
+  font-size: vw(16);
+}
+
+.address-content {
+  width: 100%;
+  position: relative;
+  top: $banner_height;
+  height: calc(100% - #{$banner_height});
+  overflow: auto;
+}
+
+.address-content_status {
+  top: $banner_height_status;
+  height: calc(100% - #{$banner_height_status});
+}
+
+.address-item {
+  height: vw(50);
+  padding: vw(10);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: $white_1;
+  margin: 0 0 rem(1);
+}
+
+.address-itemLeft {
+  flex: 1 1 auto;
+  height: 100%;
+  overflow: hidden;
+  font-size: vw(14);
+}
+
+.address-itemRight {
+  flex: 0 0 vw(20);
+  margin: 0 0 0 vw(5);
+  .pizza-edit {
+    color: $gray_4;
+    font-size: vw(18);
+  }
+}
+
+.address-poiInfo {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: vw(5) 0 0;
+  width: 100%;
+}
+
+.address-userInfo {
+  font-size: vw(12);
+  color: $gray_4;
+  margin: vw(5) 0 0;
+  span {
+    margin: 0 0 0 vw(5);
+  }
+}

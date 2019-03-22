@@ -24,7 +24,7 @@ class Address {
       name: '章琪',
       sex: _.random(0, 1),
       address: '上海市 普陀区 中山北路 3663号',
-      addressDetail: '第五宿舍',
+      addressDetail: '华东师范大学第五宿舍',
       phone: '15317315332',
       tag: '学校',
     });

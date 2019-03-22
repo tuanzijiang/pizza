@@ -85,7 +85,8 @@ export class MainAssets extends React.PureComponent<MainAssetsProps, MainAssetsS
             </div>
           </div>
           <div className="mainAssets-content">
-            {navIdx === PageName.MENU && <MenuPage menu={menu} pizzas={pizzas} />}
+            {navIdx === PageName.MENU && <MenuPage
+             menu={menu} pizzas={pizzas} addresses={addresses} user={user}/>}
             {navIdx === PageName.ORDER && <Order
               orders={orders} addresses={addresses} orderIds={orderIds}
               pizzas={pizzas}

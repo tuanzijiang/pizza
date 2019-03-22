@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './index.scss';
-import { Order, Pizza } from '@src/entity';
+import { Order, Pizza, Address } from '@src/entity';
 import i18n from '@src/utils/i18n';
 import Icon from '@biz-components/Icon';
 import { OrderStatusSchema } from '@entity/Order/schema';
@@ -59,6 +59,9 @@ interface OrderDetailProps {
   pizzas: {
     [key: number]: Pizza;
   };
+  addresses: {
+    [key: number]: Address;
+  };
   handleToOrderList: () => void;
 }
 
@@ -94,6 +97,27 @@ export default class OrderDetail extends React.PureComponent<OrderDetailProps, O
           </div>;
         })
       }
+    </>;
+  }
+
+  renderAddress() {
+    const { menu, addresses } = this.props;
+    const { address } = menu;
+    const currAddress = addresses[address];
+
+    return <>
+      <div className="pay-addressShown">
+        {
+          currAddress && <div className="pay-addressItem">
+            <div className="pay-addressInfo">{currAddress.address}</div>
+            <div className="pay-addressDetail">{currAddress.addressDetail}</div>
+            <div className="pay-addressUser">
+              <span>{currAddress.name}</span>
+              <span>{currAddress.phone}</span>
+            </div>
+          </div>
+        }
+      </div>
     </>;
   }
 
@@ -161,6 +185,12 @@ export default class OrderDetail extends React.PureComponent<OrderDetailProps, O
               <div className="orderDetail-itemFooter">
                 {i18n('小计 ¥')}
                 <span>{price}</span>
+              </div>
+            </div>
+            <div className="orderDetail-item orderDetail-address">
+              <div className="orderDetail-itemHeader">{i18n('收获地址')}</div>
+              <div className="orderDetail-itemBody">
+                {this.renderAddress()}
               </div>
             </div>
             {

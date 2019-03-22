@@ -157,3 +157,34 @@
   color: $gray_3;
   margin: rem(10) 0 0;
 }
+
+.orderDetail-address {
+  top: 0;
+  right: 0;
+  height: 38%;
+  display: flex;
+  flex-direction: column;
+  background: $white_1;
+  .orderDetail-itemBody {
+    flex: 1;
+    width: 100%;
+    overflow: hidden;
+  }
+  .orderDetail-itemFooter {
+    border-top: rem(1) solid $gray_3;
+    padding: rem(10) 0 0;
+    margin: rem(10) 0 0;
+  }
+  .orderDetail-button {
+    width: 100%;
+    height: rem(40);
+    display: flex;
+    border-radius: rem(3);
+    color: $blue_3;
+    justify-content: flex-start;
+    align-items: center;
+    span {
+      cursor: pointer;
+    }
+  }
+}

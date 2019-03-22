@@ -8,6 +8,8 @@ export class User implements UserSchema {
   public birthday: number = 0;
   public city: string = '';
   public img: string = '';
+  public address: number = 0;
+  public addresses: number[] = [];
 
   constructor(user?: UserWeakSchema) {
     if (user) {
@@ -18,6 +20,8 @@ export class User implements UserSchema {
       this.birthday = user.birthday || this.birthday;
       this.city = user.city || this.city;
       this.img = user.img || this.img;
+      this.address = user.address || this.address;
+      this.addresses = user.addresses || this.addresses;
     }
   }
 
@@ -30,6 +34,8 @@ export class User implements UserSchema {
       this.birthday = user.birthday || this.birthday;
       this.city = user.city || this.city;
       this.img = user.img || this.img;
+      this.address = user.address || this.address;
+      this.addresses = user.addresses || this.addresses;
       return this;
     } else {
       const newUser = User.fromJS();
@@ -40,6 +46,8 @@ export class User implements UserSchema {
       newUser.birthday = user.birthday || this.birthday;
       newUser.city = user.city || this.city;
       newUser.img = user.img || this.img;
+      newUser.address = user.address || this.address;
+      newUser.addresses = user.addresses || this.addresses;
       return newUser;
     }
   }

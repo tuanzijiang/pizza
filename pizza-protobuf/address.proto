@@ -27,6 +27,7 @@ message FetchAddressReq {
 }
 
 message FetchAddressResp {
+  ResultType result_type = 1;
   repeated Address addresses = 2; 
 }
 
@@ -35,11 +36,11 @@ message FetchAddressResp {
 
 message UpdateAddressReq {
   string user_id = 1;
-  Address address = 2;
 }
 
 message UpdateAddressResp {
   ResultType result_type = 1;
+  repeated Address addresses = 2;
 }
 
 // 添加地址信息

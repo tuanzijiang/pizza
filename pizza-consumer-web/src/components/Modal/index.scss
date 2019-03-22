@@ -1,0 +1,65 @@
+@import '~@ui/base.scss';
+$offset: 187;
+$duration: 1.4s;
+.modal-wrapper {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba($black_1, .5);
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal-main {
+  width: rem(400);
+  background: $white_1;
+  padding: rem(20);
+  color: $gray_5;
+  border-radius: rem(3);
+}
+
+.modal-header {
+  height: rem(30);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  font-size: rem(16);
+  margin: 0 0 rem(10) 0;
+  font-weight: 600;
+}
+
+.modal-footer {
+  height: rem(30);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  font-size: rem(16);
+  margin: rem(10) 0 0;
+}
+
+.modal-ok {
+  padding: rem(4) rem(17);
+  background: $blue_3;
+  color: $white_1;
+  border-radius: rem(3);
+  border: rem(1) solid $blue_3;
+  margin: 0 rem(10) 0 0;
+  user-select: none;
+  cursor: pointer;
+}
+
+.modal-cancel {
+  padding: rem(4) rem(17);
+  background: $white_1;
+  color: $gray_5;
+  border: rem(1) solid $gray_5;
+  border-radius: rem(3);
+  user-select: none;
+  cursor: pointer;
+}

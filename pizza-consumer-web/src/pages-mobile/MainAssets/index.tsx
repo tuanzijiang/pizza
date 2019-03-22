@@ -4,15 +4,18 @@ import './index.scss';
 import Main from './Main';
 import OrderDetail from './OrderDetail';
 import Settlement from './Settlement';
+import AddressList from './Address';
 import Pay from './Pay';
 import { connect } from 'react-redux';
-import { pageMobile as pageActionCreator } from '@store/action';
+import { pageMobile as pageActionCreator, entity as entityActionCreator } from '@store/action';
 import autobind from 'autobind-decorator';
+import { OrderWeakSchema, OrderSchema } from '@src/entity/schema';
 
 interface LoginAssetsProps {
   mainStore: any;
   entityStore: any;
   updateNavIdx: (idx: number) => void;
+  updateOrder: (order: OrderWeakSchema | OrderSchema) => void;
 }
 
 interface LoginAssetsState { }
@@ -22,6 +25,7 @@ export enum MainAssetName {
   OrderDetail = 1,
   Settlement = 2,
   Pay = 3,
+  AddressList = 4,
 }
 
 const config = {
@@ -29,6 +33,7 @@ const config = {
   [MainAssetName.OrderDetail]: 1,
   [MainAssetName.Settlement]: 2,
   [MainAssetName.Pay]: 3,
+  [MainAssetName.AddressList]: 4,
 };
 
 const handleTouchMove = (e: TouchEvent) => {
@@ -38,6 +43,7 @@ const handleTouchMove = (e: TouchEvent) => {
 export class MainAssets extends React.PureComponent<LoginAssetsProps, LoginAssetsState> {
   private pageAssetsEl: React.RefObject<PageAssets> = React.createRef();
   private orderDetailEl: React.RefObject<OrderDetail> = React.createRef();
+  private addressListEl: React.RefObject<AddressList> = React.createRef();
 
   constructor(props: LoginAssetsProps) {
     super(props);
@@ -63,10 +69,14 @@ export class MainAssets extends React.PureComponent<LoginAssetsProps, LoginAsset
       this.orderDetailEl && this.orderDetailEl.current.componentDidEnter) {
       this.orderDetailEl.current.componentDidEnter(...extraInfo);
     }
+    if (idx === config[MainAssetName.AddressList] &&
+      this.addressListEl && this.addressListEl.current.componentDidEnter) {
+      this.addressListEl.current.componentDidEnter(...extraInfo);
+    }
   }
 
   render() {
-    const { mainStore, updateNavIdx, entityStore } = this.props;
+    const { mainStore, updateNavIdx, entityStore, updateOrder } = this.props;
     const { navIdx, orderIds } = mainStore;
     return (
       <div className="loginAssets">
@@ -91,6 +101,12 @@ export class MainAssets extends React.PureComponent<LoginAssetsProps, LoginAsset
             onPageChange={this.handlePageChange}
             entityStore={entityStore}
           />
+          <AddressList
+            onPageChange={this.handlePageChange}
+            entityStore={entityStore}
+            updateOrder={updateOrder}
+            ref={this.addressListEl}
+          />
         </PageAssets>
       </div>
     );
@@ -106,6 +122,9 @@ export default connect((state: any) => {
   return {
     updateNavIdx: (idx: number) => {
       dispatch(pageActionCreator.main.updateNavIdx(idx));
+    },
+    updateOrder: (order: OrderWeakSchema | OrderSchema) => {
+      dispatch(entityActionCreator.orders.updateOrder(order));
     },
   };
 })(MainAssets);

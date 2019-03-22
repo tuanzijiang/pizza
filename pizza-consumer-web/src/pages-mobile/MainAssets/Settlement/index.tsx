@@ -9,6 +9,7 @@ import { neetStatusBar } from '@utils/device';
 import cx from 'classnames';
 import Icon from '@biz-components/Icon';
 import { CART_ORDER_ID } from '@entity/Order';
+import { AddressUsage } from '../Address';
 
 interface SettlementProps {
   onPageChange(idx: MainAssetName, openType?: OpenType, ...extraInfo: any[]): void;
@@ -32,16 +33,27 @@ export default class Settlement extends React.PureComponent<SettlementProps, Set
     onPageChange(MainAssetName.Main, OpenType.LEFT);
   }
 
+  @autobind
+  handleChangeToAddressList() {
+    const { onPageChange } = this.props;
+    onPageChange(MainAssetName.AddressList, OpenType.RIGHT, {
+      usage: AddressUsage.SELECT,
+    });
+  }
+
   renderMiddle() {
     return <span className="settlement-middle">{i18n('确认订单')}</span>;
   }
 
   render() {
     const { entityStore } = this.props;
-    const { pizzas, orders } = entityStore;
+    const { pizzas, orders, addresses, user } = entityStore;
 
     const currOrder = orders[CART_ORDER_ID] || {};
     const pizzaIds = currOrder.pizzas;
+    const addressId = currOrder.address;
+    const defaultAddressId = user.address;
+    const currAddress = addresses[addressId === 0 ? defaultAddressId : addressId];
 
     let price = 0;
     if (currOrder && currOrder.num) {
@@ -66,6 +78,20 @@ export default class Settlement extends React.PureComponent<SettlementProps, Set
         })}>
           <div className="settlement-pizzas">
             <div className="settlement-pizzasTitle">
+              {i18n('地址信息')}
+            </div>
+            {
+              currAddress &&
+              <div className="settlement-addressItem" onClick={this.handleChangeToAddressList}>
+                <div className="settlement-addressInfo">{currAddress.address}</div>
+                <div className="settlement-addressDetail">{currAddress.addressDetail}</div>
+                <div className="settlement-addressUser">
+                  <span>{currAddress.name}</span>
+                  <span>{currAddress.phone}</span>
+                </div>
+              </div>
+            }
+            <div className="settlement-pizzasTitle settlement-pizzasTitle_goods">
               {i18n('商品信息')}
             </div>
             {
