@@ -1,7 +1,7 @@
 import net, { Command } from '@net/base';
 import { entity } from '@store/action';
 import { User } from '@entity/User';
-import { FetchAddressResp, FetchAddressReq } from '@src/net/fetch-address';
+import { FetchAddressResp, FetchAddressReq } from '@src/net/api-fetch-address';
 import store from '@store/index';
 import { Address } from '@net/common';
 

@@ -1,5 +1,5 @@
 import net, { Command } from '@net/base';
-import { UpdateOrderReq, UpdateOrderResp } from '@src/net/update-order';
+import { UpdateOrderReq, UpdateOrderResp } from '@src/net/api-update-order';
 import store from '@store/index';
 import { entity } from '@store/action';
 

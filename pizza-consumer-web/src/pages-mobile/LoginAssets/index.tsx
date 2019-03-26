@@ -25,13 +25,13 @@ interface LoginAssetsState {
 }
 
 export enum LoginAssetName {
-  Login = 'Login',
-  LoginPW = 'LoginPW',
-  FindPW = 'FindPW',
-  SetPW = 'SetPW',
-  Register = 'Register',
-  RegisterEmail = 'RegisterEmail',
-  BindTel = 'BindTel',
+  Login = 0,
+  LoginPW = 1,
+  FindPW = 2,
+  SetPW = 3,
+  Register = 4,
+  RegisterEmail = 5,
+  BindTel = 6,
 }
 
 const config = {
@@ -101,7 +101,9 @@ export class LoginAssets extends React.PureComponent<LoginAssetsProps, LoginAsse
     } = loginStore;
     return (
       <div className="loginAssets" ref={this.loginAssetsEl}>
-        <PageAssets ref={this.pageAssetsEl} changeCb={this.onPageChange}>
+        <PageAssets
+          init={LoginAssetName.FindPW} ref={this.pageAssetsEl} changeCb={this.onPageChange}
+        >
           <Login
             onPageChange={this.handlePageChange}
             onVarifyClick={updateVarifyTime}

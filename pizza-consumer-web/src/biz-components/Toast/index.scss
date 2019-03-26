@@ -1,0 +1,39 @@
+@import '~@ui/base.scss';
+
+.toast-wrapper {
+  z-index: 100;
+  position: fixed;
+  bottom: rem(30);
+  color: white;
+  text-align: center;
+  width: 100%;
+  display: none;
+
+  .toast-text {
+    background: rgba($black_1, .7);
+  }
+}
+
+.toast-wrapper_mobile {
+  bottom: vw(60);
+
+  .toast-text {
+    padding: vw(10) vw(15);
+    border-radius: vw(5);
+    font-size: vw(14);
+  }
+}
+
+.toast-wrapper_pc {
+  bottom: rem(60);
+
+  .toast-text {
+    padding: rem(10) rem(15);
+    border-radius: rem(5);
+    font-size: rem(14);
+  }
+}
+
+.toast-wrapper_visibility {
+  display: block;
+}

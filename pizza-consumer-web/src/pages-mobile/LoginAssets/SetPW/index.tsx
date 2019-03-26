@@ -9,6 +9,12 @@ import { LoginAssetName } from '../index';
 import { neetStatusBar } from '@utils/device';
 import autobind from 'autobind-decorator';
 import { timerFormater } from '@utils/time';
+import { sendVerificationApi } from '@src/services/api-send-verification';
+import { VerificationType } from '@src/net/common';
+import { isPW, isVarify } from '@src/utils/check';
+import { openToast } from '@src/utils/store';
+import { setPWApi } from '@src/services/api-set-pw';
+import { hiddenTel } from '@utils/check';
 
 interface SetPWProps {
   onPageChange(idx: LoginAssetName, openType?: OpenType): void;
@@ -19,6 +25,8 @@ interface SetPWProps {
 
 interface SetPWState {
   tel: string;
+  varify: string;
+  password: string;
 }
 
 const VARIFY_TIME = 1000 * 45;
@@ -30,6 +38,8 @@ export default class SetPW extends React.PureComponent<SetPWProps, SetPWState> {
     super(props);
     this.state = {
       tel: '',
+      varify: '',
+      password: '',
     };
   }
 
@@ -59,13 +69,60 @@ export default class SetPW extends React.PureComponent<SetPWProps, SetPWState> {
   @autobind
   handleVarifyClick() {
     const { varifyTime, onVarifyClick, currentTime } = this.props;
+    const { tel } = this.state;
     if (varifyTime < currentTime) {
+      sendVerificationApi({
+        tel,
+        type: VerificationType.FINDPW,
+      });
+
       onVarifyClick(new Date().valueOf() + VARIFY_TIME);
     }
   }
 
+  @autobind
+  handlePasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target) {
+      this.setState({
+        password: e.target.value,
+      });
+    }
+  }
+
+  @autobind
+  handleVarifyChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target) {
+      this.setState({
+        varify: e.target.value,
+      });
+    }
+  }
+
+  @autobind
+  handleSubmitClick() {
+    const { onPageChange } = this.props;
+    const { tel, varify, password } = this.state;
+    if (!isPW(password)) {
+      openToast('密码格式错误');
+      return;
+    }
+
+    if (!isVarify(varify)) {
+      openToast('验证码格式错误');
+      return;
+    }
+
+    setPWApi({
+      password,
+      account: tel,
+      varification: varify,
+    });
+
+    onPageChange(LoginAssetName.LoginPW, OpenType.LEFT);
+  }
+
   renderVarifyCode() {
-    const { varifyTime, currentTime  } = this.props;
+    const { varifyTime, currentTime } = this.props;
     const text = !varifyTime ? i18n('获取验证码') : i18n('重新获取');
 
     if (!varifyTime || varifyTime - currentTime < 0) {
@@ -94,7 +151,7 @@ export default class SetPW extends React.PureComponent<SetPWProps, SetPWState> {
       'setPW-content': true,
       'setPW-content_status': neetStatusBar,
     });
-    const { tel } = this.state;
+    const { tel, varify, password } = this.state;
 
     return (
       <div className="setPW-wrapper">
@@ -106,15 +163,27 @@ export default class SetPW extends React.PureComponent<SetPWProps, SetPWState> {
         <form className={setPWContent}>
           <div className="setPW-tel">
             {i18n('验证码发送至:')}
-            <span>{tel}</span>
+            <span>{hiddenTel(tel)}</span>
           </div>
           <div className="setPW-input">
-            <Input placeholde={i18n('验证码')} type="number" right={this.renderVarifyCode()} />
+            <Input
+              placeholde={i18n('验证码')}
+              type="number"
+              right={this.renderVarifyCode()}
+              value={varify}
+              onChange={this.handleVarifyChange}
+            />
           </div>
-          <div className="setPW-input">
-            <Input placeholde={i18n('新密码')} type="password" />
-          </div>
-          <div className="setPW-button">{i18n('确定')}</div>
+          <form className="setPW-input">
+            <Input
+              placeholde={i18n('新密码')}
+              type="password"
+              value={password}
+              onChange={this.handlePasswordChange}
+            />
+          </form>
+          <div
+          className="setPW-button" onClick={this.handleSubmitClick}>{i18n('确定')}</div>
         </form>
       </div>
     );

@@ -6,6 +6,11 @@ import i18n from '@utils/i18n';
 import { LoginAssetName } from '../index';
 import Input from '@biz-components/Input';
 import autobind from 'autobind-decorator';
+import { isTel, isPW } from '@utils/check';
+import { loginApi } from '@services/api-login';
+import { LoginType } from '@src/net/common';
+import history from '@utils/history';
+import { openToast } from '@utils/store';
 
 interface LoginPWProps {
   onPageChange(idx: LoginAssetName, openType?: OpenType): void;
@@ -55,6 +60,35 @@ export default class LoginPW extends React.PureComponent<LoginPWProps, LoginPWSt
     }
   }
 
+  @autobind
+  handleLoginClick() {
+    const { account, password } = this.state;
+    if (!isTel(account)) {
+      openToast('手机号格式错误');
+      return;
+    }
+    if (!isPW(password)) {
+      openToast('密码格式错误');
+      return;
+    }
+    this.handleLogin();
+  }
+
+  @autobind
+  async handleLogin() {
+    const { account, password } = this.state;
+    const result = await loginApi({
+      account,
+      password,
+      type: LoginType.PASSWORD,
+    });
+    if (result) {
+      history.push('./MainAssets');
+    } else {
+      openToast('密码错误');
+    }
+  }
+
   renderMiddle() {
     return <span className="loginPW-middle">{i18n('密码登录')}</span>;
   }
@@ -85,7 +119,8 @@ export default class LoginPW extends React.PureComponent<LoginPWProps, LoginPWSt
               value={password}
             />
           </form>
-          <div className="loginPW-button">{i18n('登录')}</div>
+          <div className="loginPW-button"
+            onClick={this.handleLoginClick}>{i18n('登录')}</div>
           <div className="loginPW-afterInput">
             <span onClick={this.handleFindPWClick}>{i18n('找回密码')}</span>
           </div>

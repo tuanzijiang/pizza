@@ -5,7 +5,7 @@ import { Address } from '@entity/Address';
 import { Pizza } from '@entity/Pizza';
 import store from '@store/index';
 import { entity, pageMobile, pagePc } from '@store/action';
-import { FetchOrdersReq, FetchOrdersResp } from '@src/net/fetch-orders';
+import { FetchOrdersReq, FetchOrdersResp } from '@src/net/api-fetch-orders';
 import { AddressWeakSchema } from '@src/entity/schema';
 
 export const fetchOrdersApi = async (param: FetchOrdersReq) => {

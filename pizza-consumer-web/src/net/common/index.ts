@@ -3,9 +3,20 @@ export enum ResultType {
   SUCCESS = 1,
 }
 
+export enum LoginType {
+  PASSWORD = 0,
+  VERIFICATION = 1,
+}
+
 export enum Sex {
   MALE = 0,
   FEMALE = 1,
+}
+
+export enum VerificationType {
+  LOGIN = 0,
+  FINDPW = 1,
+  REGISTER = 2,
 }
 
 export enum OrderStatus {
