@@ -1,5 +1,5 @@
 import net, { Command } from '@net/base';
-import { FetchMenuReq, FetchMenuResp } from '@src/net/fetch-menu';
+import { FetchMenuReq, FetchMenuResp } from '@src/net/api-fetch-menu';
 import { Order, CART_ORDER_ID } from '@entity/Order';
 import { Pizza } from '@entity/Pizza';
 import store from '@store/index';

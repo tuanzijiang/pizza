@@ -94,3 +94,34 @@ message SignUpResp {
   ResultType result_type = 1;
   User user = 2;
 }
+
+// 发送验证码
+// [post] /sendVerification
+
+message SendVerificationReq {
+  enum Type {
+    LOGIN = 0;
+    FINDPW = 1;
+    REGISTER = 2;
+  } 
+
+  Type type = 1;
+  string tel= 2;
+}
+
+message SendVerificationResp {
+  ResultType result_type = 1;
+}
+
+// 设置密码
+// [post] /setPw
+
+message SetPWReq {
+  string account = 1;
+  string password = 2;
+  string varification = 3;
+}
+
+message SetPWResp {
+  ResultType result_type = 1;
+}

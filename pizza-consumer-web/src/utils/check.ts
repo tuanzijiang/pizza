@@ -6,3 +6,17 @@ export const isEmail = (email: string) =>
 
 export const isPW = (pw: string) =>
   (/^([A-Za-z0-9]){6,11}$/.test(pw));
+
+export const isVarify = (varify: string) =>
+  (/^[0-9]{4,6}$/.test(varify));
+
+export const hiddenTel = (tel: string) => {
+  if (!isTel(tel)) {
+    return '';
+  } else {
+    const telArr = tel.split('');
+    telArr.splice(3, 4, '****');
+    return telArr.join('');
+  }
+
+};

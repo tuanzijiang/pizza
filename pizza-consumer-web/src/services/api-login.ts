@@ -1,15 +1,14 @@
 import net, { Command } from '@net/base';
-import { User } from '@entity/User';
-import { Address } from '@entity/Address';
+import { LoginReq, LoginResp } from '@src/net/api-login';
 import store from '@store/index';
 import { entity } from '@store/action';
-import { FetchUserResp, FetchUserReq } from '@src/net/api-fetch-user';
+import { Address } from '@entity/Address';
 import { Sex } from '@src/net/common';
 import { SexSchema } from '@src/entity/schema';
 
-export const fetchUserApi = async (param: FetchUserReq) => {
-  const resp = await net.request(Command.FETCH_USER, param);
-  const { resultType, user } = resp as FetchUserResp;
+export const loginApi = async (param: LoginReq) => {
+  const resp = await net.request(Command.LOGIN, param);
+  const { resultType, user } = resp as LoginResp;
 
   if (resultType) {
     const { address } = user;
@@ -22,7 +21,8 @@ export const fetchUserApi = async (param: FetchUserReq) => {
       ...address,
       sex: address.sex === Sex.FEMALE ? SexSchema.FEMALE : SexSchema.MALE,
     })));
+    return true;
   }
 
-  return resp;
+  return false;
 };

@@ -1,4 +1,4 @@
-import { Command } from './Command';
+import { Command } from './command';
 
 export const reqProto = {
   [Command.FETCH_USER]: 'user.FetchUserReq',
@@ -6,6 +6,9 @@ export const reqProto = {
   [Command.FETCH_ORDERS]: 'order.FetchOrdersReq',
   [Command.UPDATE_ORDER]: 'order.UpdateOrderReq',
   [Command.FETCH_ADDRESS]: 'address.FetchAddressReq',
+  [Command.LOGIN]: 'user.LoginReq',
+  [Command.SEND_VERIFICATION]: 'user.SendVerificationReq',
+  [Command.SET_PW]: 'user.SetPWReq',
 };
 
 export const respProto = {
@@ -14,6 +17,9 @@ export const respProto = {
   [Command.FETCH_ORDERS]: 'order.FetchOrdersResp',
   [Command.UPDATE_ORDER]: 'order.UpdateOrderResp',
   [Command.FETCH_ADDRESS]: 'address.FetchAddressResp',
+  [Command.LOGIN]: 'user.LoginResp',
+  [Command.SEND_VERIFICATION]: 'user.SendVerificationResp',
+  [Command.SET_PW]: 'user.SetPWResp',
 };
 
 export const reqUrl = {
@@ -22,4 +28,7 @@ export const reqUrl = {
   [Command.FETCH_ORDERS]: 'fetch_orders',
   [Command.UPDATE_ORDER]: 'update_order',
   [Command.FETCH_ADDRESS]: 'fetch_address',
+  [Command.LOGIN]: 'fetch_loginStatus',
+  [Command.SEND_VERIFICATION]: 'send_verification',
+  [Command.SET_PW]: 'set_pw',
 };
