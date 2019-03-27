@@ -1,6 +1,5 @@
 import * as React from 'react';
 import './index.scss';
-import { fetchMenuApi } from '@services/api-fetch-menu';
 import { updateOrderApi } from '@services/api-update-order';
 import { Order, Pizza, User } from '@src/entity';
 import { CART_ORDER_ID } from '@entity/Order';
@@ -61,13 +60,6 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
       currTag: 0,
       tags: [],
     };
-  }
-
-  componentDidMount() {
-    const { user } = this.props;
-    fetchMenuApi({
-      userId: user.id,
-    });
   }
 
   componentDidUpdate(prevProps: MenuProps, prevState: MenuState) {

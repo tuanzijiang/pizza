@@ -7,6 +7,8 @@ import { RegisterReq, RegisterResp } from './api-register';
 import { SendVerificationReq, SendVerificationResp } from './api-send-verification';
 import { UpdateOrderReq, UpdateOrderResp } from './api-update-order';
 import { SetPWReq, SetPWResp } from './api-set-pw';
+import { AddAddressReq, AddAddressResp } from './api-add-address';
+import { UpdateAddressReq, UpdateAddressResp } from './api-update-address';
 
 export enum Command {
   // user
@@ -25,6 +27,8 @@ export enum Command {
 
   // address
   FETCH_ADDRESS = 'FETCH_ADDRESS',
+  UPDATE_ADDRESS = 'UPDATE_ADDRESS',
+  ADD_ADDRESS = 'ADD_ADDRESS',
 }
 
 export type CommandReq<T extends Command> =
@@ -37,6 +41,8 @@ export type CommandReq<T extends Command> =
   T extends Command.REGISTER ? [RegisterReq] :
   T extends Command.SEND_VERIFICATION ? [SendVerificationReq] :
   T extends Command.SET_PW? [SetPWReq] :
+  T extends Command.ADD_ADDRESS? [AddAddressReq] :
+  T extends Command.UPDATE_ADDRESS? [UpdateAddressReq] :
   [];
 
 export type CommandResp<T extends Command> =
@@ -49,4 +55,6 @@ export type CommandResp<T extends Command> =
   T extends Command.REGISTER? RegisterResp :
   T extends Command.SEND_VERIFICATION ? SendVerificationResp :
   T extends Command.SET_PW? SetPWResp :
+  T extends Command.ADD_ADDRESS? AddAddressResp:
+  T extends Command.UPDATE_ADDRESS? UpdateAddressResp:
   void;

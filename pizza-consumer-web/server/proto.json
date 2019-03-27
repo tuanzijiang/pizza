@@ -313,6 +313,10 @@
             "userId": {
               "type": "string",
               "id": 1
+            },
+            "address": {
+              "type": "Address",
+              "id": 2
             }
           }
         },
@@ -321,11 +325,6 @@
             "resultType": {
               "type": "ResultType",
               "id": 1
-            },
-            "addresses": {
-              "rule": "repeated",
-              "type": "Address",
-              "id": 2
             }
           }
         },
