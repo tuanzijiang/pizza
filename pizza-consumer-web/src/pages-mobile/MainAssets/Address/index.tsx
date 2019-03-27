@@ -39,7 +39,15 @@ export default class Address extends React.PureComponent<AddressProps, AddressSt
   @autobind
   handleLeftClick(e: React.MouseEvent<React.ReactNode>) {
     const { onPageChange } = this.props;
-    onPageChange(MainAssetName.Settlement, OpenType.LEFT);
+    const { usage } = this.state;
+
+    if (usage === AddressUsage.SELECT) {
+      onPageChange(MainAssetName.Settlement, OpenType.LEFT);
+    }
+
+    if (usage === AddressUsage.EDITABLE) {
+      onPageChange(MainAssetName.Main, OpenType.LEFT);
+    }
   }
 
   @autobind
@@ -60,6 +68,16 @@ export default class Address extends React.PureComponent<AddressProps, AddressSt
     };
   }
 
+  @autobind
+  handleEditClick(addressId?: number) {
+    return () => {
+      const { onPageChange } = this.props;
+      onPageChange(MainAssetName.AddressEdit, OpenType.RIGHT, {
+        addressId,
+      });
+    };
+  }
+
   componentDidEnter(...extraInfo: any[]) {
     const usage = extraInfo[0].usage;
     this.setState({
@@ -74,6 +92,12 @@ export default class Address extends React.PureComponent<AddressProps, AddressSt
     return <span className="address-middle">{i18n('选择地址')}</span>;
   }
 
+  renderRight() {
+    return <div className="address-right" onClick={this.handleEditClick()}>
+      <Icon name="add" classnames="address-rightIcon"/>
+    </div>;
+  }
+
   render() {
     const { entityStore } = this.props;
     const { user, addresses } = entityStore;
@@ -83,7 +107,7 @@ export default class Address extends React.PureComponent<AddressProps, AddressSt
     return (
       <div className="address-wrapper">
         <Banner
-          right={null}
+          right={this.renderRight()}
           middle={this.renderMiddle()}
           leftClick={this.handleLeftClick}
         />
@@ -109,7 +133,10 @@ export default class Address extends React.PureComponent<AddressProps, AddressSt
                   </div>
                 </div>
                 <div className="address-itemRight">
-                  {usage === AddressUsage.EDITABLE && <Icon name="edit" />}
+                  {usage === AddressUsage.EDITABLE && <Icon
+                    name="edit"
+                    onClick={this.handleEditClick(v)}
+                  />}
                 </div>
               </div>;
             })

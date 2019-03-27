@@ -51,6 +51,11 @@ export default class PageAssets extends React.PureComponent<PageAssetsProps, Pag
     };
   }
 
+  componentDidMount() {
+    const { init, changeCb } = this.props;
+    changeCb(init);
+  }
+
   @autobind
   openByName(pageIdx: number, openType?: OpenType, ...extraInfo: any[]) {
     const { pageStates, assetsState } = this.state;

@@ -15,6 +15,9 @@ import { vw } from '@ui/base';
 import Icon from '@biz-components/Icon';
 import autobind from 'autobind-decorator';
 import { neetStatusBar } from '@utils/device';
+import { fetchUserApi } from '@src/services/api-fetch-user';
+import { fetchMenuApi } from '@services/api-fetch-menu';
+import { fetchOrdersApi } from '@src/services/api-fetch-orders';
 
 interface MainProps {
   onPageChange(idx: MainAssetName, openType?: OpenType, ...extraInfo: any[]): void;
@@ -52,6 +55,25 @@ export default class Login extends React.PureComponent<MainProps, MainState> {
     );
   }
 
+  componentDidEnter() {
+    const { entityStore } = this.props;
+    const { user } = entityStore;
+    if (!user) {
+      return;
+    }
+    fetchUserApi({
+      userId: user.id,
+    });
+    fetchMenuApi({
+      userId: user.id,
+    });
+    fetchOrdersApi({
+      userId: user.id,
+      lastOrderId: '',
+      num: 20,
+    });
+  }
+
   render() {
     const { navIdx, entityStore, orderIds, onPageChange } = this.props;
     const { pizzas, addresses, orders, user } = entityStore;
@@ -72,7 +94,7 @@ export default class Login extends React.PureComponent<MainProps, MainState> {
             'main-pageWrapper': true,
             'main-pageWrapper_active': navIdx === 0,
           })}>
-            <Menu pizzas={pizzas} menu={menu} user={user}/>
+            <Menu pizzas={pizzas} menu={menu} user={user} />
           </div>
           <div className={cx({
             'main-pageWrapper': true,
@@ -100,7 +122,7 @@ export default class Login extends React.PureComponent<MainProps, MainState> {
             'main-pageWrapper': true,
             'main-pageWrapper_active': navIdx === 3,
           })}>
-            <Me user={user} />
+            <Me user={user} onPageChange={onPageChange} />
           </div>
         </div>
         <Footer height={vw(50)} wrapperClass="main-footer">
