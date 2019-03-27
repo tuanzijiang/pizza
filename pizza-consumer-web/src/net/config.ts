@@ -7,6 +7,7 @@ export const reqProto = {
   [Command.UPDATE_ORDER]: 'order.UpdateOrderReq',
   [Command.FETCH_ADDRESS]: 'address.FetchAddressReq',
   [Command.LOGIN]: 'user.LoginReq',
+  [Command.REGISTER]: 'user.SignUpReq',
   [Command.SEND_VERIFICATION]: 'user.SendVerificationReq',
   [Command.SET_PW]: 'user.SetPWReq',
 };
@@ -18,6 +19,7 @@ export const respProto = {
   [Command.UPDATE_ORDER]: 'order.UpdateOrderResp',
   [Command.FETCH_ADDRESS]: 'address.FetchAddressResp',
   [Command.LOGIN]: 'user.LoginResp',
+  [Command.REGISTER]: 'user.SignUpResp',
   [Command.SEND_VERIFICATION]: 'user.SendVerificationResp',
   [Command.SET_PW]: 'user.SetPWResp',
 };
@@ -29,6 +31,7 @@ export const reqUrl = {
   [Command.UPDATE_ORDER]: 'update_order',
   [Command.FETCH_ADDRESS]: 'fetch_address',
   [Command.LOGIN]: 'fetch_loginStatus',
+  [Command.REGISTER]: 'add_user',
   [Command.SEND_VERIFICATION]: 'send_verification',
   [Command.SET_PW]: 'set_pw',
 };
