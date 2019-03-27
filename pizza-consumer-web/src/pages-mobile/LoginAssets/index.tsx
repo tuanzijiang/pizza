@@ -102,7 +102,7 @@ export class LoginAssets extends React.PureComponent<LoginAssetsProps, LoginAsse
     return (
       <div className="loginAssets" ref={this.loginAssetsEl}>
         <PageAssets
-          init={LoginAssetName.FindPW} ref={this.pageAssetsEl} changeCb={this.onPageChange}
+          init={LoginAssetName.Login} ref={this.pageAssetsEl} changeCb={this.onPageChange}
         >
           <Login
             onPageChange={this.handlePageChange}

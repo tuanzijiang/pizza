@@ -28,6 +28,6 @@ router.post('/', async (ctx, next) => {
 
 module.exports = {
   router,
-  command: 'LOGIN',
+  command: 'SET_PW',
   reqUrl: '/set_pw',
 };

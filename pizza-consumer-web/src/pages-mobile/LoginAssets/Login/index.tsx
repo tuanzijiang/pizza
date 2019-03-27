@@ -121,7 +121,7 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
     if (result) {
       history.push('./MainAssets');
     } else {
-      openToast('验证码错误');
+      openToast('密码错误');
     }
   }
 
