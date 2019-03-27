@@ -3,7 +3,7 @@ const querystring = require('querystring');
 const argv = require('yargs').argv;
 
 const isMock = argv.isMock === 'true';
-const hostname = isMock ? 'localhost' : '';
+const hostname = isMock ? 'localhost' : '172.30.225.106';
 const port = isMock ? 3001 : 8080;
 
 const post = (path = '/', data = {}) => new Promise((resolve, reject) => {

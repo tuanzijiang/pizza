@@ -174,14 +174,14 @@ export default class SetPW extends React.PureComponent<SetPWProps, SetPWState> {
               onChange={this.handleVarifyChange}
             />
           </div>
-          <form className="setPW-input">
+          <div className="setPW-input">
             <Input
               placeholde={i18n('新密码')}
               type="password"
               value={password}
               onChange={this.handlePasswordChange}
             />
-          </form>
+          </div>
           <div
           className="setPW-button" onClick={this.handleSubmitClick}>{i18n('确定')}</div>
         </form>

@@ -13,6 +13,8 @@ import { registerApi } from '@services/api-register';
 import history from '@utils/history';
 import { openToast } from '@utils/store';
 import { isTel, isVarify } from '@utils/check';
+import { VerificationType } from '@src/net/common';
+import { sendVerificationApi } from '@services/api-send-verification';
 
 interface RegisterProps {
   onPageChange(idx: LoginAssetName, openType?: OpenType): void;
@@ -63,6 +65,17 @@ export default class Register extends React.PureComponent<RegisterProps, Registe
   handleVarifyClick() {
     const { currentTime, varifyTime, onVarifyClick } = this.props;
     if (varifyTime < currentTime) {
+      const { account } = this.state;
+      if (!isTel(account)) {
+        openToast('手机格式错误');
+        return;
+      }
+
+      sendVerificationApi({
+        type: VerificationType.REGISTER,
+        tel: account,
+      });
+
       onVarifyClick(new Date().valueOf() + VARIFY_TIME);
     }
   }

@@ -41,6 +41,19 @@ export default class BindTel extends React.PureComponent<BindTelProps, BindTelSt
     onPageChange(LoginAssetName.RegisterEmail, OpenType.LEFT);
   }
 
+  @autobind
+  componentDidEnter(...extraInfo: any[]) {
+    // const { varifyTime } = this.props;
+    // const tel = extraInfo[0];
+    // this.setState({
+    //   tel,
+    // });
+
+    // if (!varifyTime) {
+    //   this.handleVarifyClick();
+    // }
+  }
+
   renderMiddle() {
     return <span className="bindTel-middle">{i18n('绑定手机号')}</span>;
   }

@@ -6,9 +6,11 @@ import i18n from '@utils/i18n';
 import { LoginAssetName } from '../index';
 import Input from '@biz-components/Input';
 import autobind from 'autobind-decorator';
+import { openToast } from '@utils/store';
+import { isTel, isPW } from '@utils/check';
 
 interface RegisterEmailProps {
-  onPageChange(idx: LoginAssetName, openType?: OpenType): void;
+  onPageChange(idx: LoginAssetName, openType?: OpenType, ...extraInfo: any[]): void;
 }
 
 interface RegisterEmailState {
@@ -35,7 +37,16 @@ export default class RegisterEmail extends
   @autobind
   handleBindPWClick(e: React.MouseEvent<React.ReactNode>) {
     const { onPageChange } = this.props;
-    onPageChange(LoginAssetName.BindTel, OpenType.RIGHT);
+    const { account, password } = this.state;
+    if (!isTel(account)) {
+      openToast('手机号格式错误');
+      return;
+    }
+    if (!isPW(password)) {
+      openToast('密码格式错误');
+      return;
+    }
+    onPageChange(LoginAssetName.BindTel, OpenType.RIGHT, account, password);
   }
 
   @autobind
