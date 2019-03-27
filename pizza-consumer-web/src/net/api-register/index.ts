@@ -4,6 +4,7 @@ export interface RegisterReq {
   phone?: string;
   password?: string;
   email?: string;
+  verification?: string;
 }
 
 export interface RegisterResp {

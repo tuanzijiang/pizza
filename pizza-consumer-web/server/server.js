@@ -22,7 +22,7 @@ app.use(async (ctx, next) => {
   const query = ctx.request.query;
   const header = ctx.request.header;
   log.info(url, method, body, query, header['content-type']);
-  next();
+  await next();
 });
 
 const router = new Router();

@@ -96,7 +96,7 @@ export default class Pay extends React.PureComponent<PayProps, PayState> {
 
     return <div className="pay-info">
       <div className="pay-name">
-        {firstPizza.name}
+        {firstPizza && firstPizza.name}
       </div>
       <div className="pay-name">{i18n('共')}{pizzaNum}{i18n('件商品')}</div>
       <div className="pay-price">

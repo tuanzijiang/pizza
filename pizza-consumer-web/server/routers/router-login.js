@@ -5,7 +5,7 @@ const proto = require('../proto.json');
 const net = require('../net');
 const argv = require('yargs').argv;
 
-const isMock = argv.isMock === 'true'
+const isMock = argv.isMock === 'true';
 const root = Root.fromJSON(proto);
 const reqProtoType = 'user.LoginReq';
 const respProtoType = 'user.LoginResp';
@@ -28,7 +28,11 @@ router.post('/', async (ctx, next) => {
     };
   } else {
     try {
-      body = await net.post('/fetchLoginStatus', result);
+      response = await net.post('/fetchLoginStatus', result);
+      body = {
+        resultType: 1, 
+        user: User.fromJS(response.user),
+      }
     } catch (e) {
       body = {
         resultType: 0,

@@ -160,6 +160,10 @@
             "email": {
               "type": "string",
               "id": 3
+            },
+            "verification": {
+              "type": "string",
+              "id": 4
             }
           }
         },
@@ -191,7 +195,8 @@
               "values": {
                 "LOGIN": 0,
                 "FINDPW": 1,
-                "REGISTER": 2
+                "REGISTER": 2,
+                "BIND_TEL": 3
               }
             }
           }

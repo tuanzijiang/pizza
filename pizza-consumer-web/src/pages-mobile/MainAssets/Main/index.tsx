@@ -72,7 +72,7 @@ export default class Login extends React.PureComponent<MainProps, MainState> {
             'main-pageWrapper': true,
             'main-pageWrapper_active': navIdx === 0,
           })}>
-            <Menu pizzas={pizzas} menu={menu} />
+            <Menu pizzas={pizzas} menu={menu} user={user}/>
           </div>
           <div className={cx({
             'main-pageWrapper': true,

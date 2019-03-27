@@ -7,7 +7,7 @@ import { LoginAssetName } from '../index';
 import Input from '@biz-components/Input';
 import autobind from 'autobind-decorator';
 import { openToast } from '@utils/store';
-import { isTel, isPW } from '@utils/check';
+import { isTel, isPW, isEmail } from '@utils/check';
 
 interface RegisterEmailProps {
   onPageChange(idx: LoginAssetName, openType?: OpenType, ...extraInfo: any[]): void;
@@ -38,8 +38,8 @@ export default class RegisterEmail extends
   handleBindPWClick(e: React.MouseEvent<React.ReactNode>) {
     const { onPageChange } = this.props;
     const { account, password } = this.state;
-    if (!isTel(account)) {
-      openToast('手机号格式错误');
+    if (!isEmail(account)) {
+      openToast('邮箱格式错误');
       return;
     }
     if (!isPW(password)) {
@@ -68,7 +68,7 @@ export default class RegisterEmail extends
   }
 
   renderMiddle() {
-    return <span className="registerEmail-middle">{i18n('密码登录')}</span>;
+    return <span className="registerEmail-middle">{i18n('邮箱注册')}</span>;
   }
 
   render() {
@@ -84,7 +84,7 @@ export default class RegisterEmail extends
           <div className="registerEmail-beforeInput" />
           <div className="registerEmail-input">
             <Input
-              placeholde={i18n('手机号/邮箱')}
+              placeholde={i18n('邮箱')}
               onChange={this.handleAccountChange}
               value={account}
             />

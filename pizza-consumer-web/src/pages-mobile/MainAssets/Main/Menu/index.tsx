@@ -2,7 +2,7 @@ import * as React from 'react';
 import './index.scss';
 import { fetchMenuApi } from '@services/api-fetch-menu';
 import { updateOrderApi } from '@services/api-update-order';
-import { Order, Pizza } from '@src/entity';
+import { Order, Pizza, User } from '@src/entity';
 import { CART_ORDER_ID } from '@entity/Order';
 import Icon from '@biz-components/Icon';
 import i18n from '@src/utils/i18n';
@@ -12,6 +12,7 @@ import cx from 'classnames';
 interface MenuProps {
   menu: Order;
   pizzas: Pizza[];
+  user: User;
 }
 
 interface MenuState {
@@ -63,8 +64,9 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
   }
 
   componentDidMount() {
+    const { user } = this.props;
     fetchMenuApi({
-      userId: 123,
+      userId: user.id,
     });
   }
 
