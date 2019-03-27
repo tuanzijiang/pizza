@@ -41,6 +41,12 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
     @Query("update OrderEntity set state=?1 where orderUuid=?2")
     int updateStateByOrderUuid(Integer state, String orderUuid);
 
+    // update
+    @Transactional
+    @Modifying
+    @Query("update OrderEntity set state=?1, totalPrice=?2 where orderUuid=?3")
+    int updateStateAndTotalPriceByOrderUuid(Integer state, Double totalPrice, String orderUuid);
+
     @Query(value="select * from pizza_order where DATEDIFF(commit_time,NOW()) = 0",nativeQuery = true)
     List<OrderEntity> findAllOrderCommitToday();
 
