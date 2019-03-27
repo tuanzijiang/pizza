@@ -17,6 +17,7 @@ export enum VerificationType {
   LOGIN = 0,
   FINDPW = 1,
   REGISTER = 2,
+  BIND_REGISTER = 3,
 }
 
 export enum OrderStatus {

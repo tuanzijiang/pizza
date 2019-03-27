@@ -4,6 +4,10 @@ const log = require('../utils/log');
 const proto = require('../proto.json');
 const Pizza = require('../entity/Pizza');
 const _ = require('lodash');
+const net = require('../net');
+const argv = require('yargs').argv;
+
+const isMock = argv.isMock === 'true';
 
 const root = Root.fromJSON(proto);
 const reqProtoType = 'order.FetchMenuReq';
@@ -16,13 +20,28 @@ const router = new Router();
 router.post('/', async (ctx, next) => {
   const protoBuff = ctx.proto;
   const result = reqType.decode(protoBuff);
-  log.info('[fetch_menu_req]:', result);
 
   // mock
   const { userId } = result;
-  const body = {
-    resultType: 1,
-    pizzas: _.range(15).map(v => Pizza.random()),
+  let body;
+
+  if (isMock) {
+    body = {
+      resultType: 1,
+      pizzas: _.range(15).map(v => Pizza.random()),
+    };
+  } else {
+    try {
+      response = await net.post('/fetchMenu', result);
+      body = {
+        resultType: response.resultType, 
+        pizzas: response.pizzas.map(v => Pizza.fromJS(v)),
+      }
+    } catch (e) {
+      body = {
+        resultType: 0,
+      }
+    }
   }
 
   const decodeBody = respType.encode(respType.create(body)).finish();

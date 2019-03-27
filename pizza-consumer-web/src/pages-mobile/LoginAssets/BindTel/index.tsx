@@ -9,6 +9,9 @@ import { LoginAssetName } from '../index';
 import { neetStatusBar } from '@utils/device';
 import autobind from 'autobind-decorator';
 import { timerFormater } from '@utils/time';
+import { registerApi } from '@src/services/api-register';
+import history from '@utils/history';
+import { openToast } from '@utils/store';
 
 interface BindTelProps {
   onPageChange(idx: LoginAssetName, openType?: OpenType): void;
@@ -18,8 +21,10 @@ interface BindTelProps {
 }
 
 interface BindTelState {
-  account: string;
-  varify: string;
+  email: string;
+  verification: string;
+  tel: string;
+  password: string;
 }
 
 const VARIFY_TIME = 1000 * 45;
@@ -30,8 +35,10 @@ export default class BindTel extends React.PureComponent<BindTelProps, BindTelSt
   constructor(props: BindTelProps) {
     super(props);
     this.state = {
-      account: '',
-      varify: '',
+      email: '',
+      verification: '',
+      tel: '',
+      password: '',
     };
   }
 
@@ -41,13 +48,45 @@ export default class BindTel extends React.PureComponent<BindTelProps, BindTelSt
     onPageChange(LoginAssetName.RegisterEmail, OpenType.LEFT);
   }
 
+  @autobind
+  componentDidEnter(...extraInfo: any[]) {
+    const [email, password] = extraInfo;
+    this.setState({
+      email,
+      password,
+    });
+  }
+
+  @autobind
+  handleBindClick() {
+    this.handleSignUp();
+  }
+
+  @autobind
+  async handleSignUp() {
+    const { email, password, tel, verification } = this.state;
+
+    const result = await registerApi({
+      email,
+      password,
+      verification,
+      phone: tel,
+
+    });
+    if (result) {
+      history.push('./MainAssets');
+    } else {
+      openToast('注册失败');
+    }
+  }
+
   renderMiddle() {
     return <span className="bindTel-middle">{i18n('绑定手机号')}</span>;
   }
 
   @autobind
   handleVarifyClick() {
-    const { currentTime , varifyTime, onVarifyClick } = this.props;
+    const { currentTime, varifyTime, onVarifyClick } = this.props;
     if (varifyTime < currentTime) {
       onVarifyClick(new Date().valueOf() + VARIFY_TIME);
     }
@@ -57,7 +96,7 @@ export default class BindTel extends React.PureComponent<BindTelProps, BindTelSt
   handleAccountChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target) {
       this.setState({
-        account: e.target.value,
+        tel: e.target.value,
       });
     }
   }
@@ -66,7 +105,7 @@ export default class BindTel extends React.PureComponent<BindTelProps, BindTelSt
   handleVarifyChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target) {
       this.setState({
-        varify: e.target.value,
+        verification: e.target.value,
       });
     }
   }
@@ -101,7 +140,7 @@ export default class BindTel extends React.PureComponent<BindTelProps, BindTelSt
       'bindTel-content': true,
       'bindTel-content_status': neetStatusBar,
     });
-    const { varify, account } = this.state;
+    const { verification, tel } = this.state;
 
     return (
       <div className="bindTel-wrapper">
@@ -116,7 +155,7 @@ export default class BindTel extends React.PureComponent<BindTelProps, BindTelSt
             <Input
               placeholde={i18n('手机号')}
               right={this.renderVarifyCode()}
-              value={account}
+              value={tel}
               onChange={this.handleAccountChange}
             />
           </div>
@@ -124,11 +163,11 @@ export default class BindTel extends React.PureComponent<BindTelProps, BindTelSt
             <Input
               placeholde={i18n('验证码')}
               type="number"
-              value={varify}
+              value={verification}
               onChange={this.handleVarifyChange}
             />
           </div>
-          <div className="bindTel-button">{i18n('绑定')}</div>
+          <div className="bindTel-button" onClick={this.handleBindClick}>{i18n('绑定')}</div>
         </div>
       </div>
     );

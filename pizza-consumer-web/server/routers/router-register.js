@@ -39,7 +39,7 @@ router.post('/', async (ctx, next) => {
   const decodeBody = respType.encode(respType.create(body)).finish();
 
   ctx.body = decodeBody;
-  next();
+  await next();
 });
 
 module.exports = {

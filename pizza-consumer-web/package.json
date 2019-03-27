@@ -16,7 +16,7 @@
     "server": "nodemon server/server --isMock false",
     "mock": "nodemon mock/server",
     "pb": "yarn pb:web && yarn pb:server",
-    "pb:server": "pbjs -t json ../pizza-protobuf/user.proto ../pizza-protobuf/order.proto > mock/proto.json",
+    "pb:server": "pbjs -t json ../pizza-protobuf/user.proto ../pizza-protobuf/order.proto > server/proto.json",
     "pb:web": "pbjs -t json ../pizza-protobuf/user.proto ../pizza-protobuf/order.proto > src/net/proto.json"
   },
   "devDependencies": {

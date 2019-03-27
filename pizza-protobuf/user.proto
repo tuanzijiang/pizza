@@ -62,7 +62,7 @@ message LoginReq {
   
   Type type = 1;
   string account = 2;
-  string password = 3;
+  string password = 3; // 验证码登录的时候，这个指代验证码；密码登录的时候，这个字段指代密码
 }
 
 message LoginResp {
@@ -88,6 +88,7 @@ message SignUpReq {
   string phone = 1;
   string password = 2;
   string email = 3;
+  string verification = 4;
 }
 
 message SignUpResp {
@@ -103,6 +104,7 @@ message SendVerificationReq {
     LOGIN = 0;
     FINDPW = 1;
     REGISTER = 2;
+    BIND_TEL = 3;
   } 
 
   Type type = 1;

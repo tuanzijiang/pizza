@@ -6,7 +6,7 @@ import i18n from '@utils/i18n';
 import { LoginAssetName } from '../index';
 import Input from '@biz-components/Input';
 import autobind from 'autobind-decorator';
-import { isTel, isPW } from '@utils/check';
+import { isPW, isEmail } from '@utils/check';
 import { loginApi } from '@services/api-login';
 import { LoginType } from '@src/net/common';
 import history from '@utils/history';
@@ -63,8 +63,8 @@ export default class LoginPW extends React.PureComponent<LoginPWProps, LoginPWSt
   @autobind
   handleLoginClick() {
     const { account, password } = this.state;
-    if (!isTel(account)) {
-      openToast('手机号格式错误');
+    if (!isEmail(account)) {
+      openToast('邮箱格式错误');
       return;
     }
     if (!isPW(password)) {
@@ -106,7 +106,7 @@ export default class LoginPW extends React.PureComponent<LoginPWProps, LoginPWSt
           <div className="loginPW-beforeInput" />
           <div className="loginPW-input">
             <Input
-              placeholde={i18n('手机号/邮箱')}
+              placeholde={i18n('邮箱')}
               onChange={this.handleAccountChange}
               value={account}
             />
