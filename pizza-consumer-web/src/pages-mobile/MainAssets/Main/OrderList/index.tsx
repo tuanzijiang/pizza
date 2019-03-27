@@ -1,9 +1,6 @@
 import * as React from 'react';
 import './index.scss';
-import Icon from '@biz-components/Icon';
-import { fetchOrdersApi } from '@src/services/api-fetch-orders';
-import { OrderStatus } from '@net/common';
-import { User, Pizza, Address, Order } from '@src/entity';
+import { Pizza, Address, Order } from '@src/entity';
 import i18n from '@src/utils/i18n';
 import { MainAssetName } from '../../index';
 import { OpenType } from '@biz-components/PageAssets';
@@ -27,14 +24,6 @@ interface OrderListProps {
 interface OrderListState { }
 
 export default class OrderList extends React.PureComponent<OrderListProps, OrderListState> {
-  componentDidMount() {
-    fetchOrdersApi({
-      userId: 123,
-      lastOrderId: '',
-      num: 10,
-      status: OrderStatus.PAID,
-    });
-  }
 
   @autobind
   handleDetailClick(orderId: string) {

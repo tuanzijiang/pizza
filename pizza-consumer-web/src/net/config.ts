@@ -10,6 +10,8 @@ export const reqProto = {
   [Command.REGISTER]: 'user.SignUpReq',
   [Command.SEND_VERIFICATION]: 'user.SendVerificationReq',
   [Command.SET_PW]: 'user.SetPWReq',
+  [Command.ADD_ADDRESS]: 'address.AddAddressReq',
+  [Command.UPDATE_ADDRESS]: 'address.UpdateAddressReq',
 };
 
 export const respProto = {
@@ -22,6 +24,8 @@ export const respProto = {
   [Command.REGISTER]: 'user.SignUpResp',
   [Command.SEND_VERIFICATION]: 'user.SendVerificationResp',
   [Command.SET_PW]: 'user.SetPWResp',
+  [Command.ADD_ADDRESS]: 'address.AddAddressResp',
+  [Command.UPDATE_ADDRESS]: 'address.UpdateAddressResp',
 };
 
 export const reqUrl = {
@@ -34,4 +38,6 @@ export const reqUrl = {
   [Command.REGISTER]: 'add_user',
   [Command.SEND_VERIFICATION]: 'send_verification',
   [Command.SET_PW]: 'set_pw',
+  [Command.ADD_ADDRESS]: 'add_address',
+  [Command.UPDATE_ADDRESS]: 'update_address',
 };
