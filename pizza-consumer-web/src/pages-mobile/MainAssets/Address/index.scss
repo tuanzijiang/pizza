@@ -17,6 +17,7 @@
   top: $banner_height;
   height: calc(100% - #{$banner_height});
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .address-content_status {

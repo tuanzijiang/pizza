@@ -2,5 +2,7 @@ dist
 node_modules
 mock/proto.json
 src/net/proto.json
+cert.pem
+key.pem
 
 *.log

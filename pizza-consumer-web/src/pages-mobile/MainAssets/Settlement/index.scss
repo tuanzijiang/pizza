@@ -31,6 +31,7 @@
   background: $white_1;
   margin: 0 0 vw(10);
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .settlement-pizzasTitle_goods {
