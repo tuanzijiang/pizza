@@ -17,9 +17,25 @@ router.post('/', async (ctx, next) => {
   const result = reqType.decode(protoBuff);
 
   // mock
-  const body = {
-    resultType: 1,
-    addresses: _.range(15).map(v => Address.random()),
+  let body;
+
+  if (isMock) {
+    body = {
+      resultType: 1,
+      addresses: _.range(15).map(v => Address.random()),
+    };
+  } else {
+    try {
+      response = await net.post('/fetchUserAddresses', result);
+      body = {
+        resultType: 1,
+        addresses: response.addresses.map(v => Address.fromJS(v)),
+      }
+    } catch (e) {
+      body = {
+        resultType: 0,
+      }
+    }
   }
 
   const decodeBody = respType.encode(respType.create(body)).finish();

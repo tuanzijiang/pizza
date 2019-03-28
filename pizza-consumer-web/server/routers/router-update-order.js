@@ -18,10 +18,26 @@ router.post('/', async (ctx, next) => {
 
   const { orderId, pizzaIs, count } = result;
 
-  // // mock
-  const body = {
-    resultType: 1,
+  // mock
+  let body;
+
+  if (isMock) {
+    body = {
+      resultType: 1,
+    };
+  } else {
+    try {
+      response = await net.post('/updateOrder', result);
+      body = {
+        resultType: 1,
+      }
+    } catch (e) {
+      body = {
+        resultType: 0,
+      }
+    }
   }
+
 
   const decodeBody = respType.encode(respType.create(body)).finish();
 

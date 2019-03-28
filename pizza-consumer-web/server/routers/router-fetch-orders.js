@@ -17,9 +17,25 @@ router.post('/', async (ctx, next) => {
   const result = reqType.decode(protoBuff);
 
   // mock
-  const body = {
-    resultType: 1,
-    orders: _.range(5).map(v => Order.random()),
+  let body;
+
+  if (isMock) {
+    body = {
+      resultType: 1,
+      orders: _.range(5).map(v => Order.random()),
+    };
+  } else {
+    try {
+      response = await net.post('/fetchOrders', result);
+      body = {
+        resultType: 1,
+        orders: response.orders.map(v => Order.fromJS(orders)),
+      }
+    } catch (e) {
+      body = {
+        resultType: 0,
+      }
+    }
   }
 
   const decodeBody = respType.encode(respType.create(body)).finish();

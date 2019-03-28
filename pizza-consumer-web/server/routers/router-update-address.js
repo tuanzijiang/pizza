@@ -17,8 +17,23 @@ router.post('/', async (ctx, next) => {
   const result = reqType.decode(protoBuff);
 
   // mock
-  const body = {
-    resultType: 1,
+  let body;
+
+  if (isMock) {
+    body = {
+      resultType: 1,
+    };
+  } else {
+    try {
+      response = await net.post('/updateUserAddress', result);
+      body = {
+        resultType: 1,
+      }
+    } catch (e) {
+      body = {
+        resultType: 0,
+      }
+    }
   }
 
   const decodeBody = respType.encode(respType.create(body)).finish();
