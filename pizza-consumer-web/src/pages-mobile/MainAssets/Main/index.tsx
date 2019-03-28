@@ -29,7 +29,7 @@ interface MainProps {
 
 interface MainState { }
 
-export default class Login extends React.PureComponent<MainProps, MainState> {
+export default class Main extends React.PureComponent<MainProps, MainState> {
   constructor(props: MainProps) {
     super(props);
     this.state = {};
@@ -55,9 +55,14 @@ export default class Login extends React.PureComponent<MainProps, MainState> {
     );
   }
 
-  componentDidEnter() {
-    const { entityStore } = this.props;
+  componentDidEnter(...extraInfo: any[]) {
+    const { entityStore, updateNavIdx } = this.props;
     const { user } = entityStore;
+    if (extraInfo[0]) {
+      const { idx } = extraInfo[0];
+      updateNavIdx(idx);
+    }
+
     if (!user) {
       return;
     }

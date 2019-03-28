@@ -101,3 +101,15 @@
 .pay-kindSuccess {
   color: $green_4;
 }
+
+.pay-button {
+  margin: vw(20) auto;
+  height: vw(40);
+  line-height: vw(40);
+  color: $white_1;
+  background: $green_4;
+  border-radius: vw(3);
+  text-align: center;
+  width: calc(100% - 2 * #{$padding_width});
+  -webkit-tap-highlight-color: transparent;
+}

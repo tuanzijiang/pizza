@@ -9,6 +9,9 @@ import { UpdateOrderReq, UpdateOrderResp } from './api-update-order';
 import { SetPWReq, SetPWResp } from './api-set-pw';
 import { AddAddressReq, AddAddressResp } from './api-add-address';
 import { UpdateAddressReq, UpdateAddressResp } from './api-update-address';
+import { FetchOrderReq, FetchOrderResp } from './api-fetch-order';
+import { SendOrderReq, SendOrderResp } from './api-send-order';
+import { CancelOrderReq, CancelOrderResp } from './api-cancel-order';
 
 export enum Command {
   // user
@@ -24,6 +27,9 @@ export enum Command {
   // order
   FETCH_ORDERS = 'FETCH_ORDERS',
   UPDATE_ORDER = 'UPDATE_ORDER',
+  FETCH_ORDER = 'FETCH_ORDER',
+  SEND_ORDER = 'SEND_ORDER',
+  CANCEL_ORDER = 'CANCEL_ORDER',
 
   // address
   FETCH_ADDRESS = 'FETCH_ADDRESS',
@@ -43,6 +49,9 @@ export type CommandReq<T extends Command> =
   T extends Command.SET_PW? [SetPWReq] :
   T extends Command.ADD_ADDRESS? [AddAddressReq] :
   T extends Command.UPDATE_ADDRESS? [UpdateAddressReq] :
+  T extends Command.FETCH_ORDER? [FetchOrderReq] :
+  T extends Command.SEND_ORDER? [SendOrderReq] :
+  T extends Command.CANCEL_ORDER? [CancelOrderReq] :
   [];
 
 export type CommandResp<T extends Command> =
@@ -57,4 +66,7 @@ export type CommandResp<T extends Command> =
   T extends Command.SET_PW? SetPWResp :
   T extends Command.ADD_ADDRESS? AddAddressResp:
   T extends Command.UPDATE_ADDRESS? UpdateAddressResp:
+  T extends Command.FETCH_ORDER? FetchOrderResp:
+  T extends Command.SEND_ORDER? SendOrderResp:
+  T extends Command.CANCEL_ORDER? CancelOrderResp:
   void;

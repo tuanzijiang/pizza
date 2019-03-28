@@ -15,6 +15,7 @@ import { OrderWeakSchema, OrderSchema } from '@src/entity/schema';
 interface LoginAssetsProps {
   mainStore: any;
   entityStore: any;
+  commonStore: any;
   updateNavIdx: (idx: number) => void;
   updateOrder: (order: OrderWeakSchema | OrderSchema) => void;
 }
@@ -49,6 +50,7 @@ export class MainAssets extends React.PureComponent<LoginAssetsProps, LoginAsset
   private addressListEl: React.RefObject<AddressList> = React.createRef();
   private addressEditEl: React.RefObject<AddressEdit> = React.createRef();
   private mainEl: React.RefObject<Main> = React.createRef();
+  private payEl: React.RefObject<Pay> = React.createRef();
 
   constructor(props: LoginAssetsProps) {
     super(props);
@@ -78,12 +80,17 @@ export class MainAssets extends React.PureComponent<LoginAssetsProps, LoginAsset
     }
     if (idx === config[MainAssetName.Main] &&
       this.mainEl && this.mainEl.current.componentDidEnter) {
-      this.mainEl.current.componentDidEnter();
+      this.mainEl.current.componentDidEnter(...extraInfo);
     }
+    if (idx === config[MainAssetName.Pay] &&
+      this.payEl && this.payEl.current.componentDidEnter) {
+      this.payEl.current.componentDidEnter(...extraInfo);
+    }
+
   }
 
   render() {
-    const { mainStore, updateNavIdx, entityStore, updateOrder } = this.props;
+    const { mainStore, updateNavIdx, entityStore, updateOrder, commonStore } = this.props;
     const { navIdx, orderIds } = mainStore;
     return (
       <div className="loginAssets">
@@ -108,6 +115,8 @@ export class MainAssets extends React.PureComponent<LoginAssetsProps, LoginAsset
           <Pay
             onPageChange={this.handlePageChange}
             entityStore={entityStore}
+            commonStore={commonStore}
+            ref={this.payEl}
           />
           <AddressList
             onPageChange={this.handlePageChange}
@@ -130,6 +139,7 @@ export default connect((state: any) => {
   return {
     mainStore: state.pageMobile.main,
     entityStore: state.entity,
+    commonStore: state.common,
   };
 }, (dispatch) => {
   return {
