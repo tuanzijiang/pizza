@@ -13,6 +13,9 @@ import {
   MainAssets as MainPageMobile,
 } from './pages-mobile';
 import { neetStatusBar, isPc } from '@utils/device';
+import { open } from '@utils/db';
+
+open();
 
 // @ts-ignore
 window.__STORE__ = store;
