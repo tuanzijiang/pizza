@@ -31,6 +31,7 @@ const post = (path = '/', data = {}) => new Promise((resolve, reject) => {
   const req = http.request(options, (res) => {
     res.setEncoding('utf8');
     res.on('data', function (chunk) {
+      console.warn(`[post] origin`, chunk);
       try {
         // resultType枚举映射
         const obj = JSON.parse(chunk);
@@ -38,7 +39,7 @@ const post = (path = '/', data = {}) => new Promise((resolve, reject) => {
         console.log(`[post]${totalPath} end: ${JSON.stringify(obj)}`);
         resolve(obj);
       } catch (e) {
-        console.error(e);
+        console.error(`[posrt] error`,e);
         reject(e);
       }
 

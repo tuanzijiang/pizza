@@ -101,6 +101,7 @@ export class MainAssets extends React.PureComponent<LoginAssetsProps, LoginAsset
             orderIds={orderIds}
             updateNavIdx={updateNavIdx}
             entityStore={entityStore}
+            commonStore={commonStore}
             ref={this.mainEl}
           />
           <OrderDetail
@@ -111,6 +112,7 @@ export class MainAssets extends React.PureComponent<LoginAssetsProps, LoginAsset
           <Settlement
             onPageChange={this.handlePageChange}
             entityStore={entityStore}
+            commonStore={commonStore}
           />
           <Pay
             onPageChange={this.handlePageChange}

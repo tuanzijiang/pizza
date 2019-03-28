@@ -13,6 +13,7 @@ interface MenuProps {
   menu: Order;
   pizzas: Pizza[];
   user: User;
+  menuId: string;
 }
 
 interface MenuState {
@@ -146,11 +147,12 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
 
   @autobind
   handleMenuUpdateClick(pizzaId: number, count: number) {
+    const { menuId } = this.props;
     return () => {
       updateOrderApi({
-        pizzaId,
         count,
-        orderId: CART_ORDER_ID,
+        pizzaId,
+        orderId: menuId,
       });
     };
   }

@@ -1,6 +1,7 @@
 const Router = require('koa-router');
 const { Root } = require('protobufjs');
 const User = require('../entity/User');
+const net = require('../net');
 const proto = require('../proto.json');
 const argv = require('yargs').argv;
 

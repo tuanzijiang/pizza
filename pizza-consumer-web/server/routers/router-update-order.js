@@ -3,6 +3,7 @@ const { Root } = require('protobufjs');
 const Order = require('../entity/Order');
 const proto = require('../proto.json');
 const _ = require('lodash');
+const net = require('../net');
 const argv = require('yargs').argv;
 
 const isMock = argv.isMock === 'true'
@@ -18,7 +19,7 @@ router.post('/', async (ctx, next) => {
   const protoBuff = ctx.proto;
   const result = reqType.decode(protoBuff);
 
-  const { orderId, pizzaIs, count } = result;
+  const { orderId, pizzaId, count } = result;
 
   // mock
   let body;
@@ -34,6 +35,7 @@ router.post('/', async (ctx, next) => {
         resultType: 1,
       }
     } catch (e) {
+      console.error(e);
       body = {
         resultType: 0,
       }

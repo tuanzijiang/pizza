@@ -4,6 +4,7 @@ const Order = require('../entity/Order');
 const proto = require('../proto.json');
 const _ = require('lodash');
 const argv = require('yargs').argv;
+const net = require('../net');
 
 const isMock = argv.isMock === 'true'
 const root = Root.fromJSON(proto);

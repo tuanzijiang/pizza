@@ -2,6 +2,7 @@ const Router = require('koa-router');
 const { Root } = require('protobufjs');
 const proto = require('../proto.json');
 const _ = require('lodash');
+const net = require('../net');
 const argv = require('yargs').argv;
 
 const isMock = argv.isMock === 'true';
