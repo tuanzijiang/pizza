@@ -3,7 +3,9 @@ const { Root } = require('protobufjs');
 const proto = require('../proto.json');
 const Address = require('../entity/Address');
 const _ = require('lodash');
+const argv = require('yargs').argv;
 
+const isMock = argv.isMock === 'true';
 const root = Root.fromJSON(proto);
 const reqProtoType = 'address.FetchAddressReq';
 const respProtoType = 'address.FetchAddressResp';

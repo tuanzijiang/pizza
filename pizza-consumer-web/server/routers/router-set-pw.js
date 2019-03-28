@@ -2,7 +2,9 @@ const Router = require('koa-router');
 const { Root } = require('protobufjs');
 const User = require('../entity/User');
 const proto = require('../proto.json');
+const argv = require('yargs').argv;
 
+const isMock = argv.isMock === 'true'
 const root = Root.fromJSON(proto);
 const reqProtoType = 'user.SetPWReq';
 const respProtoType = 'user.SetPWResp';
