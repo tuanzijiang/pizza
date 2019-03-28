@@ -1,4 +1,4 @@
-import { ResultType, Pizza } from '../common';
+import { ResultType, Pizza, Order } from '../common';
 
 export interface FetchMenuReq {
   userId: number;
@@ -7,4 +7,5 @@ export interface FetchMenuReq {
 export interface FetchMenuResp {
   resultType: ResultType;
   pizzas: Pizza[];
+  cart: Order;
 }

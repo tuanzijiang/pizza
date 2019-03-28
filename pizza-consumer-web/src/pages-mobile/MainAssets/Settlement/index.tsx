@@ -10,6 +10,8 @@ import cx from 'classnames';
 import Icon from '@biz-components/Icon';
 import { CART_ORDER_ID } from '@entity/Order';
 import { AddressUsage } from '../Address';
+import { sendOrdersApi } from '@src/services/api-send-order';
+import { openToast } from '@src/utils/store';
 
 interface SettlementProps {
   onPageChange(idx: MainAssetName, openType?: OpenType, ...extraInfo: any[]): void;
@@ -23,8 +25,25 @@ export default class Settlement extends React.PureComponent<SettlementProps, Set
 
   @autobind
   handleOrderClick() {
-    const { onPageChange } = this.props;
-    onPageChange(MainAssetName.Pay, OpenType.RIGHT);
+    const { entityStore, onPageChange } = this.props;
+    const { orders, user } = entityStore;
+
+    const currOrder = orders[CART_ORDER_ID];
+    const orderId = currOrder.id;
+    const addressId = currOrder.address;
+    const defaultAddressId = user.address;
+    const userAddressId = addressId === 0 ? defaultAddressId : addressId;
+    const result = sendOrdersApi({
+      orderId,
+      userAddressId,
+    });
+    if (result) {
+      onPageChange(MainAssetName.Pay, OpenType.RIGHT, {
+        currOrderId: currOrder.id,
+      });
+    } else {
+      openToast('下单失败');
+    }
   }
 
   @autobind

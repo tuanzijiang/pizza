@@ -80,11 +80,14 @@ export default class Address extends React.PureComponent<AddressProps, AddressSt
 
   componentDidEnter(...extraInfo: any[]) {
     const usage = extraInfo[0].usage;
+    const { entityStore } = this.props;
+    const { user } = entityStore;
+    const { id } = user;
     this.setState({
       usage,
     });
     fetchAddressApi({
-      userId: 123,
+      userId: id,
     });
   }
 

@@ -1,17 +1,14 @@
 const Router = require('koa-router');
 const { Root } = require('protobufjs');
-const proto = require('../proto.json');
-const Pizza = require('../entity/Pizza');
 const Order = require('../entity/Order');
-const _ = require('lodash');
+const proto = require('../proto.json');
 const net = require('../net');
 const argv = require('yargs').argv;
 
 const isMock = argv.isMock === 'true';
-
 const root = Root.fromJSON(proto);
-const reqProtoType = 'order.FetchMenuReq';
-const respProtoType = 'order.FetchMenuResp';
+const reqProtoType = 'order.FetchOrderReq';
+const respProtoType = 'order.FetchOrderResp';
 const reqType = root.lookupType(reqProtoType);
 const respType = root.lookupType(respProtoType);
 
@@ -20,26 +17,24 @@ const router = new Router();
 router.post('/', async (ctx, next) => {
   const protoBuff = ctx.proto;
   const result = reqType.decode(protoBuff);
+  const { orderId } = result;
 
   // mock
-  const { userId } = result;
   let body;
 
   if (isMock) {
-    const pizzas = _.range(15).map(v => Pizza.random());
-    const cart = Order.random();
-    cart.pizzas = pizzas;
+    const order = Order.random();
+    order.id = orderId;
     body = {
+      order,
       resultType: 1,
-      pizzas,
-      cart, 
     };
   } else {
     try {
-      response = await net.post('/fetchMenu', result);
+      response = await net.post('/fetchOrder', result);
       body = {
-        resultType: response.resultType, 
-        pizzas: response.pizzas.map(v => Pizza.fromJS(v)),
+        resultType: 1,
+        order: response.order,
       }
     } catch (e) {
       body = {
@@ -56,6 +51,6 @@ router.post('/', async (ctx, next) => {
 
 module.exports = {
   router,
-  command: 'FETCH_MENU',
-  reqUrl: '/fetch_menu',
+  command: 'FETCH_ORDER',
+  reqUrl: '/fetch_order',
 };
