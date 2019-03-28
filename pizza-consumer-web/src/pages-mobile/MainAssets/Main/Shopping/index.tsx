@@ -14,6 +14,7 @@ interface ShoppingCartProps {
   onPageChange(idx: MainAssetName, openType?: OpenType, ...extraInfo: any[]): void;
   menu: Order;
   pizzas: Pizza[];
+  menuId: string;
 }
 
 interface ShoppingCartState {
@@ -24,11 +25,12 @@ export default class Shopping extends React.PureComponent<ShoppingCartProps, Sho
 
   @autobind
   handleMenuUpdateClick(pizzaId: number, count: number) {
+    const { menuId } = this.props;
     return () => {
       updateOrderApi({
         pizzaId,
         count,
-        orderId: CART_ORDER_ID,
+        orderId: menuId,
       });
     };
   }

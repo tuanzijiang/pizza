@@ -24,7 +24,8 @@ export const fetchOrderApi = async (param: FetchOrderReq) => {
 
     [responseOrder].forEach(order => {
       const { address, pizzas } = order;
-      const addressId = address.id;
+      // @ts-ignore
+      const addressId = Address.fromJS(address).id;
 
       const pizzasInfo = pizzas.reduce((prev: any, curr) => {
         prev[0] = prev[0].concat(curr.id);

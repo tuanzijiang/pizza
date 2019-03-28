@@ -17,6 +17,7 @@ import Image from '@components/Image';
 interface SettlementProps {
   onPageChange(idx: MainAssetName, openType?: OpenType, ...extraInfo: any[]): void;
   entityStore: any;
+  commonStore: any;
 }
 
 interface SettlementState {
@@ -25,8 +26,9 @@ interface SettlementState {
 export default class Settlement extends React.PureComponent<SettlementProps, SettlementState> {
 
   @autobind
-  handleOrderClick() {
-    const { entityStore, onPageChange } = this.props;
+  async handleOrderClick() {
+    const { entityStore, onPageChange, commonStore } = this.props;
+    const { cart_id } = commonStore;
     const { orders, user } = entityStore;
 
     const currOrder = orders[CART_ORDER_ID];
@@ -34,9 +36,9 @@ export default class Settlement extends React.PureComponent<SettlementProps, Set
     const addressId = currOrder.address;
     const defaultAddressId = user.address;
     const userAddressId = addressId === 0 ? defaultAddressId : addressId;
-    const result = sendOrdersApi({
-      orderId,
+    const result = await sendOrdersApi({
       userAddressId,
+      orderId: orderId === CART_ORDER_ID ? cart_id : orderId,
     });
     if (result) {
       onPageChange(MainAssetName.Pay, OpenType.RIGHT, {

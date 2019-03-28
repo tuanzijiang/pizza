@@ -23,6 +23,7 @@ router.post('/', async (ctx, next) => {
 
   // mock
   const { userId } = result;
+
   let body;
 
   if (isMock) {
@@ -40,6 +41,7 @@ router.post('/', async (ctx, next) => {
       body = {
         resultType: response.resultType, 
         pizzas: response.pizzas.map(v => Pizza.fromJS(v)),
+        cart: response.cart,
       }
     } catch (e) {
       body = {

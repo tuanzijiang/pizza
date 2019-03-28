@@ -25,6 +25,7 @@ interface MainProps {
   orderIds: string[];
   updateNavIdx: (idx: number) => void;
   entityStore: any;
+  commonStore: any;
 }
 
 interface MainState { }
@@ -80,9 +81,10 @@ export default class Main extends React.PureComponent<MainProps, MainState> {
   }
 
   render() {
-    const { navIdx, entityStore, orderIds, onPageChange } = this.props;
+    const { navIdx, entityStore, orderIds, onPageChange, commonStore } = this.props;
     const { pizzas, addresses, orders, user } = entityStore;
     const menu = orders[CART_ORDER_ID];
+    const { cart_id } = commonStore;
 
     return (
       <div className="main-wrapper">
@@ -99,7 +101,7 @@ export default class Main extends React.PureComponent<MainProps, MainState> {
             'main-pageWrapper': true,
             'main-pageWrapper_active': navIdx === 0,
           })}>
-            <Menu pizzas={pizzas} menu={menu} user={user} />
+            <Menu pizzas={pizzas} menu={menu} user={user} menuId={cart_id} />
           </div>
           <div className={cx({
             'main-pageWrapper': true,
@@ -109,6 +111,7 @@ export default class Main extends React.PureComponent<MainProps, MainState> {
               pizzas={pizzas}
               menu={menu}
               onPageChange={onPageChange}
+              menuId={cart_id}
             />
           </div>
           <div className={cx({

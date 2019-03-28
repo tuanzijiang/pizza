@@ -3,6 +3,7 @@ const { Root } = require('protobufjs');
 const User = require('../entity/User');
 const proto = require('../proto.json');
 const argv = require('yargs').argv;
+const net = require('../net');
 
 const isMock = argv.isMock === 'true'
 const root = Root.fromJSON(proto);
