@@ -12,6 +12,7 @@ import { CART_ORDER_ID } from '@entity/Order';
 import { AddressUsage } from '../Address';
 import { sendOrdersApi } from '@src/services/api-send-order';
 import { openToast } from '@src/utils/store';
+import Image from '@components/Image';
 
 interface SettlementProps {
   onPageChange(idx: MainAssetName, openType?: OpenType, ...extraInfo: any[]): void;
@@ -118,6 +119,7 @@ export default class Settlement extends React.PureComponent<SettlementProps, Set
                 const currPizza = pizzas[pizzaId];
                 const currNums = currOrder.num;
                 const currNum = currNums[pizzaId];
+                const currImage = currPizza.img;
 
                 if (currNum === 0) {
                   return null;
@@ -126,7 +128,9 @@ export default class Settlement extends React.PureComponent<SettlementProps, Set
                 return (
                   <div className="settlement-pizzaItem" key={pizzaId}>
                     <div className="settlement-pizzaItemImage">
-                      <Icon name="pisa" classnames="settlement-pizzaItemPisa" />
+                      <Image url={currImage}>
+                        <Icon name="pisa" classnames="settlement-pizzaItemPisa" />
+                      </Image>
                     </div>
                     <div className="settlement-pizzaItemName">
                       {currPizza.name}

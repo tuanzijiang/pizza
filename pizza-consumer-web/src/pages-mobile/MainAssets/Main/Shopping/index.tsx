@@ -8,6 +8,7 @@ import { CART_ORDER_ID } from '@entity/Order';
 import { updateOrderApi } from '@services/api-update-order';
 import { MainAssetName } from '../..';
 import { OpenType } from '@biz-components/PageAssets';
+import Image from '@components/Image';
 
 interface ShoppingCartProps {
   onPageChange(idx: MainAssetName, openType?: OpenType, ...extraInfo: any[]): void;
@@ -52,13 +53,16 @@ export default class Shopping extends React.PureComponent<ShoppingCartProps, Sho
             const orderPizzaNum = num[orderPizzaId];
             const orderPizzaPrice = orderPizza.price;
             const orderPizzaName = orderPizza.name;
+            const img = orderPizza.img;
             return (
               <div
                 key={orderPizzaId}
                 className="shoppingCart-pizzaItem"
               >
                 <div className="shoppingCart-pizzaItemImg">
-                  <Icon name="pisa" classnames="shoppingCart-pizzaItemPisa" />
+                  <Image url={img}>
+                    <Icon name="pisa" classnames="shoppingCart-pizzaItemPisa" />
+                  </Image>
                 </div>
                 <div className="shoppingCart-pizzaItemContent">
                   <div className="shoppingCart-pizzaItemName">

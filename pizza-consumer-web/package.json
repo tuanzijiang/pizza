@@ -12,9 +12,8 @@
     "build": "yarn pb && webpack --config webpack.prod.js",
     "analysis": "webpack --config webpack.dev.js --profile --json > stats.json",
     "lint": "tslint --project . src/**/*.ts src/**/*.tsx",
-    "server:mock": "nodemon server/server --isMock true",
-    "server": "nodemon server/server --isMock false",
-    "mock": "nodemon mock/server",
+    "mock": "nodemon server/server --isMock true",
+    "server": "nodemon server/server --isMock false --address ",
     "pb": "yarn pb:web && yarn pb:server",
     "pb:server": "pbjs -t json ../pizza-protobuf/user.proto ../pizza-protobuf/order.proto > server/proto.json",
     "pb:web": "pbjs -t json ../pizza-protobuf/user.proto ../pizza-protobuf/order.proto > src/net/proto.json"

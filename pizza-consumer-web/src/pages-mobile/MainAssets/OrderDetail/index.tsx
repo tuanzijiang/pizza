@@ -13,6 +13,7 @@ import cx from 'classnames';
 import Icon from '@biz-components/Icon';
 import { fetchOrderApi } from '@src/services/api-fetch-order';
 import { cancelOrdersApi } from '@src/services/api-cancel-order';
+import Image from '@components/Image';
 
 interface OrderDetailProps {
   onPageChange(idx: MainAssetName, openType?: OpenType, ...extraInfo: any[]): void;
@@ -153,6 +154,7 @@ export default class OrderDetail extends React.PureComponent<OrderDetailProps, O
               const currPizza = pizzas[pizzaId];
               const currNums = currOrder.num;
               const currNum = currNums[pizzaId];
+              const currImg = currPizza.img;
 
               if (currNum === 0) {
                 return null;
@@ -161,7 +163,9 @@ export default class OrderDetail extends React.PureComponent<OrderDetailProps, O
               return (
                 <div className="orderDetail-pizzaItem" key={pizzaId}>
                   <div className="orderDetail-pizzaItemImage">
-                    <Icon name="pisa" classnames="orderDetail-pizzaItemPisa" />
+                    <Image url={currImg}>
+                      <Icon name="pisa" classnames="orderDetail-pizzaItemPisa" />
+                    </Image>
                   </div>
                   <div className="orderDetail-pizzaItemName">
                     {currPizza.name}

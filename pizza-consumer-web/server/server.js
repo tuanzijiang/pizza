@@ -3,9 +3,18 @@ const cors = require('koa2-cors');
 const bodyParser = require('koa-bodyparser')
 const Router = require('koa-router');
 const getRawBody = require('raw-body');
+const argv = require('yargs').argv;
 
+const check = require('./utils/check');
 const routers = require('./routers/index');
 const log = require('./utils/log');
+
+
+
+if (argv.isMock === 'false' && !check(argv.address)) {
+  console.error(`请输入ip和port，形如：192.168.1.1:8080`);
+  return;
+}
 
 const app = new koa();
 const PORT = 3000;
@@ -27,7 +36,7 @@ app.use(async (ctx, next) => {
 
 const router = new Router();
 
-routers.forEach(({reqUrl, reqRouter}) => {
+routers.forEach(({ reqUrl, reqRouter }) => {
   router.use(reqUrl, reqRouter.routes(), reqRouter.allowedMethods())
 });
 
