@@ -33,7 +33,7 @@ module.exports = merge(common, {
   devServer: {
     https: false,
     host: '0.0.0.0',
-    openPage: '/index.html',
+    openPage: 'index.html',
     contentBase: path.resolve(__dirname, './src/'),
     allowedHosts: [
       '.local',
