@@ -8,6 +8,8 @@ import { entity, pageMobile, pagePc } from '@store/action';
 import { FetchOrderReq, FetchOrderResp } from '@src/net/api-fetch-order';
 import { AddressWeakSchema } from '@src/entity/schema';
 
+import { add, OBJECT_STORE_NAMES } from '@utils/db';
+
 export const fetchOrderApi = async (param: FetchOrderReq) => {
   const resp = await net.request(Command.FETCH_ORDER, param);
   const { resultType, order: responseOrder } = resp as FetchOrderResp;
@@ -57,6 +59,11 @@ export const fetchOrderApi = async (param: FetchOrderReq) => {
     store.dispatch(entity.orders.updateOrders(updateOrders));
     store.dispatch(pageMobile.main.updateOrdersId(currOrdersIds));
     store.dispatch(pagePc.main.updateOrdersId(currOrdersIds));
+
+    // 插入数据库
+    await add(OBJECT_STORE_NAMES.PIZZA, updatePizzas);
+    await add(OBJECT_STORE_NAMES.ADDRESS, Object.values(updateAddress));
+    await add(OBJECT_STORE_NAMES.ORDER, Object.values(updateOrders));
   }
 
   return resp;

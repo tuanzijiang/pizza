@@ -14,4 +14,5 @@ export const error = (tag: string, extraInfo: string, ...params: any) => {
 
 export enum LogTag {
   NET = 'NET',
+  DB = 'DB',
 }

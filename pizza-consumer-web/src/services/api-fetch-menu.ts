@@ -6,6 +6,8 @@ import store from '@store/index';
 import { entity } from '@store/action';
 import commonActionCreator from '@store/reducers/common/action';
 
+import { add, OBJECT_STORE_NAMES } from '@utils/db';
+
 export const fetchMenuApi = async (param: FetchMenuReq) => {
   const menu = await net.request(Command.FETCH_MENU, param);
   const { resultType, pizzas, cart } = menu as FetchMenuResp;
@@ -35,6 +37,13 @@ export const fetchMenuApi = async (param: FetchMenuReq) => {
     store.dispatch(entity.pizzas.updatePizzas(pizzasInfo[2]));
     store.dispatch(entity.orders.updateOrder(cartOrder));
     store.dispatch(commonActionCreator.updateCartId(cart.id));
+
+    await add(OBJECT_STORE_NAMES.COMMON, [{
+      id: CART_ORDER_ID,
+      menuId: cart.id,
+    }]);
+    await add(OBJECT_STORE_NAMES.PIZZA, pizzasInfo[2]);
+    await add(OBJECT_STORE_NAMES.ORDER, [cartOrder]);
   }
   return menu;
 };
