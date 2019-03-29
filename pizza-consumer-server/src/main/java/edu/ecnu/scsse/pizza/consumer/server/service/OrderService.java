@@ -1,33 +1,26 @@
 package edu.ecnu.scsse.pizza.consumer.server.service;
 
 import com.alipay.api.AlipayApiException;
-import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradeWapPayModel;
-import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradeWapPayRequest;
 import com.alipay.api.response.AlipayTradeWapPayResponse;
 import com.google.gson.Gson;
 import edu.ecnu.scsse.pizza.consumer.server.exception.*;
 import edu.ecnu.scsse.pizza.consumer.server.exception.IllegalArgumentException;
-import edu.ecnu.scsse.pizza.consumer.server.model.ResultType;
-import edu.ecnu.scsse.pizza.consumer.server.model.entity.Address;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Order;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Pizza;
-import edu.ecnu.scsse.pizza.consumer.server.model.order.FetchOrdersResponse;
 import edu.ecnu.scsse.pizza.consumer.server.utils.AlipayConfig;
 import edu.ecnu.scsse.pizza.consumer.server.utils.EntityConverter;
 import edu.ecnu.scsse.pizza.consumer.server.utils.HttpUtils;
 import edu.ecnu.scsse.pizza.data.domain.*;
 import edu.ecnu.scsse.pizza.data.enums.*;
-import edu.ecnu.scsse.pizza.consumer.server.model.order.FetchOrderResponse;
 import edu.ecnu.scsse.pizza.data.repository.*;
 import edu.ecnu.scsse.pizza.data.util.PageRequestFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -91,17 +84,22 @@ public class OrderService {
         if (orderEntityOptional.isPresent()){
             OrderEntity entity = orderEntityOptional.get();
             Order order = EntityConverter.convert(entity);
-            // query Address
-            Future queryFuture = WORKER.submit(() -> this.supplementAddress(entity, order));
-            // query Pizzas
-            this.supplementPizzas(entity, order, order.getStatus() == OrderStatus.CART);
+            if (order.getStatus() != OrderStatus.CART) {
+                // query Address
+                Future queryFuture = WORKER.submit(() -> this.supplementAddress(entity, order));
+                // query Pizzas
+                this.supplementPizzas(entity, order, order.getStatus() == OrderStatus.CART);
 
-            try {
-                queryFuture.get(1, TimeUnit.SECONDS);
-            } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                throw new ConsumerServerException(ExceptionType.REPOSITORY,
-                        "Fail to query Address while assembling the order entity."
-                        , e);
+                try {
+                    queryFuture.get(1, TimeUnit.SECONDS);
+                } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                    throw new ConsumerServerException(ExceptionType.REPOSITORY,
+                            "Fail to query Address while assembling the order entity."
+                            , e);
+                }
+            } else {
+                // query Pizzas
+                this.supplementPizzas(entity, order, order.getStatus() == OrderStatus.CART);
             }
 
             return order;
@@ -117,7 +115,7 @@ public class OrderService {
      * @param orderStatuses order status list
      * @return order
      */
-    public List<Order> fetchOrders(Integer userId, List<OrderStatus> orderStatuses, String lastOrderUuid, Integer count) throws NotFoundException, IllegalArgumentException {
+    public List<Order> fetchOrders(Integer userId, List<OrderStatus> orderStatuses, String lastOrderUuid, Integer count) throws ConsumerServerException {
         // arg check
         if (userId == null) {
             throw new IllegalArgumentException("userId can't be null.");
@@ -133,22 +131,15 @@ public class OrderService {
         List<Integer> orderStatuesValue = orderStatuses.stream()
                 .mapToInt(OrderStatus::getDbValue)
                 .boxed().collect(Collectors.toList());
-        if (orderStatuses.isEmpty()) {
-            throw new NotFoundException(String.format("Can't find relevant state in db with orderStatus {%s}.",
-                    GSON.toJson(orderStatuses.toString())));
-        }
 
-        Optional<Integer> lastOrderId = lastOrderUuid == null || lastOrderUuid.isEmpty() ?  Optional.of(0):
-                orderJpaRepository.findIdByOrderUuid(lastOrderUuid);
-        if (lastOrderId.isPresent()) {
-            List<OrderEntity> orderEntityList = orderJpaRepository.findByUserIdAndStateInAndIdGreaterThan(
-                    userId, orderStatuesValue,
-                    lastOrderId.get(),
-                    PageRequestFactory.create().count(count).asc("id").build());
-            return this.convert(orderEntityList);
-        } else {
-            throw new NotFoundException("There is no order where 'orderUuid'={%s}", lastOrderUuid);
-        }
+        Integer lastOrderId = lastOrderUuid == null || lastOrderUuid.isEmpty() ? -1:
+                orderJpaRepository.findIdByOrderUuid(lastOrderUuid)
+                        .orElseThrow(() -> new NotFoundException("There is no order where 'orderUuid'={%s}", lastOrderUuid));
+        List<OrderEntity> orderEntityList = orderJpaRepository.findByUserIdAndStateInAndIdGreaterThan(
+                userId, orderStatuesValue,
+                lastOrderId,
+                PageRequestFactory.create().count(count).asc("id").build());
+        return this.convert(orderEntityList);
     }
 
     /**
@@ -157,13 +148,13 @@ public class OrderService {
      * @param userId user id
      * @return new cart order
      */
-    public Order getCartOrder(Integer userId, List<Pizza> menus) throws IllegalArgumentException {
+    public Order getCartOrder(Integer userId, List<Pizza> menus) throws ConsumerServerException {
         if (userId == null) {
             throw new IllegalArgumentException("userId must not be NULL.");
         }
 
-        OrderEntity orderEntity = null;
-        Order result = null;
+        OrderEntity orderEntity;
+        Order result;
         Optional<OrderEntity> optionalOrderEntity = orderJpaRepository.
                 findFirstByUserIdAndStateOrderByIdDesc(userId, OrderStatus.CART.getDbValue());
         if (optionalOrderEntity.isPresent()) {
@@ -175,7 +166,7 @@ public class OrderService {
             orderEntity.setState(OrderStatus.CART.getDbValue());
             orderEntity.setUserId(userId);
             orderEntity.setOrderUuid(UUID.randomUUID().toString());
-            orderEntity = orderJpaRepository.save(orderEntity);
+            orderJpaRepository.save(orderEntity);
             result = EntityConverter.convert(orderEntity);
         }
         return result;
@@ -200,7 +191,7 @@ public class OrderService {
      * @throws NotFoundException
      * @throws IllegalArgumentException
      */
-    public int updateOrder(String orderUuid, Integer menuId, Integer count) throws NotFoundException, IllegalArgumentException {
+    public int updateOrder(String orderUuid, Integer menuId, Integer count) throws ConsumerServerException {
         if (orderUuid == null || !this.isPositive(menuId) || !this.isPositive(count)) {
             throw new IllegalArgumentException("IllegalArgument orderUuid[%s], menuId[%s], count[%s]", orderUuid, menuId, count);
         }
@@ -215,7 +206,7 @@ public class OrderService {
      *
      * @param orderUuid orderUuid
      */
-    public boolean cancelOrder(String orderUuid) throws NotFoundException {
+    public boolean cancelOrder(String orderUuid) throws ConsumerServerException {
         OrderEntity order = orderJpaRepository.findByOrderUuid(orderUuid)
                 .orElseThrow(() -> new NotFoundException("No order found with orderUuid[%s]", orderUuid));
         if (this.canOrderCancel(order)) {
@@ -232,21 +223,17 @@ public class OrderService {
      * @return phones
      * @throws NotFoundException
      */
-    public Phones getPhones(String orderUuid) throws NotFoundException {
+    public Phones getPhones(String orderUuid) throws ConsumerServerException {
         OrderEntity order = orderJpaRepository.findByOrderUuid(orderUuid)
                 .orElseThrow(() -> new NotFoundException("No order found with orderUuid[%s]", orderUuid));
         Phones phones = new Phones();
-        if (this.isPositive(order.getDriverId())) {
-            DriverEntity driverEntity = driverJpaRepository.findById(order.getDriverId())
-                    .orElseThrow(() -> new NotFoundException("No driver found with id[%s]", order.getDriverId()));
-            phones.deliverymanPhone = driverEntity.getPhone();
-        }
+        DriverEntity driverEntity = driverJpaRepository.findById(order.getDriverId())
+                .orElseThrow(() -> new NotFoundException("No driver found with id[%s]", order.getDriverId()));
+        phones.deliverymanPhone = driverEntity.getPhone();
 
-        if (this.isPositive(order.getShopId())) {
-             PizzaShopEntity shopEntity = pizzaShopJpaRepository.findById(order.getShopId())
-                    .orElseThrow(() -> new NotFoundException("No shop found with id[%s]", order.getShopId()));
-            phones.shopPhone = shopEntity.getPhone();
-        }
+        PizzaShopEntity shopEntity = pizzaShopJpaRepository.findById(order.getShopId())
+                .orElseThrow(() -> new NotFoundException("No shop found with id[%s]", order.getShopId()));
+        phones.shopPhone = shopEntity.getPhone();
         return phones;
     }
 
@@ -259,7 +246,7 @@ public class OrderService {
      * @throws IllegalArgumentException
      * @throws ServiceException
      */
-    public Order sendOrder(String orderUuid, Integer userAddressId) throws IllegalArgumentException, ServiceException {
+    public Order sendOrder(String orderUuid, Integer userAddressId) throws ConsumerServerException {
         // arg check
         if (orderUuid == null) {
             throw new IllegalArgumentException("orderUuid can't be null.");
@@ -278,8 +265,7 @@ public class OrderService {
     }
 
 
-    // todo
-    public String payRequest(String orderUuid, double totalPrice) throws PayFailureException, IllegalArgumentException {
+    public String payRequest(String orderUuid, double totalPrice) throws ConsumerServerException {
         // arg check
         if (orderUuid == null) {
             throw new IllegalArgumentException("orderUuid can't be null.");
@@ -288,7 +274,7 @@ public class OrderService {
             throw new IllegalArgumentException("totalPrice must be positive.");
         }
 
-        AlipayClient client = new DefaultAlipayClient(AlipayConfig.GATE_WAY, AlipayConfig.APP_ID, AlipayConfig.PRIVATE_KEY, AlipayConfig.FORMAT, AlipayConfig.CHARSET, AlipayConfig.ALIPAY_PUBLIC_KEY,AlipayConfig.SIGNTYPE);
+        DefaultAlipayClient client = new DefaultAlipayClient(AlipayConfig.GATE_WAY, AlipayConfig.APP_ID, AlipayConfig.PRIVATE_KEY, AlipayConfig.FORMAT, AlipayConfig.CHARSET, AlipayConfig.ALIPAY_PUBLIC_KEY, AlipayConfig.SIGNTYPE);
         AlipayTradeWapPayRequest alipayRequest = new AlipayTradeWapPayRequest();
         // 封装请求支付信息
         AlipayTradeWapPayModel model = new AlipayTradeWapPayModel();
@@ -538,6 +524,8 @@ public class OrderService {
                         .ifPresent(m -> pizzas.add(EntityConverter.convert(om, m)));
             }
             order.setPizzas(pizzas);
+        } else {
+            order.setPizzas(Collections.EMPTY_LIST);
         }
     }
 

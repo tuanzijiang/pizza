@@ -63,7 +63,7 @@ public class OrderController {
             FetchOrdersResponse response = new FetchOrdersResponse();
             response.setOrders(orders);
             return response;
-        } catch (NotFoundException | IllegalArgumentException e) {
+        } catch (ConsumerServerException e) {
             return new FetchOrdersResponse(e);
         }
     }
@@ -78,7 +78,7 @@ public class OrderController {
         response.setPizzas(orderService.getInSaleMenu());
         try {
             response.setCart(orderService.getCartOrder(request.getUserId(), response.getPizzas()));
-        } catch (IllegalArgumentException e) {
+        } catch (ConsumerServerException e) {
             response.setException(e);
         }
         return response;
@@ -134,7 +134,7 @@ public class OrderController {
                 return response;
             }
 
-        } catch (NotFoundException e) {
+        } catch (ConsumerServerException e) {
             return new CancelOrderResponse(e);
         }
     }
@@ -152,7 +152,7 @@ public class OrderController {
             response.setServicePhone(phones.getServicePhone());
             response.setShopPhone(phones.getShopPhone());
             return response;
-        } catch (NotFoundException e) {
+        } catch (ConsumerServerException e) {
             return new FetchPhoneResponse(e);
         }
 
@@ -169,7 +169,7 @@ public class OrderController {
             PayOrderResponse response = new PayOrderResponse();
             response.setForm(form);
             return response;
-        } catch (PayFailureException | IllegalArgumentException e) {
+        } catch (ConsumerServerException e) {
             return new PayOrderResponse(e);
         }
 

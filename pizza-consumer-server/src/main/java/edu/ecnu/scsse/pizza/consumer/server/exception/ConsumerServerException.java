@@ -6,8 +6,14 @@ public class ConsumerServerException extends Exception {
 
     protected String hintMessage = "服务器忙，请稍后重试。";
 
+    public ConsumerServerException(ExceptionType exceptionType, String message) {
+        super(message);
+        this.exceptionType = exceptionType;
+    }
+
     public ConsumerServerException(ExceptionType exceptionType,  String hintMessage, String message) {
         super(message);
+        this.hintMessage = hintMessage;
         this.exceptionType = exceptionType;
     }
 
