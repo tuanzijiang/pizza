@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.text.ParseException;
@@ -93,4 +94,17 @@ public class MenuController extends BaseController{
             return new MenuDetailResponse(e);
         }
     }
+
+    /***
+     * 上传披萨图片
+     * @request
+     * @return
+     */
+    @RequestMapping(value = "/uploadImage",method = RequestMethod.POST)
+    @ResponseBody
+    public String uploadImage(@RequestParam MultipartFile file) throws ParseException,BusinessServerException{
+        return menuService.uploadImage(file);
+    }
+
+
 }

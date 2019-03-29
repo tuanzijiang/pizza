@@ -26,13 +26,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class MenuService extends SessionService {
     private static final Logger log = LoggerFactory.getLogger(MenuService.class);
+
+    private static String UPLOADED_FOLDER = "D:\\Programming\\javaprojects\\pizza-express\\image\\";
 
     @Autowired
     MenuJpaRepository menuJpaRepository;
@@ -161,15 +169,24 @@ public class MenuService extends SessionService {
         String type = OperateType.INSERT.getExpression();//操作类型
         String object = OperateObject.MENU.getExpression();//操作对象
         try {
-            //更新菜品信息
+            //获得菜品信息
             response = new MenuDetailResponse();
             MenuEntity menuEntity = new MenuEntity();
             CopyUtils.copyProperties(menu,menuEntity);
             menuEntity.setState(menu.getState().getDbValue());
             menuEntity.setTag(menu.getTagName().getDbValue());
+
+            //获得菜品图片信息
+            MultipartFile imageFile = (MultipartFile)request.getImage();
+            String msg = uploadMenuImageFile(imageFile,menuEntity);
+            if(!msg.contains("Success")) {
+                response.setResultType(ResultType.FAILURE);
+                response.setErrorMsg(msg);
+                return response;
+            }
             menuJpaRepository.saveAndFlush(menuEntity);
             int menuId = menuEntity.getId();
-            //更新菜品原料信息
+            //获得菜品原料信息
             List<Ingredient> ingredientList = request.getIngredients();//披萨的原料列表
             for(Ingredient ingredient:ingredientList) {
                 int ingredientId = ingredient.getId();
@@ -200,6 +217,53 @@ public class MenuService extends SessionService {
             throw new BusinessServerException(ExceptionType.REPOSITORY, "Fail to insert menu.", e);
         }
         return response;
+    }
+
+    public String uploadImage(MultipartFile file){
+        String msg;
+//        String fileName = file.getOriginalFilename();
+        if (file.isEmpty())
+            msg = "Failed: empty file.";
+//        else if(!fileName.endsWith("jpg")&&!fileName.endsWith("jpeg")&&!fileName.endsWith("png"))
+//            msg = "Failed: file must be in JPG/JPEG/PNG format.";
+        else{
+            try {
+                // Get the file and save it somewhere
+                byte[] bytes = file.getBytes();
+                Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
+                Files.write(path, bytes);
+                //entity.setImage(path.toString());
+                msg = "Success: upload file successfully.";
+
+            } catch (IOException e) {
+                msg = e.getMessage();
+                e.printStackTrace();
+            }
+        }
+        return msg;
+    }
+
+    private String uploadMenuImageFile(MultipartFile file, MenuEntity entity){
+        String msg;
+        if (file.isEmpty()) {
+            msg = "Failed: empty file.";
+        }
+        else{
+            try {
+                // Get the file and save it somewhere
+                byte[] bytes = file.getBytes();
+                Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
+                Files.write(path, bytes);
+                //将图片路径保存至数据库
+                //entity.setImage(path.toString());
+                msg = "Success: upload file successfully.";
+
+            } catch (IOException e) {
+                msg = e.getMessage();
+                e.printStackTrace();
+            }
+        }
+        return msg;
     }
 
 
