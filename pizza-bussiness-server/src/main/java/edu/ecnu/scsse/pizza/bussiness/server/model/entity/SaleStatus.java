@@ -1,7 +1,6 @@
 package edu.ecnu.scsse.pizza.bussiness.server.model.entity;
 
 import com.alibaba.fastjson.JSONObject;
-import jdk.nashorn.internal.parser.JSONParser;
 
 public class SaleStatus{
     private String date;
