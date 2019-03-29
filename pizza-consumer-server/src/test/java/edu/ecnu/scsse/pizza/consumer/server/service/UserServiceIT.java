@@ -1,11 +1,8 @@
-package edu.ecnu.scsse.pizza.consumer.server;
+package edu.ecnu.scsse.pizza.consumer.server.service;
 
 import edu.ecnu.scsse.pizza.consumer.server.model.ResultType;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Address;
 import edu.ecnu.scsse.pizza.consumer.server.model.user.*;
-import edu.ecnu.scsse.pizza.consumer.server.service.UserService;
-import edu.ecnu.scsse.pizza.data.domain.AddressEntity;
-import edu.ecnu.scsse.pizza.data.enums.AddressTag;
 import edu.ecnu.scsse.pizza.data.enums.Sex;
 import edu.ecnu.scsse.pizza.data.enums.UpdateUserType;
 import edu.ecnu.scsse.pizza.data.repository.AddressJpaRepository;
@@ -15,16 +12,12 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-public class UserServiceUT {
+public class UserServiceIT {
 
     @Autowired
     AddressJpaRepository addressJpaRepository;
@@ -32,7 +25,7 @@ public class UserServiceUT {
     @Autowired
     UserService userService;
 
-    private static final Logger log = LoggerFactory.getLogger(UserServiceUT.class);
+    private static final Logger log = LoggerFactory.getLogger(UserServiceIT.class);
 
 
     @Test
@@ -112,6 +105,14 @@ public class UserServiceUT {
         loginRequest.setType(LoginRequest.Type.PASSWORD);
 
         LoginResponse response=userService.login(loginRequest);
+        Assert.assertEquals(response.getResultType(), ResultType.FAILURE);
+    }
+
+    @Test
+    public void testSignUpEmptyParamFailure() {
+        SignUpRequest signUpRequest=new SignUpRequest();
+
+        SignUpResponse response=userService.signUp(signUpRequest);
         Assert.assertEquals(response.getResultType(), ResultType.FAILURE);
     }
 
