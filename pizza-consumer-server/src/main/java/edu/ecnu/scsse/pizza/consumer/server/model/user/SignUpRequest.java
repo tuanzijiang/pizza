@@ -8,5 +8,5 @@ public class SignUpRequest {
     private String phone;
     private String password;
     private String email;
-
+    private String verification;
 }
