@@ -5,10 +5,7 @@ import edu.ecnu.scsse.pizza.bussiness.server.exception.PermissionException;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Ingredient;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.ShopIngredient;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
-import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ingredient.BatchImportResponse;
-import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ingredient.IngredientDetailRequest;
-import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ingredient.IngredientDetailResponse;
-import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ingredient.IngredientManageResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ingredient.*;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDetailRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.service.IngredientService;
 import org.slf4j.Logger;
@@ -123,8 +120,17 @@ public class IngredientController extends BaseController{
      */
     @RequestMapping(value = "/buyIngredient",method = RequestMethod.GET)
     @ResponseBody
-    public BaseResponse buyIngredient(@RequestParam int shopId,@RequestParam int ingredientId){
-        return ingredientService.buyIngredient(shopId, ingredientId);
+    public BaseResponse buyIngredient(@RequestBody BuyIngredientRequest request){
+        int adminId = getCurrentAdminId();
+        if(adminId!=-1) {
+            return ingredientService.buyIngredient(request);
+        }
+        else{
+            PermissionException e = new PermissionException("Admin is logout.");
+            log.warn("Admin is logout.", e);
+            return new IngredientDetailResponse(e);
+        }
+
     }
 
 }

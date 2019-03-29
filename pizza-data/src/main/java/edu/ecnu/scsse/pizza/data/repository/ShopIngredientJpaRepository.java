@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ShopIngredientJpaRepository extends JpaRepository<ShopIngredientEntity,Integer> {
 
@@ -19,4 +20,7 @@ public interface ShopIngredientJpaRepository extends JpaRepository<ShopIngredien
     int updateCountByShopIdAndIngredientId(int count,int shopId,int ingredientId);
 
     List<ShopIngredientEntity> findByShopId(int shopId);
+
+    @Query(value="select * from shop_ingredient where shop_id=?1 and ingredient_id=?2",nativeQuery = true)
+    Optional<ShopIngredientEntity> findByShopIdAndIngredientId(int shopId, int ingredientId);
 }
