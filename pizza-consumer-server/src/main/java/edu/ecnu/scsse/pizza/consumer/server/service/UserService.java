@@ -54,9 +54,13 @@ public class UserService {
                 Optional<UserAddressEntity> userAddressEntityOptional = userAddressJpaRepository.findByUserIdAndAddressId(
                         user.getId(),
                         addressId);
-                Optional<AddressEntity> addressEntity = addressJpaRepository.findById(addressId);
-                Address address = EntityConverter.convert(userAddressEntityOptional.get(), addressEntity.get());
-                user.setAddress(address);
+                Optional<AddressEntity> addressEntityOptional = addressJpaRepository.findById((int) addressId);
+                if (addressEntityOptional.isPresent()) {
+                    Address address = EntityConverter.convert(
+                            userAddressEntityOptional.get(),
+                            addressEntityOptional.get());
+                    user.setAddress(address);
+                }
             }
             fetchUserResponse.setUser(user);
             fetchUserResponse.setResultType(ResultType.SUCCESS);
@@ -172,8 +176,9 @@ public class UserService {
 
     /**
      * 注册
-     *
+     * <p>
      * //Todo: 验证码
+     *
      * @param signUpRequest
      * @return
      */
@@ -181,7 +186,7 @@ public class UserService {
         SignUpResponse signUpResponse = new SignUpResponse();
 
         // 验证码登录
-        if(signUpRequest.getEmail()==null || signUpRequest.getEmail().equals("")) {
+        if (signUpRequest.getEmail() == null || signUpRequest.getEmail().equals("")) {
             UserEntity userEntity = new UserEntity();
             userEntity.setPhone(signUpRequest.getPhone());
             try {
@@ -263,13 +268,12 @@ public class UserService {
     public AddUserAddressResponse addUserAddress(AddUserAddressRequest addUserAddressRequest) {
         AddUserAddressResponse response = new AddUserAddressResponse();
         Address address = addUserAddressRequest.getAddress();
-        AddressEntity addressEntity = new AddressEntity();
+        AddressEntity addressEntity;
         try {
-            AmapLocation.Geocode geocode=HttpUtils.queryGeo(address.getAddress());
-            if(geocode!=null) {
-                addressEntity=EntityConverter.convert(geocode);
-            }
-            else {
+            AmapLocation.Geocode geocode = HttpUtils.queryGeo(address.getAddress());
+            if (geocode != null) {
+                addressEntity = EntityConverter.convert(geocode);
+            } else {
                 response.setResultType(ResultType.FAILURE);
                 return response;
             }
@@ -322,12 +326,12 @@ public class UserService {
             List<Address> addresses = new ArrayList<>();
             for (UserAddressEntity userAddressEntity : userAddressEntityList) {
                 Address address = EntityConverter.convert(userAddressEntity,
-                        addressJpaRepository.findById(userAddressEntity.getAddressId()).get());
+                        addressJpaRepository.findById((int) userAddressEntity.getAddressId()).get());
                 addresses.add(address);
             }
 
             response.setAddresses(addresses);
-        }catch (Exception e) {
+        } catch (Exception e) {
             response.setResultType(ResultType.FAILURE);
         }
 
