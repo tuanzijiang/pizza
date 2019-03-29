@@ -19,6 +19,7 @@ const pay_config = [{
 }];
 
 const Order_Status_Text = {
+  [OrderStatusSchema.UNKONWN]: '未知',
   [OrderStatusSchema.CART]: '已添加',
   [OrderStatusSchema.UNPAID]: '未支付',
   [OrderStatusSchema.PAID]: '已支付',
@@ -28,9 +29,12 @@ const Order_Status_Text = {
   [OrderStatusSchema.DELIVERING]: '配送中',
   [OrderStatusSchema.RECEIVED]: '已接单',
   [OrderStatusSchema.FINISH]: '已完成',
+  [OrderStatusSchema.WAIT_DELIVERY]: '待配送',
+  [OrderStatusSchema.RECEIVE_FAIL]: '商家接单失败',
 };
 
 const Order_Status_Info = {
+  [OrderStatusSchema.UNKONWN]: '未知',
   [OrderStatusSchema.CART]: '您的订单已添加，请尽快提交',
   [OrderStatusSchema.UNPAID]: '您的订单已提交，请尽快完成支付',
   [OrderStatusSchema.PAID]: '您的订单尚未接单，请耐心等待',
@@ -40,9 +44,12 @@ const Order_Status_Info = {
   [OrderStatusSchema.DELIVERING]: '您的订单正在配送，请耐心等待',
   [OrderStatusSchema.RECEIVED]: '您的订单已接单，骑手正在赶往商家',
   [OrderStatusSchema.FINISH]: '您的订单已完成',
+  [OrderStatusSchema.WAIT_DELIVERY]: '您的订单待配送',
+  [OrderStatusSchema.RECEIVE_FAIL]: '商家接单失败',
 };
 
 const Order_Status_Button = {
+  [OrderStatusSchema.UNKONWN]: '未知',
   [OrderStatusSchema.CART]: '下单',
   [OrderStatusSchema.UNPAID]: '支付',
   [OrderStatusSchema.PAID]: '取消订单',
@@ -52,6 +59,8 @@ const Order_Status_Button = {
   [OrderStatusSchema.DELIVERING]: '取消订单',
   [OrderStatusSchema.RECEIVED]: '取消订单',
   [OrderStatusSchema.FINISH]: '再来一单',
+  [OrderStatusSchema.WAIT_DELIVERY]: '取消订单',
+  [OrderStatusSchema.RECEIVE_FAIL]: '再来一单',
 };
 
 interface OrderDetailProps {

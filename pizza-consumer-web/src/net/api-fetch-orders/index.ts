@@ -4,7 +4,7 @@ export interface FetchOrdersReq {
   userId: number;
   lastOrderId: string;
   num: number;
-  status?: OrderStatus;
+  status?: OrderStatus[];
 }
 
 export interface FetchOrdersResp {

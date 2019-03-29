@@ -21,15 +21,18 @@ export enum VerificationType {
 }
 
 export enum OrderStatus {
-  CART = 0,
-  UNPAID = 1,
-  PAID = 2,
-  CANCEL_CHECKING = 3,
-  CANCELED = 4,
-  CANCEL_FAILED = 5,
-  DELIVERING = 6,
-  RECEIVED = 7,
-  FINISH = 8,
+  UNKONWN = 0,
+  CART = 1,
+  UNPAID = 2,
+  PAID = 3,
+  CANCEL_CHECKING = 4,
+  CANCELED = 5,
+  CANCEL_FAILED = 6,
+  DELIVERING = 7,
+  RECEIVED = 8,
+  FINISH = 9,
+  WAIT_DELIVERY = 10,
+  RECEIVE_FAIL = 11,
 }
 
 export enum PizzaStatus {
