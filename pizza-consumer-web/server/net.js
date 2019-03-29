@@ -31,15 +31,15 @@ const post = (path = '/', data = {}) => new Promise((resolve, reject) => {
   const req = http.request(options, (res) => {
     res.setEncoding('utf8');
     res.on('data', function (chunk) {
-      console.warn(`[post] origin`, chunk);
       try {
         // resultType枚举映射
         const obj = JSON.parse(chunk);
         obj.resultType = obj.resultType === 'SUCCESS' ? 1 : 0;
-        console.log(`[post]${totalPath} end: ${JSON.stringify(obj)}`);
+        console.log(`[post] ${totalPath} end: ${JSON.stringify(obj)}`);
         resolve(obj);
       } catch (e) {
-        console.error(`[posrt] error`,e);
+        console.warn(`[post] origin`, chunk);
+        console.error(`[post] error`, e);
         reject(e);
       }
 

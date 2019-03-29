@@ -9,8 +9,25 @@ import { FetchOrdersReq, FetchOrdersResp } from '@src/net/api-fetch-orders';
 import { AddressWeakSchema } from '@src/entity/schema';
 
 import { add, OBJECT_STORE_NAMES } from '@utils/db';
+import { OrderStatus } from '@src/net/common';
+
+const ALL_STATUS = [
+  // OrderStatus.UNKONWN,
+  OrderStatus.CANCELED,
+  OrderStatus.CANCEL_CHECKING,
+  OrderStatus.CANCEL_FAILED,
+  // OrderStatus.CART,
+  OrderStatus.DELIVERING,
+  OrderStatus.FINISH,
+  OrderStatus.PAID,
+  OrderStatus.RECEIVED,
+  OrderStatus.UNPAID,
+  OrderStatus.WAIT_DELIVERY,
+  OrderStatus.RECEIVE_FAIL,
+];
 
 export const fetchOrdersApi = async (param: FetchOrdersReq) => {
+  param.status = ALL_STATUS;
   const resp = await net.request(Command.FETCH_ORDERS, param);
   const { resultType, orders } = resp as FetchOrdersResp;
 
