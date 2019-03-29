@@ -1,8 +1,10 @@
 package edu.ecnu.scsse.pizza.bussiness.server.controller;
 
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.order.*;
 import edu.ecnu.scsse.pizza.bussiness.server.service.OrderService;
+import edu.ecnu.scsse.pizza.data.enums.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -76,6 +78,24 @@ public class OrderController {
     @ResponseBody
     public List<Order> getPendingRequestList(){
         return orderService.getPendingRequestList();
+    }
+
+    /**
+     * 通过审核
+     */
+    @RequestMapping(value = "/allowCancel",method = RequestMethod.GET)
+    @ResponseBody
+    public BaseResponse allowCancel(@RequestParam int orderId){
+        return orderService.changeOrderStatus(orderId, OrderStatus.CANCELED);
+    }
+
+    /**
+     * 拒绝审核
+     */
+    @RequestMapping(value = "/denyCancel",method = RequestMethod.GET)
+    @ResponseBody
+    public BaseResponse denyCancel(@RequestParam int orderId){
+        return orderService.changeOrderStatus(orderId, OrderStatus.CANCEL_FAILED);
     }
 
 

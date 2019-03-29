@@ -4,6 +4,8 @@ import edu.ecnu.scsse.pizza.bussiness.server.exception.NotFoundException;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Menu;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.SaleStatus;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ResultType;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
 import edu.ecnu.scsse.pizza.data.domain.*;
 import edu.ecnu.scsse.pizza.data.enums.OrderStatus;
@@ -137,6 +139,36 @@ public class OrderService {
         }
 
         return pendingList;
+    }
+
+    public BaseResponse changeOrderStatus(int orderId, OrderStatus status){
+        OrderDetailResponse response = new OrderDetailResponse();
+        String msg;
+        Optional<OrderEntity> optional = orderJpaRepository.findById(orderId);
+        if(optional.isPresent()){
+            OrderEntity orderEntity = optional.get();
+            if(OrderStatus.fromDbValue(orderEntity.getState())==OrderStatus.CANCEL_CHECKING){
+                orderEntity.setState(status.getDbValue());
+                orderJpaRepository.saveAndFlush(orderEntity);
+                response.setResultType(ResultType.SUCCESS);
+                msg = String.format("Success:change order %d status to %s",orderId, status);
+                response.setSuccessMsg(msg);
+                log.info(msg);
+            }
+            else{
+                response.setResultType(ResultType.FAILURE);
+                msg = "Wrong order status.";
+                response.setErrorMsg(msg);
+                log.warn(msg);
+            }
+        }
+        else{
+            msg = String.format("Order %d is not found.",orderId);
+            NotFoundException e = new NotFoundException(msg);
+            response = new OrderDetailResponse(e);
+            log.warn(msg);
+        }
+        return response;
     }
 
     private Order convertSimple(OrderEntity orderEntity){
