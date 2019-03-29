@@ -3,6 +3,7 @@ package edu.ecnu.scsse.pizza.bussiness.server.controller;
 import edu.ecnu.scsse.pizza.bussiness.server.exception.BusinessServerException;
 import edu.ecnu.scsse.pizza.bussiness.server.exception.NotFoundException;
 import edu.ecnu.scsse.pizza.bussiness.server.exception.PermissionException;
+import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Menu;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDetailRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDetailResponse;
@@ -15,9 +16,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.text.ParseException;
+import java.util.List;
 
 @Controller
 @RequestMapping("/menu")
+@CrossOrigin
 public class MenuController extends BaseController{
     private static final Logger log = LoggerFactory.getLogger(MenuController.class);
 
@@ -31,7 +35,7 @@ public class MenuController extends BaseController{
      */
     @RequestMapping(value = "/getMenuList",method = RequestMethod.GET)
     @ResponseBody
-    public MenuManageResponse getMenuList(){
+    public List<Menu> getMenuList(){
         return menuService.getMenuList();
     }
 
@@ -40,9 +44,9 @@ public class MenuController extends BaseController{
      * @request request
      * @return response
      */
-    @RequestMapping(value = "/editMenuStatus/{menuId}",method = RequestMethod.GET)
+    @RequestMapping(value = "/editMenuStatus",method = RequestMethod.GET)
     @ResponseBody
-    public BaseResponse editMenuStatus(@PathVariable int menuId){
+    public BaseResponse editMenuStatus(@RequestParam int menuId){
         int adminId = getCurrentAdminId();
         if(adminId!=-1)
             return menuService.editMenuStatus(menuId);
@@ -58,13 +62,32 @@ public class MenuController extends BaseController{
      * @request request
      * @return response
      */
-    @RequestMapping(value = "/editMenuDetail",method = RequestMethod.GET)
+    @RequestMapping(value = "/editMenuDetail",method = RequestMethod.POST)
     @ResponseBody
     public MenuDetailResponse editMenuStatus(@RequestBody MenuDetailRequest menuDetailRequest) throws BusinessServerException {
         int adminId = getCurrentAdminId();
         if (adminId != -1)
             return menuService.editMenuDetail(menuDetailRequest);
         else {
+            PermissionException e = new PermissionException("Admin is logout.");
+            log.warn("Admin is logout.", e);
+            return new MenuDetailResponse(e);
+        }
+    }
+
+    /***
+     * 新增披萨
+     * @request
+     * @return
+     */
+    @RequestMapping(value = "/addNewMenu",method = RequestMethod.POST)
+    @ResponseBody
+    public BaseResponse addNewMenu(@RequestBody MenuDetailRequest request) throws ParseException,BusinessServerException{
+        int adminId = getCurrentAdminId();
+        if(adminId!=-1) {
+            return menuService.addNewMenu(request);
+        }
+        else{
             PermissionException e = new PermissionException("Admin is logout.");
             log.warn("Admin is logout.", e);
             return new MenuDetailResponse(e);
