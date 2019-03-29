@@ -1,0 +1,22 @@
+@import '~@ui/base.scss';
+
+.image-wrapper {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  overflow: hidden;
+  border-radius: rem(3);
+  background: $gray_1;
+  color: $white_1;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-wrapper_radius {
+  border-radius: 50%;
+}
+
+.image-img {
+  width: 100%;
+  height: 100%;
+}

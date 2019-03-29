@@ -5,10 +5,29 @@ import { Address } from '@entity/Address';
 import { Pizza } from '@entity/Pizza';
 import store from '@store/index';
 import { entity, pageMobile, pagePc } from '@store/action';
-import { FetchOrdersReq, FetchOrdersResp } from '@src/net/fetch-orders';
+import { FetchOrdersReq, FetchOrdersResp } from '@src/net/api-fetch-orders';
 import { AddressWeakSchema } from '@src/entity/schema';
 
+import { add, OBJECT_STORE_NAMES } from '@utils/db';
+import { OrderStatus } from '@src/net/common';
+
+const ALL_STATUS = [
+  // OrderStatus.UNKONWN,
+  OrderStatus.CANCELED,
+  OrderStatus.CANCEL_CHECKING,
+  OrderStatus.CANCEL_FAILED,
+  // OrderStatus.CART,
+  OrderStatus.DELIVERING,
+  OrderStatus.FINISH,
+  OrderStatus.PAID,
+  OrderStatus.RECEIVED,
+  OrderStatus.UNPAID,
+  OrderStatus.WAIT_DELIVERY,
+  OrderStatus.RECEIVE_FAIL,
+];
+
 export const fetchOrdersApi = async (param: FetchOrdersReq) => {
+  param.status = ALL_STATUS;
   const resp = await net.request(Command.FETCH_ORDERS, param);
   const { resultType, orders } = resp as FetchOrdersResp;
 
@@ -56,6 +75,11 @@ export const fetchOrdersApi = async (param: FetchOrdersReq) => {
     store.dispatch(entity.orders.updateOrders(updateOrders));
     store.dispatch(pageMobile.main.updateOrdersId(currOrdersIds));
     store.dispatch(pagePc.main.updateOrdersId(currOrdersIds));
+
+    // 插入数据库
+    await add(OBJECT_STORE_NAMES.PIZZA, updatePizzas);
+    await add(OBJECT_STORE_NAMES.ADDRESS, Object.values(updateAddress));
+    await add(OBJECT_STORE_NAMES.ORDER, Object.values(updateOrders));
   }
 
   return resp;

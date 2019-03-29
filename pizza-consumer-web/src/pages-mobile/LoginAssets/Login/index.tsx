@@ -10,6 +10,11 @@ import { neetStatusBar } from '@utils/device';
 import autobind from 'autobind-decorator';
 import { timerFormater } from '@utils/time';
 import history from '@utils/history';
+import { openToast } from '@utils/store';
+import { isTel, isVarify } from '@utils/check';
+import { loginApi } from '@services/api-login';
+import { sendVerificationApi } from '@services/api-send-verification';
+import { LoginType, VerificationType } from '@src/net/common';
 
 interface LoginProps {
   onPageChange(idx: LoginAssetName, openType?: OpenType): void;
@@ -58,6 +63,17 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
   handleVarifyClick() {
     const { varifyTime, onVarifyClick, currentTime } = this.props;
     if (varifyTime < currentTime) {
+      const { account } = this.state;
+      if (!isTel(account)) {
+        openToast('手机格式错误');
+        return;
+      }
+
+      sendVerificationApi({
+        type: VerificationType.LOGIN,
+        tel: account,
+      });
+
       onVarifyClick(new Date().valueOf() + VARIFY_TIME);
     }
   }
@@ -82,7 +98,31 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
 
   @autobind
   handleLoginClick() {
-    history.push('./MainAssets');
+    const { account, varify } = this.state;
+    if (!isTel(account)) {
+      openToast('手机号格式错误');
+      return;
+    }
+    if (!isVarify(varify)) {
+      openToast('验证码格式错误');
+      return;
+    }
+    this.handleLogin();
+  }
+
+  @autobind
+  async handleLogin() {
+    const { account, varify } = this.state;
+    const result = await loginApi({
+      account,
+      password: varify,
+      type: LoginType.VERIFICATION,
+    });
+    if (result) {
+      history.push('./MainAssets');
+    } else {
+      openToast('密码错误');
+    }
   }
 
   renderVarifyCode() {

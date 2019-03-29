@@ -25,13 +25,13 @@ interface LoginAssetsState {
 }
 
 export enum LoginAssetName {
-  Login = 'Login',
-  LoginPW = 'LoginPW',
-  FindPW = 'FindPW',
-  SetPW = 'SetPW',
-  Register = 'Register',
-  RegisterEmail = 'RegisterEmail',
-  BindTel = 'BindTel',
+  Login = 0,
+  LoginPW = 1,
+  FindPW = 2,
+  SetPW = 3,
+  Register = 4,
+  RegisterEmail = 5,
+  BindTel = 6,
 }
 
 const config = {
@@ -51,6 +51,7 @@ const handleTouchMove = (e: TouchEvent) => {
 export class LoginAssets extends React.PureComponent<LoginAssetsProps, LoginAssetsState> {
   private pageAssetsEl: React.RefObject<PageAssets> = React.createRef();
   private setPWEl: React.RefObject<SetPW> = React.createRef();
+  private bindTelEl: React.RefObject<BindTel> = React.createRef();
   private loginAssetsEl: React.RefObject<HTMLDivElement> = React.createRef();
   private varifyTimer: any = null;
 
@@ -73,6 +74,11 @@ export class LoginAssets extends React.PureComponent<LoginAssetsProps, LoginAsse
     // 进入setPW页面需要立即发送验证码
     if (idx === config[LoginAssetName.SetPW] && this.setPWEl) {
       this.setPWEl.current.componentDidEnter(...extraInfo);
+    }
+
+    // 进入bindTel页面需要把account的信息传递过去
+    if (idx === config[LoginAssetName.BindTel] && this.bindTelEl) {
+      this.bindTelEl.current.componentDidEnter(...extraInfo);
     }
   }
 
@@ -101,7 +107,9 @@ export class LoginAssets extends React.PureComponent<LoginAssetsProps, LoginAsse
     } = loginStore;
     return (
       <div className="loginAssets" ref={this.loginAssetsEl}>
-        <PageAssets ref={this.pageAssetsEl} changeCb={this.onPageChange}>
+        <PageAssets
+          init={LoginAssetName.Login} ref={this.pageAssetsEl} changeCb={this.onPageChange}
+        >
           <Login
             onPageChange={this.handlePageChange}
             onVarifyClick={updateVarifyTime}
@@ -125,6 +133,7 @@ export class LoginAssets extends React.PureComponent<LoginAssetsProps, LoginAsse
           />
           <RegisterEmail onPageChange={this.handlePageChange} />
           <BindTel
+            ref={this.bindTelEl}
             onPageChange={this.handlePageChange}
             onVarifyClick={updateBindVarifyTime}
             varifyTime={bindVarifyTime}

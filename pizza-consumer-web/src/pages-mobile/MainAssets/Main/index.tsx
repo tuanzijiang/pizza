@@ -15,6 +15,9 @@ import { vw } from '@ui/base';
 import Icon from '@biz-components/Icon';
 import autobind from 'autobind-decorator';
 import { neetStatusBar } from '@utils/device';
+import { fetchUserApi } from '@src/services/api-fetch-user';
+import { fetchMenuApi } from '@services/api-fetch-menu';
+import { fetchOrdersApi } from '@src/services/api-fetch-orders';
 
 interface MainProps {
   onPageChange(idx: MainAssetName, openType?: OpenType, ...extraInfo: any[]): void;
@@ -22,11 +25,12 @@ interface MainProps {
   orderIds: string[];
   updateNavIdx: (idx: number) => void;
   entityStore: any;
+  commonStore: any;
 }
 
 interface MainState { }
 
-export default class Login extends React.PureComponent<MainProps, MainState> {
+export default class Main extends React.PureComponent<MainProps, MainState> {
   constructor(props: MainProps) {
     super(props);
     this.state = {};
@@ -52,10 +56,35 @@ export default class Login extends React.PureComponent<MainProps, MainState> {
     );
   }
 
+  componentDidEnter(...extraInfo: any[]) {
+    const { entityStore, updateNavIdx } = this.props;
+    const { user } = entityStore;
+    if (extraInfo[0]) {
+      const { idx } = extraInfo[0];
+      updateNavIdx(idx);
+    }
+
+    if (!user) {
+      return;
+    }
+    fetchUserApi({
+      userId: user.id,
+    });
+    fetchMenuApi({
+      userId: user.id,
+    });
+    fetchOrdersApi({
+      userId: user.id,
+      lastOrderId: '',
+      num: 20,
+    });
+  }
+
   render() {
-    const { navIdx, entityStore, orderIds, onPageChange } = this.props;
+    const { navIdx, entityStore, orderIds, onPageChange, commonStore } = this.props;
     const { pizzas, addresses, orders, user } = entityStore;
     const menu = orders[CART_ORDER_ID];
+    const { cart_id } = commonStore;
 
     return (
       <div className="main-wrapper">
@@ -72,7 +101,7 @@ export default class Login extends React.PureComponent<MainProps, MainState> {
             'main-pageWrapper': true,
             'main-pageWrapper_active': navIdx === 0,
           })}>
-            <Menu pizzas={pizzas} menu={menu} />
+            <Menu pizzas={pizzas} menu={menu} user={user} menuId={cart_id} />
           </div>
           <div className={cx({
             'main-pageWrapper': true,
@@ -82,6 +111,7 @@ export default class Login extends React.PureComponent<MainProps, MainState> {
               pizzas={pizzas}
               menu={menu}
               onPageChange={onPageChange}
+              menuId={cart_id}
             />
           </div>
           <div className={cx({
@@ -100,7 +130,7 @@ export default class Login extends React.PureComponent<MainProps, MainState> {
             'main-pageWrapper': true,
             'main-pageWrapper_active': navIdx === 3,
           })}>
-            <Me user={user} />
+            <Me user={user} onPageChange={onPageChange} />
           </div>
         </div>
         <Footer height={vw(50)} wrapperClass="main-footer">

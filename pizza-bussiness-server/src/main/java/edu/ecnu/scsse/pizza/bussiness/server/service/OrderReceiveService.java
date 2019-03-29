@@ -18,16 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.*;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Service
 public class OrderReceiveService {
     private static final Logger log = LoggerFactory.getLogger(OrderReceiveService.class);
     private static final int max_duration = 60*25;
+    private static long millisecondNumToOneSecond=1000;
 
     private Map<Integer,Integer> shopOrderNumMap;
-    private ReentrantReadWriteLock shopListRwlock = new ReentrantReadWriteLock();
-    private ReentrantReadWriteLock shopOrderNumRwlock = new ReentrantReadWriteLock();
 
 
     @Autowired
@@ -46,6 +44,10 @@ public class OrderReceiveService {
     private OrderJpaRepository orderJpaRepository;
     @Autowired
     private MenuIngredientJpaRepository menuIngredientJpaRepository;
+    @Autowired
+    private DeliveryService deliveryService;
+
+
 
     public OrderReceiveResponse getReceiveShopId(OrderReceiveRequest orderReceiveRequest)
     {
@@ -69,6 +71,7 @@ public class OrderReceiveService {
             aimOrder.setOrderUuid(orderUuid);
             Timestamp commitTime = order.getCommitTime();
             aimOrder.setCommitTime(String.valueOf(commitTime));
+            aimOrder.setLatestReceiveTime(commitTime.getTime()+max_duration*millisecondNumToOneSecond);
             List<OrderMenuEntity> orderMenuEntityList = orderMenuJpaRepository.findByOrderId(orderId);
             List<Menu> menuList = new ArrayList<>();
             for (OrderMenuEntity orderMenuEntity : orderMenuEntityList) {
@@ -118,6 +121,7 @@ public class OrderReceiveService {
                         double lat = address.getLat().doubleValue();
                         double lon = address.getLon().doubleValue();
                         Point destination = new MapPoint(lat, lon);
+                        aimOrder.setMapPoint(destination);
                         GaoDeMapUtil gaoDeMapUtil = new GaoDeMapUtil();
                         Map<Shop, Double> shopDurationMap = new HashMap<>();
                         for (Shop shop : shopList) {
@@ -135,7 +139,16 @@ public class OrderReceiveService {
                                     return new Double(o1.getValue() - o2.getValue()).intValue();
                                 }
                             });
-                            return getSuitableShopId(tmpList, aimOrder, orderEntity.get());
+                            orderReceiveResponse = getSuitableShopId(tmpList, aimOrder, orderEntity.get());
+                            Thread thread=new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    log.info("orderID:"+aimOrder.getOrderId()+"已被分配到配送服务");
+                                    deliveryService.deliveryOrder(aimOrder);
+                                }
+                            });
+                            thread.start();
+                            return orderReceiveResponse;
                         } else {
                             int result= orderJpaRepository.updateStateByOrderUuid(OrderStatus.RECEIVE_FAIL.getDbValue(),order.getOrderUuid());
                             if(result==1){
@@ -248,6 +261,7 @@ public class OrderReceiveService {
                 shopOrderNumMap.put(finalShop.getId(),shopOrderNumMap.get(finalShop.getId())+1);
                 orderEntity.setState(OrderStatus.WAIT_DELIVERY.getDbValue());
                 orderEntity.setShopId(finalShop.getId());
+                order.setShopId(String.valueOf(finalShop.getId()));
                 orderReceiveResponse.setOrderEntity(orderEntity);
                 orderReceiveResponse.setSuccessMsg("订单状态成功更新为待配送并已分配到店");
             }else {
@@ -273,11 +287,13 @@ public class OrderReceiveService {
             }
         }
         this.shopOrderNumMap = shopOrderNumMap;
+        log.info("零点重新组装shopOrderNumMap:"+shopOrderNumMap.toString());
     }
 
     public void setShopOrderNumMap(Map<Integer, Integer> shopOrderNumMap) {
         this.shopOrderNumMap = shopOrderNumMap;
     }
+
 }
 
 

@@ -4,6 +4,7 @@ import './index.scss';
 export interface InputProps {
   left?: React.ReactNode;
   right?: React.ReactNode;
+  middle?: React.ReactNode;
   defaultValue?: string;
   placeholde?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -19,14 +20,16 @@ export default class Ipnut extends React.PureComponent<InputProps, InputState> {
   };
 
   render() {
-    const { left, right, placeholde, type, value, onChange } = this.props;
+    const { left, right, placeholde, type, value, onChange, middle } = this.props;
     return (
       <div className="input-wrapper">
         <div className="input-left">
           {left}
         </div>
         <div className="input-content">
-          <input placeholder={placeholde} type={type} value={value} onChange={onChange} />
+          {middle ? middle :
+            <input placeholder={placeholde} type={type} value={value} onChange={onChange} />
+          }
         </div>
         <div className="input-right">
           {right}

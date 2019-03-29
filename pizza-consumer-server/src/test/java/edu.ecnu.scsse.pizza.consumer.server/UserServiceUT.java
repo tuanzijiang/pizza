@@ -170,7 +170,7 @@ public class UserServiceUT {
         address.setName("cao miao");
         address.setPhone("123");
         address.setSex(Sex.FEMALE);
-        address.setTag(AddressTag.COMMON);
+        //address.setTag(AddressTag.COMMON);
 
         addUserAddressRequest.setAddress(address);
         addUserAddressRequest.setUserId(1);
@@ -188,7 +188,7 @@ public class UserServiceUT {
         address.setName("cao miao");
         address.setPhone("123");
         address.setSex(Sex.FEMALE);
-        address.setTag(AddressTag.COMMON);
+        //address.setTag(AddressTag.COMMON);
 
         addUserAddressRequest.setAddress(address);
         addUserAddressRequest.setUserId(1);
@@ -208,7 +208,7 @@ public class UserServiceUT {
         address.setName("jiang");
         address.setPhone("12312312223");
         address.setSex(Sex.FEMALE);
-        address.setTag(AddressTag.COMMON);
+        //address.setTag(AddressTag.COMMON);
         request.setAddress(address);
         request.setUserId(1);
 

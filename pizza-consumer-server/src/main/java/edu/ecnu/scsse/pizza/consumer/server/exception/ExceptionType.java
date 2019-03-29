@@ -4,5 +4,6 @@ public enum ExceptionType {
     SERVICE,
     CONTROLLER,
     REPOSITORY,
-    BUSSINESS
+    BUSSINESS,
+    THIRD_PARTY
 }

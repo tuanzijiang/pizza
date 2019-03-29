@@ -6,15 +6,18 @@ import "address.proto";
 import "pizza.proto";
 
 enum OrderStatus {
-      CART = 0;
-      UNPAID = 1;
-      PAID = 2;
-      CANCEL_CHECKING = 3;
-      CANCELED = 4;
-      CANCEL_FAILED = 5;
-      DELIVERING = 6;
-      RECEIVED = 7;
-      FINISH = 8;
+  UNKONWN = 0;
+  CART = 1;
+  UNPAID = 2;
+  PAID = 3;
+  CANCEL_CHECKING = 4;
+  CANCELED = 5;
+  CANCEL_FAILED = 6;
+  DELIVERING = 7;
+  RECEIVED = 8;
+  FINISH = 9;
+  WAIT_DELIVERY = 10;
+  RECEIVE_FAIL = 11;
   }
 
 message Order {
@@ -39,14 +42,14 @@ message FetchOrderResp {
   Order order = 2;
 }
 
-// 批量获取订单详情
+// 批量获取订单简介，无address
 // [post] /fetchOrders
 
 message FetchOrdersReq {
   int32 user_id = 1;
   string last_order_id = 2;
   int32 num = 3;
-  OrderStatus status = 4;
+  repeated OrderStatus status = 4;
 }
 
 message FetchOrdersResp {
@@ -77,7 +80,7 @@ message SendOrderReq {
 
 message SendOrderResp {
   ResultType result_type = 1;
-  Order order = 2;
+  Order order = 2; // 这个也用不到
 }
 
 // 更新当前用户的菜单

@@ -10,7 +10,7 @@ import java.util.List;
 public class MenuDetailRequest {
     private String id;
     private String name;
-    private String image;
+    private Object image;
     private String description;
     private List<Ingredient> ingredients;
     private double price;
@@ -20,7 +20,7 @@ public class MenuDetailRequest {
     public MenuDetailRequest() {
     }
 
-    public MenuDetailRequest(String id, String name, String image, String description, List<Ingredient> ingredients, double price, PizzaStatus state, PizzaTag tagName) {
+    public MenuDetailRequest(String id, String name, Object image, String description, List<Ingredient> ingredients, double price, PizzaStatus state, PizzaTag tagName) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -47,11 +47,11 @@ public class MenuDetailRequest {
         this.name = name;
     }
 
-    public String getImage() {
+    public Object getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(Object image) {
         this.image = image;
     }
 

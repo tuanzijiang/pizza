@@ -1,29 +1,18 @@
 package edu.ecnu.scsse.pizza.bussiness.server.utils;
 
-import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Driver;
-import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Ingredient;
-import edu.ecnu.scsse.pizza.bussiness.server.model.entity.MapPoint;
-import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Shop;
+import edu.ecnu.scsse.pizza.bussiness.server.model.entity.*;
 import edu.ecnu.scsse.pizza.bussiness.server.service.DeliveryService;
 import edu.ecnu.scsse.pizza.bussiness.server.service.OrderReceiveService;
-import edu.ecnu.scsse.pizza.data.domain.DriverEntity;
-import edu.ecnu.scsse.pizza.data.domain.OrderEntity;
-import edu.ecnu.scsse.pizza.data.domain.PizzaShopEntity;
-import edu.ecnu.scsse.pizza.data.domain.ShopIngredientEntity;
-import edu.ecnu.scsse.pizza.data.repository.DriverJpaRepository;
-import edu.ecnu.scsse.pizza.data.repository.OrderJpaRepository;
-import edu.ecnu.scsse.pizza.data.repository.PizzaShopJpaRepository;
-import edu.ecnu.scsse.pizza.data.repository.ShopIngredientJpaRepository;
-import org.omg.CORBA.Environment;
+import edu.ecnu.scsse.pizza.data.domain.*;
+import edu.ecnu.scsse.pizza.data.enums.DriverStatus;
+import edu.ecnu.scsse.pizza.data.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.Timestamp;
+import java.util.*;
 
 @Component
 @Order(value = 0)
@@ -31,6 +20,8 @@ public class InitSystemConfig implements CommandLineRunner{
 
     @Autowired
     private PizzaShopJpaRepository pizzaShopJpaRepository;
+    @Autowired
+    private AddressJpaRepository addressJpaRepository;
     @Autowired
     private OrderJpaRepository orderJpaRepository;
     @Autowired
@@ -43,6 +34,8 @@ public class InitSystemConfig implements CommandLineRunner{
     @Override
     public void run(String... args) throws Exception{
         initOrderReceiveShopOrderNumMap();
+        initDriverListinDeliveryService();
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
     }
 
     private void initOrderReceiveShopOrderNumMap(){
@@ -63,8 +56,24 @@ public class InitSystemConfig implements CommandLineRunner{
     private void initDriverListinDeliveryService(){
         List<DriverEntity> driverEntityList = driverJpaRepository.findAll();
         List<Driver> driverList = new ArrayList<>();
+        Map<Integer,Timer> driverTimerMap = new HashMap<>();
         for(DriverEntity driverEntity:driverEntityList){
+
+            //装配一下driver的信息
             Driver driver = new Driver();
+            driver.setId(driverEntity.getId());
+            driver.setShopId(driverEntity.getShopId());
+            driver.setState(DriverStatus.fromDbValue(driverEntity.getState()));
+            List<edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order> orderList=new ArrayList<>();
+            driver.setOrderList(orderList);
+            driverList.add(driver);
+            Timer timer=new Timer();
+            driverTimerMap.put(driver.getId(),timer);
         }
+        deliveryService.setDriverList(driverList);
+        deliveryService.setScheduledThreadPoolExecutor();
+        deliveryService.setDriverTimerMap(driverTimerMap);
+        PriorityQueue<edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order> priorityQueue=new PriorityQueue<>();
+        deliveryService.setWaitToDeliveryOrderQueue(priorityQueue);
     }
 }

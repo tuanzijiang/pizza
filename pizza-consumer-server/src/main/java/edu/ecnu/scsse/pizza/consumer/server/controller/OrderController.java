@@ -3,6 +3,7 @@ package edu.ecnu.scsse.pizza.consumer.server.controller;
 import edu.ecnu.scsse.pizza.consumer.server.exception.ConsumerServerException;
 import edu.ecnu.scsse.pizza.consumer.server.exception.IllegalArgumentException;
 import edu.ecnu.scsse.pizza.consumer.server.exception.NotFoundException;
+import edu.ecnu.scsse.pizza.consumer.server.exception.PayFailureException;
 import edu.ecnu.scsse.pizza.consumer.server.model.ResultType;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Order;
 import edu.ecnu.scsse.pizza.consumer.server.model.order.*;
@@ -11,17 +12,23 @@ import edu.ecnu.scsse.pizza.consumer.server.model.order.FetchOrderResponse;
 import edu.ecnu.scsse.pizza.consumer.server.model.order.FetchOrdersRequest;
 import edu.ecnu.scsse.pizza.consumer.server.model.order.FetchOrdersResponse;
 import edu.ecnu.scsse.pizza.consumer.server.service.OrderService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+
 import java.util.List;
 
 @Controller
-@RequestMapping("/order")
 public class OrderController {
+
+    private static final Logger log = LoggerFactory.getLogger(OrderController.class);
 
     @Autowired
     private OrderService orderService;
@@ -70,7 +77,7 @@ public class OrderController {
         FetchMenuResponse response = new FetchMenuResponse();
         response.setPizzas(orderService.getInSaleMenu());
         try {
-            response.setCart(orderService.getCartOrder(request.getUserId()));
+            response.setCart(orderService.getCartOrder(request.getUserId(), response.getPizzas()));
         } catch (IllegalArgumentException e) {
             response.setException(e);
         }
@@ -149,5 +156,31 @@ public class OrderController {
             return new FetchPhoneResponse(e);
         }
 
+    }
+
+    /**
+     * 发起订单支付请求
+     */
+    @RequestMapping("/pay")
+    @ResponseBody
+    public PayOrderResponse pay(@RequestBody PayOrderRequest request) {
+        try {
+            String form = orderService.payRequest(request.getOrderId(), request.getTotalPrice());
+            PayOrderResponse response = new PayOrderResponse();
+            response.setForm(form);
+            return response;
+        } catch (PayFailureException | IllegalArgumentException e) {
+            return new PayOrderResponse(e);
+        }
+
+    }
+
+    /**
+     * 支付宝 notify_url（异步通知），表示支付完成，可更新数据库状态。
+     */
+    @RequestMapping("/paid")
+    public String paid(HttpServletRequest request) {
+        orderService.paid(request);
+        return "success";
     }
 }

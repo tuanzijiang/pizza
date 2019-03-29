@@ -1,4 +1,5 @@
 @import '~@ui/base.scss';
+
 .loginPW-wrapper {
   height: 100%;
   width: 100%;
@@ -40,4 +41,9 @@
   border-radius: vw(3);
   text-align: center;
   width: calc(100% - 2 * #{$padding_width});
+  font-size: vw(14);
+}
+
+.loginPW-input {
+  margin: vw(1) 0;
 }

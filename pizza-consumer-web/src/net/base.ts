@@ -2,9 +2,9 @@ import proto from './proto.json';
 import { ip_4 } from '@utils/device';
 import { info, LogTag, error } from '@utils/log';
 import { Root as protobufRoot } from 'protobufjs';
-import { Command, CommandReq, CommandResp } from './Command';
+import { Command, CommandReq, CommandResp } from './command';
 import { reqProto, reqUrl, respProto } from './config';
-export { Command } from './Command';
+export { Command } from './command';
 
 const BASE_URL = `http://${ip_4}:3000/`;
 

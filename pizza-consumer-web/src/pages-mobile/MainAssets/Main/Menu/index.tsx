@@ -1,17 +1,19 @@
 import * as React from 'react';
 import './index.scss';
-import { fetchMenuApi } from '@services/api-fetch-menu';
 import { updateOrderApi } from '@services/api-update-order';
-import { Order, Pizza } from '@src/entity';
+import { Order, Pizza, User } from '@src/entity';
 import { CART_ORDER_ID } from '@entity/Order';
 import Icon from '@biz-components/Icon';
 import i18n from '@src/utils/i18n';
 import autobind from 'autobind-decorator';
 import cx from 'classnames';
+import Image from '@components/Image';
 
 interface MenuProps {
   menu: Order;
   pizzas: Pizza[];
+  user: User;
+  menuId: string;
 }
 
 interface MenuState {
@@ -60,12 +62,6 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
       currTag: 0,
       tags: [],
     };
-  }
-
-  componentDidMount() {
-    fetchMenuApi({
-      userId: 123,
-    });
   }
 
   componentDidUpdate(prevProps: MenuProps, prevState: MenuState) {
@@ -151,11 +147,12 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
 
   @autobind
   handleMenuUpdateClick(pizzaId: number, count: number) {
+    const { menuId } = this.props;
     return () => {
       updateOrderApi({
-        pizzaId,
         count,
-        orderId: CART_ORDER_ID,
+        pizzaId,
+        orderId: menuId,
       });
     };
   }
@@ -174,7 +171,7 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
             const needTag = tags.includes(pizzaId);
             const {
               name: title, description: desc,
-              price, id,
+              price, id, img,
             } = currPizza;
             const count = menu.num[pizzaId];
 
@@ -196,7 +193,9 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
                 }
                 <div className="menu-pizzaItemContent">
                   <div className="menu-pizzaItemImage">
-                    <Icon name="pisa" classnames="menu-pizzaItemPisa" />
+                    <Image url={img}>
+                      <Icon name="pisa" classnames="menu-pizzaItemPisa" />
+                    </Image>
                   </div>
                   <div className="menu-pizzaItemFont">
                     <div className="menu-pizzaItemTitle">

@@ -30,7 +30,7 @@ public class HttpUtils {
 
     private static final String AMAP_URL = "https://restapi.amap.com/v3/geocode/geo?key=be738875154909f7a2408f3f96e7871a&address=%s";
 
-    private static final String BUSSINESS_SERVICE_URL = "";
+    private static final String BUSSINESS_SERVICE_URL = "orderReceive/getReceiveShopId";
 
     private static final Gson GSON = new GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)

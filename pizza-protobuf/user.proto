@@ -62,7 +62,7 @@ message LoginReq {
   
   Type type = 1;
   string account = 2;
-  string password = 3;
+  string password = 3; // 验证码登录的时候，这个指代验证码；密码登录的时候，这个字段指代密码
 }
 
 message LoginResp {
@@ -88,9 +88,42 @@ message SignUpReq {
   string phone = 1;
   string password = 2;
   string email = 3;
+  string verification = 4;
 }
 
 message SignUpResp {
   ResultType result_type = 1;
   User user = 2;
+}
+
+// 发送验证码
+// [post] /sendVerification
+
+message SendVerificationReq {
+  enum Type {
+    LOGIN = 0;
+    FINDPW = 1;
+    REGISTER = 2;
+    BIND_TEL = 3;
+  } 
+
+  Type type = 1;
+  string tel= 2;
+}
+
+message SendVerificationResp {
+  ResultType result_type = 1;
+}
+
+// 设置密码
+// [post] /setPw
+
+message SetPWReq {
+  string account = 1;
+  string password = 2;
+  string varification = 3;
+}
+
+message SetPWResp {
+  ResultType result_type = 1;
 }

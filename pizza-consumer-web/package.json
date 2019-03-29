@@ -12,9 +12,13 @@
     "build": "yarn pb && webpack --config webpack.prod.js",
     "analysis": "webpack --config webpack.dev.js --profile --json > stats.json",
     "lint": "tslint --project . src/**/*.ts src/**/*.tsx",
-    "mock": "nodemon mock/server",
+    "mock": "nodemon server/server --isMock true",
+    "server": "nodemon server/server --isMock false --address ",
+    "start": "http-server dist",
+    "start:https": "http-server dist -S",
+    "cert":"openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem",
     "pb": "yarn pb:web && yarn pb:server",
-    "pb:server": "pbjs -t json ../pizza-protobuf/user.proto ../pizza-protobuf/order.proto > mock/proto.json",
+    "pb:server": "pbjs -t json ../pizza-protobuf/user.proto ../pizza-protobuf/order.proto > server/proto.json",
     "pb:web": "pbjs -t json ../pizza-protobuf/user.proto ../pizza-protobuf/order.proto > src/net/proto.json"
   },
   "devDependencies": {
@@ -71,9 +75,11 @@
     "webpack-pwa-manifest": "^4.0.0"
   },
   "dependencies": {
+    "http-server": "^0.11.1",
     "koa-protobuf": "^0.1.1",
     "protobufjs": "^6.8.8",
     "raw-body": "^2.3.3",
+    "workbox-webpack-plugin": "^4.1.1",
     "yargs": "^13.2.2"
   }
 }

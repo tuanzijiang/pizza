@@ -10,7 +10,7 @@ public class Address {
     private String address;
     private String addressDetail;
     private String phone;
-    private AddressTag tag;
+//    private AddressTag tag;
 
     public Integer getId() {
         return id;
@@ -59,12 +59,12 @@ public class Address {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
-    public AddressTag getTag() {
-        return tag;
-    }
-
-    public void setTag(AddressTag tag) {
-        this.tag = tag;
-    }
+//
+//    public AddressTag getTag() {
+//        return tag;
+//    }
+//
+//    public void setTag(AddressTag tag) {
+//        this.tag = tag;
+//    }
 }

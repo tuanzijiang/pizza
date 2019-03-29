@@ -1,6 +1,9 @@
 package edu.ecnu.scsse.pizza.bussiness.server.model.entity;
 
 
+import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
+import edu.ecnu.scsse.pizza.data.domain.PizzaShopEntity;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -17,6 +20,10 @@ public class Shop {
     private String address;
     private String phone;
     private String image;
+    private String startTimeStr;
+    private String endTimeStr;
+    private double lat;
+    private double lon;
 
 
     public int getId() {
@@ -113,6 +120,38 @@ public class Shop {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getStartTimeStr() {
+        return startTimeStr;
+    }
+
+    public void setStartTimeStr(String startTimeStr) {
+        this.startTimeStr = startTimeStr;
+    }
+
+    public String getEndTimeStr() {
+        return endTimeStr;
+    }
+
+    public void setEndTimeStr(String endTimeStr) {
+        this.endTimeStr = endTimeStr;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
+    public void setLon(double lon) {
+        this.lon = lon;
     }
 
     public Shop() {

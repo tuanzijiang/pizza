@@ -10,10 +10,14 @@ import cx from 'classnames';
 import Icon from '@biz-components/Icon';
 import { CART_ORDER_ID } from '@entity/Order';
 import { AddressUsage } from '../Address';
+import { sendOrdersApi } from '@src/services/api-send-order';
+import { openToast } from '@src/utils/store';
+import Image from '@components/Image';
 
 interface SettlementProps {
   onPageChange(idx: MainAssetName, openType?: OpenType, ...extraInfo: any[]): void;
   entityStore: any;
+  commonStore: any;
 }
 
 interface SettlementState {
@@ -22,9 +26,27 @@ interface SettlementState {
 export default class Settlement extends React.PureComponent<SettlementProps, SettlementState> {
 
   @autobind
-  handleOrderClick() {
-    const { onPageChange } = this.props;
-    onPageChange(MainAssetName.Pay, OpenType.RIGHT);
+  async handleOrderClick() {
+    const { entityStore, onPageChange, commonStore } = this.props;
+    const { cart_id } = commonStore;
+    const { orders, user } = entityStore;
+
+    const currOrder = orders[CART_ORDER_ID];
+    const orderId = currOrder.id;
+    const addressId = currOrder.address;
+    const defaultAddressId = user.address;
+    const userAddressId = addressId === 0 ? defaultAddressId : addressId;
+    const result = await sendOrdersApi({
+      userAddressId,
+      orderId: orderId === CART_ORDER_ID ? cart_id : orderId,
+    });
+    if (result) {
+      onPageChange(MainAssetName.Pay, OpenType.RIGHT, {
+        currOrderId: currOrder.id,
+      });
+    } else {
+      openToast('下单失败');
+    }
   }
 
   @autobind
@@ -99,6 +121,7 @@ export default class Settlement extends React.PureComponent<SettlementProps, Set
                 const currPizza = pizzas[pizzaId];
                 const currNums = currOrder.num;
                 const currNum = currNums[pizzaId];
+                const currImage = currPizza.img;
 
                 if (currNum === 0) {
                   return null;
@@ -107,7 +130,9 @@ export default class Settlement extends React.PureComponent<SettlementProps, Set
                 return (
                   <div className="settlement-pizzaItem" key={pizzaId}>
                     <div className="settlement-pizzaItemImage">
-                      <Icon name="pisa" classnames="settlement-pizzaItemPisa" />
+                      <Image url={currImage}>
+                        <Icon name="pisa" classnames="settlement-pizzaItemPisa" />
+                      </Image>
                     </div>
                     <div className="settlement-pizzaItemName">
                       {currPizza.name}

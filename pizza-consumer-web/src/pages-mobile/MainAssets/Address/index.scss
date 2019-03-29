@@ -17,6 +17,7 @@
   top: $banner_height;
   height: calc(100% - #{$banner_height});
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .address-content_status {
@@ -66,4 +67,9 @@
   span {
     margin: 0 0 0 vw(5);
   }
+}
+
+.address-rightIcon {
+  color: $white_2;
+  font-size: vw(16)
 }

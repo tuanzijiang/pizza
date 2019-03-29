@@ -137,7 +137,6 @@ public class Menu {
     public Menu(MenuDetailRequest menu){
         this.id = menu.getId();
         this.name = menu.getName();
-        this.image = menu.getImage();
         this.description = menu.getDescription();
         this.price = menu.getPrice();
         this.state = menu.getState();

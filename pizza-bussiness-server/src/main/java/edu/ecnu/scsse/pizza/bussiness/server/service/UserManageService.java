@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,21 +30,21 @@ public class UserManageService {
     @Autowired
     private UserAddressJpaRepository userAddressJpaRepository;
 
-    public UserManageResponse getUserList(){
-        UserManageResponse userManageResponse;
+    public List<User> getUserList(){
+        List<User> userList = new ArrayList<>();
         List<UserEntity> userEntityList = userJpaRepository.findAll();
         if(userEntityList.size()!=0){
-            userManageResponse = new UserManageResponse();
-            List<User> userList = userEntityList.stream().map(this::convert).collect(Collectors.toList());
-            userManageResponse.setUserList(userList);
+            //userManageResponse = new UserManageResponse();
+            userList = userEntityList.stream().map(this::convert).collect(Collectors.toList());
+            //userManageResponse.setUserList(userList);
         }
         else{
             NotFoundException e = new NotFoundException("User list is not found.");
-            userManageResponse = new UserManageResponse(e);
+//            userManageResponse = new UserManageResponse(e);
             log.warn("Fail to find the user list.", e);
         }
 
-        return userManageResponse;
+        return userList;
     }
 
     private User convert(UserEntity userEntity){
@@ -56,7 +57,7 @@ public class UserManageService {
             user.setBirthday(df.format(userEntity.getBirthday()));
         }
         if(userEntity.getLatestLoginTime()!=null){
-            String loginTimePattern = "yyyy/MM/dd hh/MM/ss";
+            String loginTimePattern = "yyyy/MM/dd hh:MM:ss";
             DateFormat df2 = new SimpleDateFormat(loginTimePattern);
             user.setLatestLoginTime(df2.format(userEntity.getLatestLoginTime()));
         }

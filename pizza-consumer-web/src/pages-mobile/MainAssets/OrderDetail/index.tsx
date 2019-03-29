@@ -11,6 +11,9 @@ import { Order } from '@entity/Order';
 import { Address } from '@entity/Address';
 import cx from 'classnames';
 import Icon from '@biz-components/Icon';
+import { fetchOrderApi } from '@src/services/api-fetch-order';
+import { cancelOrdersApi } from '@src/services/api-cancel-order';
+import Image from '@components/Image';
 
 interface OrderDetailProps {
   onPageChange(idx: MainAssetName, openType?: OpenType, ...extraInfo: any[]): void;
@@ -22,6 +25,7 @@ interface OrderDetailState {
 }
 
 const Order_Status_Text = {
+  [OrderStatusSchema.UNKONWN]: '未知',
   [OrderStatusSchema.CART]: '已添加',
   [OrderStatusSchema.UNPAID]: '未支付',
   [OrderStatusSchema.PAID]: '已支付',
@@ -31,9 +35,12 @@ const Order_Status_Text = {
   [OrderStatusSchema.DELIVERING]: '配送中',
   [OrderStatusSchema.RECEIVED]: '已接单',
   [OrderStatusSchema.FINISH]: '已完成',
+  [OrderStatusSchema.WAIT_DELIVERY]: '待配送',
+  [OrderStatusSchema.RECEIVE_FAIL]: '商家接单失败',
 };
 
 const Order_Status_Info = {
+  [OrderStatusSchema.UNKONWN]: '未知',
   [OrderStatusSchema.CART]: '您的订单已添加，请尽快提交',
   [OrderStatusSchema.UNPAID]: '您的订单已提交，请尽快完成支付',
   [OrderStatusSchema.PAID]: '您的订单尚未接单，请耐心等待',
@@ -43,6 +50,8 @@ const Order_Status_Info = {
   [OrderStatusSchema.DELIVERING]: '您的订单正在配送，请耐心等待',
   [OrderStatusSchema.RECEIVED]: '您的订单已接单，骑手正在赶往商家',
   [OrderStatusSchema.FINISH]: '您的订单已完成',
+  [OrderStatusSchema.WAIT_DELIVERY]: '您的订单待配送',
+  [OrderStatusSchema.RECEIVE_FAIL]: '商家接单失败',
 };
 
 export default class OrderDetail extends React.PureComponent<OrderDetailProps, OrderDetailState> {
@@ -64,15 +73,46 @@ export default class OrderDetail extends React.PureComponent<OrderDetailProps, O
   }
 
   componentDidEnter(...extraInfo: any[]) {
+    const { entityStore } = this.props;
+    const { user } = entityStore;
     this.setState({
       currOrderId: extraInfo[0],
+    });
+    fetchOrderApi({
+      userId: user.id,
+      orderId: extraInfo[0],
+    });
+  }
+
+  @autobind
+  handleCancelClick() {
+    const { currOrderId } = this.state;
+    cancelOrdersApi({
+      orderId: currOrderId,
+    });
+  }
+
+  @autobind
+  handleSendAgain() {
+    const { onPageChange } = this.props;
+    onPageChange(MainAssetName.Main, OpenType.LEFT, {
+      idx: 0,
+    });
+  }
+
+  @autobind
+  handlePayClick() {
+    const { onPageChange } = this.props;
+    const { currOrderId } = this.state;
+    onPageChange(MainAssetName.Pay, OpenType.RIGHT, {
+      currOrderId,
     });
   }
 
   renderOrder() {
     const { currOrderId } = this.state;
     const { entityStore } = this.props;
-    const { pizzas, addresses, orders, user } = entityStore;
+    const { pizzas, addresses, orders } = entityStore;
     const currOrder = orders[currOrderId];
 
     const canBeCancel = Order.canBeCancel(currOrder);
@@ -93,13 +133,21 @@ export default class OrderDetail extends React.PureComponent<OrderDetailProps, O
           </div>
           <div className="orderDetail-statusButtons">
             {
-              canBeCancel && <div className="orderDetail-statusButton">{i18n('取消订单')}</div>
+              canBeCancel && <div
+                className="orderDetail-statusButton" onClick={this.handleCancelClick}
+              >
+                {i18n('取消订单')}
+              </div>
             }
             {
-              canAgain && <div className="orderDetail-statusButton">{i18n('再来一单')}</div>
+              canAgain && <div className="orderDetail-statusButton"
+                onClick={this.handleSendAgain}
+              >{i18n('再来一单')}</div>
             }
             {
-              needPay && <div className="orderDetail-statusButton">{i18n('去支付')}</div>
+              needPay && <div className="orderDetail-statusButton"
+                onClick={this.handlePayClick}
+              >{i18n('去支付')}</div>
             }
           </div>
         </div>
@@ -112,6 +160,7 @@ export default class OrderDetail extends React.PureComponent<OrderDetailProps, O
               const currPizza = pizzas[pizzaId];
               const currNums = currOrder.num;
               const currNum = currNums[pizzaId];
+              const currImg = currPizza.img;
 
               if (currNum === 0) {
                 return null;
@@ -120,7 +169,9 @@ export default class OrderDetail extends React.PureComponent<OrderDetailProps, O
               return (
                 <div className="orderDetail-pizzaItem" key={pizzaId}>
                   <div className="orderDetail-pizzaItemImage">
-                    <Icon name="pisa" classnames="orderDetail-pizzaItemPisa" />
+                    <Image url={currImg}>
+                      <Icon name="pisa" classnames="orderDetail-pizzaItemPisa" />
+                    </Image>
                   </div>
                   <div className="orderDetail-pizzaItemName">
                     {currPizza.name}

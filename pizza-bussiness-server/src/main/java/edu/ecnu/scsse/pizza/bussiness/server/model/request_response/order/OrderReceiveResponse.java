@@ -29,4 +29,11 @@ public class OrderReceiveResponse extends BaseResponse {
 
     public OrderReceiveResponse() {
     }
+
+    @Override
+    public String toString() {
+        return "OrderReceiveResponse{" +
+                "orderEntity=" + orderEntity +
+                '}';
+    }
 }

@@ -40,7 +40,7 @@ export default class Order extends React.PureComponent<OrderProps, OrderState> {
       userId: 123,
       lastOrderId: '',
       num: 10,
-      status: OrderStatus.PAID,
+      status: [OrderStatus.PAID],
     });
     fetchAddressApi({
       userId: 123,

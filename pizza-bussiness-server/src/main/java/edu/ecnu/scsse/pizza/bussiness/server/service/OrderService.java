@@ -4,11 +4,14 @@ import edu.ecnu.scsse.pizza.bussiness.server.exception.NotFoundException;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Menu;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.SaleStatus;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ResultType;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
 import edu.ecnu.scsse.pizza.data.domain.*;
 import edu.ecnu.scsse.pizza.data.enums.OrderStatus;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.order.*;
 import edu.ecnu.scsse.pizza.data.repository.*;
+import org.aspectj.weaver.ast.Or;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,26 +48,22 @@ public class OrderService {
     @Autowired
     private OrderMenuJpaRepository  orderMenuJpaRepository;
 
-    public OrderManageResponse getOrderList(){
-        OrderManageResponse orderManageResponse;
+    public List<Order> getOrderList(){
+        List<Order> orderList = new ArrayList<>();
         List<OrderEntity> orderEntityList = orderJpaRepository.findAll();
         if(orderEntityList.size()!=0){
-            orderManageResponse = new OrderManageResponse();
-            List<Order> orderList = orderEntityList.stream().map(this::convertSimple).collect(Collectors.toList());
-            orderManageResponse.setOrderList(orderList);
+            orderList = orderEntityList.stream().map(this::convertSimple).collect(Collectors.toList());
         }
         else{
-            NotFoundException e = new NotFoundException("Order list is not found.");
-            orderManageResponse = new OrderManageResponse(e);
-            log.warn("Fail to find the order list.", e);
+            log.warn("Fail to find the order list.");
         }
 
-        return orderManageResponse;
+        return orderList;
     }
 
-    public OrderDetailResponse getOrderDetail(OrderDetailRequest orderDetailRequest){
+    public OrderDetailResponse getOrderDetail(int orderId){
         OrderDetailResponse orderDetailResponse;
-        Optional<OrderEntity> orderEntityOptional = orderJpaRepository.findById(orderDetailRequest.getOrderId());
+        Optional<OrderEntity> orderEntityOptional = orderJpaRepository.findById(orderId);
         if(orderEntityOptional.isPresent()){
             OrderEntity orderEntity = orderEntityOptional.get();
             orderDetailResponse = new OrderDetailResponse(convertDetail(orderEntity));        }
@@ -129,6 +128,49 @@ public class OrderService {
         return new SaleStatus(date,orderNum, completeNum, cancelNum, totalAmount);
     }
 
+    public List<Order> getPendingRequestList(){
+        List<Order> pendingList = new ArrayList<>();
+        List<OrderEntity> orderEntityList = orderJpaRepository.findPendingList();
+        if(orderEntityList.size()!=0){
+            pendingList = orderEntityList.stream().map(this::convertSimple).collect(Collectors.toList());
+        }
+        else{
+            log.warn("Fail to find the pending list.");
+        }
+
+        return pendingList;
+    }
+
+    public BaseResponse changeOrderStatus(int orderId, OrderStatus status){
+        OrderDetailResponse response = new OrderDetailResponse();
+        String msg;
+        Optional<OrderEntity> optional = orderJpaRepository.findById(orderId);
+        if(optional.isPresent()){
+            OrderEntity orderEntity = optional.get();
+            if(OrderStatus.fromDbValue(orderEntity.getState())==OrderStatus.CANCEL_CHECKING){
+                orderEntity.setState(status.getDbValue());
+                orderJpaRepository.saveAndFlush(orderEntity);
+                response.setResultType(ResultType.SUCCESS);
+                msg = String.format("Success:change order %d status to %s",orderId, status);
+                response.setSuccessMsg(msg);
+                log.info(msg);
+            }
+            else{
+                response.setResultType(ResultType.FAILURE);
+                msg = "Wrong order status.";
+                response.setErrorMsg(msg);
+                log.warn(msg);
+            }
+        }
+        else{
+            msg = String.format("Order %d is not found.",orderId);
+            NotFoundException e = new NotFoundException(msg);
+            response = new OrderDetailResponse(e);
+            log.warn(msg);
+        }
+        return response;
+    }
+
     private Order convertSimple(OrderEntity orderEntity){
         Order order = new Order();
         CopyUtils.copyProperties(orderEntity, order);
@@ -146,7 +188,7 @@ public class OrderService {
         }
 
         //下单时间的格式转换
-        String commitTimePattern = "yyyy/MM/dd hh/MM/ss";
+        String commitTimePattern = "yyyy/MM/dd hh:MM:ss";
         DateFormat df = new SimpleDateFormat(commitTimePattern);
         if(orderEntity.getCommitTime()!=null)
             order.setCommitTime(df.format(orderEntity.getCommitTime()));
@@ -155,7 +197,7 @@ public class OrderService {
 
     private Order convertDetail(OrderEntity orderEntity){
         Order order = convertSimple(orderEntity);
-        String commitTimePattern = "yyyy/MM/dd hh/MM/ss";
+        String commitTimePattern = "yyyy/MM/dd hh:MM:ss";
         DateFormat df = new SimpleDateFormat(commitTimePattern);
 
         //设置订购的披萨信息

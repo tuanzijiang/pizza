@@ -25,7 +25,7 @@ public enum OrderStatus {
 
     private String expression;
 
-    public int getDbValue() {
+    public Integer getDbValue() {
         return dbValue;
     }
 
