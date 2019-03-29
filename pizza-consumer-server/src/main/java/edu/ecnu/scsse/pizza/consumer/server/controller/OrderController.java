@@ -77,7 +77,7 @@ public class OrderController {
         FetchMenuResponse response = new FetchMenuResponse();
         response.setPizzas(orderService.getInSaleMenu());
         try {
-            response.setCart(orderService.getCartOrder(request.getUserId()));
+            response.setCart(orderService.getCartOrder(request.getUserId(), response.getPizzas()));
         } catch (IllegalArgumentException e) {
             response.setException(e);
         }

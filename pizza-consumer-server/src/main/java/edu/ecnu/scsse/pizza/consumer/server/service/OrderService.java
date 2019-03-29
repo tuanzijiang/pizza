@@ -25,6 +25,7 @@ import edu.ecnu.scsse.pizza.data.repository.*;
 import edu.ecnu.scsse.pizza.data.util.PageRequestFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -137,7 +138,7 @@ public class OrderService {
                     GSON.toJson(orderStatuses.toString())));
         }
 
-        Optional<Integer> lastOrderId = lastOrderUuid == null ?  Optional.of(0):
+        Optional<Integer> lastOrderId = lastOrderUuid == null || lastOrderUuid.isEmpty() ?  Optional.of(0):
                 orderJpaRepository.findIdByOrderUuid(lastOrderUuid);
         if (lastOrderId.isPresent()) {
             List<OrderEntity> orderEntityList = orderJpaRepository.findByUserIdAndStateInAndIdGreaterThan(
@@ -156,7 +157,7 @@ public class OrderService {
      * @param userId user id
      * @return new cart order
      */
-    public Order getCartOrder(Integer userId) throws IllegalArgumentException {
+    public Order getCartOrder(Integer userId, List<Pizza> menus) throws IllegalArgumentException {
         if (userId == null) {
             throw new IllegalArgumentException("userId must not be NULL.");
         }
@@ -168,7 +169,7 @@ public class OrderService {
         if (optionalOrderEntity.isPresent()) {
             orderEntity = optionalOrderEntity.get();
             result = EntityConverter.convert(orderEntity);
-            this.supplementPizzas(orderEntity, result, true);
+            this.supplementPizzas(orderEntity, result, menus);
         } else {
             orderEntity = new OrderEntity();
             orderEntity.setState(OrderStatus.CART.getDbValue());
@@ -477,6 +478,34 @@ public class OrderService {
                 order.setAddress(EntityConverter.convert(userAddressEntity, addressEntity));
             }
         }
+    }
+
+    /**
+     * Query and supplement order menu info to {@param order}.
+     *
+     * @param entity order db entity.
+     * @param order order to supplement.
+     */
+    private void supplementPizzas(OrderEntity entity, Order order, List<Pizza> menu) {
+        List<OrderMenuEntity> orderMenuEntities = orderMenuJpaRepository.findByOrderId(entity.getId());
+        if (!CollectionUtils.isEmpty(orderMenuEntities)) {
+
+            List<Pizza> pizzas = new ArrayList<>();
+            for (OrderMenuEntity om : orderMenuEntities) {
+                menu.stream()
+                        .filter(m -> Objects.equals(m.getId(), om.getMenuId()))
+                        .findFirst()
+                        .ifPresent(m -> pizzas.add(this.copy(m, om.getCount())));
+            }
+            order.setPizzas(pizzas);
+        }
+    }
+
+    private Pizza copy(Pizza menu, int count) {
+        Pizza pizza = new Pizza();
+        BeanUtils.copyProperties(menu, pizza);
+        pizza.setCount(count);
+        return pizza;
     }
 
     /**
