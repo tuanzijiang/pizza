@@ -17,4 +17,6 @@ public interface ShopIngredientJpaRepository extends JpaRepository<ShopIngredien
     @Modifying
     @Query(value="update shop_ingredient set count=?1 where shop_id=?2 and ingredient_id=?3",nativeQuery = true)
     int updateCountByShopIdAndIngredientId(int count,int shopId,int ingredientId);
+
+    List<ShopIngredientEntity> findByShopId(int shopId);
 }
