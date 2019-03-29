@@ -15,4 +15,11 @@ public class MapPoint implements Point{
         return longitude;
     }
 
+    @Override
+    public String toString() {
+        return "MapPoint{" +
+                "latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
+    }
 }

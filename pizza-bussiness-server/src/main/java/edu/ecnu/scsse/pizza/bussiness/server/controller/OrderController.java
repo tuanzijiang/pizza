@@ -1,21 +1,21 @@
 package edu.ecnu.scsse.pizza.bussiness.server.controller;
 
+import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.order.*;
 import edu.ecnu.scsse.pizza.bussiness.server.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping("/order")
+@CrossOrigin
 public class OrderController {
     @Autowired
     private OrderService orderService;
@@ -25,19 +25,19 @@ public class OrderController {
      */
     @RequestMapping(value = "/getOrderList",method = RequestMethod.GET)
     @ResponseBody
-    public OrderManageResponse getOrderList(){
+    public List<Order> getOrderList(){
         return orderService.getOrderList();
     }
 
     /**
      * 查看订单详情
-     * @param request
+     * @param orderId
      * @return response
      */
     @RequestMapping(value = "/getOrderDetail",method = RequestMethod.GET)
     @ResponseBody
-    public OrderDetailResponse getOrderDetail(@RequestBody OrderDetailRequest request){
-        return orderService.getOrderDetail(request);
+    public OrderDetailResponse getOrderDetail(@RequestParam int orderId){
+        return orderService.getOrderDetail(orderId);
     }
 
     /**
@@ -67,6 +67,15 @@ public class OrderController {
         String startDate = request.getStartDate();
         String endDate = request.getEndDate();
         return orderService.getSaleStatusList(startDate,endDate);
+    }
+
+    /**
+     * 查看待审核请求
+     */
+    @RequestMapping(value = "/getPendingRequestList",method = RequestMethod.GET)
+    @ResponseBody
+    public List<Order> getPendingRequestList(){
+        return orderService.getPendingRequestList();
     }
 
 

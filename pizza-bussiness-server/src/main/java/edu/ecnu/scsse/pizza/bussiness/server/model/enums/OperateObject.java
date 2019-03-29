@@ -6,7 +6,8 @@ public enum OperateObject {
     UNKNOWN(0, "未知"),
     MENU(1, "披萨"),
     INGREDIENT(2, "原料"),
-    SHOP(3, "工厂");
+    SHOP(3, "工厂"),
+    DRIVER(4,"配送员");
 
     OperateObject(int dbValue, String expression) {
         this.dbValue = dbValue;
