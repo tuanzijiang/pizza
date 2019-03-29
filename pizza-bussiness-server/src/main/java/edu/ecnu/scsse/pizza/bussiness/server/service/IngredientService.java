@@ -10,10 +10,7 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.enums.OperateResult;
 import edu.ecnu.scsse.pizza.bussiness.server.model.enums.OperateType;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ResultType;
-import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ingredient.BatchImportResponse;
-import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ingredient.IngredientDetailRequest;
-import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ingredient.IngredientDetailResponse;
-import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ingredient.IngredientManageResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ingredient.*;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.ExcelUtils;
 import edu.ecnu.scsse.pizza.data.domain.IngredientEntity;
@@ -43,6 +40,7 @@ import java.util.stream.Collectors;
 @Service
 public class IngredientService {
     final int DEFAULT_ALARM_NUM = 200;
+    final int INVENTORY_REPLENISHMENT = 1000;
 
     private Logger log = LoggerFactory.getLogger(IngredientService.class);
     @Autowired
@@ -276,8 +274,41 @@ public class IngredientService {
         return alarmList;
     }
 
-    public BaseResponse buyIngredient(int shopId,int ingredientId){
+    /**
+     * 向仓库订购原料，仓库分发原料给店铺
+     * */
+    public BaseResponse buyIngredient(BuyIngredientRequest request){
         IngredientDetailResponse response = new IngredientDetailResponse();
+        int shopId = request.getShopId();
+        int ingredientId = request.getIngredientId();
+        int orderNum = request.getOrderNum(); //要订购的份数
+        int curTotalNum = ingredientJpaRepository.findCountById(ingredientId); //现在仓库该原料的库存量
+        String operateType = OperateType.UPDATE.getExpression();
+        String operateObj = OperateObject.SHOP.getExpression()+shopId+OperateObject.INGREDIENT.getExpression()+ingredientId;
+        /* 如果当前的库存比要订的大，就直接订购;
+         * 如果当前的库存不够，就先补充库存，然后再订购
+         */
+        while(curTotalNum<=orderNum) {
+            curTotalNum+=INVENTORY_REPLENISHMENT;
+            ingredientJpaRepository.updateCountByIngredientId(curTotalNum,ingredientId);
+        }
+        try {
+            Optional<ShopIngredientEntity> optional = shopIngredientJpaRepository.findByShopIdAndIngredientId(shopId, ingredientId);
+            if (optional.isPresent()) {
+                ShopIngredientEntity entity = optional.get();
+                int curNum = entity.getCount(); //现在这个商家的原料量
+                shopIngredientJpaRepository.updateCountByShopIdAndIngredientId(curNum + orderNum, shopId, ingredientId);
+                ingredientJpaRepository.updateCountByIngredientId(curTotalNum - orderNum, ingredientId);
+                operateLoggerService.addOperateLogger(operateType, operateObj, OperateResult.SUCCESS.getExpression());
+            } else {
+                NotFoundException e = new NotFoundException("The shop doesn't have this ingredient.");
+                response = new IngredientDetailResponse(e);
+            }
+        }catch (Exception e){
+            log.error("Fail to order ingredient.",e);
+            response.setResultType(ResultType.FAILURE);
+            response.setErrorMsg(e.getMessage());
+        }
         return response;
     }
 
