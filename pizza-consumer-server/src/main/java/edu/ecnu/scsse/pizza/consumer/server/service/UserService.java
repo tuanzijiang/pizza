@@ -145,6 +145,13 @@ public class UserService {
                 break;
             case VERIFICATION:
                 // TODO: 手机验证码登录
+                Optional<UserEntity> userEntityOptional2 = userJpaRepository.findByPhone(loginRequest.getAccount());
+                if (userEntityOptional2.isPresent()) {
+                    UserEntity userEntity2 = userEntityOptional2.get();
+                    loginResponse.setUser(EntityConverter.convert(userEntity2));
+                } else {
+                    loginResponse.setResultType(ResultType.FAILURE);
+                }
                 break;
         }
         return loginResponse;
@@ -166,11 +173,25 @@ public class UserService {
     /**
      * 注册
      *
+     * //Todo: 验证码
      * @param signUpRequest
      * @return
      */
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
         SignUpResponse signUpResponse = new SignUpResponse();
+
+        // 验证码登录
+        if(signUpRequest.getEmail()==null || signUpRequest.getEmail().equals("")) {
+            UserEntity userEntity = new UserEntity();
+            userEntity.setPhone(signUpRequest.getPhone());
+            try {
+                userJpaRepository.save(userEntity);
+                signUpResponse.setUser(EntityConverter.convert(userEntity));
+            } catch (Exception e) {
+                signUpResponse.setResultType(ResultType.FAILURE);
+            }
+            return signUpResponse;
+        }
 
         if (!checkPasswordFormat(signUpRequest.getPassword())) {
             signUpResponse.setResultType(ResultType.FAILURE);
@@ -223,7 +244,7 @@ public class UserService {
             userAddressEntity.setName(address.getName());
             userAddressEntity.setPhone(address.getPhone());
             userAddressEntity.setSex(address.getSex().getDbValue());
-            userAddressEntity.setTag(address.getTag().getDbValue());
+            //userAddressEntity.setTag(address.getTag().getDbValue());
             userAddressJpaRepository.updateByUserIdAndAddressId(userAddressEntity);
         } catch (Exception e) {
             response.setResultType(ResultType.FAILURE);
@@ -272,10 +293,11 @@ public class UserService {
         userAddressEntity.setName(address.getName());
         userAddressEntity.setPhone(address.getPhone());
         userAddressEntity.setSex(address.getSex().getDbValue());
-        userAddressEntity.setTag(address.getTag().getDbValue());
+        // userAddressEntity.setTag(address.getTag().getDbValue());
 
         try {
             userAddressJpaRepository.save(userAddressEntity);
+            userJpaRepository.updateDefaultAddress(addUserAddressRequest.getUserId(), addressEntity.getId());
         } catch (Exception e) {
             response.setResultType(ResultType.FAILURE);
         }
