@@ -57,4 +57,26 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
     @Modifying
     @Query(value="update pizza_order set state=?1 , shop_id=?2 where order_uuid=?3",nativeQuery = true)
     int updateStateAndShopIdByOrderUuid(int state,int shopId,String orderUuid);
+
+    @Query(value = "select * from pizza_order where state=4", nativeQuery = true)
+    List<OrderEntity> findPendingList();
+
+    @Query(value = "select * from pizza_order where driver_id=?1 and state=?2",nativeQuery = true)
+    List<OrderEntity> findWaitToDeliveryOrderByDriverId(int driverId,int waitToDeliveryOrderState);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update pizza_order set state=?1,deliver_start_time=?2 where id=?3",nativeQuery = true)
+    int updateStateAndStartDeliveryTimeByOrderId(int state,Timestamp deliveryStartTime,int id);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update pizza_order set state=?1,deliver_end_time=?2 where id=?3",nativeQuery = true)
+    int updateStateAndEndDeliveryTimeByOrderId(int state,Timestamp deliveryEndTime,int id);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update pizza_order set state=?1, driver_id=?2 where id=?3",nativeQuery = true)
+    int updateStateAndDriverIdByOrderId(int state,int driverId,int orderId);
+
 }

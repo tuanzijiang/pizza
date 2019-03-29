@@ -46,21 +46,22 @@ public class MenuService extends SessionService {
     @Autowired
     OperateLoggerService operateLoggerService;
 
-    public MenuManageResponse getMenuList(){
-        MenuManageResponse menuManageResponse;
+    public List<Menu> getMenuList(){
+//        MenuManageResponse menuManageResponse;
+        List<Menu> menuList = new ArrayList<>();
         List<MenuEntity> menuEntityList = menuJpaRepository.findAll();
         if(menuEntityList.size()!=0){
-            menuManageResponse = new MenuManageResponse();
-            List<Menu> menuList = menuEntityList.stream().map(this::convert).collect(Collectors.toList());
-            menuManageResponse.setMenuList(menuList);
+//            menuManageResponse = new MenuManageResponse();
+            menuList = menuEntityList.stream().map(this::convert).collect(Collectors.toList());
+//            menuManageResponse.setMenuList(menuList);
         }
         else{
             NotFoundException e = new NotFoundException("Menu list is not found.");
-            menuManageResponse = new MenuManageResponse(e);
+//            menuManageResponse = new MenuManageResponse(e);
             log.warn("Fail to find the menu list.", e);
         }
 
-        return menuManageResponse;
+        return menuList;
     }
 
     public MenuDetailResponse editMenuStatus(int menuId){
@@ -153,6 +154,55 @@ public class MenuService extends SessionService {
         }
         return response;
     }
+
+    public MenuDetailResponse addNewMenu(MenuDetailRequest request) throws BusinessServerException{
+        MenuDetailResponse response;
+        Menu menu = new Menu(request);
+        String type = OperateType.INSERT.getExpression();//操作类型
+        String object = OperateObject.MENU.getExpression();//操作对象
+        try {
+            //更新菜品信息
+            response = new MenuDetailResponse();
+            MenuEntity menuEntity = new MenuEntity();
+            CopyUtils.copyProperties(menu,menuEntity);
+            menuEntity.setState(menu.getState().getDbValue());
+            menuEntity.setTag(menu.getTagName().getDbValue());
+            menuJpaRepository.saveAndFlush(menuEntity);
+            int menuId = menuEntity.getId();
+            //更新菜品原料信息
+            List<Ingredient> ingredientList = request.getIngredients();//披萨的原料列表
+            for(Ingredient ingredient:ingredientList) {
+                int ingredientId = ingredient.getId();
+                int count = ingredient.getMenuNeedCount();//修改后的所需原料数
+                Optional<MenuIngredientEntity> optional = menuIngredientJpaRepository.findByMenuIdAndIngredientId(menuId, ingredientId);
+                if(optional.isPresent()){
+                    MenuIngredientEntity menuIngredientEntity = optional.get();
+                    if(count!=0) {// 修改原料数量
+                        menuIngredientEntity.setCount(count);
+                        menuIngredientJpaRepository.saveAndFlush(menuIngredientEntity);
+                    }
+                    else{//删除原有原料
+                        menuIngredientJpaRepository.deleteByMenuIdAndIngredientId(menuId, ingredientId);
+                    }
+                }
+                else{
+                    //新增披萨所需原料种类并设置数量
+                    MenuIngredientEntity entity = new MenuIngredientEntity();
+                    entity.setMenuId(menuId);
+                    entity.setIngredientId(ingredientId);
+                    entity.setCount(count);
+                    menuIngredientJpaRepository.saveAndFlush(entity);
+                }
+            }
+            operateLoggerService.addOperateLogger(type, object+menuId, OperateResult.SUCCESS.getExpression());
+        }catch (Exception e){
+            log.error("Fail to insert menu.",e);
+            throw new BusinessServerException(ExceptionType.REPOSITORY, "Fail to insert menu.", e);
+        }
+        return response;
+    }
+
+
 
     private Menu convert(MenuEntity menuEntity){
         Menu menu = new Menu();

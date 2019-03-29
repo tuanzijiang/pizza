@@ -121,7 +121,7 @@ export default class AddressEdit extends React.PureComponent<AddressEditProps, A
   }
 
   @autobind
-  handleConfirmClick() {
+  async handleConfirmClick() {
     const { name, sex, address, addressDetail, phone, addressId } = this.state;
     const { entityStore, onPageChange } = this.props;
     const { user } = entityStore;
@@ -136,12 +136,12 @@ export default class AddressEdit extends React.PureComponent<AddressEditProps, A
       tag: '',
     };
     if (addressId) {
-      updateAddressApi({
+      await updateAddressApi({
         userId,
         address: addressEntity,
       });
     } else {
-      addAddressApi({
+      await addAddressApi({
         userId,
         address: addressEntity,
       });

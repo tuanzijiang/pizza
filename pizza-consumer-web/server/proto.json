@@ -290,7 +290,7 @@
         "FetchAddressReq": {
           "fields": {
             "userId": {
-              "type": "string",
+              "type": "int32",
               "id": 1
             }
           }
@@ -311,7 +311,7 @@
         "UpdateAddressReq": {
           "fields": {
             "userId": {
-              "type": "string",
+              "type": "int32",
               "id": 1
             },
             "address": {
@@ -331,7 +331,7 @@
         "AddAddressReq": {
           "fields": {
             "userId": {
-              "type": "string",
+              "type": "int32",
               "id": 1
             },
             "address": {

@@ -1,8 +1,8 @@
 const Router = require('koa-router');
 const { Root } = require('protobufjs');
-const log = require('../utils/log');
 const proto = require('../proto.json');
 const Pizza = require('../entity/Pizza');
+const Order = require('../entity/Order');
 const _ = require('lodash');
 const net = require('../net');
 const argv = require('yargs').argv;
@@ -23,12 +23,17 @@ router.post('/', async (ctx, next) => {
 
   // mock
   const { userId } = result;
+
   let body;
 
   if (isMock) {
+    const pizzas = _.range(15).map(v => Pizza.random());
+    const cart = Order.random();
+    cart.pizzas = pizzas;
     body = {
       resultType: 1,
-      pizzas: _.range(15).map(v => Pizza.random()),
+      pizzas,
+      cart, 
     };
   } else {
     try {
@@ -36,6 +41,7 @@ router.post('/', async (ctx, next) => {
       body = {
         resultType: response.resultType, 
         pizzas: response.pizzas.map(v => Pizza.fromJS(v)),
+        cart: response.cart,
       }
     } catch (e) {
       body = {

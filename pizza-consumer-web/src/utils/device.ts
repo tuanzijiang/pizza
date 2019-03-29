@@ -3,9 +3,9 @@
 // @ts-ignore
 export const isWebApp = navigator.standalone;
 
-export const isiOS = (/iphone|ipod|ipad/gi).test(navigator.platform);
+export const isiOS = (/iphone|ipod|ipad/gi).test(navigator.userAgent);
 
-export const isAndroid = (/Android/gi).test(navigator.platform);
+export const isAndroid = (/Android/gi).test(navigator.userAgent);
 
 export const isSafari = (/Safari/i).test(navigator.appVersion);
 

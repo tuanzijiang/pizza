@@ -12,6 +12,9 @@ export const reqProto = {
   [Command.SET_PW]: 'user.SetPWReq',
   [Command.ADD_ADDRESS]: 'address.AddAddressReq',
   [Command.UPDATE_ADDRESS]: 'address.UpdateAddressReq',
+  [Command.FETCH_ORDER]: 'order.FetchOrderReq',
+  [Command.SEND_ORDER]: 'order.SendOrderReq',
+  [Command.CANCEL_ORDER]: 'order.CancelOrderReq',
 };
 
 export const respProto = {
@@ -26,6 +29,9 @@ export const respProto = {
   [Command.SET_PW]: 'user.SetPWResp',
   [Command.ADD_ADDRESS]: 'address.AddAddressResp',
   [Command.UPDATE_ADDRESS]: 'address.UpdateAddressResp',
+  [Command.FETCH_ORDER]: 'order.FetchOrderResp',
+  [Command.SEND_ORDER]: 'order.SendOrderResp',
+  [Command.CANCEL_ORDER]: 'order.CancelOrderResp',
 };
 
 export const reqUrl = {
@@ -40,4 +46,7 @@ export const reqUrl = {
   [Command.SET_PW]: 'set_pw',
   [Command.ADD_ADDRESS]: 'add_address',
   [Command.UPDATE_ADDRESS]: 'update_address',
+  [Command.FETCH_ORDER]: 'fetch_order',
+  [Command.SEND_ORDER]: 'send_order',
+  [Command.CANCEL_ORDER]: 'cancel_order',
 };

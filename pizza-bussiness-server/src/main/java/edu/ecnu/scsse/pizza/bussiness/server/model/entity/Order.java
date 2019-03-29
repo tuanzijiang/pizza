@@ -3,6 +3,7 @@ package edu.ecnu.scsse.pizza.bussiness.server.model.entity;
 import edu.ecnu.scsse.pizza.bussiness.server.model.enums.OrderState;
 import edu.ecnu.scsse.pizza.data.enums.OrderStatus;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 public class Order implements Comparable<Order>{
@@ -25,14 +26,13 @@ public class Order implements Comparable<Order>{
     private String orderUuid;
 
     private Point mapPoint;
-    private int deliveryOrder;
     private int deliveryPriority;
-    private Date finishTime;
-    private int latestLeaveTime;
+    private long latestReceiveTime;
+    private long deliveryDuration;
 
     @Override
     public int compareTo(Order o) {
-        return this.deliveryPriority > o.deliveryPriority ? -1 : 1;
+        return Timestamp.valueOf(this.commitTime).before(Timestamp.valueOf(o.getCommitTime()))? -1 : 1;
     }
 
     public Order() {
@@ -204,5 +204,71 @@ public class Order implements Comparable<Order>{
 
     public void setOrderUuid(String orderUuid) {
         this.orderUuid = orderUuid;
+    }
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public Point getMapPoint() {
+        return mapPoint;
+    }
+
+    public void setMapPoint(Point mapPoint) {
+        this.mapPoint = mapPoint;
+    }
+
+
+    public int getDeliveryPriority() {
+        return deliveryPriority;
+    }
+
+    public void setDeliveryPriority(int deliveryPriority) {
+        this.deliveryPriority = deliveryPriority;
+    }
+
+
+
+    public long getLatestReceiveTime() {
+        return latestReceiveTime;
+    }
+
+    public void setLatestReceiveTime(long latestReceiveTime) {
+        this.latestReceiveTime = latestReceiveTime;
+    }
+
+    public long getDeliveryDuration() {
+        return deliveryDuration;
+    }
+
+    public void setDeliveryDuration(long deliveryDuration) {
+        this.deliveryDuration = deliveryDuration;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderId='" + orderId + '\'' +
+                ", receiveName='" + receiveName + '\'' +
+                ", receivePhone='" + receivePhone + '\'' +
+                ", receiveAddress='" + receiveAddress + '\'' +
+                ", menuList=" + menuList +
+                ", totalAmount=" + totalAmount +
+                ", buyPhone='" + buyPhone + '\'' +
+                ", commitTime='" + commitTime + '\'' +
+                ", shopId='" + shopId + '\'' +
+                ", shopName='" + shopName + '\'' +
+                ", driverId='" + driverId + '\'' +
+                ", driverName='" + driverName + '\'' +
+                ", driverPhone='" + driverPhone + '\'' +
+                ", startDeliverTime='" + startDeliverTime + '\'' +
+                ", arriveTime='" + arriveTime + '\'' +
+                ", state=" + state +
+                ", orderUuid='" + orderUuid + '\'' +
+                ", mapPoint=" + mapPoint +
+                ", deliveryPriority=" + deliveryPriority +
+                ", latestReceiveTime=" + latestReceiveTime +
+                ", deliveryDuration=" + deliveryDuration +
+                '}';
     }
 }

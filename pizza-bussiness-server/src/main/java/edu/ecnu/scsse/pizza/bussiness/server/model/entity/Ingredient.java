@@ -2,6 +2,7 @@ package edu.ecnu.scsse.pizza.bussiness.server.model.entity;
 
 import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
 import edu.ecnu.scsse.pizza.data.domain.IngredientEntity;
+import edu.ecnu.scsse.pizza.data.enums.IngredientStatus;
 
 public class Ingredient {
     private int id;
@@ -11,6 +12,8 @@ public class Ingredient {
     private int alermNum;
     private int count;
     private int menuNeedCount;
+    private IngredientStatus ingredientStatus;
+
 
     public int getId() {
         return id;
@@ -68,6 +71,14 @@ public class Ingredient {
         this.menuNeedCount = menuNeedCount;
     }
 
+    public IngredientStatus getIngredientStatus() {
+        return ingredientStatus;
+    }
+
+    public void setIngredientStatus(IngredientStatus ingredientStatus) {
+        this.ingredientStatus = ingredientStatus;
+    }
+
     public Ingredient(int id, String name, String supplierName, int state, int alermNum, int count) {
         this.id = id;
         this.name = name;
@@ -78,11 +89,26 @@ public class Ingredient {
     }
 
     public Ingredient() {
+        this.id = 0;
+        this.name = "";
+        this.supplierName = "";
+        this.state = 0;
+        this.alermNum = 0;
+        this.count = 0;
+        this.menuNeedCount = 0;
+        this.ingredientStatus= IngredientStatus.USING;
     }
 
     public Ingredient(IngredientEntity ingredientEntity){
-        CopyUtils.copyProperties(ingredientEntity,this);
+        this.id = 0;
+        this.name = "";
+        this.supplierName = "";
+        this.state = 0;
+        this.alermNum = 0;
+        this.count = 0;
         this.menuNeedCount = 0;
+        CopyUtils.copyProperties(ingredientEntity,this);
+
     }
 
     @Override

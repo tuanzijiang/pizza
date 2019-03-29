@@ -8,6 +8,7 @@ import history from '@utils/history';
 import { MainAssetName } from '../..';
 import { OpenType } from '@biz-components/PageAssets';
 import { AddressUsage } from '../../Address';
+import { logoutApi } from '@services/api-logout';
 
 interface MeProps {
   user: User;
@@ -20,6 +21,7 @@ export default class Me extends React.PureComponent<MeProps, MeState> {
 
   @autobind
   handleLogoutClick(e: React.MouseEvent) {
+    logoutApi();
     history.push('./LoginAssets');
   }
 

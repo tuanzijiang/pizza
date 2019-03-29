@@ -1,8 +1,11 @@
 const Router = require('koa-router');
 const { Root } = require('protobufjs');
 const User = require('../entity/User');
+const net = require('../net');
 const proto = require('../proto.json');
+const argv = require('yargs').argv;
 
+const isMock = argv.isMock === 'true'
 const root = Root.fromJSON(proto);
 const reqProtoType = 'user.SetPWReq';
 const respProtoType = 'user.SetPWResp';
@@ -16,8 +19,23 @@ router.post('/', async (ctx, next) => {
   const result = reqType.decode(protoBuff);
 
   // mock
-  const body = {
-    resultType: 1,
+  let body;
+
+  if (isMock) {
+    body = {
+      resultType: 1,
+    };
+  } else {
+    try {
+      response = await net.post('/setPw', result);
+      body = {
+        resultType: 1,
+      }
+    } catch (e) {
+      body = {
+        resultType: 0,
+      }
+    }
   }
 
   const decodeBody = respType.encode(respType.create(body)).finish();

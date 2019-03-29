@@ -21,16 +21,14 @@ public class OrderServiceTest extends TestApplication {
 
     @Test
     public void testGetOrderList(){
-        OrderManageResponse orderManageResponse = orderService.getOrderList();
-        List<Order> orderList = orderManageResponse.getOrderList();
+        List<Order> orderList = orderService.getOrderList();
         logger.info("Total order number is {}",orderList.size());
         Assert.assertEquals(2,orderList.size());
     }
 
     @Test
     public void testGetOrderDetailByRightMenuId(){
-        OrderDetailRequest request = new OrderDetailRequest(1);
-        OrderDetailResponse orderDetailResponse = orderService.getOrderDetail(request);
+        OrderDetailResponse orderDetailResponse = orderService.getOrderDetail(1);
         //OrderDetailResponse exceptedResponse = new OrderDetailResponse()
         Assert.assertEquals(1,Integer.parseInt(orderDetailResponse.getOrderId()));
         Assert.assertEquals(1,orderDetailResponse.getState().getDbValue());
@@ -44,8 +42,7 @@ public class OrderServiceTest extends TestApplication {
 
     @Test
     public void testGetOrderDriverInfoByMenuId(){
-        OrderDetailRequest request = new OrderDetailRequest(2);
-        OrderDetailResponse orderDetailResponse = orderService.getOrderDetail(request);
+        OrderDetailResponse orderDetailResponse = orderService.getOrderDetail(2);
         Assert.assertEquals(1,Integer.parseInt(orderDetailResponse.getDriverId()));
         Assert.assertEquals("13162308625",orderDetailResponse.getDriverPhone());
         Assert.assertEquals("chen",orderDetailResponse.getDriverName());

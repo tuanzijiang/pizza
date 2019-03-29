@@ -2,9 +2,16 @@ const http = require('http');
 const querystring = require('querystring');
 const argv = require('yargs').argv;
 
-const isMock = argv.isMock === 'true';
-const hostname = isMock ? 'localhost' : '172.30.225.106';
-const port = isMock ? 3001 : 8080;
+const check = require('./utils/check');
+const result = check(argv.address);
+if (!result) {
+  console.error('address error');
+  return;
+}
+const {
+  ip: hostname,
+  port,
+} = check(argv.address);
 const prefix = '/pizza-consumer';
 
 const post = (path = '/', data = {}) => new Promise((resolve, reject) => {
@@ -24,11 +31,18 @@ const post = (path = '/', data = {}) => new Promise((resolve, reject) => {
   const req = http.request(options, (res) => {
     res.setEncoding('utf8');
     res.on('data', function (chunk) {
-      // resultType枚举映射
-      const obj = JSON.parse(chunk);
-      obj.resultType = obj.resultType === 'SUCCESS' ? 1 : 0;
-      console.log(`[post]${totalPath} end: ${JSON.stringify(obj)}`);
-      resolve(obj);
+      console.warn(`[post] origin`, chunk);
+      try {
+        // resultType枚举映射
+        const obj = JSON.parse(chunk);
+        obj.resultType = obj.resultType === 'SUCCESS' ? 1 : 0;
+        console.log(`[post]${totalPath} end: ${JSON.stringify(obj)}`);
+        resolve(obj);
+      } catch (e) {
+        console.error(`[posrt] error`,e);
+        reject(e);
+      }
+
     });
   });
 
@@ -37,7 +51,7 @@ const post = (path = '/', data = {}) => new Promise((resolve, reject) => {
     reject(err);
   });
 
-  console.log(`[post]${totalPath} start: ${postData}`);
+  console.log(`[post]${hostname}:${port}${totalPath} start: ${postData}`);
   req.write(postData);
   req.end();
 })

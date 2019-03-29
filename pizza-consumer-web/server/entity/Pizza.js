@@ -1,4 +1,5 @@
 const { getRandomNum, getRandomStr } = require('../utils/random');
+const pic = require('../utils/pic');
 const _ = require('lodash');
 
 const PIZZA_NAME_ARR = [
@@ -49,7 +50,7 @@ class Pizza {
       description: PIZZA_DESC_ARR[_.random(0, PIZZA_DESC_ARR.length - 1)],
       price: getRandomNum(2),
       tag: PIZZA_TAG_ARR[_.random(0, PIZZA_TAG_ARR.length - 1)],
-      img: `img_${getRandomStr(2)}`,
+      img: pic.getPizzaPics(),
       state: _.random(0, 1),
       count: _.random(0, 10),
     });

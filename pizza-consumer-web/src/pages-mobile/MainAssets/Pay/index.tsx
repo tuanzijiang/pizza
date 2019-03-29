@@ -10,6 +10,7 @@ import cx from 'classnames';
 import { CART_ORDER_ID } from '@entity/Order';
 import { timerFormater } from '@utils/time';
 import Icon from '@biz-components/Icon';
+import { fetchOrderApi } from '@src/services/api-fetch-order';
 
 enum PAY_KIND {
   ALIPAY = 0,
@@ -27,18 +28,33 @@ const pay_config = [{
 interface PayProps {
   onPageChange(idx: MainAssetName, openType?: OpenType, ...extraInfo: any[]): void;
   entityStore: any;
+  commonStore: any;
 }
 
 interface PayState {
   pay_kind: PAY_KIND;
+  currOrderId: string;
+  now_time: number;
 }
 
 export default class Pay extends React.PureComponent<PayProps, PayState> {
+  private timer: any = null;
+
   constructor(props: PayProps) {
     super(props);
     this.state = {
       pay_kind: PAY_KIND.ALIPAY,
+      currOrderId: '',
+      now_time: new Date().valueOf(),
     };
+  }
+
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      this.setState({
+        now_time: new Date().valueOf(),
+      });
+    }, 1000);
   }
 
   @autobind
@@ -49,7 +65,34 @@ export default class Pay extends React.PureComponent<PayProps, PayState> {
   @autobind
   handleLeftClick(e: React.MouseEvent<React.ReactNode>) {
     const { onPageChange } = this.props;
-    onPageChange(MainAssetName.Settlement, OpenType.LEFT);
+    const { currOrderId } = this.state;
+    onPageChange(MainAssetName.OrderDetail, OpenType.LEFT, currOrderId);
+  }
+
+  @autobind
+  componentDidEnter(...extraInfo: any[]) {
+    const { commonStore, entityStore } = this.props;
+    const { currOrderId } = extraInfo[0];
+    const { user } = entityStore;
+    const orderId = currOrderId === CART_ORDER_ID ? commonStore.cart_id : currOrderId;
+
+    this.setState({
+      currOrderId: orderId,
+    });
+
+    fetchOrderApi({
+      orderId,
+      userId: user.id,
+    });
+  }
+
+  @autobind
+  handlePayKindClick(pay_kind: number) {
+    return () => {
+      this.setState({
+        pay_kind,
+      });
+    };
   }
 
   renderMiddle() {
@@ -63,7 +106,9 @@ export default class Pay extends React.PureComponent<PayProps, PayState> {
         pay_config.map(v => {
           const id = v.id;
           const title = v.title;
-          return <div className="pay-kindItem" key={id}>
+          return <div className="pay-kindItem" key={id}
+            onClick={this.handlePayKindClick(id)}
+          >
             <div className="pay-kindName">
               {title}
             </div>
@@ -109,15 +154,16 @@ export default class Pay extends React.PureComponent<PayProps, PayState> {
   render() {
     const { entityStore } = this.props;
     const { orders } = entityStore;
+    const { now_time, currOrderId } = this.state;
 
-    const currOrder = orders[CART_ORDER_ID];
+    const currOrder = orders[currOrderId];
     let startTime = (new Date).valueOf();
 
     if (currOrder && currOrder.startTime) {
       startTime = currOrder.startTime;
     }
 
-    let remainTime = startTime + 15 * 60 * 1000 - new Date().valueOf();
+    let remainTime = startTime + 15 * 60 * 1000 - now_time;
     remainTime = remainTime >= 0 ? remainTime : 0;
     const { second, minu } = timerFormater(remainTime);
     const secondFormater = second < 10 ? `0${second}` : second;
@@ -147,6 +193,9 @@ export default class Pay extends React.PureComponent<PayProps, PayState> {
             {i18n('选择支付方式')}
           </div>
           {this.renderPayKind()}
+          <div className="pay-button">
+            {i18n('支付')}
+          </div>
         </div>
       </div>
     );

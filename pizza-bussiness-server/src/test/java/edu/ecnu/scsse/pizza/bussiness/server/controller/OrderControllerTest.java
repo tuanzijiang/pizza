@@ -20,17 +20,14 @@ public class OrderControllerTest extends TestApplication{
 
     @Test
     public void testGetOrderList() {
-        OrderManageResponse orderManageResponse = orderController.getOrderList();
-        List<Order> orderList = orderManageResponse.getOrderList();
+        List<Order> orderList = orderController.getOrderList();
         logger.info("Total order number is {}",orderList.size());
         Assert.assertEquals(3,orderList.size());
-        Assert.assertEquals(ResultType.SUCCESS,orderManageResponse.getResultType());
     }
 
     @Test
     public void testOrderDetail(){
-        OrderDetailRequest request = new OrderDetailRequest(1);
-        OrderDetailResponse orderDetailResponse = orderController.getOrderDetail(request);
+        OrderDetailResponse orderDetailResponse = orderController.getOrderDetail(1);
         Assert.assertEquals(ResultType.SUCCESS,orderDetailResponse.getResultType());
     }
 

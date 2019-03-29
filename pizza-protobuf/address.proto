@@ -23,7 +23,7 @@ message Address {
 // [post] /fetchUserAddresses
 
 message FetchAddressReq {
-  string user_id = 1;
+  int32 user_id = 1;
 }
 
 message FetchAddressResp {
@@ -35,7 +35,7 @@ message FetchAddressResp {
 // [post] /updateUserAddress
 
 message UpdateAddressReq {
-  string user_id = 1;
+  int32 user_id = 1;
   Address address = 2;
 }
 
@@ -47,7 +47,7 @@ message UpdateAddressResp {
 // [post] /addUserAddress
 
 message AddAddressReq {
-  string user_id = 1;
+  int32 user_id = 1;
   Address address = 2;
 }
 

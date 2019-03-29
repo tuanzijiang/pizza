@@ -3,7 +3,10 @@ const { Root } = require('protobufjs');
 const proto = require('../proto.json');
 const Address = require('../entity/Address');
 const _ = require('lodash');
+const argv = require('yargs').argv;
+const net = require('../net');
 
+const isMock = argv.isMock === 'true';
 const root = Root.fromJSON(proto);
 const reqProtoType = 'address.FetchAddressReq';
 const respProtoType = 'address.FetchAddressResp';
@@ -17,9 +20,25 @@ router.post('/', async (ctx, next) => {
   const result = reqType.decode(protoBuff);
 
   // mock
-  const body = {
-    resultType: 1,
-    addresses: _.range(15).map(v => Address.random()),
+  let body;
+
+  if (isMock) {
+    body = {
+      resultType: 1,
+      addresses: _.range(15).map(v => Address.random()),
+    };
+  } else {
+    try {
+      response = await net.post('/fetchUserAddresses', result);
+      body = {
+        resultType: 1,
+        addresses: response.addresses.map(v => Address.fromJS(v)),
+      }
+    } catch (e) {
+      body = {
+        resultType: 0,
+      }
+    }
   }
 
   const decodeBody = respType.encode(respType.create(body)).finish();
