@@ -35,8 +35,6 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 public class OrderServiceTest {
 
-    private static final Gson GSON = new Gson();
-
     @Mock
     private OrderJpaRepository orderJpaRepository;
 
@@ -67,7 +65,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void paid() {
+    public void testPaid() {
         double price = 20.12;
         String orderUuid = "AAA";
         when(orderJpaRepository.updateStateAndTotalPriceByOrderUuid(OrderStatus.PAID.getDbValue(), price, orderUuid))
@@ -86,7 +84,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void paidFail() {
+    public void testPaidFail() {
         double price = 20.12;
         String orderUuid = "AAA";
         when(orderJpaRepository.updateStateAndTotalPriceByOrderUuid(OrderStatus.PAID.getDbValue(), price, orderUuid))
@@ -102,7 +100,7 @@ public class OrderServiceTest {
 
 
     @Test
-    public void fetchCartOrder() throws ConsumerServerException {
+    public void testFetchCartOrder() throws ConsumerServerException {
         Integer orderId = 1;
         String orderUuid = "AAA";
         Integer userId = 1;
@@ -124,7 +122,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void fetchUnknownOrder() throws ConsumerServerException {
+    public void testFetchUnknownOrder() {
         String orderUuid = "AAA";
         when(orderJpaRepository.findByOrderUuid(orderUuid)).thenReturn(Optional.empty());
 
@@ -133,7 +131,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void fetchOrder() throws ConsumerServerException {
+    public void testFetchOrder() throws ConsumerServerException {
         Integer orderId = 1;
         String orderUuid = "AAA";
         Integer userId = 1;
@@ -159,7 +157,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void fetchOrderWithUnknownUserAddress() throws ConsumerServerException {
+    public void testFetchOrderWithUnknownUserAddress() throws ConsumerServerException {
         Integer orderId = 1;
         String orderUuid = "AAA";
         Integer userId = 1;
@@ -175,7 +173,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void fetchOrderWithUnknownAddress() throws ConsumerServerException {
+    public void testFetchOrderWithUnknownAddress() throws ConsumerServerException {
         Integer orderId = 1;
         String orderUuid = "AAA";
         Integer userId = 1;
@@ -193,7 +191,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void fetchOrderEmptyOrderMenu() throws ConsumerServerException {
+    public void testFetchOrderEmptyOrderMenu() throws ConsumerServerException {
         Integer orderId = 1;
         String orderUuid = "AAA";
         Integer userId = 1;
@@ -214,7 +212,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void fetchOrderWithEmptyMenu() throws ConsumerServerException {
+    public void testFetchOrderWithEmptyMenu() throws ConsumerServerException {
         Integer orderId = 1;
         String orderUuid = "AAA";
         Integer userId = 1;
@@ -237,7 +235,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void fetchOrderFailure() {
+    public void testFetchOrderFailure() {
         Integer orderId = 1;
         String orderUuid = "AAA";
         Integer userId = 1;
@@ -250,7 +248,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void fetchOrdersWithNullUserId() {
+    public void testFetchOrdersWithNullUserId() {
         List<OrderStatus> orderStatuses = all();
         int count = 20;
         IllegalArgumentException e = (IllegalArgumentException) thrownBy(() ->
@@ -260,7 +258,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void fetchOrdersWithEmptyStatus() {
+    public void testFetchOrdersWithEmptyStatus() {
         List<OrderStatus> orderStatuses = Collections.EMPTY_LIST;
         int count = 20;
         IllegalArgumentException e = (IllegalArgumentException) thrownBy(() ->
@@ -270,7 +268,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void fetchOrdersWithNegativeCount() {
+    public void testFetchOrdersWithNegativeCount() {
         List<OrderStatus> orderStatuses = all();
         IllegalArgumentException e = (IllegalArgumentException) thrownBy(() ->
                 orderService.fetchOrders(1, orderStatuses, "", -1));
@@ -279,7 +277,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void fetchOrdersWithZeroCount() {
+    public void testFetchOrdersWithZeroCount() {
         List<OrderStatus> orderStatuses = all();
         IllegalArgumentException e = (IllegalArgumentException) thrownBy(() ->
                 orderService.fetchOrders(1, orderStatuses, "", 0));
@@ -288,7 +286,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void fetchOrders() throws ConsumerServerException {
+    public void testFetchOrders() throws ConsumerServerException {
         List<OrderStatus> orderStatuses = all();
         int count = 20;
         List<OrderEntity> entities = FakeFactory.fakeOrderEntities();
@@ -305,7 +303,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void fetchOrdersWithEmptyResult() throws ConsumerServerException {
+    public void testFetchOrdersWithEmptyResult() throws ConsumerServerException {
         List<OrderStatus> orderStatuses = all();
         int count = 20;
         when(orderJpaRepository.findByUserIdAndStateInAndIdGreaterThan(
@@ -317,7 +315,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void fetchOrdersWithUnknownLast() {
+    public void testFetchOrdersWithUnknownLast() {
         List<OrderStatus> orderStatuses = all();
         String lastUuid = "last";
         int count = 20;
@@ -334,14 +332,14 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void getCartOrderWithNullUserId() {
+    public void testGetCartOrderWithNullUserId() {
         IllegalArgumentException e = (IllegalArgumentException) thrownBy(() ->
                 orderService.getCartOrder(null, Collections.EMPTY_LIST));
         assertEquals(e.getMessage(), "userId must not be NULL.");
     }
 
     @Test
-    public void getCartOrder() throws ConsumerServerException {
+    public void testGetCartOrder() throws ConsumerServerException {
 
         Integer userId = 1;
         List<Pizza> pizzas = FakeFactory.fakePizzas();
@@ -349,6 +347,8 @@ public class OrderServiceTest {
         Optional<OrderEntity> orderEntity = FakeFactory.fakeCartOrderEntity(1, "AAA", userId);
         when(orderJpaRepository.findFirstByUserIdAndStateOrderByIdDesc(userId, OrderStatus.CART.getDbValue()))
                 .thenReturn(orderEntity);
+        when(orderMenuJpaRepository.findByOrderId(1))
+                .thenReturn(FakeFactory.fakeOrderMenuEntities(1, Lists.newArrayList(1,2,3)));
         Order order = orderService.getCartOrder(userId, pizzas);
         assertEquals(order.getId(), "AAA");
         assertEquals(order.getStatus(), OrderStatus.CART);
@@ -356,7 +356,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void getCartOrderNew() throws ConsumerServerException {
+    public void testGetCartOrderNew() throws ConsumerServerException {
 
         Integer userId = 1;
         List<Pizza> pizzas = FakeFactory.fakePizzas();
@@ -370,49 +370,49 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void getInSaleMenu() {
+    public void testGetInSaleMenu() {
         List<MenuEntity> entities = FakeFactory.fakeMenuEntities(Lists.newArrayList(1,2,3));
         when(menuJpaRepository.findAllByState(PizzaStatus.IN_SALE.getDbValue())).thenReturn(entities);
         assertEquals(orderService.getInSaleMenu().size(), entities.size());
     }
 
     @Test
-    public void updateOrderWithNullOrderId() {
+    public void testUpdateOrderWithNullOrderId() {
         IllegalArgumentException e = (IllegalArgumentException) thrownBy(() ->
                 orderService.updateOrder(null, 1, 1));
         assertNotNull(e);
     }
 
     @Test
-    public void updateOrderWithZeroMenuId() {
+    public void testUpdateOrderWithZeroMenuId() {
         IllegalArgumentException e = (IllegalArgumentException) thrownBy(() ->
                 orderService.updateOrder("AAA", 0, 1));
         assertNotNull(e);
     }
 
     @Test
-    public void updateOrderWithNegativeMenuId() {
+    public void testUpdateOrderWithNegativeMenuId() {
         IllegalArgumentException e = (IllegalArgumentException) thrownBy(() ->
                 orderService.updateOrder("AAA", -1, 1));
         assertNotNull(e);
     }
 
     @Test
-    public void updateOrderWithZeroCount() {
+    public void testUpdateOrderWithZeroCount() {
         IllegalArgumentException e = (IllegalArgumentException) thrownBy(() ->
                 orderService.updateOrder("AAA", 1, 0));
         assertNotNull(e);
     }
 
     @Test
-    public void updateOrderWithNegativeCount() {
+    public void testUpdateOrderWithNegativeCount() {
         IllegalArgumentException e = (IllegalArgumentException) thrownBy(() ->
                 orderService.updateOrder("AAA", 1, -1));
         assertNotNull(e);
     }
 
     @Test
-    public void updateOrder() throws ConsumerServerException {
+    public void testUpdateOrder() throws ConsumerServerException {
         String orderUuid = "AAA";
         Integer menuId = 1;
         Integer count = 1;
@@ -423,7 +423,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void updateOrderWithUnknownCart() {
+    public void testUpdateOrderWithUnknownCart() {
         String orderUuid = "AAA";
         Integer menuId = 1;
         Integer count = 1;
@@ -434,7 +434,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void cancelOrderWithUnknownOrder() {
+    public void testCancelOrderWithUnknownOrder() {
         String orderUuid = "1";
         when(orderJpaRepository.findByOrderUuid(anyString())).thenReturn(Optional.empty());
         NotFoundException e = (NotFoundException) thrownBy(() -> orderService.cancelOrder(orderUuid));
@@ -452,7 +452,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void cancelOrderFailureSinceOverTime() throws ConsumerServerException {
+    public void testCancelOrderFailureSinceOverTime() throws ConsumerServerException {
         String orderUuid = "1";
         OrderEntity orderEntity = FakeFactory.fakeOrderEntity(1, orderUuid, 1, 1).get();
         orderEntity.setCommitTime(new Timestamp(System.currentTimeMillis() - 20 * 60 * 1000));
@@ -461,7 +461,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void cancelOrderBeforeCommit() throws ConsumerServerException {
+    public void testCancelOrderBeforeCommit() throws ConsumerServerException {
         String orderUuid = "1";
         OrderEntity orderEntity = FakeFactory.fakeOrderEntity(1, orderUuid, 1, 1).get();
         orderEntity.setCommitTime(null);
@@ -470,7 +470,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void getPhones() throws ConsumerServerException {
+    public void testGetPhones() throws ConsumerServerException {
         String orderUuid = "AAA";
 
         Optional<OrderEntity> order = FakeFactory.fakeOrderEntity(1, orderUuid, 1, 1);
@@ -491,7 +491,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void getPhonesWithUnknownOrder() {
+    public void testGetPhonesWithUnknownOrder() {
         when(orderJpaRepository.findByOrderUuid(anyString())).thenReturn(Optional.empty());
 
         NotFoundException e = (NotFoundException) thrownBy(() -> orderService.getPhones("aaa"));
@@ -499,7 +499,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void getPhonesWithUnknownDriver() {
+    public void testGetPhonesWithUnknownDriver() {
         String orderUuid = "AAA";
 
         Optional<OrderEntity> order = FakeFactory.fakeOrderEntity(1, orderUuid, 1, 1);
@@ -513,7 +513,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void getPhonesWithUnknownShop() {
+    public void testGetPhonesWithUnknownShop() {
         String orderUuid = "AAA";
 
         Optional<OrderEntity> order = FakeFactory.fakeOrderEntity(1, orderUuid, 1, 1);

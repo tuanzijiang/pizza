@@ -30,7 +30,7 @@ public class HttpUtils {
 
     private static final String AMAP_URL = "https://restapi.amap.com/v3/geocode/geo?key=be738875154909f7a2408f3f96e7871a&address=%s";
 
-    private static final String BUSSINESS_SERVICE_URL = "orderReceive/getReceiveShopId";
+    private static final String BUSSINESS_SERVICE_URL = "http://139.224.238.171:8088/pizza-bussiness/orderReceive/getReceiveShopId";
 
     private static final Gson GSON = new GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
@@ -46,8 +46,8 @@ public class HttpUtils {
      */
     public static AmapLocation.Geocode queryGeo(String address) throws IOException {
         AmapLocation location = get(String.format(AMAP_URL, address), AmapLocation.class);
-        if (location != null && !CollectionUtils.isEmpty(location.getGeoCodes())) {
-            return location.getGeoCodes().get(0);
+        if (location != null && !CollectionUtils.isEmpty(location.getGeocodes())) {
+            return location.getGeocodes().get(0);
         }
         return null;
     }

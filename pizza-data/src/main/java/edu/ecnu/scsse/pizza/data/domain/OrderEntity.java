@@ -1,11 +1,12 @@
 package edu.ecnu.scsse.pizza.data.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Entity
 @Table(name = "pizza_order", schema = "pizza_project", catalog = "")
-public class OrderEntity {
+public class OrderEntity implements Serializable {
     private int id;
     private int userId;
     private int addressId;

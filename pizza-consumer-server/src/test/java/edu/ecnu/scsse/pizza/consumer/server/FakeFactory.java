@@ -36,6 +36,7 @@ public class FakeFactory {
             pizza.setName("pizza" + i);
             pizza.setState(PizzaStatus.IN_SALE);
             pizza.setPrice(10.1);
+            list.add(pizza);
         }
         return list;
     }

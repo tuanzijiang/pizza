@@ -1,7 +1,10 @@
 package edu.ecnu.scsse.pizza.consumer.server.utils;
 
+import lombok.Data;
+
 import java.util.List;
 
+@Data
 public class AmapLocation {
 	private Integer status;
     private String info;
@@ -9,46 +12,6 @@ public class AmapLocation {
     private Integer count;
 
     private List<Geocode> geocodes;
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public String getInfo() {
-        return info;
-    }
-
-    public void setInfo(String info) {
-        this.info = info;
-    }
-
-    public String getInfocode() {
-        return infocode;
-    }
-
-    public void setInfocode(String infocode) {
-        this.infocode = infocode;
-    }
-
-    public Integer getCount() {
-        return count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
-    }
-
-    public List<Geocode> getGeoCodes() {
-        return geocodes;
-    }
-
-    public void setGeoCodes(List<Geocode> geocodes) {
-        this.geocodes = geocodes;
-    }
 
     public static class Geocode {
         private String formattedAddress;

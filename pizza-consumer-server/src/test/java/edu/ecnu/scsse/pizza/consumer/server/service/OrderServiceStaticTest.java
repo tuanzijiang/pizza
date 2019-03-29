@@ -44,25 +44,25 @@ public class OrderServiceStaticTest {
     }
 
     @Test
-    public void payRequestWithNullOrderId() {
+    public void testPayRequestWithNullOrderId() {
         IllegalArgumentException e = (IllegalArgumentException) thrownBy(() -> orderService.payRequest(null, 20.12));
         assertEquals(e.getMessage(), "orderUuid can't be null.");
     }
 
     @Test
-    public void payRequestWithZeroPrice() {
+    public void testPayRequestWithZeroPrice() {
         IllegalArgumentException e = (IllegalArgumentException) thrownBy(() -> orderService.payRequest("AAA", 0));
         assertEquals(e.getMessage(), "totalPrice must be positive.");
     }
 
     @Test
-    public void payRequestWithNegativePrice() {
+    public void testPayRequestWithNegativePrice() {
         IllegalArgumentException e = (IllegalArgumentException) thrownBy(() -> orderService.payRequest("AAA", -10));
         assertEquals(e.getMessage(), "totalPrice must be positive.");
     }
 
     @Test
-    public void payRequest() throws Exception {
+    public void testPayRequest() throws Exception {
         String returnString = "body";
         DefaultAlipayClient client = PowerMockito.mock(DefaultAlipayClient.class);
         AlipayTradeWapPayResponse payResponse = new AlipayTradeWapPayResponse();
@@ -78,7 +78,7 @@ public class OrderServiceStaticTest {
     }
 
     @Test
-    public void payRequestFailure() throws Exception {
+    public void testPayRequestFailure() throws Exception {
         String errorMsg = "Error Msg.";
         DefaultAlipayClient client = PowerMockito.mock(DefaultAlipayClient.class);
         AlipayTradeWapPayResponse payResponse = new AlipayTradeWapPayResponse();
@@ -95,7 +95,7 @@ public class OrderServiceStaticTest {
     }
 
     @Test
-    public void payRequestWithAlipayApiException() throws Exception {
+    public void testPayRequestWithAlipayApiException() throws Exception {
         DefaultAlipayClient client = PowerMockito.mock(DefaultAlipayClient.class);
         AlipayApiException exception = new AlipayApiException();
         Mockito.when(client.pageExecute(any())).thenThrow(exception);
@@ -109,28 +109,28 @@ public class OrderServiceStaticTest {
     }
 
     @Test
-    public void sendOrderWithNullOrderUuid() {
+    public void testSendOrderWithNullOrderUuid() {
         IllegalArgumentException e = (IllegalArgumentException) thrownBy(() ->
                 orderService.sendOrder(null, 1));
         assertEquals(e.getMessage(), "orderUuid can't be null.");
     }
 
     @Test
-    public void sendOrderWithZeroUserAddressId() {
+    public void testSendOrderWithZeroUserAddressId() {
         IllegalArgumentException e = (IllegalArgumentException) thrownBy(() ->
                 orderService.sendOrder("AAA", 0));
         assertEquals(e.getMessage(), "userAddressId must be positive.");
     }
 
     @Test
-    public void sendOrderWithNegativeUserAddressId() {
+    public void testSendOrderWithNegativeUserAddressId() {
         IllegalArgumentException e = (IllegalArgumentException) thrownBy(() ->
                 orderService.sendOrder("AAA", -1));
         assertEquals(e.getMessage(), "userAddressId must be positive.");
     }
 
     @Test
-    public void sendOrder() throws IOException, ConsumerServerException {
+    public void testSendOrder() throws IOException, ConsumerServerException {
         String orderUuid = "AAA";
         Integer userAddressId = 1;
         PowerMockito.mockStatic(HttpUtils.class);
@@ -142,7 +142,7 @@ public class OrderServiceStaticTest {
     }
 
     @Test
-    public void sendOrderWithIOException() throws IOException, ConsumerServerException {
+    public void testSendOrderWithIOException() throws IOException, ConsumerServerException {
         String orderUuid = "AAA";
         Integer userAddressId = 1;
         PowerMockito.mockStatic(HttpUtils.class);
