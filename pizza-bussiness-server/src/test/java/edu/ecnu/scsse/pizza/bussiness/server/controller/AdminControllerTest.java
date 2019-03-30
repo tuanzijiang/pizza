@@ -11,6 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AdminControllerTest extends TestApplication{
     private static final Logger logger = LoggerFactory.getLogger(AdminServiceTest.class);
     @Autowired
@@ -20,7 +23,7 @@ public class AdminControllerTest extends TestApplication{
     public void testAdminLoginSuccessfully() {
         LoginRequest successRequest = new LoginRequest("admin","admin");
         LoginResponse response = adminController.adminLogin(successRequest);
-        Assert.assertEquals(response.getAdminId(),1);
+        Assert.assertEquals(response.getAdminId(),2);
         Assert.assertEquals(response.getResultType(), ResultType.SUCCESS);
     }
 
@@ -39,4 +42,12 @@ public class AdminControllerTest extends TestApplication{
         Assert.assertEquals(response.getAdminId(),-1);
         Assert.assertEquals(response.getResultType(), ResultType.FAILURE);
     }
+
+//    @Test
+//    public void testGetAdminLoggerList(){
+//        List<edu.ecnu.scsse.pizza.bussiness.server.model.entity.Logger> adminLoggerList=adminController.getOperateLogger();
+//        logger.info("Total order number is {}",adminLoggerList.size());
+//        Assert.assertEquals(adminLoggerList.size(),101);
+//    }
+
 }

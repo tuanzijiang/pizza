@@ -23,7 +23,7 @@ public class OrderServiceTest extends TestApplication {
     public void testGetOrderList(){
         List<Order> orderList = orderService.getOrderList();
         logger.info("Total order number is {}",orderList.size());
-        Assert.assertEquals(2,orderList.size());
+        Assert.assertEquals(12,orderList.size());
     }
 
     @Test
@@ -31,12 +31,11 @@ public class OrderServiceTest extends TestApplication {
         OrderDetailResponse orderDetailResponse = orderService.getOrderDetail(1);
         //OrderDetailResponse exceptedResponse = new OrderDetailResponse()
         Assert.assertEquals(1,Integer.parseInt(orderDetailResponse.getOrderId()));
-        Assert.assertEquals(1,orderDetailResponse.getState().getDbValue());
         Assert.assertEquals("123",orderDetailResponse.getReceivePhone());
         Assert.assertEquals("cao miao",orderDetailResponse.getReceiveName());
         Assert.assertEquals("15800349392",orderDetailResponse.getBuyPhone());
         Assert.assertEquals(1,Integer.parseInt(orderDetailResponse.getShopId()));
-        Assert.assertEquals("梁磊",orderDetailResponse.getShopName());
+        Assert.assertEquals("必胜客",orderDetailResponse.getShopName());
         Assert.assertEquals("",orderDetailResponse.getDriverId());
     }
 
@@ -45,7 +44,7 @@ public class OrderServiceTest extends TestApplication {
         OrderDetailResponse orderDetailResponse = orderService.getOrderDetail(2);
         Assert.assertEquals(1,Integer.parseInt(orderDetailResponse.getDriverId()));
         Assert.assertEquals("13162308625",orderDetailResponse.getDriverPhone());
-        Assert.assertEquals("chen",orderDetailResponse.getDriverName());
+        Assert.assertEquals("cqh",orderDetailResponse.getDriverName());
     }
 
     @Test
@@ -56,7 +55,7 @@ public class OrderServiceTest extends TestApplication {
             logger.info(s.toString());
         Assert.assertEquals(15,saleList.size());
         Assert.assertEquals("2019/03/01",saleList.get(0).getDate());
-        Assert.assertEquals(1,saleList.get(5).getOrderNum());
+        Assert.assertEquals(0,saleList.get(5).getOrderNum());
         Assert.assertEquals(0,saleList.get(5).getCompleteNum());
         Assert.assertEquals(0,saleList.get(5).getCancelNum());
     }
@@ -66,7 +65,7 @@ public class OrderServiceTest extends TestApplication {
     public void testGetYesterdaySaleWithDate() throws ParseException{
         YesterdaySaleResponse response = orderService.getYesterdaySaleStatus("2019/03/14");
         Assert.assertEquals(ResultType.SUCCESS,response.getResultType());
-        Assert.assertEquals(0,response.getOrderNum());
+        Assert.assertEquals(1,response.getOrderNum());
         Assert.assertEquals(0,response.getCancelNum());
         Assert.assertEquals(0,response.getCompleteNum());
     }
