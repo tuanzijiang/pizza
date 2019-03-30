@@ -1,0 +1,47 @@
+<div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 operation-record-page">
+  <div class="operation-record-title">
+    <h5>管理员操作记录</h5>
+  </div>
+  <div class="mt-lg-2 pr-lg-2">
+    <p-table #dt [value]="operations" [paginator]="true" [rows]="10"
+             [globalFilterFields]="['manager_id', 'type', 'object', 'time']">
+      <ng-template pTemplate="caption">
+        <div style="text-align: right">
+          <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+          <input type="text" pInputText size="50" placeholder="搜索..."
+                 (input)="dt.filterGlobal($event.target.value, 'contains')" style="width:auto">
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header" filterStyle="display:none">
+        <tr>
+          <th *ngFor="let col of cols" [pSortableColumn]="col.field">
+            {{col.header}}
+            <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                        ariaLabelDesc="Activate to sort in descending order"
+                        ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+          </th>
+        </tr>
+        <tr>
+          <th *ngFor="let col of cols" [ngSwitch]="col.field">
+            <input *ngSwitchCase="'manager_id'" pInputText type="text" class="op-filter"
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
+            <input *ngSwitchCase="'object'" pInputText type="text" class="op-filter"
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
+            <input *ngSwitchCase="'time'" pInputText type="text" class="op-filter"
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
+            <p-dropdown *ngSwitchCase="'type'" [options]="opType" [style]="{'width':'100%'}"
+                        (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData>
+        <tr>
+          <td *ngFor="let col of cols" [ngSwitch]="true">
+            <span *ngSwitchCase="col.field === 'time'">{{rowData[col.field] | date}}</span>
+            <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

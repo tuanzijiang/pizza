@@ -1,0 +1,51 @@
+<div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 book-manage-page">
+  <div class="book-manage-title">
+    <h5>订购管理</h5>
+  </div>
+  <div class="mt-lg-2 pr-lg-2">
+    <p-panel header="今日预警">
+      <div class="mt-lg-2 ml-lg-2 mb-lg-2">
+        <p-table #dt [value]="alerts" [paginator]="true" [rows]="10">
+          <ng-template pTemplate="header" filterStyle="display:none">
+            <tr>
+              <th *ngFor="let col of cols" [pSortableColumn]="col.field">
+                {{col.header}}
+                <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                            ariaLabelDesc="Activate to sort in descending order"
+                            ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+              </th>
+              <th></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData>
+            <tr>
+              <td *ngFor="let col of cols.slice(0,4)" [ngSwitch]="true">
+                {{rowData[col.field]}}
+              </td>
+              <td pEditableColumn>
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+                    <input pInputText type="number" [(ngModel)]="rowData.order_num" required>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    {{rowData.order_num}}
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+              <td class="book-operation">
+                <div class="full-width">
+                  <button pButton type="button" label="确认订购"
+                          class="ui-button-rounded" (click)="confirmBook(rowData)"></button>
+                </div>
+                <div class="full-width mt-lg-2">
+                  <button pButton type="button" label="取消订购"
+                          class="ui-button-rounded ui-button-secondary" (click)="cancelBook(rowData)"></button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </p-panel>
+  </div>
+</div>

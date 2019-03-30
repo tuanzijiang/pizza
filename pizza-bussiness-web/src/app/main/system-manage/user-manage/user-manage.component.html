@@ -1,0 +1,61 @@
+<div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-2 user-manage-page">
+  <div class="user-manage-title">
+    <h5>用户信息</h5>
+  </div>
+  <div class="mt-lg-2 pr-lg-2">
+    <p-table #dt [value]="userList" [paginator]="true" [rows]="10"
+             [globalFilterFields]="['nickname', 'email', 'phone', 'other_account', 'address', 'distinct', 'birthday', 'latest_login']">
+      <ng-template pTemplate="caption">
+        <div style="text-align: right">
+          <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+          <input type="text" pInputText size="50" placeholder="搜索..."
+                 (input)="dt.filterGlobal($event.target.value, 'contains')" style="width:auto">
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header" filterStyle="display:none" >
+        <tr>
+          <th *ngFor="let col of cols" [pSortableColumn]="col.field">
+            {{col.header}}
+            <p-sortIcon *ngIf="col.field != 'user_pic'" [field]="col.field" ariaLabel="Activate to sort"
+                        ariaLabelDesc="Activate to sort in descending order"
+                        ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+          </th>
+        </tr>
+        <tr>
+          <th *ngFor="let col of cols" [ngSwitch]="col.field">
+            <input *ngSwitchCase="'nickname'" pInputText type="text" class="user-filter"
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
+            <input *ngSwitchCase="'email'" pInputText type="text" class="user-filter"
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
+            <input *ngSwitchCase="'address'" pInputText type="text" class="user-filter"
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
+            <input *ngSwitchCase="'distinct'" pInputText type="text" class="user-filter"
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
+            <input *ngSwitchCase="'birthday'" pInputText type="text" class="user-filter"
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
+            <input *ngSwitchCase="'latest_login'" pInputText type="text" class="user-filter"
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-userList>
+        <tr>
+          <td *ngFor="let col of cols" [ngSwitch]="true">
+          <span *ngSwitchCase="col.field ==='user_pic'">
+            <img src="../../../../assets/images/example.jpeg" alt="" style="width:50px; height:auto;">
+          </span>
+            <span *ngSwitchCase="col.field ==='birthday'">
+            {{userList[col.field].toLocaleDateString()}}
+          </span>
+            <span *ngSwitchCase="col.field ==='latest_login'">
+            {{userList[col.field].toLocaleString()}}
+          </span>
+            <span *ngSwitchDefault>
+            {{userList[col.field]}}
+          </span>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

@@ -1,0 +1,133 @@
+<div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 delivery-page">
+  <div class="delivery-title">
+    <h5>配送人员管理</h5>
+  </div>
+  <div class="mt-lg-2 pr-lg-2">
+    <p-table #dt [value]="deliveries" [paginator]="true" [rows]="10"
+             [globalFilterFields]="['id', 'name', 'phone', 'shop_id']">
+      <ng-template pTemplate="caption">
+        <div class="row">
+          <div class="col-lg-6" style="text-align: left">
+            <p-button icon="pi pi-plus" label="新增" (onClick)="addDelivery()"></p-button>
+          </div>
+          <div class="col-lg-6" style="text-align: right">
+            <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+            <input type="text" pInputText size="50" placeholder="搜索..."
+                   (input)="dt.filterGlobal($event.target.value, 'contains')" style="width:auto">
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header" filterStyle="display:none">
+        <tr>
+          <th *ngFor="let col of cols" [pSortableColumn]="col.field">
+            {{col.header}}
+            <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+                        ariaLabelDesc="Activate to sort in descending order"
+                        ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+          </th>
+          <th></th>
+        </tr>
+        <tr>
+          <th *ngFor="let col of cols" [ngSwitch]="col.field">
+            <input *ngSwitchCase="'id'" pInputText type="text" class="del-filter"
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
+            <input *ngSwitchCase="'name'" pInputText type="text" class="del-filter"
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
+            <input *ngSwitchCase="'phone'" pInputText type="text" class="del-filter"
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
+            <input *ngSwitchCase="'shop_id'" pInputText type="text" class="del-filter"
+                   (input)="dt.filter($event.target.value, col.field, 'contains')">
+          </th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData>
+        <tr>
+          <td *ngFor="let col of cols" [ngSwitch]="true">
+            {{rowData[col.field]}}
+          </td>
+          <td class="deli-operation">
+            <button pButton type="button" icon="pi pi-pencil" class="ui-button-primary" (click)="editDelivery(rowData)"></button>
+            <button pButton type="button" icon="pi pi-times" class="ui-button-danger ml-lg-3" (click)="onRowCancel(rowData)"></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<!--Dialog for changing selected delivery!-->
+<p-dialog
+  header="{{dialogHeader}}" [(visible)]="displayChangeDialog" [modal]="true" [responsive]="true"
+  [style]="{width: '60%'}"
+  [minY]="70" [maximizable]="true" [baseZIndex]="10000">
+  <div class="mt-lg-2 ml-lg-2 mr-lg-2" *ngIf="tempDel != null">
+    <div class="row">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">人员姓名</h6>
+      </div>
+      <div class="col-lg-6">
+        <input class="form-control" type="text" [(ngModel)]="tempDel.name">
+      </div>
+    </div>
+    <div class="row mt-lg-2">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">联系方式</h6>
+      </div>
+      <div class="col-lg-6">
+        <input class="form-control" type="text" [(ngModel)]="tempDel.phone">
+      </div>
+    </div>
+    <div class="row mt-lg-2">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">绑定工厂</h6>
+      </div>
+      <div class="col-lg-6">
+        <input class="form-control" type="text" [(ngModel)]="tempDel.shop_id">
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <button type="button" pButton icon="pi pi-check" (click)="submitChangedDel()" label="提交"></button>
+    <button type="button" pButton icon="pi pi-times" (click)="closeDialog()" label="关闭"
+            class="ui-button-secondary"></button>
+  </p-footer>
+</p-dialog>
+
+<!--Dialog for adding selected delivery!-->
+<p-dialog
+  header="{{dialogHeader}}" [(visible)]="displayAddDialog" [modal]="true" [responsive]="true"
+  [style]="{width: '60%'}"
+  [minY]="70" [maximizable]="true" [baseZIndex]="10000">
+  <div class="mt-lg-2 ml-lg-2 mr-lg-2" *ngIf="tempDel != null">
+    <div class="row">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">人员姓名</h6>
+      </div>
+      <div class="col-lg-6">
+        <input class="form-control" type="text" [(ngModel)]="tempDel.name">
+      </div>
+    </div>
+    <div class="row mt-lg-2">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">联系方式</h6>
+      </div>
+      <div class="col-lg-6">
+        <input class="form-control" type="text" [(ngModel)]="tempDel.phone">
+      </div>
+    </div>
+    <div class="row mt-lg-2">
+      <div class="col-lg-3">
+        <h6 class="control-label mt-lg-2">绑定工厂</h6>
+      </div>
+      <div class="col-lg-6">
+        <input class="form-control" type="text" [(ngModel)]="tempDel.shop_id">
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <button type="button" pButton icon="pi pi-check" (click)="submitAddedDel()" label="提交"></button>
+    <button type="button" pButton icon="pi pi-times" (click)="closeDialog()" label="关闭"
+            class="ui-button-secondary"></button>
+  </p-footer>
+</p-dialog>
