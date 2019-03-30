@@ -2,6 +2,7 @@ package edu.ecnu.scsse.pizza.bussiness.server.controller;
 
 import edu.ecnu.scsse.pizza.bussiness.server.TestApplication;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ResultType;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.order.*;
 import org.junit.Assert;
@@ -22,7 +23,7 @@ public class OrderControllerTest extends TestApplication{
     public void testGetOrderList() {
         List<Order> orderList = orderController.getOrderList();
         logger.info("Total order number is {}",orderList.size());
-        Assert.assertEquals(3,orderList.size());
+        Assert.assertEquals(12,orderList.size());
     }
 
     @Test
@@ -43,6 +44,25 @@ public class OrderControllerTest extends TestApplication{
         SaleResponse response = orderController.getMonthSaleStatus(request);
         Assert.assertEquals(ResultType.SUCCESS,response.getResultType());
         Assert.assertEquals(15,response.getSaleStatusList().size());
+    }
+
+    @Test
+    public void testGetPendingRequestList() throws ParseException{
+        List<Order> orderList = orderController.getPendingRequestList();
+        logger.info("Total order number is {}",orderList.size());
+        Assert.assertEquals(0,orderList.size());
+    }
+
+    @Test
+    public void testAllowCancel() throws ParseException{
+        BaseResponse response =  orderController.allowCancel(1);
+        Assert.assertEquals(ResultType.FAILURE,response.getResultType());
+    }
+
+    @Test
+    public void testDenyCancel() throws ParseException{
+        BaseResponse response = orderController.denyCancel(1);
+        Assert.assertEquals(ResultType.FAILURE,response.getResultType());
     }
 
 }

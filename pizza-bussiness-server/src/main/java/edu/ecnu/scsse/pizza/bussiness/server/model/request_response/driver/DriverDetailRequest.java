@@ -37,4 +37,20 @@ public class DriverDetailRequest {
     public void setShopId(int shopId) {
         this.shopId = shopId;
     }
+
+    public DriverDetailRequest() {
+    }
+
+    public DriverDetailRequest( String name, String phone, int shopId) {
+        this.name = name;
+        this.phone = phone;
+        this.shopId = shopId;
+    }
+
+    public DriverDetailRequest(int driverId, String name, String phone, int shopId) {
+        this.driverId = driverId;
+        this.name = name;
+        this.phone = phone;
+        this.shopId = shopId;
+    }
 }

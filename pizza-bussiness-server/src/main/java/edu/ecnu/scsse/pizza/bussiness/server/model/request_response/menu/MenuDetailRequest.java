@@ -20,6 +20,16 @@ public class MenuDetailRequest {
     public MenuDetailRequest() {
     }
 
+    public MenuDetailRequest( String name, Object image, String description, List<Ingredient> ingredients, double price, PizzaStatus state, PizzaTag tagName) {
+        this.name = name;
+        this.image = image;
+        this.description = description;
+        this.ingredients = ingredients;
+        this.price = price;
+        this.state = state;
+        this.tagName = tagName;
+    }
+
     public MenuDetailRequest(String id, String name, Object image, String description, List<Ingredient> ingredients, double price, PizzaStatus state, PizzaTag tagName) {
         this.id = id;
         this.name = name;
