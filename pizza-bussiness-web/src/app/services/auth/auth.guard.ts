@@ -32,13 +32,13 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
   }
 
   checkLogin(url: string): boolean {
-    if (this.authService.isLoggedIn) { console.log("11111111111111111"); return true; }
+    if (this.authService.isLoggedIn) { return true; }
 
     // Store the attempted URL for redirecting
     this.authService.redirectUrl = url;
 
     // Create a dummy session id
-    let sessionId = 123456789;
+    let sessionId = Math.round(Math.random()*100000000);
 
     // Set our navigation extras object
     // that contains our global query params and fragment

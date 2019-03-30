@@ -1,7 +1,16 @@
 import {Injectable} from '@angular/core';
-import {delay, tap} from "rxjs/operators";
-import {Observable, of} from "rxjs";
+import {tap} from "rxjs/operators";
+import {Observable,} from "rxjs";
+import {Admin} from "../../modules/admin";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {AddressService} from "../address/address.service";
+import {BaseResponse} from "../../modules/baseResponse";
 
+const httpOptions = {
+  headers: new HttpHeaders({
+    'Content-Type':  'application/json',
+  })
+};
 @Injectable({
   providedIn: 'root'
 })
@@ -11,18 +20,20 @@ export class AuthService {
   isLoggedIn = false;
   redirectUrl: string;
 
-  constructor() {
+  constructor(private http: HttpClient) {
   }
 
-  login(userName): Observable<boolean> {
-    return of(true).pipe(
-      tap(val => {
-        AuthService.UserName = userName;
-        this.isLoggedIn = true})
-    );
+  login(admin: Admin): Observable<BaseResponse> {
+    return this.http.post<BaseResponse>(AddressService.getLogin(), admin, httpOptions)
+      .pipe(
+      tap(() => {
+        AuthService.UserName = admin.adminName;
+        this.isLoggedIn = true}),
+      )
   }
 
   logout(): void {
     this.isLoggedIn = false;
   }
+
 }
