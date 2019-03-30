@@ -3,23 +3,26 @@
 */
 
 export class OrderDetail {
-  order_id: string;
-  receive_name: string;
-  receive_phone: string;
-  receive_address: string;
-  menu: OrderMenu[];
-  total_amount: number;
-  buy_phone: string;
-  commit_time: string;
-  shop_id: string;
-  driver_id: string;
-  start_deliver_time: string;
-  arrive_time: string;
+  orderId: string;
+  receiveName: string;
+  receivePhone: string;
+  receiveAddress: string;
+  menuList: OrderMenu[];
+  totalAmount: number;
+  buyPhone: string;
+  commitTime: string;
+  shopId: string;
+  shopName: string;
+  driverId: string;
+  driverName: string;
+  driverPhone: string;
+  startDeliverTime: string;
+  arriveTime: string;
   state: string;
 }
 
 class OrderMenu {
-  menu_name: string;
-  menu_price: number;
-  menu_count: number;
+  name: string;
+  price: number;
+  count: number;
 }

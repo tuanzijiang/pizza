@@ -1,8 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ErrorMessage} from "ng-bootstrap-form-validation";
-import {ActivatedRoute, NavigationExtras, Router} from "@angular/router";
+import { NavigationExtras, Router} from "@angular/router";
 import {AuthService} from "../services/auth/auth.service";
+import {Admin} from "../modules/admin";
+import {BaseResponse} from "../modules/baseResponse";
 
 @Component({
   selector: 'app-login',
@@ -15,7 +17,7 @@ export class LoginComponent implements OnInit {
   buttonDisabled: boolean;
   userName: string;
   password: string;
-
+  admin: Admin;
   customErrorMessages: ErrorMessage[] = [
     {
       error: 'required',
@@ -42,6 +44,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.admin = new Admin();
     this.buttonDisabled = false;
     this.formGroup = new FormGroup({
       UserName: new FormControl('', [
@@ -59,23 +62,31 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.buttonDisabled = true;
-    this.authService.login(this.userName).subscribe(
-      () => {
-        let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/order-list';
-        // Set our navigation extras object
-        // that passes on our global query params and fragment
-        let navigationExtras: NavigationExtras = {
-          queryParamsHandling: 'preserve',
-          preserveFragment: true
-        };
+    this.admin.adminName = this.userName;
+    this.admin.password = this.password;
+    this.authService.login(this.admin).subscribe(
+      (response: BaseResponse) => {
+        if(response.resultType == 'FAILURE') {
+          alert(response.errorMsg);
+          this.buttonDisabled = false;
+        } else {
+          let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/order-list';
+          // Set our navigation extras object
+          // that passes on our global query params and fragment
+          let navigationExtras: NavigationExtras = {
+            queryParamsHandling: '',
+            preserveFragment: true
+          };
 
-        // Redirect the user
-        this.router.navigate([redirect], navigationExtras);
-      }
+          // Redirect the user
+          this.router.navigate([redirect], navigationExtras);
+        }
+      },
     );}
 
   onReset() {
     this.formGroup.reset();
+    this.buttonDisabled = false;
   }
 
 }
