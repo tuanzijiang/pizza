@@ -1,4 +1,4 @@
 export class Ingredient {
-  ig_name: string;
-  ig_num: number;
+  name: string;
+  count: number;
 }

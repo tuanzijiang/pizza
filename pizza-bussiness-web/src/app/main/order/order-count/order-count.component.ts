@@ -1,6 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {YesterdayOrder} from "../../../modules/order/yesterdayOrder";
 import {Table} from "primeng/table";
+import {OrderService} from "../../../services/order/order.service";
+import {OrderCount} from "../../../modules/order/orderCount";
 
 @Component({
   selector: 'app-order-count',
@@ -11,34 +13,42 @@ export class OrderCountComponent implements OnInit {
 
   @ViewChild('myTable') private _table: Table;
   yesterdayOrder: YesterdayOrder;
-  orderCount: any;
+  orderCountList: OrderCount[];
   cols: any[];
   dateFilters: any;
 
-  constructor() {
+  constructor(private orderService: OrderService) {
   }
 
   ngOnInit() {
     var _self = this;
-    this.yesterdayOrder = {
-      new_order_num: 100,
-      complete_num: 80,
-      total_amount: 800
-    };
+    this.orderService.getYesterdayOrder().subscribe(
+      (yesOrder: YesterdayOrder) => {
+        this.yesterdayOrder = yesOrder;
+      }
+    );
 
-    this.orderCount = [
-      {date: new Date('2019-03-04'), order_num: 1000, complete_num: 900, cancle_num: 100, total_amount: 20000, aaa: 'bbb'},
-      {date: new Date('2019-03-05'), order_num: 1500, complete_num: 1300, cancle_num: 200, total_amount: 50000, aaa: 'bbb'},
-      {date: new Date('2019-03-06'), order_num: 1000, complete_num: 1400, cancle_num: 150, total_amount: 50000, aaa: 'bbb'},
-      {date: new Date('2019-03-07'), order_num: 2000, complete_num: 1500, cancle_num: 500, total_amount: 30000, aaa: 'bbb'},
-    ];
+    this.orderService.getOrderCountStatus().subscribe(
+      (orderCountList: OrderCount[])=> {
+        this.orderCountList = [];
+        for(let orderCount of orderCountList) {
+          let newOrder = new OrderCount();
+          newOrder.date = new Date(orderCount.date);
+          newOrder.orderNum = orderCount.orderNum;
+          newOrder.completeNum = orderCount.completeNum;
+          newOrder.cancelNum = orderCount.cancelNum;
+          newOrder.totalAmount = orderCount.totalAmount;
+          this.orderCountList.push(newOrder);
+        }
+      }
+    );
 
     this.cols = [
       { field: 'date', header: '时间' },
-      { field: 'order_num', header: '订单总数' },
-      { field: 'complete_num', header: '已完成数' },
-      { field: 'cancle_num', header: '取消数' },
-      { field: 'total_amount', header: '累计金额（元）' }
+      { field: 'orderNum', header: '订单总数' },
+      { field: 'completeNum', header: '已完成数' },
+      { field: 'cancelNum', header: '取消数' },
+      { field: 'totalAmount', header: '累计金额（元）' }
     ];
 
     // this will be called from your templates onSelect event

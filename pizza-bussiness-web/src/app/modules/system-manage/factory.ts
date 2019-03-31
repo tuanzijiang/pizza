@@ -1,15 +1,15 @@
 import {Ingredient} from "./ingredient";
 
 export class Factory {
-  fac_id: string;
+  id: string;
   name: string;
-  pic: any;
+  image: any;
   address: string;
   area: string;
-  open_hours: string;
+  openHours: string;
   phone: string;
-  max_orders: number;
-  longitude: string;
-  latitude: string;
-  ingridients: Ingredient[];
+  maxNum: number;
+  lon: string;
+  lat: string;
+  ingredientList: Ingredient[];
 }

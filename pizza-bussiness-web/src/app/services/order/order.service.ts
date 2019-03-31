@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Observable} from "rxjs";
-import {OrderDetail} from "../../modules/order/orderDetail";
+import { map } from 'rxjs/operators';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {AddressService} from "../address/address.service";
 
@@ -19,7 +19,17 @@ export class OrderService {
 
   getOrders():Observable<any> {
     return this.http.get(AddressService.getOrderList(), httpOptions)
-      .map((result: Response) => result.json())
+      .pipe(map((result: Response) => result.json()))
+  }
+
+  getYesterdayOrder(): Observable<any> {
+    return this.http.get(AddressService.getYesterdayOrder(), httpOptions)
+      .pipe(map((result: Response) => result.json()))
+  }
+
+  getOrderCountStatus(): Observable<any> {
+    return this.http.get(AddressService.getOrderCountList(), httpOptions)
+      .pipe(map((result: Response) => result.json()))
   }
 
 

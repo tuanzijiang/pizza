@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Delivery} from "../../modules/delivery/delivery";
+import {SystemManageService} from "../../services/system-manage/system-manage.service";
+import {DeliveryService} from "../../services/delivery/delivery.service";
 
 @Component({
   selector: 'app-delivery',
@@ -15,7 +17,7 @@ export class DeliveryComponent implements OnInit {
   displayChangeDialog: boolean;
   displayAddDialog: boolean;
 
-  constructor() {
+  constructor(private deliveryService: DeliveryService) {
   }
 
   ngOnInit() {
@@ -23,19 +25,14 @@ export class DeliveryComponent implements OnInit {
     this.displayChangeDialog = false;
     this.displayAddDialog = false;
 
+
     this.cols = [
       {field: 'id', header: '配送员ID'},
       {field: 'name', header: '姓名'},
       {field: 'phone', header: '手机号'},
-      {field: 'shop_id', header: '绑定的店ID'},
+      {field: 'shopId', header: '绑定的店ID'},
     ];
 
-    this.deliveries = [
-      {id: 'GDH72636', name: '迪丽热巴', phone: '15284736374', shop_id: 'AAAA'},
-      {id: 'FHD47547', name: '古力娜扎', phone: '15248738485', shop_id: 'BBBB'},
-      {id: 'LFI57564', name: '关晓彤', phone: '15284857464', shop_id: 'CCCC'},
-      {id: 'JDB58392', name: '赵丽颖', phone: '15269506968', shop_id: 'DDDDD'},
-    ]
   }
 
   addDelivery() {

@@ -4,7 +4,7 @@
   </div>
   <div class="mt-lg-2 pr-lg-2">
     <p-table #dt [value]="factories" [paginator]="true" [rows]="10"
-             [globalFilterFields]="['fac_id', 'name', 'address', 'area', 'open_hours', 'phone']">
+             [globalFilterFields]="['id', 'name', 'address', 'area', 'openHours', 'phone']">
       <ng-template pTemplate="caption">
         <div class="row">
           <div class="col-lg-6" style="text-align: left">
@@ -21,7 +21,7 @@
         <tr>
           <th *ngFor="let col of cols" [pSortableColumn]="col.field">
             {{col.header}}
-            <p-sortIcon *ngIf="col.field != 'pic'" [field]="col.field" ariaLabel="Activate to sort"
+            <p-sortIcon *ngIf="col.field != 'image'" [field]="col.field" ariaLabel="Activate to sort"
                         ariaLabelDesc="Activate to sort in descending order"
                         ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
           </th>
@@ -44,7 +44,7 @@
       <ng-template pTemplate="body" let-rowData>
         <tr>
           <td *ngFor="let col of cols" [ngSwitch]="true">
-            <span *ngSwitchCase="col.field ==='pic'">
+            <span *ngSwitchCase="col.field ==='image'">
               <img src="{{rowData[col.field]}}" alt="" style="width:50px; height:auto;">
             </span>
             <span *ngSwitchDefault>
@@ -145,7 +145,7 @@
             <span><b>最大接单量: </b></span>
           </div>
           <div class="col-lg-6 offset-lg-0">
-            <input class="form-control" type="number" [(ngModel)]="tempFactory.max_orders">
+            <input class="form-control" type="number" [(ngModel)]="tempFactory.maxNum">
           </div>
         </div>
         <div class="row mt-lg-2">
@@ -181,7 +181,7 @@
         </div>
         <div class="col-lg-6">
           <input class="form-control-file" type='file' accept="image/*" (change)="onSelectFile($event)">
-          <img [src]="imgUrl" height="100" width="100" *ngIf="tempFactory.pic != null">
+          <img [src]="imgUrl" height="100" width="100" *ngIf="tempFactory.image != null">
         </div>
       </div>
     </div>
@@ -255,7 +255,7 @@
             <span><b>最大接单量: </b></span>
           </div>
           <div class="col-lg-6 offset-lg-0">
-            <input class="form-control" type="number" [(ngModel)]="tempFactory.max_orders">
+            <input class="form-control" type="number" [(ngModel)]="tempFactory.maxNum">
           </div>
         </div>
         <div class="row mt-lg-2">
@@ -291,7 +291,7 @@
         </div>
         <div class="col-lg-6">
           <input class="form-control-file" type='file' accept="image/*" (change)="onSelectFile($event)">
-          <img [src]="imgUrl" height="100" width="100" *ngIf="tempFactory.pic != null">
+          <img [src]="imgUrl" height="100" width="100" *ngIf="tempFactory.image != null">
         </div>
       </div>
     </div>

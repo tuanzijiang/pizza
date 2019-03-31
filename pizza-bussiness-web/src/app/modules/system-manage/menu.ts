@@ -1,12 +1,13 @@
 import {Ingredient} from "./ingredient";
 
 export class Menu {
-  pizza_id: string;
+  id: string;
   name: string;
   type: string;
-  pic: any;
+  image: any;
   price: number;
-  desc: string;
-  status: string;
-  ingridients: Ingredient[];
+  tagName: string;
+  description: string;
+  state: string;
+  ingredients: Ingredient[];
 }
