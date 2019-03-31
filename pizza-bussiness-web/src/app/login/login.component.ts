@@ -82,7 +82,8 @@ export class LoginComponent implements OnInit {
           this.router.navigate([redirect], navigationExtras);
         }
       },
-    );}
+    );
+  }
 
   onReset() {
     this.formGroup.reset();

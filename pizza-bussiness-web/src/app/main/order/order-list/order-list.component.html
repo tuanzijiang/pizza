@@ -4,7 +4,7 @@
   </div>
   <div class="mt-lg-2 pr-lg-2">
     <p-table #dt [value]="orders" [paginator]="true" [rows]="10"
-             [globalFilterFields]="['order_id', 'receive_name', 'phone', 'receive_address', 'total_amount', 'create_time', 'state', 'operation']">
+             [globalFilterFields]="['orderId', 'receiveName', 'receivePhone', 'receiveAddress', 'totalAmount', 'commitTime', 'state', 'operation']">
       <ng-template pTemplate="caption">
         <div style="text-align: right">
           <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
@@ -24,13 +24,13 @@
         </tr>
         <tr>
           <th *ngFor="let col of cols" [ngSwitch]="col.field">
-            <input *ngSwitchCase="'order_id'" pInputText type="text" class="order-filter"
+            <input *ngSwitchCase="'orderId'" pInputText type="text" class="order-filter"
                    (input)="dt.filter($event.target.value, col.field, 'contains')">
-            <input *ngSwitchCase="'receive_name'" pInputText type="text" class="order-filter"
+            <input *ngSwitchCase="'receiveName'" pInputText type="text" class="order-filter"
                    (input)="dt.filter($event.target.value, col.field, 'contains')">
-            <input *ngSwitchCase="'phone'" pInputText type="text" class="order-filter"
+            <input *ngSwitchCase="'receivePhone'" pInputText type="text" class="order-filter"
                    (input)="dt.filter($event.target.value, col.field, 'contains')">
-            <input *ngSwitchCase="'receive_address'" pInputText type="text" class="order-filter"
+            <input *ngSwitchCase="'receiveAddress'" pInputText type="text" class="order-filter"
                    (input)="dt.filter($event.target.value, col.field, 'contains')">
             <p-dropdown *ngSwitchCase="'state'" [options]="states" [style]="{'width':'100%'}"
                         (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
