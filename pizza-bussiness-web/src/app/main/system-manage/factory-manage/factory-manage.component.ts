@@ -105,7 +105,7 @@ export class FactoryManageComponent implements OnInit {
 
   submitAddFac() {
     this.tempFactory.openHours = this.dateToStr(this.startDate) + "-" + this.dateToStr(this.endDate);
-    this.systemManageService.editShop(this.tempFactory).subscribe(
+    this.systemManageService.addShop(this.tempFactory).subscribe(
       (response: BaseResponse) => {
         if (response.resultType == 'FAILURE') {
           alert(response.errorMsg);

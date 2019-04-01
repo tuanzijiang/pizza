@@ -34,6 +34,11 @@ export class SystemManageService {
       .pipe(map((result: Response) => result.json()))
   }
 
+  addMenu(menu: Menu):Observable<any> {
+    return this.http.post(AddressService.addMenu(), menu, httpOptions)
+      .pipe(map((result: Response) => result.json()))
+  }
+
   changeMenuState(id: string):Observable<any> {
     return this.http.post(AddressService.changeMenuState() + id, httpOptions)
       .pipe(map((result: Response) => result.json()))
@@ -46,6 +51,11 @@ export class SystemManageService {
 
   editShop(shop: Factory):Observable<any> {
     return this.http.post(AddressService.editShop(), shop, httpOptions)
+      .pipe(map((result: Response) => result.json()))
+  }
+
+  addShop(shop: Factory):Observable<any> {
+    return this.http.post(AddressService.addShop(), shop, httpOptions)
       .pipe(map((result: Response) => result.json()))
   }
 

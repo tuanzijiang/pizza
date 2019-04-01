@@ -4,7 +4,7 @@
   </div>
   <div class="mt-lg-2 pr-lg-2">
     <p-table #dt [value]="operations" [paginator]="true" [rows]="10"
-             [globalFilterFields]="['manager_id', 'type', 'object', 'time']">
+             [globalFilterFields]="['adminId', 'operateType', 'operateDetail', 'operateTime']">
       <ng-template pTemplate="caption">
         <div style="text-align: right">
           <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
@@ -23,13 +23,13 @@
         </tr>
         <tr>
           <th *ngFor="let col of cols" [ngSwitch]="col.field">
-            <input *ngSwitchCase="'manager_id'" pInputText type="text" class="op-filter"
+            <input *ngSwitchCase="'adminId'" pInputText type="text" class="op-filter"
                    (input)="dt.filter($event.target.value, col.field, 'contains')">
-            <input *ngSwitchCase="'object'" pInputText type="text" class="op-filter"
+            <input *ngSwitchCase="'operateDetail'" pInputText type="text" class="op-filter"
                    (input)="dt.filter($event.target.value, col.field, 'contains')">
-            <input *ngSwitchCase="'time'" pInputText type="text" class="op-filter"
+            <input *ngSwitchCase="'operateTime'" pInputText type="text" class="op-filter"
                    (input)="dt.filter($event.target.value, col.field, 'contains')">
-            <p-dropdown *ngSwitchCase="'type'" [options]="opType" [style]="{'width':'100%'}"
+            <p-dropdown *ngSwitchCase="'operateType'" [options]="opType" [style]="{'width':'100%'}"
                         (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
           </th>
         </tr>

@@ -18,11 +18,11 @@
             </tr>
             <tr>
               <th *ngFor="let col of pendingCols" [ngSwitch]="col.field">
-                <input *ngSwitchCase="'order_id'" pInputText type="text" class="chargeback-filter"
+                <input *ngSwitchCase="'orderId'" pInputText type="text" class="chargeback-filter"
                        (input)="dt.filter($event.target.value, col.field, 'contains')">
-                <input *ngSwitchCase="'receiver'" pInputText type="text" class="chargeback-filter"
+                <input *ngSwitchCase="'receiveName'" pInputText type="text" class="chargeback-filter"
                        (input)="dt.filter($event.target.value, col.field, 'contains')">
-                <input *ngSwitchCase="'phone'" pInputText type="text" class="chargeback-filter"
+                <input *ngSwitchCase="'receivePhone'" pInputText type="text" class="chargeback-filter"
                        (input)="dt.filter($event.target.value, col.field, 'contains')">
               </th>
               <th></th>
@@ -31,9 +31,6 @@
           <ng-template pTemplate="body" let-rowData>
             <tr>
               <td *ngFor="let col of pendingCols" [ngSwitch]="true">
-                <span *ngSwitchCase="col.field == 'commit_time' || col.field == 'cancel_time'">
-                  {{rowData[col.field] | date:'medium' }}
-                </span>
                 <span *ngSwitchDefault>{{rowData[col.field]}}</span>
               </td>
               <td class="chargeback-operation">
@@ -59,18 +56,18 @@
             </tr>
             <tr>
               <th *ngFor="let col of processedCols" [ngSwitch]="col.field">
-                <input *ngSwitchCase="'order_id'" pInputText type="text" class="chargeback-filter"
+                <input *ngSwitchCase="'orderId'" pInputText type="text" class="chargeback-filter"
                        (input)="dtProcessed.filter($event.target.value, col.field, 'contains')">
-                <input *ngSwitchCase="'receiver'" pInputText type="text" class="chargeback-filter"
+                <input *ngSwitchCase="'receiveName'" pInputText type="text" class="chargeback-filter"
                        (input)="dtProcessed.filter($event.target.value, col.field, 'contains')">
-                <input *ngSwitchCase="'phone'" pInputText type="text" class="chargeback-filter"
+                <input *ngSwitchCase="'receivePhone'" pInputText type="text" class="chargeback-filter"
                        (input)="dtProcessed.filter($event.target.value, col.field, 'contains')">
                 <p-calendar
                   [style]="{'width':'100%'}"
                   [inputStyle]="{'width':'100%'}"
                   [(ngModel)]="dateFilters"
                   appendTo="body"
-                  *ngSwitchCase="'commit_time'"
+                  *ngSwitchCase="'commitTime'"
                   selectionMode="range"
                   [readonlyInput]="false"
                   dateFormat="yy-mm-dd"
@@ -83,10 +80,7 @@
           <ng-template pTemplate="body" let-rowData let-columns="columns">
             <tr>
               <td *ngFor="let col of columns" [ngSwitch]="true">
-                <span *ngSwitchCase="col.field == 'commit_time' || col.field == 'cancel_time'">
-                  {{rowData[col.field] | date:'medium' }}
-                </span>
-                <span *ngSwitchCase="col.field == 'result'">
+                <span *ngSwitchCase="col.field == 'state'">
                   <span *ngIf="rowData[col.field] == '通过'" style="color: green">
                     {{rowData[col.field]}}
                   </span>
