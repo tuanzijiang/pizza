@@ -30,7 +30,7 @@ import static org.mockito.Matchers.any;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({OrderService.class, HttpUtils.class})
-@PowerMockIgnore("javax.management.*")
+@PowerMockIgnore({"javax.management.*","com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*"})
 public class OrderServiceStaticTest {
 
     private static final Gson GSON = new Gson();
@@ -149,5 +149,13 @@ public class OrderServiceStaticTest {
         PowerMockito.when(HttpUtils.commitOrder(orderUuid, userAddressId)).thenThrow(IOException.class);
         ServiceException exception = (ServiceException) thrownBy(() -> orderService.sendOrder(orderUuid, userAddressId));
         assertEquals(exception.getMessage(), "I/O Exception while sending http request to Business Server.");
+    }
+
+    @Test
+    public void testSetters(){
+        OrderService.Phones phones=new OrderService.Phones();
+        phones.setServicePhone("");
+        phones.setDeliverymanPhone("");
+        phones.setShopPhone("");
     }
 }

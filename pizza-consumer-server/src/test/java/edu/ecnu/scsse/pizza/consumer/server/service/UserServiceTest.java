@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-public class UserServiceUT {
+public class UserServiceTest {
 
     @Mock
     private UserJpaRepository userJpaRepository;
@@ -108,7 +108,7 @@ public class UserServiceUT {
         when(userAddressJpaRepository.findByUserId(anyInt())).thenReturn(userAddressEntityList);
 
 
-        when(userJpaRepository.findByEmail(userEntity.getEmail())).thenReturn(userEntityOptional);
+        when(userJpaRepository.findByEmail(anyString())).thenReturn(userEntityOptional);
         when(userJpaRepository.findByPhone(userEntity.getPhone())).thenReturn(userEntityOptional);
         when(userJpaRepository.save(any())).thenReturn(userEntity);
 
@@ -200,15 +200,23 @@ public class UserServiceUT {
         LoginResponse loginResponse = userService.login(loginRequest);
         Assert.assertEquals(loginResponse.getResultType(), ResultType.FAILURE);
 
-        loginRequest.setAccount("12");
-        loginRequest.setPassword(password);
-        loginResponse = userService.login(loginRequest);
-        Assert.assertEquals(loginResponse.getResultType(), ResultType.FAILURE);
-
         loginRequest.setType(LoginRequest.Type.VERIFICATION);
         loginRequest.setAccount("12");
         loginRequest.setPassword("123456");
+        when(userJpaRepository.findByPhone(anyString())).thenReturn(nullUser);
         loginResponse = userService.login(loginRequest);
+        Assert.assertEquals(loginResponse.getResultType(), ResultType.FAILURE);
+    }
+
+    @Test
+    public void testLoginUserNotExists() {
+
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setType(LoginRequest.Type.PASSWORD);
+        loginRequest.setAccount("12");
+        loginRequest.setPassword(password);
+        when(userJpaRepository.findByEmail(anyString())).thenReturn(nullUser);
+        LoginResponse loginResponse = userService.login(loginRequest);
         Assert.assertEquals(loginResponse.getResultType(), ResultType.FAILURE);
     }
 

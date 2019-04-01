@@ -12,8 +12,8 @@
     <artifactId>pizza-consumer-server</artifactId>
 
     <properties>
-        <powermock.version>1.6.2</powermock.version>
-        <mockito-version>1.10.8</mockito-version>
+        <powermock.version>2.0.0-RC.3</powermock.version>
+        <mockito.version>2.23.0</mockito.version>
     </properties>
 
     <dependencies>
@@ -84,14 +84,14 @@
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
+            <artifactId>powermock-api-mockito2</artifactId>
             <version>${powermock.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>${mockito-version}</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

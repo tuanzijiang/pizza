@@ -1,10 +1,8 @@
 package edu.ecnu.scsse.pizza.consumer.server.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ecnu.scsse.pizza.consumer.server.model.user.*;
 import edu.ecnu.scsse.pizza.consumer.server.service.UserService;
-import net.minidev.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,14 +16,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
-public class UserControllerUT {
+public class UserControllerTest {
 
     private MockMvc mockMvc;
 
