@@ -1,0 +1,44 @@
+@import '~antd/dist/antd.css';
+@import '~@ui/base.scss';
+
+.main-wrapper {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.main-left {
+  flex: 0 0 rem(200);
+  height: 100%;
+  background: $white_3;
+}
+
+.main-right {
+  flex: 1 1 auto;
+  height: 100%;
+  background: $white_1;
+}
+
+.main-leftWrapper {
+  height: 100%;
+  width: 100%;
+  padding: rem(5);
+}
+
+.main-leftHeader {
+  line-height: rem(30);
+  text-align: center;
+  user-select: none;
+}
+
+.main-leftRecord {
+  line-height: rem(30);
+  text-align: center;
+  cursor: pointer;
+
+  &:hover {
+    background: $gray_1;
+  }
+}
+
+.main-leftRecord_add {}
