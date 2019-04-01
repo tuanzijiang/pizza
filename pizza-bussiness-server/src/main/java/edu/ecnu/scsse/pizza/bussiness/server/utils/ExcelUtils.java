@@ -9,10 +9,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,10 +19,10 @@ import java.util.List;
 public class ExcelUtils {
     private static Logger log = LoggerFactory.getLogger(ExcelUtils.class);
 
-    public static HashMap<String, Object> importXls(String xlsFile){
+    public static HashMap<String, Object> importXls(MultipartFile xlsFile){
         HashMap<String,Object> map = new HashMap<>();
         try{
-            HSSFWorkbook book = new HSSFWorkbook(new FileInputStream(xlsFile));
+            HSSFWorkbook book = new HSSFWorkbook(xlsFile.getInputStream());
             Sheet sheet = book.getSheetAt(0);
             map.put("sheet",sheet);
             Row title = sheet.getRow(0);
@@ -67,10 +66,10 @@ public class ExcelUtils {
         return map;
     }
 
-    public static HashMap<String, Object> importXlsx(String xlsxFile){
+    public static HashMap<String, Object> importXlsx(MultipartFile xlsxFile){
         HashMap<String,Object> map = new HashMap<>();
         try{
-            XSSFWorkbook book = new XSSFWorkbook(new FileInputStream(xlsxFile));
+            XSSFWorkbook book = new XSSFWorkbook(xlsxFile.getInputStream());
             Sheet sheet = book.getSheetAt(0);
             map.put("sheet",sheet);
             Row title = sheet.getRow(0);

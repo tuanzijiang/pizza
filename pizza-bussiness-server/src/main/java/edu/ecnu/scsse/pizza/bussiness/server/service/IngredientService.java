@@ -28,10 +28,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import javax.persistence.EntityExistsException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -157,15 +157,16 @@ public class IngredientService {
         return response;
     }
 
-    public BatchImportResponse batchImportByExcelFile(String path){
+    public BatchImportResponse batchImportByExcelFile(MultipartFile file){
         String msg = "";
         BatchImportResponse response = new BatchImportResponse();
         response.setResultType(ResultType.FAILURE);
         Sheet sheet = null;
-        if(path.endsWith("xls"))
-            sheet = (Sheet) ExcelUtils.importXls(path).get("sheet");
-        else if(path.endsWith("xlsx"))
-            sheet = (Sheet) ExcelUtils.importXlsx(path).get("sheet");
+        String fileName = file.getOriginalFilename();
+        if(fileName!=null&&fileName.endsWith("xls"))
+            sheet = (Sheet) ExcelUtils.importXls(file).get("sheet");
+        else if(fileName!=null&&fileName.endsWith("xlsx"))
+            sheet = (Sheet) ExcelUtils.importXlsx(file).get("sheet");
         if(sheet!=null) {
             msg = getIngredientRowAndCell(sheet);
             if(msg.contains("successfully")) {
@@ -234,8 +235,13 @@ public class IngredientService {
             }
             ingredientList.add(ingredient);
         }
-        ingredientJpaRepository.saveAll(ingredientList);
-        msg = String.format("%d items import successfully.",ingredientList.size());
+        try {
+            ingredientJpaRepository.saveAll(ingredientList);
+            msg = String.format("%d items import successfully.", ingredientList.size());
+        }catch (EntityExistsException e){
+            e.printStackTrace();
+            msg = e.getMessage();
+        }
         return msg;
     }
 

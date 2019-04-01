@@ -21,7 +21,7 @@ public class AdminServiceTest extends TestApplication{
     public void testAdminLoginSuccessfully() {
         LoginRequest successRequest = new LoginRequest("admin","admin");
         LoginResponse response = adminService.adminLogin(successRequest);
-        Assert.assertEquals(response.getAdminId(),1);
+        Assert.assertEquals(response.getAdminId(),2);
         Assert.assertEquals(response.getResultType(), ResultType.SUCCESS);
     }
 

@@ -3,6 +3,7 @@ package edu.ecnu.scsse.pizza.bussiness.server.service;
 import edu.ecnu.scsse.pizza.bussiness.server.exception.NotFoundException;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Menu;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order;
+import edu.ecnu.scsse.pizza.bussiness.server.model.entity.PendingOrder;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.SaleStatus;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ResultType;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -128,17 +130,21 @@ public class OrderService {
         return new SaleStatus(date,orderNum, completeNum, cancelNum, totalAmount);
     }
 
-    public List<Order> getPendingRequestList(){
-        List<Order> pendingList = new ArrayList<>();
+    public List<PendingOrder> getPendingRequestList(){
+        List<PendingOrder> pendingList = new ArrayList<>();
+        List<PendingOrder> resultList = new ArrayList<>();
         List<OrderEntity> orderEntityList = orderJpaRepository.findPendingList();
         if(orderEntityList.size()!=0){
-            pendingList = orderEntityList.stream().map(this::convertSimple).collect(Collectors.toList());
+            pendingList = orderEntityList.stream().map(this::convertToPendingOrder).collect(Collectors.toList());
+            for(PendingOrder pendingOrder:pendingList){
+                if(pendingOrder.getPeriod()<=10)
+                    resultList.add(pendingOrder);
+            }
         }
         else{
-            log.warn("Fail to find the pending list.");
+            log.warn("Fail to find pending list.");
         }
-
-        return pendingList;
+        return resultList;
     }
 
     public BaseResponse changeOrderStatus(int orderId, OrderStatus status){
@@ -169,6 +175,47 @@ public class OrderService {
             log.warn(msg);
         }
         return response;
+    }
+
+    public List<PendingOrder> getCancelOrderList(){
+        List<PendingOrder> cancelList = new ArrayList<>();
+        List<OrderEntity> orderEntityList = orderJpaRepository.findCancelOrderList();
+        if(orderEntityList.size()!=0){
+            cancelList = orderEntityList.stream().map(this::convertToPendingOrder).collect(Collectors.toList());
+        }
+        else{
+            log.warn("Fail to find cancel list.");
+        }
+        return cancelList;
+    }
+
+    private PendingOrder convertToPendingOrder(OrderEntity orderEntity){
+        PendingOrder pendingOrder = new PendingOrder();
+        CopyUtils.copyProperties(orderEntity,pendingOrder);
+        pendingOrder.setState(OrderStatus.fromDbValue(orderEntity.getState()));
+        pendingOrder.setOrderId(String.valueOf(orderEntity.getId()));
+
+        //设置收货人信息
+        Optional<UserAddressEntity> userAddressEntityOptional = userAddressJpaRepository.findByUserIdAndAddressId(orderEntity.getUserId(),orderEntity.getAddressId());
+        if(userAddressEntityOptional.isPresent()){
+            UserAddressEntity userAddressEntity = userAddressEntityOptional.get();
+            pendingOrder.setReceiveName(userAddressEntity.getName());
+            pendingOrder.setReceivePhone(userAddressEntity.getPhone());
+        }
+
+        //下单时间的格式转换
+        String commitTimePattern = "yyyy/MM/dd hh:MM:ss";
+        DateFormat df = new SimpleDateFormat(commitTimePattern);
+        if(orderEntity.getCommitTime()!=null) {
+            pendingOrder.setCommitTime(df.format(orderEntity.getCommitTime()));
+            //已支付时长
+            long date = orderEntity.getCommitTime().getTime();
+            long cur = (new Date()).getTime();
+            double period = (cur-date)/1000/60;
+            pendingOrder.setPeriod(period);
+            pendingOrder.setPaidPeriod((int)period+"min");
+        }
+        return pendingOrder;
     }
 
     private Order convertSimple(OrderEntity orderEntity){

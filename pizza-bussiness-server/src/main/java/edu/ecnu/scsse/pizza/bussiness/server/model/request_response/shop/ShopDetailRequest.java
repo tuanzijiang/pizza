@@ -91,4 +91,32 @@ public class ShopDetailRequest {
     public void setLon(double lon) {
         this.lon = lon;
     }
+
+    public ShopDetailRequest( int maxNum, String name, String address, String phone, String image, String startTime, String endTime, double lat, double lon) {
+        this.maxNum = maxNum;
+        this.name = name;
+        this.address = address;
+        this.phone = phone;
+        this.image = image;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.lat = lat;
+        this.lon = lon;
+    }
+
+    public ShopDetailRequest(String id, int maxNum, String name, String address, String phone, String image, String startTime, String endTime, double lat, double lon) {
+        this.id = id;
+        this.maxNum = maxNum;
+        this.name = name;
+        this.address = address;
+        this.phone = phone;
+        this.image = image;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.lat = lat;
+        this.lon = lon;
+    }
+
+    public ShopDetailRequest() {
+    }
 }

@@ -1,6 +1,7 @@
 package edu.ecnu.scsse.pizza.bussiness.server.controller;
 
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order;
+import edu.ecnu.scsse.pizza.bussiness.server.model.entity.PendingOrder;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.order.*;
 import edu.ecnu.scsse.pizza.bussiness.server.service.OrderService;
@@ -76,7 +77,7 @@ public class OrderController {
      */
     @RequestMapping(value = "/getPendingRequestList",method = RequestMethod.GET)
     @ResponseBody
-    public List<Order> getPendingRequestList(){
+    public List<PendingOrder> getPendingRequestList(){
         return orderService.getPendingRequestList();
     }
 
@@ -96,6 +97,15 @@ public class OrderController {
     @ResponseBody
     public BaseResponse denyCancel(@RequestParam int orderId){
         return orderService.changeOrderStatus(orderId, OrderStatus.CANCEL_FAILED);
+    }
+
+    /**
+     * 查看历史退单
+     */
+    @RequestMapping(value = "/getCancelOrderList",method = RequestMethod.GET)
+    @ResponseBody
+    public List<PendingOrder> getCancelOrderList(){
+        return orderService.getCancelOrderList();
     }
 
 

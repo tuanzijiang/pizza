@@ -57,4 +57,24 @@ public class IngredientDetailRequest {
     public void setStatus(IngredientStatus status) {
         this.status = status;
     }
+
+    public IngredientDetailRequest( String name, int count, int alermNum, String supplierName, IngredientStatus status) {
+        this.name = name;
+        this.count = count;
+        this.alermNum = alermNum;
+        this.supplierName = supplierName;
+        this.status = status;
+    }
+
+    public IngredientDetailRequest(int id, String name, int count, int alermNum, String supplierName, IngredientStatus status) {
+        this.id = id;
+        this.name = name;
+        this.count = count;
+        this.alermNum = alermNum;
+        this.supplierName = supplierName;
+        this.status = status;
+    }
+
+    public IngredientDetailRequest() {
+    }
 }
