@@ -2,6 +2,7 @@ package edu.ecnu.scsse.pizza.bussiness.server.controller;
 
 import edu.ecnu.scsse.pizza.bussiness.server.TestApplication;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order;
+import edu.ecnu.scsse.pizza.bussiness.server.model.entity.PendingOrder;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ResultType;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.order.*;
@@ -48,7 +49,7 @@ public class OrderControllerTest extends TestApplication{
 
     @Test
     public void testGetPendingRequestList() throws ParseException{
-        List<Order> orderList = orderController.getPendingRequestList();
+        List<PendingOrder> orderList = orderController.getPendingRequestList();
         logger.info("Total order number is {}",orderList.size());
         Assert.assertEquals(0,orderList.size());
     }
