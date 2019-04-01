@@ -4,7 +4,7 @@
   </div>
   <div class="mt-lg-2 pr-lg-2">
     <p-table #dt [value]="materials" [paginator]="true" [rows]="10"
-             [globalFilterFields]="['material_id', 'name', 'inventory', 'provider', 'threshold', 'status']">
+             [globalFilterFields]="['id', 'name', 'count', 'supplierName', 'alertNum', 'ingredientStatus']">
       <ng-template pTemplate="caption">
         <div class="row">
           <div class="col-lg-6" style="text-align: left">
@@ -30,13 +30,13 @@
         </tr>
         <tr>
           <th *ngFor="let col of cols" [ngSwitch]="col.field">
-            <input *ngSwitchCase="'material_id'" pInputText type="text" class="material-filter"
+            <input *ngSwitchCase="'id'" pInputText type="text" class="material-filter"
                    (input)="dt.filter($event.target.value, col.field, 'contains')">
             <input *ngSwitchCase="'name'" pInputText type="text" class="material-filter"
                    (input)="dt.filter($event.target.value, col.field, 'contains')">
-            <input *ngSwitchCase="'provider'" pInputText type="text" class="material-filter"
+            <input *ngSwitchCase="'supplierName'" pInputText type="text" class="material-filter"
                    (input)="dt.filter($event.target.value, col.field, 'contains')">
-            <p-dropdown *ngSwitchCase="'status'" [options]="status" [style]="{'width':'100%'}"
+            <p-dropdown *ngSwitchCase="'ingredientStatus'" [options]="status" [style]="{'width':'100%'}"
                         (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
           </th>
           <th></th>
@@ -79,7 +79,7 @@
         <h6 class="control-label mt-lg-2">库存量</h6>
       </div>
       <div class="col-lg-6">
-        <input class="form-control" type="number" [(ngModel)]="tempMaterial.inventory">
+        <input class="form-control" type="number" [(ngModel)]="tempMaterial.count">
       </div>
     </div>
     <div class="row mt-lg-2">
@@ -87,7 +87,7 @@
         <h6 class="control-label mt-lg-2">安全阈值</h6>
       </div>
       <div class="col-lg-6">
-        <input class="form-control" type="number" [(ngModel)]="tempMaterial.threshold">
+        <input class="form-control" type="number" [(ngModel)]="tempMaterial.alertNum">
       </div>
     </div>
     <div class="row mt-lg-2">
@@ -95,7 +95,7 @@
         <h6 class="control-label mt-lg-2">供应商</h6>
       </div>
       <div class="col-lg-6">
-        <input class="form-control" type="text" [(ngModel)]="tempMaterial.provider">
+        <input class="form-control" type="text" [(ngModel)]="tempMaterial.supplierName">
       </div>
     </div>
     <div class="row mt-lg-2">
@@ -103,8 +103,8 @@
         <h6 class="control-label mt-lg-2">状态</h6>
       </div>
       <div class="col-lg-6 offset-lg-0">
-        <p-radioButton name="group1" value="使用中" label="使用中" [(ngModel)]="tempMaterial.status" inputId="opt1"></p-radioButton>
-        <p-radioButton name="group1" value="停用中" label="停用中" class="ml-lg-3" [(ngModel)]="tempMaterial.status" inputId="opt2"></p-radioButton>
+        <p-radioButton name="group1" value="使用中" label="使用中" [(ngModel)]="tempMaterial.ingredientStatus" inputId="opt1"></p-radioButton>
+        <p-radioButton name="group1" value="停用中" label="停用中" class="ml-lg-3" [(ngModel)]="tempMaterial.ingredientStatus" inputId="opt2"></p-radioButton>
       </div>
     </div>
   </div>
@@ -134,7 +134,7 @@
         <h6 class="control-label mt-lg-2">库存量</h6>
       </div>
       <div class="col-lg-6">
-        <input class="form-control" type="number" [(ngModel)]="tempMaterial.inventory">
+        <input class="form-control" type="number" [(ngModel)]="tempMaterial.count">
       </div>
     </div>
     <div class="row mt-lg-2">
@@ -142,7 +142,7 @@
         <h6 class="control-label mt-lg-2">安全阈值</h6>
       </div>
       <div class="col-lg-6">
-        <input class="form-control" type="number" [(ngModel)]="tempMaterial.threshold">
+        <input class="form-control" type="number" [(ngModel)]="tempMaterial.alertNum">
       </div>
     </div>
     <div class="row mt-lg-2">
@@ -150,7 +150,7 @@
         <h6 class="control-label mt-lg-2">供应商</h6>
       </div>
       <div class="col-lg-6">
-        <input class="form-control" type="text" [(ngModel)]="tempMaterial.provider">
+        <input class="form-control" type="text" [(ngModel)]="tempMaterial.supplierName">
       </div>
     </div>
     <div class="row mt-lg-2">
@@ -158,8 +158,8 @@
         <h6 class="control-label mt-lg-2">状态</h6>
       </div>
       <div class="col-lg-6 offset-lg-0">
-        <p-radioButton name="group1" value="使用中" label="使用中" [(ngModel)]="tempMaterial.status" inputId="opt1"></p-radioButton>
-        <p-radioButton name="group1" value="停用中" label="停用中" class="ml-lg-3" [(ngModel)]="tempMaterial.status" inputId="opt2"></p-radioButton>
+        <p-radioButton name="group1" value="使用中" label="使用中" [(ngModel)]="tempMaterial.ingredientStatus" inputId="opt1"></p-radioButton>
+        <p-radioButton name="group1" value="停用中" label="停用中" class="ml-lg-3" [(ngModel)]="tempMaterial.ingredientStatus" inputId="opt2"></p-radioButton>
       </div>
     </div>
   </div>

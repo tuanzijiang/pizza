@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Delivery} from "../../modules/delivery/delivery";
-import {SystemManageService} from "../../services/system-manage/system-manage.service";
 import {DeliveryService} from "../../services/delivery/delivery.service";
+import {BaseResponse} from "../../modules/baseResponse";
 
 @Component({
   selector: 'app-delivery',
@@ -25,6 +25,11 @@ export class DeliveryComponent implements OnInit {
     this.displayChangeDialog = false;
     this.displayAddDialog = false;
 
+    this.deliveryService.getDriverList().subscribe(
+      (driverList: Delivery[]) => {
+        this.deliveries = driverList;
+      }
+    );
 
     this.cols = [
       {field: 'id', header: '配送员ID'},
@@ -54,13 +59,29 @@ export class DeliveryComponent implements OnInit {
   }
 
   submitChangedDel() {
-    this.displayChangeDialog = false;
-    this.tempDel = null;
+    this.deliveryService.editDriver(this.tempDel).subscribe(
+      (response: BaseResponse) => {
+        if (response.resultType == 'FAILURE') {
+          alert(response.errorMsg);
+        } else {
+          this.displayChangeDialog = false;
+          this.tempDel = null;
+        }
+      }
+    );
   }
 
   submitAddedDel() {
-    this.displayAddDialog = false;
-    this.tempDel = null;
+    this.deliveryService.addDriver(this.tempDel).subscribe(
+      (response: BaseResponse) => {
+        if (response.resultType == 'FAILURE') {
+          alert(response.errorMsg);
+        } else {
+          this.displayAddDialog = false;
+          this.tempDel = null;
+        }
+      }
+    );
   }
 
   closeDialog() {

@@ -4,7 +4,7 @@
   </div>
   <div class="mt-lg-2 pr-lg-2">
     <p-table #dt [value]="deliveries" [paginator]="true" [rows]="10"
-             [globalFilterFields]="['id', 'name', 'phone', 'shop_id']">
+             [globalFilterFields]="['id', 'name', 'phone', 'shopId']">
       <ng-template pTemplate="caption">
         <div class="row">
           <div class="col-lg-6" style="text-align: left">
@@ -35,7 +35,7 @@
                    (input)="dt.filter($event.target.value, col.field, 'contains')">
             <input *ngSwitchCase="'phone'" pInputText type="text" class="del-filter"
                    (input)="dt.filter($event.target.value, col.field, 'contains')">
-            <input *ngSwitchCase="'shop_id'" pInputText type="text" class="del-filter"
+            <input *ngSwitchCase="'shopId'" pInputText type="text" class="del-filter"
                    (input)="dt.filter($event.target.value, col.field, 'contains')">
           </th>
           <th></th>
@@ -83,7 +83,7 @@
         <h6 class="control-label mt-lg-2">绑定工厂</h6>
       </div>
       <div class="col-lg-6">
-        <input class="form-control" type="text" [(ngModel)]="tempDel.shop_id">
+        <input class="form-control" type="text" [(ngModel)]="tempDel.shopId">
       </div>
     </div>
   </div>
@@ -121,7 +121,7 @@
         <h6 class="control-label mt-lg-2">绑定工厂</h6>
       </div>
       <div class="col-lg-6">
-        <input class="form-control" type="text" [(ngModel)]="tempDel.shop_id">
+        <input class="form-control" type="text" [(ngModel)]="tempDel.shopId">
       </div>
     </div>
   </div>

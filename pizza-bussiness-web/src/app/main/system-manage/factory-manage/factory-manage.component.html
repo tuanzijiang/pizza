@@ -74,9 +74,9 @@
       <span><b>工厂名称: </b>{{tempFactory.name}}</span><br>
       <span><b>原料份数: </b></span><br>
       <table>
-        <tr *ngFor="let ig of tempFactory.ingridients">
-          <td>{{ig.ig_name}}</td>
-          <td>{{ig.ig_num}}</td>
+        <tr *ngFor="let ig of tempFactory.ingredientList">
+          <td>{{ig.name}}</td>
+          <td>{{ig.count}}</td>
         </tr>
       </table>
     </span>
@@ -124,11 +124,11 @@
           <div class="col-lg-6 offset-lg-0">
             <div class="row">
               <div class="col">
-                <input class="form-control" type="text" placeholder="经度" [(ngModel)]="tempFactory.longitude">
+                <input class="form-control" type="text" placeholder="经度" [(ngModel)]="tempFactory.lon">
               </div>
               <div class="col">
                 <input class="form-control ml-lg-2" type="text" placeholder="纬度"
-                       [(ngModel)]="tempFactory.latitude">
+                       [(ngModel)]="tempFactory.lat">
               </div>
             </div>
           </div>
@@ -234,11 +234,11 @@
           <div class="col-lg-6 offset-lg-0">
             <div class="row">
               <div class="col">
-                <input class="form-control" type="text" placeholder="经度" [(ngModel)]="tempFactory.longitude">
+                <input class="form-control" type="text" placeholder="经度" [(ngModel)]="tempFactory.lon">
               </div>
               <div class="col">
                 <input class="form-control ml-lg-2" type="text" placeholder="纬度"
-                       [(ngModel)]="tempFactory.latitude">
+                       [(ngModel)]="tempFactory.lat">
               </div>
             </div>
           </div>

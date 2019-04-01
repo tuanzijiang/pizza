@@ -14,7 +14,6 @@ export class MenuManageComponent implements OnInit {
   cols: any[];
   igcols: any[];
   menuList: Menu[];
-  igList: Ingredient[];
   states: any[];
   pizzaType: any[];
   displayAddDialog: boolean;
@@ -96,7 +95,7 @@ export class MenuManageComponent implements OnInit {
   }
 
   submitNewMenu() {
-    this.systemManageService.editMenu(this.tempMenu).subscribe(
+    this.systemManageService.addMenu(this.tempMenu).subscribe(
       (response: BaseResponse) => {
         if (response.resultType == 'FAILURE') {
           alert(response.errorMsg);

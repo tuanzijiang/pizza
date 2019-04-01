@@ -1,8 +1,8 @@
 export class Material {
-  material_id: string;
+  id: string;
   name: string;
-  inventory: number;
-  provider: string;
-  threshold: number;
-  status: string;
+  count: number;
+  supplierName: string;
+  alertNum: number;
+  ingredientStatus: string;
 }

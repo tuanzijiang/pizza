@@ -37,6 +37,10 @@ export class AddressService {
     return `${local}/menu/editMenuDetail`
   }
 
+  static addMenu() {
+    return `${local}/menu/addNewMenu`
+  }
+
   static changeMenuState() {
     return `${local}/menu/editMenuStatus?menuId=`
   }
@@ -49,7 +53,68 @@ export class AddressService {
     return `${local}/shop/editShopDetail`
   }
 
+  static addShop() {
+    return `${local}/shop/addNewShop`
+  }
+
   static getDriverList() {
     return `${local}/driver/getDriverList`
   }
+
+  static editDriver() {
+    return `${local}/driver/editDriverDetail`
+  }
+
+  static addDriver() {
+    return `${local}/driver/addNewDriver`
+  }
+
+  static getIngredientList() {
+    return `${local}/ingredient/getIngredientList`
+  }
+
+  static editIngredientDetail() {
+    return `${local}/ingredient/editIngredientDetail`
+  }
+
+  static addNewIngredient() {
+    return `${local}/ingredient/addNewIngredient`
+  }
+
+  static uploadIngredients() {
+    return `${local}/ingredient/batchImportByExcelFile`
+  }
+
+  static getAlarmList() {
+    return `${local}/ingredient/getAlarmList`
+  }
+
+  static buyIngredient() {
+    return `${local}/ingredient/buyIngredient`
+  }
+
+  static removeIngredient() {
+    return `${local}/ingredient/removeIngredient?id=`
+  }
+
+  static cancelBuyIngredient() {
+    return `${local}/ingredient/cancelBuyIngredient?id=`
+  }
+
+  static allowOrder() {
+    return `${local}/order/allowCancel?orderId=`
+  }
+
+  static denyOrder() {
+    return `${local}/order/denyCancel?orderId=`
+  }
+
+  static getOperationLogger() {
+    return `${local}/admin/getOperateLogger`
+  }
+
+  static getPendingList() {
+    return `${local}/order/getPendingRequestList`
+  }
+
 }

@@ -3,7 +3,6 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {AddressService} from "../address/address.service";
 import {map} from "rxjs/operators";
-import {Delivery} from "../../modules/delivery/delivery";
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -14,23 +13,22 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root'
 })
-export class DeliveryService {
+export class ChargebackService {
 
   constructor(private http: HttpClient) { }
 
-  getDriverList():Observable<any> {
-    return this.http.get(AddressService.getDriverList(), httpOptions)
+  getPendingList(): Observable<any> {
+    return this.http.get(AddressService.getPendingList(), httpOptions)
       .pipe(map((result: Response) => result.json()))
   }
 
-  editDriver(driver: Delivery):Observable<any> {
-    return this.http.post(AddressService.editDriver(), driver, httpOptions)
+  allowOrder(id: string): Observable<any> {
+    return this.http.get(AddressService.allowOrder() + id, httpOptions)
       .pipe(map((result: Response) => result.json()))
   }
 
-  addDriver(driver: Delivery):Observable<any> {
-    return this.http.post(AddressService.addDriver(), driver, httpOptions)
+  denyOrder(id: string): Observable<any> {
+    return this.http.get(AddressService.denyOrder() + id, httpOptions)
       .pipe(map((result: Response) => result.json()))
   }
-
 }

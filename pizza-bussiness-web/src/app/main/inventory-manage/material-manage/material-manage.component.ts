@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Material} from "../../../modules/inventory-manage/material";
+import {InventoryManageService} from "../../../services/inventory-manage/inventory-manage.service";
+import {BaseResponse} from "../../../modules/baseResponse";
 
 @Component({
   selector: 'app-material-manage',
@@ -19,7 +21,7 @@ export class MaterialManageComponent implements OnInit {
   selectedFile: File;
   showAlert: boolean;
 
-  constructor() {
+  constructor(private inventoryManageService: InventoryManageService) {
   }
 
   ngOnInit() {
@@ -28,13 +30,19 @@ export class MaterialManageComponent implements OnInit {
     this.displayImportDialog = false;
     this.showAlert = false;
 
+    this.inventoryManageService.getIngredientList().subscribe(
+      (materials: Material[]) => {
+        this.materials = materials;
+      }
+    );
+
     this.cols = [
-      {field: 'material_id', header: '原料ID'},
+      {field: 'id', header: '原料ID'},
       {field: 'name', header: '原料名称'},
-      {field: 'inventory', header: '库存量'},
-      {field: 'provider', header: '供应商'},
-      {field: 'threshold', header: '安全阈值'},
-      {field: 'status', header: '状态'},
+      {field: 'count', header: '库存量'},
+      {field: 'supplierName', header: '供应商'},
+      {field: 'alertNum', header: '安全阈值'},
+      {field: 'ingredientStatus', header: '状态'},
     ];
 
     this.status = [
@@ -42,20 +50,20 @@ export class MaterialManageComponent implements OnInit {
       {label: '使用中', value: '使用中'},
       {label: '停用中', value: '停用中'},
       ];
-
-    this.materials = [
-      {material_id: '1', name: '面粉', inventory: 3000, provider: '上海兰溪食品有限公司', threshold: 50, status: '使用中'},
-      {material_id: '2', name: '香油', inventory: 1000, provider: '上海兰溪食品有限公司', threshold: 100, status: '停用中'},
-      {material_id: '3', name: '胡椒', inventory: 900, provider: '上海兰溪食品有限公司', threshold: 200, status: '使用中'},
-      {material_id: '4', name: '牛肉', inventory: 7000, provider: '上海兰溪食品有限公司', threshold: 300, status: '停用中'},
-      {material_id: '5', name: '猪肉', inventory: 10000, provider: '上海兰溪食品有限公司', threshold: 1000, status: '使用中'},
-    ]
   }
 
   onRowCancel(mat: Material) {
-    if (this.materials.find(obj => obj.material_id == mat.material_id) != null) {
-      this.materials = this.materials.filter(obj => obj.material_id != mat.material_id);
-    }
+    this.inventoryManageService.removeIngredient(mat.id).subscribe(
+      (response: BaseResponse) => {
+        if (response.resultType == 'FAILURE') {
+          alert(response.errorMsg);
+        } else {
+          if (this.materials.find(obj => obj.id == mat.id) != null) {
+            this.materials = this.materials.filter(obj => obj.id != mat.id);
+          }
+        }
+      }
+    );
   }
 
   addMaterial() {
@@ -72,13 +80,29 @@ export class MaterialManageComponent implements OnInit {
 
 
   submitChangedMat() {
-    this.displayChangeDialog = false;
-    this.tempMaterial = null;
+    this.inventoryManageService.editIngredientDetail(this.tempMaterial).subscribe(
+      (response: BaseResponse) => {
+        if (response.resultType == 'FAILURE') {
+          alert(response.errorMsg);
+        } else {
+          this.displayChangeDialog = false;
+          this.tempMaterial = null;
+        }
+      }
+    );
   }
 
   submitAddMat() {
-    this.displayChangeDialog = false;
-    this.tempMaterial = null;
+    this.inventoryManageService.addNewIngredient(this.tempMaterial).subscribe(
+      (response: BaseResponse) => {
+        if (response.resultType == 'FAILURE') {
+          alert(response.errorMsg);
+        } else {
+          this.displayChangeDialog = false;
+          this.tempMaterial = null;
+        }
+      }
+    );
   }
 
   closeDialog() {
@@ -98,8 +122,16 @@ export class MaterialManageComponent implements OnInit {
     if(this.selectedFile == null) {
       this.showAlert = true;
     } else {
-      this.selectedFile = null;
-      this.displayImportDialog = false;
+      this.inventoryManageService.uploadIngredient(this.selectedFile).subscribe(
+        (response: BaseResponse) => {
+          if (response.resultType == 'FAILURE') {
+            alert(response.errorMsg);
+          } else {
+            this.selectedFile = null;
+            this.displayImportDialog = false;
+          }
+        }
+      );
     }
   }
 
