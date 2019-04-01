@@ -61,6 +61,9 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
     @Query(value = "select * from pizza_order where state=4", nativeQuery = true)
     List<OrderEntity> findPendingList();
 
+    @Query(value = "select * from pizza_order where state=5 or state=6", nativeQuery = true)
+    List<OrderEntity> findCancelOrderList();
+
     @Query(value = "select * from pizza_order where driver_id=?1 and state=?2",nativeQuery = true)
     List<OrderEntity> findWaitToDeliveryOrderByDriverId(int driverId,int waitToDeliveryOrderState);
 
