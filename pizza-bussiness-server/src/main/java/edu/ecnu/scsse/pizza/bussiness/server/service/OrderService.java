@@ -7,6 +7,8 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.entity.PendingOrder;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.SaleStatus;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ResultType;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.SimpleResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDetailResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
 import edu.ecnu.scsse.pizza.data.domain.*;
 import edu.ecnu.scsse.pizza.data.enums.OrderStatus;
@@ -50,11 +52,11 @@ public class OrderService {
     @Autowired
     private OrderMenuJpaRepository  orderMenuJpaRepository;
 
-    public List<Order> getOrderList(){
-        List<Order> orderList = new ArrayList<>();
+    public List<OrderManageResponse> getOrderList(){
+        List<OrderManageResponse> orderList = new ArrayList<>();
         List<OrderEntity> orderEntityList = orderJpaRepository.findAll();
         if(orderEntityList.size()!=0){
-            orderList = orderEntityList.stream().map(this::convertSimple).collect(Collectors.toList());
+            orderList = orderEntityList.stream().map(this::convert).collect(Collectors.toList());
         }
         else{
             log.warn("Fail to find the order list.");
@@ -147,8 +149,8 @@ public class OrderService {
         return resultList;
     }
 
-    public BaseResponse changeOrderStatus(int orderId, OrderStatus status){
-        OrderDetailResponse response = new OrderDetailResponse();
+    public SimpleResponse changeOrderStatus(int orderId, OrderStatus status){
+        SimpleResponse response = new SimpleResponse();
         String msg;
         Optional<OrderEntity> optional = orderJpaRepository.findById(orderId);
         if(optional.isPresent()){
@@ -171,7 +173,7 @@ public class OrderService {
         else{
             msg = String.format("Order %d is not found.",orderId);
             NotFoundException e = new NotFoundException(msg);
-            response = new OrderDetailResponse(e);
+            response = new SimpleResponse(e);
             log.warn(msg);
         }
         return response;
@@ -187,6 +189,78 @@ public class OrderService {
             log.warn("Fail to find cancel list.");
         }
         return cancelList;
+    }
+
+    private OrderManageResponse convert(OrderEntity orderEntity){
+        OrderManageResponse response = new OrderManageResponse();
+        CopyUtils.copyProperties(orderEntity, response);
+
+        response.setState(OrderStatus.fromDbValue(orderEntity.getState()).getExpression());
+        response.setOrderId(String.valueOf(orderEntity.getId()));
+
+        //设置收货人信息
+        Optional<UserAddressEntity> userAddressEntityOptional = userAddressJpaRepository.findByUserIdAndAddressId(orderEntity.getUserId(),orderEntity.getAddressId());
+        if(userAddressEntityOptional.isPresent()){
+            UserAddressEntity userAddressEntity = userAddressEntityOptional.get();
+            response.setReceiveName(userAddressEntity.getName());
+            response.setReceivePhone(userAddressEntity.getPhone());
+            response.setReceiveAddress(userAddressEntity.getAddressDetail());
+        }
+
+        //下单时间的格式转换
+        String commitTimePattern = "yyyy/MM/dd hh:MM:ss";
+        DateFormat df = new SimpleDateFormat(commitTimePattern);
+        if(orderEntity.getCommitTime()!=null)
+            response.setCommitTime(df.format(orderEntity.getCommitTime()));
+
+        //设置订购的披萨信息
+        List<MenuDetailResponse> menuList = new ArrayList<>();
+        List<OrderMenuEntity> orderMenuEntityList = orderMenuJpaRepository.findByOrderId(orderEntity.getId());
+        for(OrderMenuEntity orderMenuEntity : orderMenuEntityList){
+            MenuDetailResponse menu = new MenuDetailResponse();
+            menu.setCount(orderMenuEntity.getCount());
+            Optional<MenuEntity> menuEntityOptional = menuJpaRepository.findById(orderMenuEntity.getMenuId());
+            if(menuEntityOptional.isPresent()){
+                MenuEntity menuEntity = menuEntityOptional.get();
+                CopyUtils.copyProperties(menuEntity,menu);
+                menu.setId(String.valueOf(menuEntity.getId()));
+            }
+            menuList.add(menu);
+        }
+        response.setMenuList(menuList);
+
+        //设置购买人电话
+        Optional<UserEntity> userEntityOptional = userJpaRepository.findById(orderEntity.getUserId());
+        if(userEntityOptional.isPresent()) {
+            UserEntity userEntity = userEntityOptional.get();
+            response.setBuyPhone(userEntity.getPhone());
+        }
+
+        //设置商家信息
+        if(orderEntity.getShopId()!=null){
+            response.setShopId(String.valueOf(orderEntity.getShopId()));
+            Optional<PizzaShopEntity> pizzaShopEntityOptional = pizzaShopJpaRepository.findById(orderEntity.getShopId());
+            if(pizzaShopEntityOptional.isPresent()){
+                PizzaShopEntity pizzaShopEntity = pizzaShopEntityOptional.get();
+                response.setShopName(pizzaShopEntity.getName());
+            }
+        }
+
+        //设置配送信息
+        if(orderEntity.getDriverId()!=null){
+            response.setDriverId(String.valueOf(orderEntity.getDriverId()));
+            Optional<DriverEntity> driverEntityOptional = driverJpaRepository.findById(orderEntity.getDriverId());
+            if(driverEntityOptional.isPresent()){
+                DriverEntity driverEntity = driverEntityOptional.get();
+                response.setDriverName(driverEntity.getName());
+                response.setDriverPhone(driverEntity.getPhone());
+            }
+            if(orderEntity.getDeliverStartTime()!=null)
+                response.setStartDeliverTime(df.format(orderEntity.getDeliverStartTime()));
+            if(orderEntity.getDeliverEndTime()!=null)
+                response.setArriveTime(df.format(orderEntity.getDeliverEndTime()));
+        }
+        return response;
     }
 
     private PendingOrder convertToPendingOrder(OrderEntity orderEntity){

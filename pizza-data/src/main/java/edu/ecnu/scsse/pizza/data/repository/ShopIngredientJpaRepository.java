@@ -23,4 +23,9 @@ public interface ShopIngredientJpaRepository extends JpaRepository<ShopIngredien
 
     @Query(value="select * from shop_ingredient where shop_id=?1 and ingredient_id=?2",nativeQuery = true)
     Optional<ShopIngredientEntity> findByShopIdAndIngredientId(int shopId, int ingredientId);
+
+    @Transactional
+    @Modifying
+    @Query(value="delete from shop_ingredient where ingredient_id=?1",nativeQuery = true)
+    int deleteByIngredientId(int ingredientId);
 }

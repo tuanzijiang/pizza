@@ -29,6 +29,7 @@ public class Menu {
         this.price = 0.0;
         this.state = PizzaStatus.IN_SALE;
         this.tag = -1;
+        this.tagName = PizzaTag.UNKNOWN;
         this.count = 0;
     }
 

@@ -5,18 +5,18 @@ public class ShopIngredient {
     private String name;
     private int shopId;
     private String shopName;
-    private int alermNum;
+    private int alertNum;
     private int count;
 
     public ShopIngredient() {
     }
 
-    public ShopIngredient(int id, String name, int shopId, String shopName, int alermNum, int count) {
+    public ShopIngredient(int id, String name, int shopId, String shopName, int alertNum, int count) {
         this.id = id;
         this.name = name;
         this.shopId = shopId;
         this.shopName = shopName;
-        this.alermNum = alermNum;
+        this.alertNum = alertNum;
         this.count = count;
     }
 
@@ -52,12 +52,12 @@ public class ShopIngredient {
         this.shopName = shopName;
     }
 
-    public int getAlermNum() {
-        return alermNum;
+    public int getAlertNum() {
+        return alertNum;
     }
 
-    public void setAlermNum(int alermNum) {
-        this.alermNum = alermNum;
+    public void setAlertNum(int alertNum) {
+        this.alertNum = alertNum;
     }
 
     public int getCount() {

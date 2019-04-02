@@ -6,6 +6,7 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Ingredient;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Menu;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ResultType;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.SimpleResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.admin.LoginRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDetailRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDetailResponse;
@@ -31,7 +32,7 @@ public class MenuControllerTest extends TestApplication{
 
     @Test
     public void testGetMenuList(){
-        List<Menu> menuList=menuController.getMenuList();
+        List<MenuDetailResponse> menuList=menuController.getMenuList();
         logger.info("Total menu number is {}",menuList.size());
         Assert.assertEquals(menuList.size(),4);
     }
@@ -52,7 +53,7 @@ public class MenuControllerTest extends TestApplication{
     @Test
     public void testEditMenuStatusFullAdminNotLogin()throws BusinessServerException {
         MenuDetailRequest request=new MenuDetailRequest("1","榴莲披萨",null,"",null,40, PizzaStatus.IN_SALE, PizzaTag.UNKNOWN);
-        MenuDetailResponse response=menuController.editMenuStatus(request);
+        SimpleResponse response=menuController.editMenuStatus(request);
         Assert.assertEquals(response.getResultType(), ResultType.FAILURE);
     }
 
@@ -62,7 +63,7 @@ public class MenuControllerTest extends TestApplication{
         List<Ingredient> ingredients=new ArrayList<>();
         ingredients.add(new Ingredient(1,"榴莲","水果商",0,400,700));
         MenuDetailRequest request=new MenuDetailRequest("1","榴莲披萨",null,"",ingredients,40, PizzaStatus.IN_SALE, PizzaTag.UNKNOWN);
-        MenuDetailResponse response=menuController.editMenuStatus(request);
+        SimpleResponse response=menuController.editMenuStatus(request);
         Assert.assertEquals(response.getResultType(), ResultType.SUCCESS);
     }
 
