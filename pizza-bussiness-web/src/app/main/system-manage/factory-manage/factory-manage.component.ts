@@ -13,7 +13,6 @@ export class FactoryManageComponent implements OnInit {
 
   cols: any[];
   factories: Factory[];
-  igList: Ingredient[];
   displayAddDialog: boolean;
   tempFactory: Factory;
   displayChangeDialog: boolean;
@@ -42,21 +41,11 @@ export class FactoryManageComponent implements OnInit {
       {field: 'name', header: '工厂名称'},
       {field: 'image', header: '缩略图'},
       {field: 'address', header: '工厂地址'},
-      {field: 'area', header: '区域'},
       {field: 'openHours', header: '营业时间'},
       {field: 'phone', header: '联系电话'},
       {field: 'maxNum', header: '最大接单量'},
     ];
 
-    this.initAreas();
-  }
-
-  initAreas() {
-    this.areas = [];
-    this.areas.push({label: '请选择种类', value: null});
-    for (let factory of this.factories) {
-      this.areas.push({label: factory.area, value: factory.area});
-    }
   }
 
   addFactory() {

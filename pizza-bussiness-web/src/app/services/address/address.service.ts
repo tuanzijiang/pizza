@@ -29,6 +29,10 @@ export class AddressService {
     return `${local}/user/getUserList`
   }
 
+  static getTagList() {
+    return `${local}/menu/getTagList`
+  }
+
   static getMenuList() {
     return `${local}/menu/getMenuList`
   }
@@ -95,10 +99,6 @@ export class AddressService {
 
   static removeIngredient() {
     return `${local}/ingredient/removeIngredient?id=`
-  }
-
-  static cancelBuyIngredient() {
-    return `${local}/ingredient/cancelBuyIngredient?id=`
   }
 
   static allowOrder() {

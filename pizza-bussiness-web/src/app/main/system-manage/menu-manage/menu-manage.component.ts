@@ -35,6 +35,15 @@ export class MenuManageComponent implements OnInit {
       }
     );
 
+    this.systemManageService.getTagList().subscribe(
+      (tagList: any[]) => {
+        this.pizzaType.push({label: '请选择种类', value: null});
+        for(let tag of tagList) {
+          this.pizzaType.push({label: tag, value: tag});
+        }
+      }
+    );
+
     this.cols = [
       {field: 'id', header: '编号'},
       {field: 'name', header: '披萨名称'},

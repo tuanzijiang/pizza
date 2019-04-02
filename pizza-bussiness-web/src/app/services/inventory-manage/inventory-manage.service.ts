@@ -60,10 +60,4 @@ export class InventoryManageService {
     return this.http.get(AddressService.removeIngredient() + id, httpOptions)
       .pipe(map((result: Response) => result.json()))
   }
-
-  cancelBuyIngredient(id: string):Observable<any> {
-    return this.http.get(AddressService.cancelBuyIngredient() + id, httpOptions)
-      .pipe(map((result: Response) => result.json()))
-  }
-
 }

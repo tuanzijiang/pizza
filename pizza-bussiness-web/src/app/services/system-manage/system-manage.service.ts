@@ -24,6 +24,11 @@ export class SystemManageService {
       .pipe(map((result: Response) => result.json()))
   }
 
+  getTagList(): Observable<any> {
+    return this.http.get(AddressService.getTagList(), httpOptions)
+      .pipe(map((result: Response) => result.json()))
+  }
+
   getMenuList():Observable<any> {
     return this.http.get(AddressService.getMenuList(), httpOptions)
       .pipe(map((result: Response) => result.json()))
