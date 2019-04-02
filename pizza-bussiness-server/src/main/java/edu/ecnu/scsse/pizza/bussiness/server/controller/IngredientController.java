@@ -5,6 +5,7 @@ import edu.ecnu.scsse.pizza.bussiness.server.exception.PermissionException;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Ingredient;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.ShopIngredient;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.SimpleResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ingredient.*;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDetailRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.service.IngredientService;
@@ -34,7 +35,7 @@ public class IngredientController extends BaseController{
      */
     @RequestMapping(value = "/getIngredientList",method = RequestMethod.GET)
     @ResponseBody
-    public List<Ingredient> getIngredientList(){
+    public List<IngredientDetailResponse> getIngredientList(){
         return ingredientService.getIngredientList();
     }
 
@@ -56,14 +57,14 @@ public class IngredientController extends BaseController{
      */
     @RequestMapping(value = "/editIngredientDetail",method = RequestMethod.POST)
     @ResponseBody
-    public IngredientDetailResponse editIngredientDetail(@RequestBody IngredientDetailRequest request) throws BusinessServerException{
+    public SimpleResponse editIngredientDetail(@RequestBody IngredientDetailRequest request) throws BusinessServerException{
         int adminId = getCurrentAdminId();
         if (adminId != -1)
             return ingredientService.editIngredientDetail(request);
         else {
             PermissionException e = new PermissionException("Admin is logout.");
             log.warn("Admin is logout.", e);
-            return new IngredientDetailResponse(e);
+            return new SimpleResponse(e);
         }
     }
 
@@ -74,14 +75,14 @@ public class IngredientController extends BaseController{
      */
     @RequestMapping(value = "/addNewIngredient",method = RequestMethod.POST)
     @ResponseBody
-    public IngredientDetailResponse addNewIngredient(@RequestBody IngredientDetailRequest request) throws BusinessServerException{
+    public SimpleResponse addNewIngredient(@RequestBody IngredientDetailRequest request) throws BusinessServerException{
         int adminId = getCurrentAdminId();
         if (adminId != -1)
             return ingredientService.addNewIngredient(request);
         else {
             PermissionException e = new PermissionException("Admin is logout.");
             log.warn("Admin is logout.", e);
-            return new IngredientDetailResponse(e);
+            return new SimpleResponse(e);
         }
     }
 
@@ -92,14 +93,14 @@ public class IngredientController extends BaseController{
      */
     @RequestMapping(value = "/editIngredientStatus",method = RequestMethod.GET)
     @ResponseBody
-    public IngredientDetailResponse editIngredientStatus(@RequestParam int ingredientId) throws BusinessServerException{
+    public SimpleResponse editIngredientStatus(@RequestParam int ingredientId) throws BusinessServerException{
         int adminId = getCurrentAdminId();
         if (adminId != -1)
             return ingredientService.editIngredientStatus(ingredientId);
         else {
             PermissionException e = new PermissionException("Admin is logout.");
             log.warn("Admin is logout.", e);
-            return new IngredientDetailResponse(e);
+            return new SimpleResponse(e);
         }
     }
 
@@ -122,7 +123,7 @@ public class IngredientController extends BaseController{
      */
     @RequestMapping(value = "/buyIngredient",method = RequestMethod.GET)
     @ResponseBody
-    public BaseResponse buyIngredient(@RequestBody BuyIngredientRequest request){
+    public SimpleResponse buyIngredient(@RequestBody BuyIngredientRequest request){
         int adminId = getCurrentAdminId();
         if(adminId!=-1) {
             return ingredientService.buyIngredient(request);
@@ -130,7 +131,27 @@ public class IngredientController extends BaseController{
         else{
             PermissionException e = new PermissionException("Admin is logout.");
             log.warn("Admin is logout.", e);
-            return new IngredientDetailResponse(e);
+            return new SimpleResponse(e);
+        }
+
+    }
+
+    /**
+     * 删除原料
+     * @request
+     * @return response
+     */
+    @RequestMapping(value = "/deleteIngredient",method = RequestMethod.GET)
+    @ResponseBody
+    public SimpleResponse deleteIngredient(@RequestParam int id){
+        int adminId = getCurrentAdminId();
+        if(adminId!=-1) {
+            return ingredientService.deleteIngredient(id);
+        }
+        else{
+            PermissionException e = new PermissionException("Admin is logout.");
+            log.warn("Admin is logout.", e);
+            return new SimpleResponse(e);
         }
 
     }

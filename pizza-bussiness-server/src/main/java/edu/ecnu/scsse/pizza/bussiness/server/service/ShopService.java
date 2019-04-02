@@ -8,6 +8,7 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Shop;
 import edu.ecnu.scsse.pizza.bussiness.server.model.enums.OperateObject;
 import edu.ecnu.scsse.pizza.bussiness.server.model.enums.OperateResult;
 import edu.ecnu.scsse.pizza.bussiness.server.model.enums.OperateType;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ingredient.IngredientDetailResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.shop.ShopDetailRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.shop.ShopDetailResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.shop.ShopIngredientResponse;
@@ -16,6 +17,7 @@ import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
 import edu.ecnu.scsse.pizza.data.domain.IngredientEntity;
 import edu.ecnu.scsse.pizza.data.domain.PizzaShopEntity;
 import edu.ecnu.scsse.pizza.data.domain.ShopIngredientEntity;
+import edu.ecnu.scsse.pizza.data.enums.IngredientStatus;
 import edu.ecnu.scsse.pizza.data.repository.IngredientJpaRepository;
 import edu.ecnu.scsse.pizza.data.repository.PizzaShopJpaRepository;
 import edu.ecnu.scsse.pizza.data.repository.ShopIngredientJpaRepository;
@@ -53,40 +55,35 @@ public class ShopService{
     @Autowired
     OperateLoggerService operateLoggerService;
 
-    public List<Shop> getShopList(){
-        List<Shop> shopList = new ArrayList<>();
+    public List<ShopManageResponse> getShopList(){
+        List<ShopManageResponse> shopList = new ArrayList<>();
         List<PizzaShopEntity> shopEntityList = shopJpaRepository.findAll();
         if(shopEntityList.size()!=0){
-//            shopManageResponse = new ShopManageResponse();
             shopList = shopEntityList.stream().map(this::convert).collect(Collectors.toList());
-//            shopManageResponse.setFactoryList(shopList);
         }
         else{
             NotFoundException e = new NotFoundException("Shop list is not found.");
-//            shopManageResponse = new ShopManageResponse(e);
             log.warn("Fail to find the shop list.", e);
         }
 
         return shopList;
     }
 
-    public List<Ingredient> getIngredientListByShopId(int shopId){
-//        ShopIngredientResponse response;
+    public List<IngredientDetailResponse> getIngredientListByShopId(int shopId){
         List<ShopIngredientEntity> shopIngredientEntityList = shopIngredientJpaRepository.findByShopId(shopId);
-        List<Ingredient> shopIngredientList = new ArrayList<>();
+        List<IngredientDetailResponse> shopIngredientList = new ArrayList<>();
         for(ShopIngredientEntity entity:shopIngredientEntityList){
             Optional<IngredientEntity> ingredientEntityOptional = ingredientJpaRepository.findById(entity.getIngredientId());
             if(ingredientEntityOptional.isPresent()){
                 IngredientEntity ingredientEntity = ingredientEntityOptional.get();
-                Ingredient ingredient = new Ingredient(ingredientEntity);
+                IngredientDetailResponse ingredient = new IngredientDetailResponse(ingredientEntity);
+                ingredient.setIngredientStatus(IngredientStatus.fromDbValue(ingredientEntity.getState()).getExpression());
                 shopIngredientList.add(ingredient);
             }
             else{
-//                NotFoundException e = new NotFoundException("Ingredient is not found.");
                 log.warn("Fail to find ingredient.");
             }
         }
-//        response = new ShopIngredientResponse(shopIngredientList);
         return shopIngredientList;
     }
 
@@ -148,15 +145,17 @@ public class ShopService{
         return response;
     }
 
-    private Shop convert(PizzaShopEntity entity){
-        Shop shop = new Shop();
+    private ShopManageResponse convert(PizzaShopEntity entity){
+        ShopManageResponse shop = new ShopManageResponse();
         CopyUtils.copyProperties(entity,shop);
         shop.setLat(entity.getLat().doubleValue());
         shop.setLon(entity.getLon().doubleValue());
         String commitTimePattern = "yyyy/MM/dd hh:MM:ss";
         DateFormat df = new SimpleDateFormat(commitTimePattern);
-        shop.setStartTimeStr(df.format(entity.getStartTime()));
-        shop.setEndTimeStr(df.format(entity.getEndTime()));
+        String open = df.format(entity.getStartTime()).split(" ")[1];
+        String close = df.format(entity.getEndTime()).split(" ")[1];
+        shop.setOpenHours(open+"-"+close);
+        shop.setIngredientList(getIngredientListByShopId(entity.getId()));
         return shop;
     }
 

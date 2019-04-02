@@ -3,6 +3,7 @@ package edu.ecnu.scsse.pizza.bussiness.server.controller;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.PendingOrder;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.SimpleResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.order.*;
 import edu.ecnu.scsse.pizza.bussiness.server.service.OrderService;
 import edu.ecnu.scsse.pizza.data.enums.OrderStatus;
@@ -28,20 +29,20 @@ public class OrderController {
      */
     @RequestMapping(value = "/getOrderList",method = RequestMethod.GET)
     @ResponseBody
-    public List<Order> getOrderList(){
+    public List<OrderManageResponse> getOrderList(){
         return orderService.getOrderList();
     }
 
-    /**
-     * 查看订单详情
-     * @param orderId
-     * @return response
-     */
-    @RequestMapping(value = "/getOrderDetail",method = RequestMethod.GET)
-    @ResponseBody
-    public OrderDetailResponse getOrderDetail(@RequestParam int orderId){
-        return orderService.getOrderDetail(orderId);
-    }
+//    /**
+//     * 查看订单详情
+//     * @param orderId
+//     * @return response
+//     */
+//    @RequestMapping(value = "/getOrderDetail",method = RequestMethod.GET)
+//    @ResponseBody
+//    public OrderDetailResponse getOrderDetail(@RequestParam int orderId){
+//        return orderService.getOrderDetail(orderId);
+//    }
 
     /**
      * 查看昨日订单指标
@@ -86,7 +87,7 @@ public class OrderController {
      */
     @RequestMapping(value = "/allowCancel",method = RequestMethod.GET)
     @ResponseBody
-    public BaseResponse allowCancel(@RequestParam int orderId){
+    public SimpleResponse allowCancel(@RequestParam int orderId){
         return orderService.changeOrderStatus(orderId, OrderStatus.CANCELED);
     }
 
@@ -95,7 +96,7 @@ public class OrderController {
      */
     @RequestMapping(value = "/denyCancel",method = RequestMethod.GET)
     @ResponseBody
-    public BaseResponse denyCancel(@RequestParam int orderId){
+    public SimpleResponse denyCancel(@RequestParam int orderId){
         return orderService.changeOrderStatus(orderId, OrderStatus.CANCEL_FAILED);
     }
 

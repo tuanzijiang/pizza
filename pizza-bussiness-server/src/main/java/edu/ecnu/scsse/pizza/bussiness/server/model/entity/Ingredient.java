@@ -12,7 +12,7 @@ public class Ingredient {
     private int alermNum;
     private int count;
     private int menuNeedCount;
-    private IngredientStatus ingredientStatus;
+    private String ingredientStatus;
 
 
     public int getId() {
@@ -71,11 +71,11 @@ public class Ingredient {
         this.menuNeedCount = menuNeedCount;
     }
 
-    public IngredientStatus getIngredientStatus() {
+    public String getIngredientStatus() {
         return ingredientStatus;
     }
 
-    public void setIngredientStatus(IngredientStatus ingredientStatus) {
+    public void setIngredientStatus(String ingredientStatus) {
         this.ingredientStatus = ingredientStatus;
     }
 
@@ -96,7 +96,7 @@ public class Ingredient {
         this.alermNum = 0;
         this.count = 0;
         this.menuNeedCount = 0;
-        this.ingredientStatus= IngredientStatus.USING;
+        this.ingredientStatus= IngredientStatus.USING.getExpression();
     }
 
     public Ingredient(IngredientEntity ingredientEntity){
