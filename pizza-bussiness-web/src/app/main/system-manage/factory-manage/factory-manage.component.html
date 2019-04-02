@@ -4,7 +4,7 @@
   </div>
   <div class="mt-lg-2 pr-lg-2">
     <p-table #dt [value]="factories" [paginator]="true" [rows]="10"
-             [globalFilterFields]="['id', 'name', 'address', 'area', 'openHours', 'phone']">
+             [globalFilterFields]="['id', 'name', 'address', 'openHours', 'phone']">
       <ng-template pTemplate="caption">
         <div class="row">
           <div class="col-lg-6" style="text-align: left">
@@ -35,8 +35,6 @@
                    (input)="dt.filter($event.target.value, col.field, 'contains')">
             <input *ngSwitchCase="'phone'" pInputText type="text" class="factory-filter"
                    (input)="dt.filter($event.target.value, col.field, 'contains')">
-            <p-dropdown *ngSwitchCase="'area'" [options]="areas" [style]="{'width':'100%'}"
-                        (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
           </th>
           <th></th>
         </tr>
@@ -103,16 +101,6 @@
         <h6 class="control-label mt-lg-2">工厂地址</h6>
       </div>
       <div class="col-lg-6 offset-lg-0">
-        <div class="row mt-lg-2 full-width">
-          <div class="col-lg-3">
-            <span><b>区域: </b></span>
-          </div>
-          <div class="col-lg-6 offset-lg-0">
-            <select class="custom-select" [(ngModel)]="tempFactory.area">
-              <option *ngFor="let area of areas" value="{{area.value}}">{{area.value}}</option>
-            </select>
-          </div>
-        </div>
         <div class="mt-lg-2 full-width mt-lg-2">
            <textarea class="form-control desc-area" [(ngModel)]="tempFactory.address"
                      placeholder="请输入工厂地址" style="resize:none; height: 150px"></textarea>
@@ -213,16 +201,6 @@
         <h6 class="control-label mt-lg-2">工厂地址</h6>
       </div>
       <div class="col-lg-6 offset-lg-0">
-        <div class="row mt-lg-2 full-width">
-          <div class="col-lg-3">
-            <span><b>区域: </b></span>
-          </div>
-          <div class="col-lg-6 offset-lg-0">
-            <select class="custom-select" [(ngModel)]="tempFactory.area">
-              <option *ngFor="let area of areas" value="{{area.value}}">{{area.value}}</option>
-            </select>
-          </div>
-        </div>
         <div class="mt-lg-2 full-width mt-lg-2">
            <textarea class="form-control desc-area" [(ngModel)]="tempFactory.address"
                      placeholder="请输入工厂地址" style="resize:none; height: 150px"></textarea>

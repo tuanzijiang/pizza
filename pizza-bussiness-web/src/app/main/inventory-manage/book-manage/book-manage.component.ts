@@ -52,20 +52,8 @@ export class BookManageComponent implements OnInit {
   }
 
   cancelBook(order: BookAlert) {
-    this.inventoryManageService.cancelBuyIngredient(order.id).subscribe(
-      (response: BaseResponse) => {
-        if (response.resultType == 'FAILURE') {
-          alert(response.errorMsg);
-        } else {
-          if (response.resultType == 'FAILURE') {
-            alert(response.errorMsg);
-          } else {
-            if (this.alerts.find(obj => obj.id == order.id) != null) {
-              this.alerts = this.alerts.filter(obj => obj.id != order.id);
-            }
-          }
-        }
-      }
-    );
+    if (this.alerts.find(obj => obj.id == order.id) != null) {
+      this.alerts = this.alerts.filter(obj => obj.id != order.id);
+    }
   }
 }

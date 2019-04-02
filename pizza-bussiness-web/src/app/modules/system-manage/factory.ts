@@ -5,7 +5,6 @@ export class Factory {
   name: string;
   image: any;
   address: string;
-  area: string;
   openHours: string;
   phone: string;
   maxNum: number;
