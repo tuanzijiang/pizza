@@ -3,6 +3,22 @@
 软件开发实践课程项目：披萨订购系统。
 
 ---
+### 项目结构说明
+##### 后台系统代码
+- `pizza-bussiness-server`：后台系统的服务端
+- `pizza-bussiness-web`：后台系统的前端
+
+##### 前台系统代码
+- `pizza-consumer-server`：前台系统的服务端
+- `pizza-consumer-web`： 前台系统的前端
+
+##### 其他
+- `pizza-data`：数据库访问模块
+- `pizza-protobuf`：接口定义模块
+- `unit-test-report`：单元测试报告
+- `pizza-web-performance`：压力测试小工具
+- `pizza-ui`：UI图
+
 ### 开发规范 
 #### 一、 git commit message规范 
 ##### 格式模版
