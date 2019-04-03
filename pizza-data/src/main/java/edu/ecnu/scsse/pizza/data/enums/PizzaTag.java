@@ -5,7 +5,10 @@ import java.util.Optional;
 
 public enum PizzaTag {
 
-    UNKNOWN(-1, "披萨")
+    UNKNOWN(-1, "披萨"),
+    ORDINARY(0, "手拍纯珍比萨"),
+    CHEESE(1, "皇冠芝心比萨"),
+    THIN(2,"大方薄底比萨")
     // todo - add pizza tags !
     ;
 
