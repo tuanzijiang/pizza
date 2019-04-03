@@ -1,5 +1,13 @@
 package edu.ecnu.scsse.pizza.consumer.server.service;
 
+import com.aliyuncs.CommonRequest;
+import com.aliyuncs.CommonResponse;
+import com.aliyuncs.DefaultAcsClient;
+import com.aliyuncs.IAcsClient;
+import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.exceptions.ServerException;
+import com.aliyuncs.http.MethodType;
+import com.aliyuncs.profile.DefaultProfile;
 import edu.ecnu.scsse.pizza.consumer.server.model.ResultType;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Address;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.User;
@@ -15,6 +23,9 @@ import edu.ecnu.scsse.pizza.data.repository.UserAddressJpaRepository;
 import edu.ecnu.scsse.pizza.data.repository.UserJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -122,7 +133,6 @@ public class UserService {
 
     /**
      * 登录
-     * TODO: 手机验证码登录
      *
      * @param loginRequest
      * @return
@@ -148,17 +158,75 @@ public class UserService {
                 }
                 break;
             case VERIFICATION:
-                // TODO: 手机验证码登录
                 Optional<UserEntity> userEntityOptional2 = userJpaRepository.findByPhone(loginRequest.getAccount());
-                if (userEntityOptional2.isPresent()) {
+
+                String code = (String) ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest()
+                        .getSession().getAttribute(loginRequest.getAccount());
+                System.out.println(code);
+                if (userEntityOptional2.isPresent() && code.equals(loginRequest.getPassword())) {
                     UserEntity userEntity2 = userEntityOptional2.get();
                     loginResponse.setUser(EntityConverter.convert(userEntity2));
+
                 } else {
                     loginResponse.setResultType(ResultType.FAILURE);
                 }
                 break;
         }
         return loginResponse;
+    }
+
+    /**
+     * 发送验证码
+     *
+     * @param sendRequest
+     * @return
+     */
+    public SendVerificationCodeResponse sendVerificationCode(SendVerificationCodeRequest sendRequest) {
+        SendVerificationCodeResponse sendResponse = new SendVerificationCodeResponse();
+        DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou",
+                "LTAIbjnVNpSDcWiL", "RA7OCDcBasqZByMbpkoYGHiPawQtc4");
+        IAcsClient client = new DefaultAcsClient(profile);
+
+        CommonRequest request = new CommonRequest();
+        //request.setProtocol(ProtocolType.HTTPS);
+        request.setMethod(MethodType.POST);
+        request.setDomain("dysmsapi.aliyuncs.com");
+        request.setVersion("2017-05-25");
+        request.setAction("SendSms");
+        request.putQueryParameter("RegionId", "cn-hangzhou");
+        request.putQueryParameter("PhoneNumbers", sendRequest.getPhone());
+        request.putQueryParameter("SignName", "pizza外卖APP");
+        request.putQueryParameter("TemplateCode", "SMS_162523804");
+
+        String code = getRandomCode();
+        request.putQueryParameter("TemplateParam", "{\"code\":\"" + code + "\"}");
+        try {
+            CommonResponse response = client.getCommonResponse(request);
+            ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest()
+                    .getSession().setAttribute(sendRequest.getPhone(), code);
+        } catch (ServerException e) {
+            e.printStackTrace();
+            sendResponse.setResultType(ResultType.FAILURE);
+            sendResponse.setCause(e);
+        } catch (ClientException e) {
+            e.printStackTrace();
+            sendResponse.setResultType(ResultType.FAILURE);
+            sendResponse.setCause(e);
+        }
+        return sendResponse;
+    }
+
+    /**
+     * 获取6位随机数
+     *
+     * @return
+     */
+    private String getRandomCode() {
+        String code = "";
+        for (int i = 0; i < 6; i++) {
+            code = code + (int) (Math.random() * 9);
+        }
+        return code;
     }
 
 
