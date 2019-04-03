@@ -41,4 +41,95 @@
   }
 }
 
-.main-leftRecord_add {}
+.main-rightWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.main-rightHeader {
+  height: rem(50);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border-bottom: rem(1) solid $gray_1;
+  padding: 0 rem(20);
+  box-sizing: border-box;
+  flex: 0 0 rem(50);
+
+  .main-rightHeaderButton {
+    margin: 0 rem(5);
+    color: $gray_3;
+    user-select: none;
+    cursor: pointer;
+    transition: all .3s;
+
+    &:hover {
+      color: $gray_5;
+    }
+  }
+}
+
+.main-modalTitle {
+  margin: 0 0 rem(10);
+}
+
+.main-input {
+  margin: 0 0 rem(20);
+}
+
+.main-rightContent {
+  flex: 1 1 auto;
+  width: 100%;
+  overflow: auto;
+}
+
+.main-contentTitle {
+  width: calc(100% - 2 * #{rem(80)});
+  height: rem(30);
+  margin: rem(50) auto;
+  font-weight: 600;
+  color: $gray_4;
+  font-size: rem(18);
+  box-shadow: 0 rem(1) 0 0 $gray_4;
+}
+
+.main-contentTable {
+  width: calc(100% - 2 * #{rem(80)});
+  margin: rem(10) auto;
+}
+
+.main-contentReport {
+  width: calc(100% - 2 * #{rem(80)});
+  margin: rem(10) auto;
+}
+
+.main-contentReportRow {
+  height: rem(50);
+  display: flex;
+  justify-content: space-between;
+  align-items: center
+}
+
+.main-contentReportCell {
+  flex: 1 1 auto;
+  height: rem(45);
+  border-radius: rem(1);
+  background: $gray_1;
+  margin: 0 rem(1);
+  cursor: pointer;
+}
+
+.main-contentReportCell_success {
+  background: $green_3;
+}
+
+.main-contentReportCell_error {
+  background: $red_4;
+}
+
+.main-responseCell {
+  word-break: break-all;
+}

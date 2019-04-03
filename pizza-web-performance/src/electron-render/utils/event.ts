@@ -24,6 +24,7 @@ export enum COMMAND_FROM_RENDER {
 
 export enum COMMAND_FROM_WEBLOADER {
   RECORD = 'RECORD',
+  TEST = 'TEST',
 
   INFO = 'INFO',
 }
