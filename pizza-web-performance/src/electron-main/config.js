@@ -22,6 +22,7 @@ const COMMAND_FROM_RENDER = {
 
 const COMMAND_FROM_WEBLOADER = {
   RECORD: 'RECORD',
+  TEST: 'TEST',
 }
 
 

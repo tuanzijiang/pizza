@@ -42,7 +42,7 @@ const initMiddleware = (page) => {
         domTokenPath.unshift(token);
         currDom = currDom.parentNode;
       }
-      return domTokenPath.join('>');
+      return domTokenPath.splice(-3).join('>');
     }
     window.__LOADER__.fetchSelector = fetchSelector;
 
