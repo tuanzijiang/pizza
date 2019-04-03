@@ -53,6 +53,18 @@ public class UserController {
         return userService.login(loginRequest);
     }
 
+
+    /**
+     * 发送验证码
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/sendVerificationCode", method = RequestMethod.POST)
+    @ResponseBody
+    SendVerificationCodeResponse sendVerificationCode(@RequestBody SendVerificationCodeRequest request) {
+        return userService.sendVerificationCode(request);
+    }
+
     /**
      * 退出
      *
