@@ -6,4 +6,5 @@ import lombok.Data;
 
 @Data
 public class SendVerificationCodeResponse extends Response{
+    private String code;
 }
