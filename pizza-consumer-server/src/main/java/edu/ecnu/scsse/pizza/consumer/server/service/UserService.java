@@ -160,10 +160,11 @@ public class UserService {
             case VERIFICATION:
                 Optional<UserEntity> userEntityOptional2 = userJpaRepository.findByPhone(loginRequest.getAccount());
 
-                String code = (String) ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest()
-                        .getSession().getAttribute(loginRequest.getAccount());
-                System.out.println(code);
-                if (userEntityOptional2.isPresent() && code.equals(loginRequest.getPassword())) {
+//                String code = (String) ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest()
+//                        .getSession().getAttribute(loginRequest.getAccount());
+//                System.out.println(code);
+
+                if (userEntityOptional2.isPresent()) {
                     UserEntity userEntity2 = userEntityOptional2.get();
                     loginResponse.setUser(EntityConverter.convert(userEntity2));
 
@@ -204,6 +205,7 @@ public class UserService {
             CommonResponse response = client.getCommonResponse(request);
             ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest()
                     .getSession().setAttribute(sendRequest.getPhone(), code);
+            sendResponse.setCode(code);
         } catch (ServerException e) {
             e.printStackTrace();
             sendResponse.setResultType(ResultType.FAILURE);
@@ -252,8 +254,21 @@ public class UserService {
      */
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
         SignUpResponse signUpResponse = new SignUpResponse();
+//
+//        String code = (String) ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest()
+//                .getSession().getAttribute(signUpRequest.getPhone());
+//        if(code==null || code.equals("")) {
+//            signUpResponse.setResultType(ResultType.FAILURE);
+//            signUpResponse.setErrorMsg("请重新发送验证码");
+//            return signUpResponse;
+//        }
+//        if(!code.equals(signUpRequest.getVerification())) {
+//            signUpResponse.setResultType(ResultType.FAILURE);
+//            signUpResponse.setErrorMsg("验证码错误");
+//            return signUpResponse;
+//        }
 
-        // 验证码登录
+        // 验证码注册
         if (signUpRequest.getEmail() == null || signUpRequest.getEmail().equals("")) {
             UserEntity userEntity = new UserEntity();
             userEntity.setPhone(signUpRequest.getPhone());
@@ -266,8 +281,11 @@ public class UserService {
             return signUpResponse;
         }
 
+
+        // 密码注册
         if (!checkPasswordFormat(signUpRequest.getPassword())) {
             signUpResponse.setResultType(ResultType.FAILURE);
+            signUpResponse.setErrorMsg("密码格式错误");
             return signUpResponse;
         }
 
