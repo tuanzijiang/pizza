@@ -9,6 +9,7 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ResultType;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.admin.LoginRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.shop.ShopDetailRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.shop.ShopDetailResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.shop.ShopManageResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.service.AdminService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,17 +29,17 @@ public class ShopControllerTest extends TestApplication{
 
     @Test
     public void testGetShopList() {
-        List<Shop> shopList = shopController.getShopList();
+        List<ShopManageResponse> shopList = shopController.getShopList();
         logger.info("Total shop number is {}",shopList.size());
         Assert.assertEquals(3,shopList.size());
     }
 
-    @Test
-    public void testIngredientListByShopId() {
-        List<Ingredient> ingredientList = shopController.getIngredientListByShopId(1);
-        logger.info("Total ingredient number is {}",ingredientList.size());
-        Assert.assertEquals(2,ingredientList.size());
-    }
+//    @Test
+//    public void testIngredientListByShopId() {
+//        List<Ingredient> ingredientList = shopController.getIngredientListByShopId(1);
+//        logger.info("Total ingredient number is {}",ingredientList.size());
+//        Assert.assertEquals(2,ingredientList.size());
+//    }
 
     @Test
     public void testEditShopDetailAdminNotLogin()throws ParseException,BusinessServerException{

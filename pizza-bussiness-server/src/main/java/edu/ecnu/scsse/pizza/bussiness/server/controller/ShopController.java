@@ -34,20 +34,20 @@ public class ShopController extends BaseController{
      */
     @RequestMapping(value = "/getShopList",method = RequestMethod.GET)
     @ResponseBody
-    public List<Shop> getShopList(){
+    public List<ShopManageResponse> getShopList(){
         return shopService.getShopList();
     }
 
-    /***
-     * 查看工厂原料库
-     * @request
-     * @return
-     */
-    @RequestMapping(value = "/getIngredientListByShopId",method = RequestMethod.GET)
-    @ResponseBody
-    public List<Ingredient> getIngredientListByShopId(@RequestParam int shopId){
-        return shopService.getIngredientListByShopId(shopId);
-    }
+//    /***
+//     * 查看工厂原料库
+//     * @request
+//     * @return
+//     */
+//    @RequestMapping(value = "/getIngredientListByShopId",method = RequestMethod.GET)
+//    @ResponseBody
+//    public List<Ingredient> getIngredientListByShopId(@RequestParam int shopId){
+//        return shopService.getIngredientListByShopId(shopId);
+//    }
 
     /***
      * 修改工厂信息

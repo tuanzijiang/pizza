@@ -6,6 +6,7 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Ingredient;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.ShopIngredient;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ResultType;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.SimpleResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.admin.LoginRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ingredient.BatchImportResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ingredient.BuyIngredientRequest;
@@ -30,7 +31,7 @@ public class IngredientControllerTest  extends TestApplication{
 
     @Test
     public void testGetIngredientList(){
-        List<Ingredient> ingredientList=ingredientController.getIngredientList();
+        List<IngredientDetailResponse> ingredientList=ingredientController.getIngredientList();
         logger.info("Total ingredient number is {}",ingredientList.size());
         Assert.assertEquals(6,ingredientList.size());
     }
@@ -45,7 +46,7 @@ public class IngredientControllerTest  extends TestApplication{
     @Test
     public void testEditIngredientDetailAdminNotLogin() throws BusinessServerException{
         IngredientDetailRequest request = new IngredientDetailRequest(1,"榴莲",1000,400,"水果商", IngredientStatus.USING);
-        IngredientDetailResponse response=ingredientController.editIngredientDetail(request);
+        SimpleResponse response=ingredientController.editIngredientDetail(request);
         Assert.assertEquals(ResultType.FAILURE,response.getResultType());
     }
 
@@ -53,28 +54,28 @@ public class IngredientControllerTest  extends TestApplication{
     public void testEditIngredientDetailSuccessfully() throws BusinessServerException{
         adminService.adminLogin(new LoginRequest("admin","admin"));
         IngredientDetailRequest request = new IngredientDetailRequest(1,"榴莲",1000,400,"水果商", IngredientStatus.USING);
-        IngredientDetailResponse response=ingredientController.editIngredientDetail(request);
+        SimpleResponse response=ingredientController.editIngredientDetail(request);
         Assert.assertEquals(ResultType.SUCCESS,response.getResultType());
     }
 
     @Test
     public void testAddNewIngredientAdminNotLogin() throws BusinessServerException{
         IngredientDetailRequest request = new IngredientDetailRequest("榴莲",1000,400,"水果商", IngredientStatus.USING);
-        IngredientDetailResponse response=ingredientController.addNewIngredient(request);
+        SimpleResponse response=ingredientController.addNewIngredient(request);
         Assert.assertEquals(ResultType.FAILURE,response.getResultType());
     }
 
 
     @Test
     public void testEditIngredientStatusAdminNotLogin() throws BusinessServerException{
-        IngredientDetailResponse response=ingredientController.editIngredientStatus(1);
+        SimpleResponse response=ingredientController.editIngredientStatus(1);
         Assert.assertEquals(ResultType.FAILURE,response.getResultType());
     }
 
     @Test
     public void testEditIngredientStatusSuccessfullyn() throws BusinessServerException{
         adminService.adminLogin(new LoginRequest("admin","admin"));
-        IngredientDetailResponse response=ingredientController.editIngredientStatus(1);
+        SimpleResponse response=ingredientController.editIngredientStatus(1);
         Assert.assertEquals(ResultType.SUCCESS,response.getResultType());
     }
 

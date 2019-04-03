@@ -5,6 +5,7 @@ import edu.ecnu.scsse.pizza.bussiness.server.exception.NotFoundException;
 import edu.ecnu.scsse.pizza.bussiness.server.exception.PermissionException;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Menu;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.SimpleResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDetailRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDetailResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuManageResponse;
@@ -36,8 +37,19 @@ public class MenuController extends BaseController{
      */
     @RequestMapping(value = "/getMenuList",method = RequestMethod.GET)
     @ResponseBody
-    public List<Menu> getMenuList(){
+    public List<MenuDetailResponse> getMenuList(){
         return menuService.getMenuList();
+    }
+
+    /**
+     * 查看菜品类别列表
+     * @request
+     * @return response
+     */
+    @RequestMapping(value = "/getTagList",method = RequestMethod.GET)
+    @ResponseBody
+    public List<String> getTagList(){
+        return menuService.getTagList();
     }
 
     /**
@@ -47,14 +59,14 @@ public class MenuController extends BaseController{
      */
     @RequestMapping(value = "/editMenuStatus",method = RequestMethod.GET)
     @ResponseBody
-    public BaseResponse editMenuStatus(@RequestParam int menuId){
+    public SimpleResponse editMenuStatus(@RequestParam int menuId){
         int adminId = getCurrentAdminId();
         if(adminId!=-1)
             return menuService.editMenuStatus(menuId);
         else{
             PermissionException e = new PermissionException("Admin is logout.");
             log.warn("Admin is logout.", e);
-            return new MenuDetailResponse(e);
+            return new SimpleResponse(e);
         }
     }
 
@@ -65,14 +77,14 @@ public class MenuController extends BaseController{
      */
     @RequestMapping(value = "/editMenuDetail",method = RequestMethod.POST)
     @ResponseBody
-    public MenuDetailResponse editMenuStatus(@RequestBody MenuDetailRequest menuDetailRequest) throws BusinessServerException {
+    public SimpleResponse editMenuStatus(@RequestBody MenuDetailRequest menuDetailRequest) throws BusinessServerException {
         int adminId = getCurrentAdminId();
         if (adminId != -1)
             return menuService.editMenuDetail(menuDetailRequest);
         else {
             PermissionException e = new PermissionException("Admin is logout.");
             log.warn("Admin is logout.", e);
-            return new MenuDetailResponse(e);
+            return new SimpleResponse(e);
         }
     }
 
@@ -83,7 +95,7 @@ public class MenuController extends BaseController{
      */
     @RequestMapping(value = "/addNewMenu",method = RequestMethod.POST)
     @ResponseBody
-    public BaseResponse addNewMenu(@RequestBody MenuDetailRequest request) throws ParseException,BusinessServerException{
+    public SimpleResponse addNewMenu(@RequestBody MenuDetailRequest request) throws ParseException,BusinessServerException{
         int adminId = getCurrentAdminId();
         if(adminId!=-1) {
             return menuService.addNewMenu(request);
@@ -91,7 +103,7 @@ public class MenuController extends BaseController{
         else{
             PermissionException e = new PermissionException("Admin is logout.");
             log.warn("Admin is logout.", e);
-            return new MenuDetailResponse(e);
+            return new SimpleResponse(e);
         }
     }
 

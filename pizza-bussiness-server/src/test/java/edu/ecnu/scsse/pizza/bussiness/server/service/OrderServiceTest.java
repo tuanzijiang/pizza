@@ -21,7 +21,7 @@ public class OrderServiceTest extends TestApplication {
 
     @Test
     public void testGetOrderList(){
-        List<Order> orderList = orderService.getOrderList();
+        List<OrderManageResponse> orderList = orderService.getOrderList();
         logger.info("Total order number is {}",orderList.size());
         Assert.assertEquals(12,orderList.size());
     }

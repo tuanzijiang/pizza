@@ -10,6 +10,7 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.enums.OperateResult;
 import edu.ecnu.scsse.pizza.bussiness.server.model.enums.OperateType;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ResultType;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.SimpleResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ingredient.*;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.ExcelUtils;
@@ -55,27 +56,23 @@ public class IngredientService {
     @Autowired
     OperateLoggerService operateLoggerService;
 
-    public List<Ingredient> getIngredientList(){
-//        IngredientManageResponse response;
-        List<Ingredient> ingredientList = new ArrayList<>();
+    public List<IngredientDetailResponse> getIngredientList(){
+        List<IngredientDetailResponse> ingredientList = new ArrayList<>();
         List<IngredientEntity> ingredientEntityList = ingredientJpaRepository.findAll();
         if(ingredientEntityList.size()!=0){
-//            response = new IngredientManageResponse();
             ingredientList = ingredientEntityList.stream().map(this::convert).collect(Collectors.toList());
-//            response.setIngredientList(ingredientList);
         }
         else{
             NotFoundException e = new NotFoundException("Ingredient list is not found.");
-//            response = new IngredientManageResponse(e);
             log.warn("Fail to find the ingredient list.", e);
         }
 
         return ingredientList;
     }
 
-    public IngredientDetailResponse editIngredientDetail(IngredientDetailRequest request) throws BusinessServerException {
+    public SimpleResponse editIngredientDetail(IngredientDetailRequest request) throws BusinessServerException {
         IngredientEntity entity;
-        IngredientDetailResponse response;
+        SimpleResponse response;
         int ingredientId = request.getId();
         String type = OperateType.UPDATE.getExpression();//操作类型
         String object = OperateObject.INGREDIENT.getExpression()+ingredientId;//操作对象
@@ -86,12 +83,12 @@ public class IngredientService {
                 CopyUtils.copyProperties(request, entity);
                 entity.setState(request.getStatus().getDbValue());
                 ingredientJpaRepository.saveAndFlush(entity);
-                response = new IngredientDetailResponse();
+                response = new SimpleResponse();
                 operateLoggerService.addOperateLogger(type, object, OperateResult.SUCCESS.getExpression());
             } else {
                 String msg = String.format("Ingredient %s is not found.", ingredientId);
                 NotFoundException e = new NotFoundException(msg);
-                response = new IngredientDetailResponse(e);
+                response = new SimpleResponse(e);
                 log.warn(msg, e);
                 operateLoggerService.addOperateLogger(type, object, OperateResult.FAILURE.getExpression() + " :"+msg);
             }
@@ -103,13 +100,13 @@ public class IngredientService {
 
     }
 
-    public IngredientDetailResponse editIngredientStatus(int id){
-        IngredientDetailResponse response;
+    public SimpleResponse editIngredientStatus(int id){
+        SimpleResponse response;
         Optional<IngredientEntity> optional = ingredientJpaRepository.findById(id);
         String type = OperateType.UPDATE.getExpression();//操作类型
         String object = OperateObject.INGREDIENT.getExpression()+id;//操作对象
         if (optional.isPresent()) {
-            response = new IngredientDetailResponse();
+            response = new SimpleResponse();
             IngredientEntity entity = optional.get();
             int currentState = entity.getState();
             switch (IngredientStatus.fromDbValue(currentState)) {
@@ -131,16 +128,16 @@ public class IngredientService {
         } else {
             String msg = String.format("Ingredient %s is not found.", id);
             NotFoundException e = new NotFoundException(msg);
-            response = new IngredientDetailResponse(e);
+            response = new SimpleResponse(e);
             log.warn(msg, e);
             operateLoggerService.addOperateLogger(type, object, OperateResult.FAILURE.getExpression() + " :"+msg);
         }
         return response;
     }
 
-    public IngredientDetailResponse addNewIngredient(IngredientDetailRequest request) throws BusinessServerException{
+    public SimpleResponse addNewIngredient(IngredientDetailRequest request) throws BusinessServerException{
         IngredientEntity entity;
-        IngredientDetailResponse response;
+        SimpleResponse response;
         String type = OperateType.INSERT.getExpression();//操作类型
         String object = OperateObject.INGREDIENT.getExpression();//操作对象
         try {
@@ -148,7 +145,7 @@ public class IngredientService {
             CopyUtils.copyProperties(request, entity);
             entity.setState(request.getStatus().getDbValue());
             ingredientJpaRepository.saveAndFlush(entity);
-            response = new IngredientDetailResponse();
+            response = new SimpleResponse();
             operateLoggerService.addOperateLogger(type, object, OperateResult.SUCCESS.getExpression());
         }catch (Exception e){
             log.error("Fail to insert ingredient.",e);
@@ -259,7 +256,7 @@ public class IngredientService {
                         ShopIngredient ingredient = new ShopIngredient();
                         ingredient.setId(ingredientEntity.getId());
                         ingredient.setName(ingredientEntity.getName());
-                        ingredient.setAlermNum(ingredientEntity.getAlermNum());
+                        ingredient.setAlertNum(ingredientEntity.getAlermNum());
                         ingredient.setCount(entity.getCount());
                         Optional<PizzaShopEntity> shopOptional = shopJpaRepository.findPizzaShopEntityById(entity.getShopId());
                         if(shopOptional.isPresent()){
@@ -283,8 +280,8 @@ public class IngredientService {
     /**
      * 向仓库订购原料，仓库分发原料给店铺
      * */
-    public BaseResponse buyIngredient(BuyIngredientRequest request){
-        IngredientDetailResponse response = new IngredientDetailResponse();
+    public SimpleResponse buyIngredient(BuyIngredientRequest request){
+        SimpleResponse response = new SimpleResponse();
         int shopId = request.getShopId();
         int ingredientId = request.getIngredientId();
         int orderNum = request.getOrderNum(); //要订购的份数
@@ -308,7 +305,7 @@ public class IngredientService {
                 operateLoggerService.addOperateLogger(operateType, operateObj, OperateResult.SUCCESS.getExpression());
             } else {
                 NotFoundException e = new NotFoundException("The shop doesn't have this ingredient.");
-                response = new IngredientDetailResponse(e);
+                response = new SimpleResponse(e);
             }
         }catch (Exception e){
             log.error("Fail to order ingredient.",e);
@@ -318,10 +315,22 @@ public class IngredientService {
         return response;
     }
 
-    private Ingredient convert(IngredientEntity entity){
-        Ingredient ingredient = new Ingredient();
+    public SimpleResponse deleteIngredient(int ingredientId){
+        SimpleResponse response = new SimpleResponse();
+        try {
+            ingredientJpaRepository.deleteById(ingredientId);
+            shopIngredientJpaRepository.deleteByIngredientId(ingredientId);
+        }catch (Exception e){
+            response.setResultType(ResultType.FAILURE);
+            response.setErrorMsg(e.getMessage());
+        }
+        return response;
+    }
+
+    public IngredientDetailResponse convert(IngredientEntity entity){
+        IngredientDetailResponse ingredient = new IngredientDetailResponse();
         CopyUtils.copyProperties(entity,ingredient);
-        ingredient.setIngredientStatus(IngredientStatus.fromDbValue(entity.getState()));
+        ingredient.setIngredientStatus(IngredientStatus.fromDbValue(entity.getState()).getExpression());
         return ingredient;
     }
 
