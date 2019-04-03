@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
 public class MenuService extends SessionService {
     private static final Logger log = LoggerFactory.getLogger(MenuService.class);
 
-    private static String UPLOADED_FOLDER = "D:\\Programming\\javaprojects\\pizza-express\\image\\";
+    //private static String UPLOADED_FOLDER = "./resources/img/";
 
     @Autowired
     MenuJpaRepository menuJpaRepository;
@@ -228,16 +228,15 @@ public class MenuService extends SessionService {
 
     public String uploadImage(MultipartFile file){
         String msg;
-//        String fileName = file.getOriginalFilename();
         if (file.isEmpty())
             msg = "Failed: empty file.";
-//        else if(!fileName.endsWith("jpg")&&!fileName.endsWith("jpeg")&&!fileName.endsWith("png"))
-//            msg = "Failed: file must be in JPG/JPEG/PNG format.";
         else{
             try {
                 // Get the file and save it somewhere
                 byte[] bytes = file.getBytes();
-                Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
+                Path currentDir = Paths.get(".");
+                String p = currentDir.toAbsolutePath().toString()+"\\pizza-bussiness-server\\src\\main\\resources\\img\\";
+                Path path = Paths.get(p + file.getOriginalFilename());
                 Files.write(path, bytes);
                 //entity.setImage(path.toString());
                 msg = "Success: upload file successfully.";
@@ -259,10 +258,12 @@ public class MenuService extends SessionService {
             try {
                 // Get the file and save it somewhere
                 byte[] bytes = file.getBytes();
-                Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
+                Path currentDir = Paths.get(".");
+                String p = currentDir.toAbsolutePath().toString()+"\\pizza-bussiness-server\\src\\main\\resources\\img\\";
+                Path path = Paths.get(p + file.getOriginalFilename());
                 Files.write(path, bytes);
-                //将图片路径保存至数据库
-                //entity.setImage(path.toString());
+                //将图片名称保存至数据库
+                entity.setImage(file.getOriginalFilename());
                 msg = "Success: upload file successfully.";
 
             } catch (IOException e) {
