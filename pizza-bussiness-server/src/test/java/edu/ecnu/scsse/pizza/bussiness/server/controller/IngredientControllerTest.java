@@ -1,5 +1,7 @@
 package edu.ecnu.scsse.pizza.bussiness.server.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ecnu.scsse.pizza.bussiness.server.TestApplication;
 import edu.ecnu.scsse.pizza.bussiness.server.exception.BusinessServerException;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Ingredient;
@@ -13,84 +15,150 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ingredient.B
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ingredient.IngredientDetailRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ingredient.IngredientDetailResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.service.AdminService;
+import edu.ecnu.scsse.pizza.bussiness.server.service.IngredientService;
 import edu.ecnu.scsse.pizza.data.enums.IngredientStatus;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-public class IngredientControllerTest  extends TestApplication{
-    private static final Logger logger = LoggerFactory.getLogger(IngredientControllerTest.class);
-    @Autowired
-    IngredientController ingredientController;
-    @Autowired
-    AdminService adminService;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@SpringBootTest
+@RunWith(SpringRunner.class)
+@ContextConfiguration
+@WebAppConfiguration
+public class IngredientControllerTest {
+    private MockMvc mockMvc;
+
+    @InjectMocks
+    private IngredientController ingredientController;
+    @Mock
+    private IngredientService ingredientService;
+
+
+    @Before
+    public void setup() throws Exception{
+        MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(ingredientController).build();
+    }
 
     @Test
-    public void testGetIngredientList(){
-        List<IngredientDetailResponse> ingredientList=ingredientController.getIngredientList();
-        logger.info("Total ingredient number is {}",ingredientList.size());
-        Assert.assertEquals(6,ingredientList.size());
+    public void testGetIngredientList() throws Exception{
+        RequestBuilder request = MockMvcRequestBuilders.get("/ingredient/getIngredientList")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(JSON.toJSONString(null));
+        MvcResult mvcResult = mockMvc.perform(request).andReturn();
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getContentAsString();
+        Assert.assertTrue("正确",status==200);
     }
 
 //    @Test
-//    public void testBatchImportByExcelFile(){
-//        String excelPath = "/Users/helinzi/Downloads/ingredient.xlsx";
-//        BatchImportResponse response=ingredientController.batchImportByExcelFile(excelPath);
-//        Assert.assertEquals(ResultType.FAILURE,response.getResultType());
+//    public void testBatchImportByExcelFile() throws Exception{
+//        RequestBuilder request = MockMvcRequestBuilders.post("/ingredient/batchImportByExcelFile").param("MultipartFile","1")
+//                .contentType(MediaType.APPLICATION_JSON_UTF8)
+//                .content(JSON.toJSONString(null));
+//        MvcResult mvcResult = mockMvc.perform(request).andReturn();
+//        int status = mvcResult.getResponse().getStatus();
+//        String content = mvcResult.getResponse().getContentAsString();
+//        Assert.assertTrue("正确",status==200);
 //    }
 
     @Test
-    public void testEditIngredientDetailAdminNotLogin() throws BusinessServerException{
-        IngredientDetailRequest request = new IngredientDetailRequest(1,"榴莲",1000,400,"水果商", IngredientStatus.USING);
-        SimpleResponse response=ingredientController.editIngredientDetail(request);
-        Assert.assertEquals(ResultType.FAILURE,response.getResultType());
+    public void testEditIngredientDetail() throws Exception{
+        IngredientDetailRequest request = new IngredientDetailRequest();
+        SimpleResponse response = new SimpleResponse();
+        ObjectMapper mapper = new ObjectMapper();
+        String requestBody = mapper.writeValueAsString(request);
+        when(ingredientService.editIngredientDetail(request)).thenReturn(response);
+        mockMvc.perform(MockMvcRequestBuilders.post("/ingredient/editIngredientDetail")
+                .accept(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
     }
 
     @Test
-    public void testEditIngredientDetailSuccessfully() throws BusinessServerException{
-        adminService.adminLogin(new LoginRequest("admin","admin"));
-        IngredientDetailRequest request = new IngredientDetailRequest(1,"榴莲",1000,400,"水果商", IngredientStatus.USING);
-        SimpleResponse response=ingredientController.editIngredientDetail(request);
-        Assert.assertEquals(ResultType.SUCCESS,response.getResultType());
+    public void testAddNewIngredient() throws Exception{
+        IngredientDetailRequest request=new IngredientDetailRequest();
+        SimpleResponse response=new SimpleResponse();
+        ObjectMapper mapper = new ObjectMapper();
+        String requestBody = mapper.writeValueAsString(request);
+        when(ingredientService.addNewIngredient(request)).thenReturn(response);
+        mockMvc.perform(MockMvcRequestBuilders.post("/ingredient/addNewIngredient")
+                .accept(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
+    }
+
+
+    @Test
+    public void testEditIngredientStatus() throws Exception{
+        RequestBuilder request = MockMvcRequestBuilders.get("/ingredient/editIngredientStatus").param("ingredientId","1")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(JSON.toJSONString(null));
+        MvcResult mvcResult = mockMvc.perform(request).andReturn();
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getContentAsString();
+        Assert.assertTrue("正确",status==200);
     }
 
     @Test
-    public void testAddNewIngredientAdminNotLogin() throws BusinessServerException{
-        IngredientDetailRequest request = new IngredientDetailRequest("榴莲",1000,400,"水果商", IngredientStatus.USING);
-        SimpleResponse response=ingredientController.addNewIngredient(request);
-        Assert.assertEquals(ResultType.FAILURE,response.getResultType());
-    }
-
-
-    @Test
-    public void testEditIngredientStatusAdminNotLogin() throws BusinessServerException{
-        SimpleResponse response=ingredientController.editIngredientStatus(1);
-        Assert.assertEquals(ResultType.FAILURE,response.getResultType());
+    public void testGetAlarmList() throws Exception{
+        RequestBuilder request = MockMvcRequestBuilders.get("/ingredient/getAlarmList")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(JSON.toJSONString(null));
+        MvcResult mvcResult = mockMvc.perform(request).andReturn();
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getContentAsString();
+        Assert.assertTrue("正确",status==200);
     }
 
     @Test
-    public void testEditIngredientStatusSuccessfullyn() throws BusinessServerException{
-        adminService.adminLogin(new LoginRequest("admin","admin"));
-        SimpleResponse response=ingredientController.editIngredientStatus(1);
-        Assert.assertEquals(ResultType.SUCCESS,response.getResultType());
+    public void testBuyIngredient() throws Exception{
+        BuyIngredientRequest request = new BuyIngredientRequest();
+        SimpleResponse response = new SimpleResponse();
+        ObjectMapper mapper = new ObjectMapper();
+        String requestBody = mapper.writeValueAsString(request);
+        when(ingredientService.buyIngredient(request)).thenReturn(response);
+        mockMvc.perform(MockMvcRequestBuilders.get("/ingredient/buyIngredient")
+                .accept(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
     }
 
     @Test
-    public void testGetAlarmList() {
-        List<ShopIngredient> ingredientList=ingredientController.getAlarmList();
-        logger.info("Total ingredient number is {}",ingredientList.size());
-        Assert.assertEquals(0,ingredientList.size());
+    public void testDeleteIngredient() throws Exception{
+        RequestBuilder request = MockMvcRequestBuilders.get("/ingredient/deleteIngredient").param("id","1")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(JSON.toJSONString(null));
+        MvcResult mvcResult = mockMvc.perform(request).andReturn();
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getContentAsString();
+        Assert.assertTrue("正确",status==200);
     }
-
-//    @Test
-//    public void testBuyIngredientSuccessfully(){
-//        adminService.adminLogin(new LoginRequest("admin","admin"));
-//        BuyIngredientRequest request= new BuyIngredientRequest(1,1,300);
-//        BaseResponse response = ingredientController.buyIngredient(request);
-//        Assert.assertEquals(ResultType.SUCCESS,response.getResultType());
-//    }
 }
