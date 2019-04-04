@@ -1,5 +1,7 @@
 package edu.ecnu.scsse.pizza.bussiness.server.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ecnu.scsse.pizza.bussiness.server.TestApplication;
 import edu.ecnu.scsse.pizza.bussiness.server.exception.BusinessServerException;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Ingredient;
@@ -11,57 +13,91 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.shop.ShopDet
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.shop.ShopDetailResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.shop.ShopManageResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.service.AdminService;
+import edu.ecnu.scsse.pizza.bussiness.server.service.ShopService;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.text.ParseException;
 import java.util.List;
 
-public class ShopControllerTest extends TestApplication{
-    private static final Logger logger = LoggerFactory.getLogger(OrderControllerTest.class);
-    @Autowired
-    ShopController shopController;
-    @Autowired
-    AdminService adminService;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-    @Test
-    public void testGetShopList() {
-        List<ShopManageResponse> shopList = shopController.getShopList();
-        logger.info("Total shop number is {}",shopList.size());
-        Assert.assertEquals(3,shopList.size());
-    }
+@SpringBootTest
+@RunWith(SpringRunner.class)
+@ContextConfiguration
+@WebAppConfiguration
+public class ShopControllerTest {
+    private MockMvc mockMvc;
 
-//    @Test
-//    public void testIngredientListByShopId() {
-//        List<Ingredient> ingredientList = shopController.getIngredientListByShopId(1);
-//        logger.info("Total ingredient number is {}",ingredientList.size());
-//        Assert.assertEquals(2,ingredientList.size());
-//    }
+    @InjectMocks
+    private ShopController shopController;
+    @Mock
+    private ShopService shopService;
 
-    @Test
-    public void testEditShopDetailAdminNotLogin()throws ParseException,BusinessServerException{
-        ShopDetailRequest request = new ShopDetailRequest("1",200,"必胜客","普陀区","12345","","2019-03-15 09:52:41","2019-03-15 23:52:41",31.239072,121.418481);
-        ShopDetailResponse response=shopController.editShopDetail(request);
-        Assert.assertEquals(response.getResultType(), ResultType.FAILURE);
+    @Before
+    public void setup() throws Exception{
+        MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(shopController).build();
     }
 
     @Test
-    public void testEditShopDetailSuccessfully()throws ParseException,BusinessServerException{
-        adminService.adminLogin(new LoginRequest("admin","admin"));
-        ShopDetailRequest request = new ShopDetailRequest("1",200,"必胜客","普陀区","12345","","2019-03-15 09:52:41","2019-03-15 23:52:41",31.239072,121.418481);
-        ShopDetailResponse response=shopController.editShopDetail(request);
-        Assert.assertEquals(response.getResultType(), ResultType.SUCCESS);
+    public void testGetShopList() throws Exception{
+        RequestBuilder request = MockMvcRequestBuilders.get("/shop/getShopList")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(JSON.toJSONString(null));
+        MvcResult mvcResult = mockMvc.perform(request).andReturn();
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getContentAsString();
+        Assert.assertTrue("正确",status==200);
     }
 
-    @Test
-    public void testAddNewShopAdminNotLogin()throws ParseException,BusinessServerException{
-        ShopDetailRequest request = new ShopDetailRequest(200,"必胜客","普陀区","12345","","2019-03-15 09:52:41","2019-03-15 23:52:41",31.239072,121.418481);
-        ShopDetailResponse response=shopController.addNewShop(request);
-        Assert.assertEquals(response.getResultType(), ResultType.FAILURE);
 
+    @Test
+    public void testEditShopDetailAdminNotLogin()throws Exception{
+        ShopDetailRequest request=new ShopDetailRequest();
+        ShopDetailResponse response=new ShopDetailResponse();
+        ObjectMapper mapper = new ObjectMapper();
+        String requestBody = mapper.writeValueAsString(request);
+        when(shopService.editShopDetail(request)).thenReturn(response);
+        mockMvc.perform(MockMvcRequestBuilders.post("/shop/editShopDetail")
+                .accept(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
+    }
+
+
+    @Test
+    public void testAddNewShop()throws Exception{
+        ShopDetailRequest request=new ShopDetailRequest();
+        ShopDetailResponse response=new ShopDetailResponse();
+        ObjectMapper mapper = new ObjectMapper();
+        String requestBody = mapper.writeValueAsString(request);
+        when(shopService.addNewShop(request)).thenReturn(response);
+        mockMvc.perform(MockMvcRequestBuilders.post("/shop/addNewShop")
+                .accept(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
     }
 
 }

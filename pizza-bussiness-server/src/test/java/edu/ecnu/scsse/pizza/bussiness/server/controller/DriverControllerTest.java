@@ -77,4 +77,18 @@ public class DriverControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk());
     }
+
+    @Test
+    public void testAddNewDriver() throws Exception{
+        DriverDetailRequest request=new DriverDetailRequest();
+        DriverDetailResponse response=new DriverDetailResponse();
+        ObjectMapper mapper = new ObjectMapper();
+        String requestBody = mapper.writeValueAsString(request);
+        when(driverService.editDriverDetail(request)).thenReturn(response);
+        mockMvc.perform(MockMvcRequestBuilders.post("/driver/addNewDriver")
+                .accept(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
+    }
 }
