@@ -98,9 +98,9 @@ public class MenuService extends SessionService {
                     menuJpaRepository.saveAndFlush(menuEntity);
                     break;
                 default:
-                    simpleResponse.setResultType(ResultType.FAILURE);
-                    simpleResponse.setErrorMsg("Status error.");
-                    log.error("Status error.");
+//                    simpleResponse.setResultType(ResultType.FAILURE);
+//                    simpleResponse.setErrorMsg("Status error.");
+//                    log.error("Status error.");
                     break;
             }
             operateLoggerService.addOperateLogger(type, object, OperateResult.SUCCESS.getExpression());
@@ -185,12 +185,7 @@ public class MenuService extends SessionService {
 
             //获得菜品图片信息
             MultipartFile imageFile = (MultipartFile)request.getImage();
-            String msg = uploadMenuImageFile(imageFile,menuEntity);
-            if(!msg.contains("Success")) {
-                response.setResultType(ResultType.FAILURE);
-                response.setErrorMsg(msg);
-                return response;
-            }
+            uploadMenuImageFile(imageFile,menuEntity);
             menuJpaRepository.saveAndFlush(menuEntity);
             int menuId = menuEntity.getId();
             //获得菜品原料信息
@@ -251,7 +246,8 @@ public class MenuService extends SessionService {
 
     private String uploadMenuImageFile(MultipartFile file, MenuEntity entity){
         String msg;
-        if (file.isEmpty()) {
+        if (file==null||file.isEmpty()) {
+            entity.setImage("");
             msg = "Failed: empty file.";
         }
         else{
