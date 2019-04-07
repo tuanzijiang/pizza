@@ -22,6 +22,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,11 +52,34 @@ public class DriverServiceTest extends TestApplication {
     @Test
     public void testGetDriverList(){
         List<DriverEntity> driverEntities = FakeFactory.fakeDriverEntities();
-        Optional<PizzaShopEntity> shop = FakeFactory.fakeShop();
+        PizzaShopEntity shop = FakeFactory.fakeShop();
         when(driverJpaRepository.findAll()).thenReturn(driverEntities);
-        when(shopJpaRepository.findPizzaShopEntityById(1)).thenReturn(shop);
+        when(shopJpaRepository.findPizzaShopEntityById(1)).thenReturn(Optional.of(shop));
         List<Driver> drivers = mockDriverService.getDriverList();
         assertEquals(driverEntities.size(),drivers.size());
+    }
+
+    @Test
+    public void testGetDriverListWithNoData(){
+        when(driverJpaRepository.findAll()).thenReturn(new ArrayList<>());
+        List<Driver> drivers = mockDriverService.getDriverList();
+        assertEquals(0,drivers.size());
+    }
+
+    @Test
+    public void testEditDriverWithWrongId() throws BusinessServerException{
+        int driverId = 1;
+        String driverName = "newName";
+        DriverEntity driverEntity = FakeFactory.fakeDriver(driverId);
+        driverEntity.setName(driverName);
+        CopyUtils.copyProperties(driverEntity,request);
+        request.setDriverId(driverEntity.getId());
+        request.setName(driverEntity.getName());
+
+        when(driverJpaRepository.findById(driverId)).thenReturn(Optional.empty());
+
+        DriverDetailResponse response = mockDriverService.editDriverDetail(request);
+        assertEquals(ResultType.FAILURE,response.getResultType());
     }
 
     @Test
