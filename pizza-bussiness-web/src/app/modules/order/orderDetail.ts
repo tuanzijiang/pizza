@@ -3,7 +3,7 @@
 */
 
 export class OrderDetail {
-  orderId: string;
+  orderId: any;
   receiveName: string;
   receivePhone: string;
   receiveAddress: string;
@@ -12,10 +12,7 @@ export class OrderDetail {
   buyPhone: string;
   commitTime: string;
   shopId: string;
-  shopName: string;
   driverId: string;
-  driverName: string;
-  driverPhone: string;
   startDeliverTime: string;
   arriveTime: string;
   state: string;

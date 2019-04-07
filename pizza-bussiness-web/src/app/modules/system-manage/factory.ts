@@ -1,7 +1,7 @@
 import {Ingredient} from "./ingredient";
 
 export class Factory {
-  id: string;
+  id: any;
   name: string;
   image: any;
   address: string;

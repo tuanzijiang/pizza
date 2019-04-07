@@ -1,5 +1,5 @@
 export class OperationRecord {
-  id: string;
+  id: any;
   adminId: string;
   operateType: string;
   operateDetail: string;

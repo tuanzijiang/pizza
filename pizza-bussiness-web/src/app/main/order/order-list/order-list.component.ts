@@ -14,15 +14,19 @@ export class OrderListComponent implements OnInit {
   cols: any[];
   states: any[];
   selectedOrder: OrderDetail;
-  selectedOrderDetail: OrderDetail;
   displayDetail: boolean;
+  displayPage: boolean;
+  orderListKeys: Array<string>;
+  MenuListKeys: Array<string>;
 
   constructor(private translateService: TranslateService, private orderService: OrderService) {
   }
 
   ngOnInit() {
-    this.orders = [];
+    this.displayPage = false;
     this.displayDetail = false;
+    this.orderListKeys = ['receiveName', 'receivePhone', 'receiveAddress', 'totalAmount', 'menuList', 'buyPhone', 'commitTime', 'shopId', 'driverId', 'startDeliverTime', 'arriveTime', 'state'];
+    this.MenuListKeys = ['name', 'price', 'count'];
     this.cols = [
       {field: 'orderId', header: '订单编号'},
       {field: 'receiveName', header: '收件人'},
@@ -34,13 +38,22 @@ export class OrderListComponent implements OnInit {
     ];
     this.states = [
       {label: '请选择状态', value: null},
-      {label: '未接单', value: '未接单'},
+      {label: '未知', value: '未知'},
+      {label: '待支付', value: '待支付'},
+      {label: '已支付', value: '已支付'},
+      {label: '取消审核中', value: '取消审核中'},
+      {label: '取消失败', value: '取消失败'},
       {label: '配送中', value: '配送中'},
       {label: '已送达', value: '已送达'},
+      {label: '已完成', value: '已完成'},
+      {label: '待配送', value: '待配送'},
+      {label: '商家接单失败', value: '商家接单失败'},
     ];
     this.orderService.getOrders().subscribe(
       (orders: OrderDetail[]) => {
         this.orders = orders;
+        console.log(this.orders);
+        this.displayPage = true;
       }
     );
   }
@@ -48,9 +61,5 @@ export class OrderListComponent implements OnInit {
   selectOrderWithButton(order: OrderDetail) {
     this.selectedOrder = order;
     this.displayDetail = true;
-  }
-
-  getKeys(item): Array<string> {
-    return Object.keys(item);
   }
 }

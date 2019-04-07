@@ -1,5 +1,5 @@
 export class Material {
-  id: string;
+  id: any;
   name: string;
   count: number;
   supplierName: string;
