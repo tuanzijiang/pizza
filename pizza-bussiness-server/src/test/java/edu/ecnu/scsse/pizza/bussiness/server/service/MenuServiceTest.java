@@ -61,9 +61,7 @@ public class MenuServiceTest extends TestApplication{
 
     @Before
     public void setUp(){
-        MockitoAnnotations.initMocks(this);
         request = new MenuDetailRequest(String.valueOf(1),"",null,"", Lists.emptyList(), 0.0,PizzaStatus.IN_SALE,PizzaTag.UNKNOWN);
-
     }
 
     @Test

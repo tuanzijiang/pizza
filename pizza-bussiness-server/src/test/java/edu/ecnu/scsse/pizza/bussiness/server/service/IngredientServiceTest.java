@@ -71,7 +71,6 @@ public class IngredientServiceTest extends TestApplication{
     @Test
     public void testGetIngredientList(){
         List<IngredientEntity> ingredientEntities = FakeFactory.fakeIngredientEntities();
-
         when(ingredientJpaRepository.findAll()).thenReturn(ingredientEntities);
         List<IngredientDetailResponse> ingredients = ingredientService.getIngredientList();
         assertEquals(ingredientEntities.size(),ingredients.size());
@@ -131,7 +130,7 @@ public class IngredientServiceTest extends TestApplication{
         List<ShopIngredientEntity> shopIngredientEntityList = FakeFactory.fakeShopIngredients();
         when(shopIngredientJpaRepository.findAll()).thenReturn(shopIngredientEntityList);
         when(ingredientJpaRepository.findById(anyInt())).thenReturn(Optional.of(FakeFactory.fakeIngredient(1)));
-        when(shopJpaRepository.findPizzaShopEntityById(anyInt())).thenReturn(FakeFactory.fakeShop());
+        when(shopJpaRepository.findPizzaShopEntityById(anyInt())).thenReturn(Optional.of(FakeFactory.fakeShop()));
         List<ShopIngredient> shopIngredients = ingredientService.getAlarmList();
         assertEquals(10,shopIngredients.size());
     }
