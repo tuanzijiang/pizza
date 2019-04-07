@@ -9,9 +9,9 @@
     <version>1.0.0-SNAPSHOT</version>
     <modules>
         <module>pizza-bussiness-server</module>
-        <!--<module>pizza-bussiness-web</module>-->
-        <!--<module>pizza-consumer-server</module>-->
-        <!--<module>pizza-consumer-web</module>-->
+        <module>pizza-bussiness-web</module>
+        <module>pizza-consumer-server</module>
+        <module>pizza-consumer-web</module>
         <module>pizza-data</module>
     </modules>
 

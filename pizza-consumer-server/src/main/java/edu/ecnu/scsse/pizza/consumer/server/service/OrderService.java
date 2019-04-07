@@ -35,8 +35,6 @@ import java.util.stream.Collectors;
 @Service
 public class OrderService {
 
-    private final Gson GSON = new Gson();
-
     private static final Logger log = LoggerFactory.getLogger(OrderService.class);
 
     private final AtomicInteger WORKER_COUNTER = new AtomicInteger();
