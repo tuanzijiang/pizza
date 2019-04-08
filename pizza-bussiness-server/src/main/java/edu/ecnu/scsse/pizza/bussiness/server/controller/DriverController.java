@@ -43,8 +43,8 @@ public class DriverController extends BaseController{
      */
     @RequestMapping(value = "/editDriverDetail",method = RequestMethod.POST)
     @ResponseBody
-    public DriverDetailResponse editShopDetail(@RequestBody DriverDetailRequest request) throws ParseException,BusinessServerException {
-        int adminId = getCurrentAdminId();
+    public DriverDetailResponse editShopDetail(@RequestBody DriverDetailRequest request,@RequestParam int adminId) throws ParseException,BusinessServerException {
+        //int adminId = getCurrentAdminId();
         if (adminId != -1) {
             return driverService.editDriverDetail(request);
         } else {
@@ -61,8 +61,8 @@ public class DriverController extends BaseController{
      */
     @RequestMapping(value = "/addNewDriver",method = RequestMethod.POST)
     @ResponseBody
-    public DriverDetailResponse addNewDriver(@RequestBody DriverDetailRequest request) throws ParseException,BusinessServerException{
-        int adminId = getCurrentAdminId();
+    public DriverDetailResponse addNewDriver(@RequestBody DriverDetailRequest request,@RequestParam int adminId) throws ParseException,BusinessServerException{
+        //int adminId = getCurrentAdminId();
         if(adminId!=-1) {
             return driverService.addNewDriver(request);
         }

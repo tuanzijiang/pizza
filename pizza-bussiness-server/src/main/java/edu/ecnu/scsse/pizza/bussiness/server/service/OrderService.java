@@ -54,7 +54,7 @@ public class OrderService {
 
     public List<OrderManageResponse> getOrderList(){
         List<OrderManageResponse> orderList = new ArrayList<>();
-        List<OrderEntity> orderEntityList = orderJpaRepository.findAll();
+        List<OrderEntity> orderEntityList = orderJpaRepository.findAllOrders();
         if(orderEntityList.size()!=0){
             orderList = orderEntityList.stream().map(this::convert).collect(Collectors.toList());
         }
