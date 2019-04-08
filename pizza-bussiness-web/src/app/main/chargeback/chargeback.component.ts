@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {ChargebackPending} from "../../modules/chargeback/chargebackPending";
 import {ChargebackProcessed} from "../../modules/chargeback/chargebackProcessed";
 import {Table} from "primeng/table";
@@ -6,15 +6,14 @@ import {ChargebackService} from "../../services/chargeback/chargeback.service";
 import {BaseResponse} from "../../modules/baseResponse";
 import {OrderService} from "../../services/order/order.service";
 
-var _self = this;
 @Component({
   selector: 'app-chargeback',
   templateUrl: './chargeback.component.html',
   styleUrls: ['./chargeback.component.scss']
 })
-export class ChargebackComponent implements OnInit {
+export class ChargebackComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('dtProcessed') private _table: any;
+  @ViewChild('dtProcessed') table: Table;
   pendingCols: any[];
   processedCols: any[];
   chargebackPendings: ChargebackPending[];
@@ -26,7 +25,8 @@ export class ChargebackComponent implements OnInit {
 
   ngOnInit() {
     this.showPage = false;
-
+    this.chargebackPendings = [];
+    this.chargebackPro = [];
     this.pendingCols = [
       {field: 'orderId', header: '订单编号'},
       {field: 'receiveName', header: '收件人'},
@@ -53,12 +53,40 @@ export class ChargebackComponent implements OnInit {
     );
   }
 
+  ngAfterViewInit(): void {
+    // this will be called from your templates onSelect event
+    this.table.filterConstraints['dateRangeFilter'] = (value, filter): boolean => {
+      // get the from/start value
+      let s = this.dateFilters[0].getTime();
+      let e;
+      // the to/end value might not be set
+      // use the from/start date and add 1 day
+      // or the to/end date and add 1 day
+      if (this.dateFilters[1]) {
+        e = this.dateFilters[1].getTime() + 86400000;
+      } else {
+        e = s + 86400000;
+      }
+      // compare it to the actual values
+      return value.getTime() >= s && value.getTime() <= e;
+    };
+  }
+
   getProcessedOrder() {
     this.orderService.getCancelOrderList().subscribe(
       (cp: ChargebackProcessed[]) => {
-        this.chargebackPro = cp;
+        this.chargebackPro = [];
+        for(let processedItem of cp) {
+          let item = new ChargebackProcessed();
+          item.orderId = processedItem.orderId;
+          item.receiveName = processedItem.receiveName;
+          item.receivePhone = processedItem.receivePhone;
+          item.paidPeriod = processedItem.paidPeriod;
+          item.state = processedItem.state;
+          item.commitTime = new Date(processedItem.commitTime);
+          this.chargebackPro.push(item);
+        }
         this.showPage = true;
-        this.setTable();
       }
     )
   }
@@ -89,26 +117,6 @@ export class ChargebackComponent implements OnInit {
         }
       }
     )
-  }
-
-  setTable() {
-    // this will be called from your templates onSelect event
-    this._table.filterConstraints['dateRangeFilter'] = (value, filter): boolean => {
-      // get the from/start value
-      var s = _self.dateFilters[0].getTime();
-      var e;
-      // the to/end value might not be set
-      // use the from/start date and add 1 day
-      // or the to/end date and add 1 day
-      if (_self.dateFilters[1]) {
-        e = _self.dateFilters[1].getTime() + 86400000;
-      } else {
-        e = s + 86400000;
-      }
-      // compare it to the actual values
-      return value.getTime() >= s && value.getTime() <= e;
-    }
-
   }
 
 }

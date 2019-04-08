@@ -5,6 +5,7 @@ import {AddressService} from "../address/address.service";
 import {map} from "rxjs/operators";
 import {Menu} from "../../modules/system-manage/menu";
 import {Factory} from "../../modules/system-manage/factory";
+import {AuthService} from "../auth/auth.service";
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -35,17 +36,17 @@ export class SystemManageService {
   }
 
   editMenu(menu: Menu):Observable<any> {
-    return this.http.post(AddressService.editMenu(), menu, httpOptions)
+    return this.http.post(AddressService.editMenu() + '?adminId=' + AuthService.UserName, menu, httpOptions)
       .pipe()
   }
 
   addMenu(menu: Menu):Observable<any> {
-    return this.http.post(AddressService.addMenu(), menu, httpOptions)
+    return this.http.post(AddressService.addMenu() + '?adminId=' + AuthService.UserName, menu, httpOptions)
       .pipe()
   }
 
   changeMenuState(id: string):Observable<any> {
-    return this.http.get(AddressService.changeMenuState() + id, httpOptions)
+    return this.http.get(AddressService.changeMenuState() + id + '&adminId=' + AuthService.UserName, httpOptions)
       .pipe()
   }
 
@@ -55,12 +56,12 @@ export class SystemManageService {
   }
 
   editShop(shop: Factory):Observable<any> {
-    return this.http.post(AddressService.editShop(), shop, httpOptions)
+    return this.http.post(AddressService.editShop() + '?adminId=' + AuthService.UserName, shop, httpOptions)
       .pipe()
   }
 
   addShop(shop: Factory):Observable<any> {
-    return this.http.post(AddressService.addShop(), shop, httpOptions)
+    return this.http.post(AddressService.addShop() + '?adminId=' + AuthService.UserName, shop, httpOptions)
       .pipe()
   }
 
