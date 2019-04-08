@@ -57,8 +57,8 @@ public class IngredientController extends BaseController{
      */
     @RequestMapping(value = "/editIngredientDetail",method = RequestMethod.POST)
     @ResponseBody
-    public SimpleResponse editIngredientDetail(@RequestBody IngredientDetailRequest request) throws BusinessServerException{
-        int adminId = getCurrentAdminId();
+    public SimpleResponse editIngredientDetail(@RequestBody IngredientDetailRequest request,@RequestParam int adminId) throws BusinessServerException{
+        //int adminId = getCurrentAdminId();
         if (adminId != -1)
             return ingredientService.editIngredientDetail(request);
         else {
@@ -75,8 +75,8 @@ public class IngredientController extends BaseController{
      */
     @RequestMapping(value = "/addNewIngredient",method = RequestMethod.POST)
     @ResponseBody
-    public SimpleResponse addNewIngredient(@RequestBody IngredientDetailRequest request) throws BusinessServerException{
-        int adminId = getCurrentAdminId();
+    public SimpleResponse addNewIngredient(@RequestBody IngredientDetailRequest request,@RequestParam int adminId) throws BusinessServerException{
+        //int adminId = getCurrentAdminId();
         if (adminId != -1)
             return ingredientService.addNewIngredient(request);
         else {
@@ -93,8 +93,8 @@ public class IngredientController extends BaseController{
      */
     @RequestMapping(value = "/editIngredientStatus",method = RequestMethod.GET)
     @ResponseBody
-    public SimpleResponse editIngredientStatus(@RequestParam int ingredientId) throws BusinessServerException{
-        int adminId = getCurrentAdminId();
+    public SimpleResponse editIngredientStatus(@RequestParam int ingredientId,@RequestParam int adminId) throws BusinessServerException{
+        //int adminId = getCurrentAdminId();
         if (adminId != -1)
             return ingredientService.editIngredientStatus(ingredientId);
         else {
@@ -123,8 +123,8 @@ public class IngredientController extends BaseController{
      */
     @RequestMapping(value = "/buyIngredient",method = RequestMethod.POST)
     @ResponseBody
-    public SimpleResponse buyIngredient(@RequestBody BuyIngredientRequest request){
-        int adminId = getCurrentAdminId();
+    public SimpleResponse buyIngredient(@RequestBody BuyIngredientRequest request,@RequestParam int adminId){
+        //int adminId = getCurrentAdminId();
         if(adminId!=-1) {
             return ingredientService.buyIngredient(request);
         }
@@ -143,8 +143,8 @@ public class IngredientController extends BaseController{
      */
     @RequestMapping(value = "/deleteIngredient",method = RequestMethod.GET)
     @ResponseBody
-    public SimpleResponse deleteIngredient(@RequestParam int id){
-        int adminId = getCurrentAdminId();
+    public SimpleResponse deleteIngredient(@RequestParam int id,@RequestParam int adminId){
+        //int adminId = getCurrentAdminId();
         if(adminId!=-1) {
             return ingredientService.deleteIngredient(id);
         }

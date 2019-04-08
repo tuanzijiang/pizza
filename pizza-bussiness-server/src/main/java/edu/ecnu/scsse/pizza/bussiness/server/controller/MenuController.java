@@ -59,8 +59,8 @@ public class MenuController extends BaseController{
      */
     @RequestMapping(value = "/editMenuStatus",method = RequestMethod.GET)
     @ResponseBody
-    public SimpleResponse editMenuStatus(@RequestParam int menuId){
-        int adminId = getCurrentAdminId();
+    public SimpleResponse editMenuStatus(@RequestParam int menuId,@RequestParam int adminId){
+        //int adminId = getCurrentAdminId();
         if(adminId!=-1)
             return menuService.editMenuStatus(menuId);
         else{
@@ -77,8 +77,8 @@ public class MenuController extends BaseController{
      */
     @RequestMapping(value = "/editMenuDetail",method = RequestMethod.POST)
     @ResponseBody
-    public SimpleResponse editMenuStatus(@RequestBody MenuDetailRequest menuDetailRequest) throws BusinessServerException {
-        int adminId = getCurrentAdminId();
+    public SimpleResponse editMenuStatus(@RequestBody MenuDetailRequest menuDetailRequest,@RequestParam int adminId) throws BusinessServerException {
+        //int adminId = getCurrentAdminId();
         if (adminId != -1)
             return menuService.editMenuDetail(menuDetailRequest);
         else {
@@ -95,8 +95,8 @@ public class MenuController extends BaseController{
      */
     @RequestMapping(value = "/addNewMenu",method = RequestMethod.POST)
     @ResponseBody
-    public SimpleResponse addNewMenu(@RequestBody MenuDetailRequest request) throws ParseException,BusinessServerException{
-        int adminId = getCurrentAdminId();
+    public SimpleResponse addNewMenu(@RequestBody MenuDetailRequest request,@RequestParam int adminId) throws ParseException,BusinessServerException{
+        //int adminId = getCurrentAdminId();
         if(adminId!=-1) {
             return menuService.addNewMenu(request);
         }
