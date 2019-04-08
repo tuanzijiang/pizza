@@ -5,6 +5,7 @@ import {map} from "rxjs/operators";
 import {Observable} from "rxjs";
 import {Material} from "../../modules/inventory-manage/material";
 import {BuyIngredient} from "../../modules/inventory-manage/buy-ingredient";
+import {AuthService} from "../auth/auth.service";
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -30,19 +31,19 @@ export class InventoryManageService {
   }
 
   editIngredientDetail(material: Material):Observable<any> {
-    return this.http.post(AddressService.editIngredientDetail(), material, httpOptions)
+    return this.http.post(AddressService.editIngredientDetail() + '?adminId=' + AuthService.UserName, material, httpOptions)
       .pipe()
   }
 
   addNewIngredient(material: Material):Observable<any> {
-    return this.http.post(AddressService.addNewIngredient(), material, httpOptions)
+    return this.http.post(AddressService.addNewIngredient() + '?adminId=' + AuthService.UserName, material, httpOptions)
       .pipe()
   }
 
   uploadIngredient(file: File):Observable<any> {
     let formData = new FormData();
     formData.append('file', file, file.name);
-    return this.http.post(AddressService.uploadIngredients(), formData, fileOptions)
+    return this.http.post(AddressService.uploadIngredients() + '?adminId=' + AuthService.UserName, formData, fileOptions)
       .pipe()
   }
 
@@ -52,12 +53,12 @@ export class InventoryManageService {
   }
 
   buyIngredient(ingredient: BuyIngredient):Observable<any> {
-    return this.http.post(AddressService.buyIngredient(), ingredient, httpOptions)
+    return this.http.post(AddressService.buyIngredient() + '?adminId=' + AuthService.UserName, ingredient, httpOptions)
       .pipe()
   }
 
   removeIngredient(id: string):Observable<any> {
-    return this.http.get(AddressService.removeIngredient() + id, httpOptions)
+    return this.http.get(AddressService.removeIngredient() + id + '&adminId=' + AuthService.UserName, httpOptions)
       .pipe()
   }
 }
