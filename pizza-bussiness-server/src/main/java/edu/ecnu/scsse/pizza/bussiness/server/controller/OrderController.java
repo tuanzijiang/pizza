@@ -2,6 +2,7 @@ package edu.ecnu.scsse.pizza.bussiness.server.controller;
 
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.PendingOrder;
+import edu.ecnu.scsse.pizza.bussiness.server.model.entity.SaleStatus;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.SimpleResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.order.*;
@@ -67,7 +68,7 @@ public class OrderController {
      */
     @RequestMapping(value = "/getMonthSaleStatus",method = RequestMethod.POST)
     @ResponseBody
-    public SaleResponse getMonthSaleStatus(@RequestBody SaleRequest request) throws ParseException {
+    public List<SaleStatus> getMonthSaleStatus(@RequestBody SaleRequest request) throws ParseException {
         String startDate = request.getStartDate();
         String endDate = request.getEndDate();
         return orderService.getSaleStatusList(startDate,endDate);

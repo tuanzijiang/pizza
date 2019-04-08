@@ -21,4 +21,7 @@ public class DriverDetailResponse extends BaseResponse{
     public void setDriverId(int driverId) {
         this.driverId = driverId;
     }
+
+    public DriverDetailResponse() { }
+
 }

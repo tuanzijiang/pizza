@@ -32,6 +32,18 @@ public class MenuDetailResponse{
         this.ingredients = new ArrayList<>();
     }
 
+    public MenuDetailResponse(String id, String name, String image, String description, double price, String state, String tagName, int count, List<IngredientDetailResponse> ingredients) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.description = description;
+        this.price = price;
+        this.state = state;
+        this.tagName = tagName;
+        this.count = count;
+        this.ingredients = ingredients;
+    }
+
     public String getId() {
         return id;
     }
