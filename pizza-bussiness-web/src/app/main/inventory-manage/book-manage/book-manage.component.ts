@@ -13,14 +13,17 @@ export class BookManageComponent implements OnInit {
 
   cols: any[];
   alerts: BookAlert[];
+  showPage: boolean;
 
   constructor(private inventoryManageService: InventoryManageService) {
   }
 
   ngOnInit() {
+    this.showPage = false;
     this.inventoryManageService.getAlarmList().subscribe(
       (alerts: BookAlert[]) => {
         this.alerts = alerts;
+        this.showPage = true;
       }
     );
     this.cols = [

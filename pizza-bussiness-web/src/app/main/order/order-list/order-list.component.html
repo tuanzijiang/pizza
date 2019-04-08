@@ -10,7 +10,7 @@
   </div>
   <div class="mt-lg-2 pr-lg-2">
     <p-table #dt [value]="orders" [paginator]="true" [rows]="10"
-             [globalFilterFields]="['orderId', 'receiveName', 'receivePhone', 'receiveAddress', 'totalAmount', 'commitTime', 'state', 'operation']">
+             [globalFilterFields]="['orderId', 'receiveName', 'receivePhone', 'receiveAddress', 'totalAmount', 'commitTime', 'state', 'operation']" [tableStyle]="{'table-layout':'auto'}" >
       <ng-template pTemplate="caption">
         <div style="text-align: right">
           <i class="pi pi-search" style="margin:4px 4px 0 0"></i>

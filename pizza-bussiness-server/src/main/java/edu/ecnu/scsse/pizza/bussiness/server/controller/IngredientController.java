@@ -121,7 +121,7 @@ public class IngredientController extends BaseController{
      * @request
      * @return response
      */
-    @RequestMapping(value = "/buyIngredient",method = RequestMethod.GET)
+    @RequestMapping(value = "/buyIngredient",method = RequestMethod.POST)
     @ResponseBody
     public SimpleResponse buyIngredient(@RequestBody BuyIngredientRequest request){
         int adminId = getCurrentAdminId();

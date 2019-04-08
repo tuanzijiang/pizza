@@ -65,7 +65,7 @@ public class OrderController {
      * @param request
      * @return response
      */
-    @RequestMapping(value = "/getMonthSaleStatus",method = RequestMethod.GET)
+    @RequestMapping(value = "/getMonthSaleStatus",method = RequestMethod.POST)
     @ResponseBody
     public SaleResponse getMonthSaleStatus(@RequestBody SaleRequest request) throws ParseException {
         String startDate = request.getStartDate();

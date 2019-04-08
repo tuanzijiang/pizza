@@ -17,8 +17,8 @@ export class FactoryManageComponent implements OnInit {
   tempFactory: Factory;
   displayChangeDialog: boolean;
   checkIgDialog: boolean;
+  showPage: boolean;
   imgUrl: string;
-  areas: any[];
   header: string;
   startDate: Date;
   endDate: Date;
@@ -33,6 +33,7 @@ export class FactoryManageComponent implements OnInit {
     this.systemManageService.getShopList().subscribe(
       (shopList: Factory[]) => {
         this.factories = shopList;
+        this.showPage = true;
       }
     );
 

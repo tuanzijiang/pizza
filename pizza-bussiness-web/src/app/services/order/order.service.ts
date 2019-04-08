@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {Observable} from "rxjs";
-import { map } from 'rxjs/operators';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {AddressService} from "../address/address.service";
 import {OrderCountDate} from "../../modules/order/orderCountDate";
@@ -30,6 +29,11 @@ export class OrderService {
 
   getOrderCountStatus(orderCountDate: OrderCountDate): Observable<any> {
     return this.http.post(AddressService.getOrderCountList(), orderCountDate, httpOptions)
+      .pipe()
+  }
+
+  getCancelOrderList(): Observable<any> {
+    return this.http.get(AddressService.getCancelOrderList(), httpOptions)
       .pipe()
   }
 

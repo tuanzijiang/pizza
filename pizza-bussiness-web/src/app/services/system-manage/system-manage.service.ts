@@ -21,47 +21,47 @@ export class SystemManageService {
 
   getUserList():Observable<any> {
     return this.http.get(AddressService.getUserList(), httpOptions)
-      .pipe(map((result: Response) => result.json()))
+      .pipe()
   }
 
   getTagList(): Observable<any> {
     return this.http.get(AddressService.getTagList(), httpOptions)
-      .pipe(map((result: Response) => result.json()))
+      .pipe()
   }
 
   getMenuList():Observable<any> {
     return this.http.get(AddressService.getMenuList(), httpOptions)
-      .pipe(map((result: Response) => result.json()))
+      .pipe()
   }
 
   editMenu(menu: Menu):Observable<any> {
     return this.http.post(AddressService.editMenu(), menu, httpOptions)
-      .pipe(map((result: Response) => result.json()))
+      .pipe()
   }
 
   addMenu(menu: Menu):Observable<any> {
     return this.http.post(AddressService.addMenu(), menu, httpOptions)
-      .pipe(map((result: Response) => result.json()))
+      .pipe()
   }
 
   changeMenuState(id: string):Observable<any> {
-    return this.http.post(AddressService.changeMenuState() + id, httpOptions)
-      .pipe(map((result: Response) => result.json()))
+    return this.http.get(AddressService.changeMenuState() + id, httpOptions)
+      .pipe()
   }
 
   getShopList():Observable<any> {
     return this.http.get(AddressService.getShopList(), httpOptions)
-      .pipe(map((result: Response) => result.json()))
+      .pipe()
   }
 
   editShop(shop: Factory):Observable<any> {
     return this.http.post(AddressService.editShop(), shop, httpOptions)
-      .pipe(map((result: Response) => result.json()))
+      .pipe()
   }
 
   addShop(shop: Factory):Observable<any> {
     return this.http.post(AddressService.addShop(), shop, httpOptions)
-      .pipe(map((result: Response) => result.json()))
+      .pipe()
   }
 
 }

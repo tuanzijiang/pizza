@@ -1,9 +1,10 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, Component, OnInit, ViewChild} from '@angular/core';
 import {YesterdayOrder} from "../../../modules/order/yesterdayOrder";
 import {Table} from "primeng/table";
 import {OrderService} from "../../../services/order/order.service";
 import {OrderCount} from "../../../modules/order/orderCount";
 import {OrderCountDate} from "../../../modules/order/orderCountDate";
+import {DataTable} from "primeng/primeng";
 
 @Component({
   selector: 'app-order-count',
@@ -12,26 +13,18 @@ import {OrderCountDate} from "../../../modules/order/orderCountDate";
 })
 export class OrderCountComponent implements OnInit {
 
-  @ViewChild('myTable') private _table: Table;
+  @ViewChild('myTable') private _table: DataTable;
   yesterdayOrder: YesterdayOrder;
   orderCountList: OrderCount[];
   cols: any[];
   dateFilters: any;
-  showPage: boolean;
-   _self = this;
+  showOrderCountPage: boolean;
 
   constructor(private orderService: OrderService) {
   }
 
   ngOnInit() {
-    this.showPage = false;
-    this.orderService.getYesterdayOrder().subscribe(
-      (yesOrder: YesterdayOrder) => {
-        this.yesterdayOrder = yesOrder;
-        console.log('11111111111');
-        this.getOrderCount();
-      }
-    );
+    this.showOrderCountPage = false;
 
     this.cols = [
       { field: 'date', header: '时间' },
@@ -41,6 +34,12 @@ export class OrderCountComponent implements OnInit {
       { field: 'totalAmount', header: '累计金额（元）' }
     ];
 
+    this.orderService.getYesterdayOrder().subscribe(
+      (yesOrder: YesterdayOrder) => {
+        this.yesterdayOrder = yesOrder;
+        this.getOrderCount();
+      }
+    );
   }
 
   getOrderCount() {
@@ -50,7 +49,7 @@ export class OrderCountComponent implements OnInit {
     this.orderService.getOrderCountStatus(orderCountDate).subscribe(
       (orderCountList: OrderCount[])=> {
         this.orderCountList = [];
-        for(let orderCount of orderCountList) {
+        for(let orderCount of orderCountList['saleStatusList']) {
           let newOrder = new OrderCount();
           newOrder.date = new Date(orderCount.date);
           newOrder.orderNum = orderCount.orderNum;
@@ -59,30 +58,30 @@ export class OrderCountComponent implements OnInit {
           newOrder.totalAmount = orderCount.totalAmount;
           this.orderCountList.push(newOrder);
         }
-        console.log('22222222222');
+        this.showOrderCountPage = true;
         this.setTable();
-        this.showPage = true;
       }
     );
   }
 
   setTable() {
+    var _self = this;
     // this will be called from your templates onSelect event
     this._table.filterConstraints['dateRangeFilter'] = (value, filter): boolean => {
       // get the from/start value
-      var s = this._self.dateFilters[0].getTime();
+      var s = _self.dateFilters[0].getTime();
       var e;
       // the to/end value might not be set
       // use the from/start date and add 1 day
       // or the to/end date and add 1 day
-      if (this._self.dateFilters[1]) {
-        e = this._self.dateFilters[1].getTime() + 86400000;
+      if (_self.dateFilters[1]) {
+        e = _self.dateFilters[1].getTime() + 86400000;
       } else {
         e = s + 86400000;
       }
       // compare it to the actual values
       return value.getTime() >= s && value.getTime() <= e;
-    }
+    };
   }
 
 }

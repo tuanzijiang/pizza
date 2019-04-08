@@ -73,6 +73,10 @@ export class AddressService {
     return `${local}/driver/addNewDriver`
   }
 
+  static removeDriver() {
+    return `${local}/driver/removeDriver?id=`
+  }
+
   static getIngredientList() {
     return `${local}/ingredient/getIngredientList`
   }
@@ -98,11 +102,15 @@ export class AddressService {
   }
 
   static removeIngredient() {
-    return `${local}/ingredient/removeIngredient?id=`
+    return `${local}/ingredient/deleteIngredient?id=`
   }
 
   static allowOrder() {
     return `${local}/order/allowCancel?orderId=`
+  }
+
+  static getCancelOrderList() {
+    return `${local}/order/getCancelOrderList`
   }
 
   static denyOrder() {

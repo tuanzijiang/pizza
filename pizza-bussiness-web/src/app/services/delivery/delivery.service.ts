@@ -18,19 +18,24 @@ export class DeliveryService {
 
   constructor(private http: HttpClient) { }
 
-  getDriverList():Observable<any> {
+  getDriverList(): Observable<any> {
     return this.http.get(AddressService.getDriverList(), httpOptions)
-      .pipe(map((result: Response) => result.json()))
+      .pipe()
   }
 
-  editDriver(driver: Delivery):Observable<any> {
+  editDriver(driver: Delivery): Observable<any> {
     return this.http.post(AddressService.editDriver(), driver, httpOptions)
-      .pipe(map((result: Response) => result.json()))
+      .pipe()
   }
 
-  addDriver(driver: Delivery):Observable<any> {
+  addDriver(driver: Delivery): Observable<any> {
     return this.http.post(AddressService.addDriver(), driver, httpOptions)
-      .pipe(map((result: Response) => result.json()))
+      .pipe()
+  }
+
+  removeDriver(id: string): Observable<any> {
+    return this.http.get(AddressService.removeDriver() + id, httpOptions)
+      .pipe()
   }
 
 }
