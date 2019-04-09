@@ -28,7 +28,7 @@ export class MainAssets extends React.PureComponent<MainAssetsProps, MainAssetsS
   constructor(props: MainAssetsProps) {
     super(props);
     this.state = {
-      navIdx: PageName.ORDER,
+      navIdx: PageName.MENU,
     };
   }
 

@@ -49,8 +49,8 @@ export default class Main extends React.PureComponent<MainProps, MainState> {
     return (
       <>
         {navIdx === 0 && <span className="main-middle_other">{i18n('选择披萨')}</span>}
-        {navIdx === 1 && <span className="main-middle_other">{i18n('我的订单')}</span>}
-        {navIdx === 2 && <span className="main-middle_other">{i18n('购物车')}</span>}
+        {navIdx === 1 && <span className="main-middle_other">{i18n('购物车')}</span>}
+        {navIdx === 2 && <span className="main-middle_other">{i18n('我的订单')}</span>}
         {navIdx === 3 && <span className="main-middle_other">{i18n('我的')}</span>}
       </>
     );

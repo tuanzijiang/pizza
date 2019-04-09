@@ -97,7 +97,7 @@ message SignUpResp {
 }
 
 // 发送验证码
-// [post] /sendVerification
+// [post] /sendVerificationCode
 
 message SendVerificationReq {
   enum Type {
@@ -113,6 +113,7 @@ message SendVerificationReq {
 
 message SendVerificationResp {
   ResultType result_type = 1;
+  string code = 2;
 }
 
 // 设置密码
