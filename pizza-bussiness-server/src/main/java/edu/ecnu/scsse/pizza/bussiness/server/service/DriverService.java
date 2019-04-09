@@ -12,9 +12,12 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.SimpleRespon
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.driver.DriverDetailRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.driver.DriverDetailResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.driver.DriverManageResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.utils.CastEntity;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
+import edu.ecnu.scsse.pizza.data.bean.DriverBean;
 import edu.ecnu.scsse.pizza.data.domain.DriverEntity;
 import edu.ecnu.scsse.pizza.data.domain.PizzaShopEntity;
+import edu.ecnu.scsse.pizza.data.enums.DriverStatus;
 import edu.ecnu.scsse.pizza.data.repository.DriverJpaRepository;
 import edu.ecnu.scsse.pizza.data.repository.OrderJpaRepository;
 import edu.ecnu.scsse.pizza.data.repository.PizzaShopJpaRepository;
@@ -48,11 +51,12 @@ public class DriverService {
     @Autowired
     private OrderJpaRepository orderJpaRepository;
 
-    public List<Driver> getDriverList(){
-        List<Driver> driverList = new ArrayList<>();
-        List<DriverEntity> driverEntityList = driverJpaRepository.findAll();
-        if(driverEntityList.size()!=0){
-            driverList = driverEntityList.stream().map(this::convert).collect(Collectors.toList());
+    public List<DriverManageResponse> getDriverList() throws Exception{
+        List<DriverManageResponse> driverList = new ArrayList<>();
+        List<Object[]> objects = driverJpaRepository.findAllDrivers();
+        List<DriverBean> driverBeans = CastEntity.castEntityToDriverBean(objects,DriverBean.class);
+        if(driverBeans.size()!=0){
+            driverList = driverBeans.stream().map(this::convert).collect(Collectors.toList());
         }
         else{
             NotFoundException e = new NotFoundException("Driver list is not found.");
@@ -132,15 +136,10 @@ public class DriverService {
         return response;
     }
 
-    private Driver convert(DriverEntity driverEntity){
-        Driver driver = new Driver();
-        CopyUtils.copyProperties(driverEntity,driver);
-        Optional<PizzaShopEntity> optional = shopJpaRepository.findPizzaShopEntityById(driverEntity.getShopId());
-        if(optional.isPresent()){
-            PizzaShopEntity entity = optional.get();
-            String shopName = entity.getName();
-            driver.setShopName(shopName);
-        }
+    private DriverManageResponse convert(DriverBean driverBean){
+        DriverManageResponse driver = new DriverManageResponse();
+        CopyUtils.copyProperties(driverBean,driver);
+        driver.setState(DriverStatus.fromDbValue(driverBean.getState()).getExpression());
         return driver;
     }
 }

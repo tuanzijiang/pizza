@@ -61,11 +61,11 @@ public class MenuServiceTest extends TestApplication{
 
     @Before
     public void setUp(){
-        request = new MenuDetailRequest(String.valueOf(1),"",null,"", Lists.emptyList(), 0.0,"使用中",PizzaTag.UNKNOWN);
+        request = new MenuDetailRequest(String.valueOf(1),"",null,"", Lists.emptyList(), 0.0,"使用中","披萨");
     }
 
     @Test
-    public void testGetMenuList(){
+    public void testGetMenuList() throws Exception{
         List<MenuEntity> menuEntities = FakeFactory.fakeMenuEntities();
         List<IngredientEntity> ingredientEntities = FakeFactory.fakeIngredientEntities();
         when(menuJpaRepository.findAll()).thenReturn(menuEntities);

@@ -6,22 +6,60 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse
 
 import java.util.List;
 
-public class DriverManageResponse extends BaseResponse{
-    private List<Driver> driverList;
+public class DriverManageResponse{
+    private int id;
+    private int shopId;
+    private String shopName;
+    private String name;
+    private String state;
+    private String phone;
 
-    public DriverManageResponse() {
+    public int getId() {
+        return id;
     }
 
-    public DriverManageResponse(BusinessServerException e) {
-        super(e);
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public List<Driver> getDriverList() {
-        return driverList;
+    public int getShopId() {
+        return shopId;
     }
 
-    public void setDriverList(List<Driver> driverList) {
-        this.driverList = driverList;
+    public void setShopId(int shopId) {
+        this.shopId = shopId;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
 }

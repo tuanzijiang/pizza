@@ -9,6 +9,7 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ResultType;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.SimpleResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.driver.DriverDetailRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.driver.DriverDetailResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.driver.DriverManageResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
 import edu.ecnu.scsse.pizza.data.domain.DriverEntity;
 import edu.ecnu.scsse.pizza.data.domain.MenuEntity;
@@ -50,19 +51,19 @@ public class DriverServiceTest extends TestApplication {
     }
 
     @Test
-    public void testGetDriverList(){
+    public void testGetDriverList() throws Exception{
         List<DriverEntity> driverEntities = FakeFactory.fakeDriverEntities();
         PizzaShopEntity shop = FakeFactory.fakeShop();
         when(driverJpaRepository.findAll()).thenReturn(driverEntities);
         when(shopJpaRepository.findPizzaShopEntityById(1)).thenReturn(Optional.of(shop));
-        List<Driver> drivers = mockDriverService.getDriverList();
+        List<DriverManageResponse> drivers = mockDriverService.getDriverList();
         assertEquals(driverEntities.size(),drivers.size());
     }
 
     @Test
-    public void testGetDriverListWithNoData(){
+    public void testGetDriverListWithNoData() throws Exception{
         when(driverJpaRepository.findAll()).thenReturn(new ArrayList<>());
-        List<Driver> drivers = mockDriverService.getDriverList();
+        List<DriverManageResponse> drivers = mockDriverService.getDriverList();
         assertEquals(0,drivers.size());
     }
 

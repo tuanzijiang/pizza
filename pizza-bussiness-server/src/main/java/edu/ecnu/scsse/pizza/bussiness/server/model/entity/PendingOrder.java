@@ -9,12 +9,12 @@ public class PendingOrder {
     private String commitTime;
     private double period;
     private String paidPeriod;
-    private OrderStatus state;
+    private String state;
 
     public PendingOrder() {
     }
 
-    public PendingOrder(String orderId, String receiveName, String receivePhone, String commitTime, double period, String paidPeriod, OrderStatus state) {
+    public PendingOrder(String orderId, String receiveName, String receivePhone, String commitTime, double period, String paidPeriod, String state) {
         this.orderId = orderId;
         this.receiveName = receiveName;
         this.receivePhone = receivePhone;
@@ -64,11 +64,11 @@ public class PendingOrder {
         this.paidPeriod = paidPeriod;
     }
 
-    public OrderStatus getState() {
+    public String getState() {
         return state;
     }
 
-    public void setState(OrderStatus state) {
+    public void setState(String state) {
         this.state = state;
     }
 

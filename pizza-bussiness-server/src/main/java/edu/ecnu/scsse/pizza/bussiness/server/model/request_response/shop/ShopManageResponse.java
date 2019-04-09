@@ -4,6 +4,7 @@ import edu.ecnu.scsse.pizza.bussiness.server.exception.BusinessServerException;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.*;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ingredient.IngredientDetailResponse;
+import edu.ecnu.scsse.pizza.data.domain.IngredientEntity;
 import edu.ecnu.scsse.pizza.data.domain.PizzaShopEntity;
 
 import java.sql.Timestamp;
@@ -13,7 +14,7 @@ public class ShopManageResponse{
     private int id;
     private List<Driver> driverList;
     private List<Order> orderList;
-    private List<IngredientDetailResponse> ingredientList;
+    private List<IngredientEntity> ingredientList;
     private Point mapPoint;
     private int maxNum;
     private Timestamp startTime;
@@ -29,7 +30,7 @@ public class ShopManageResponse{
     public ShopManageResponse() {
     }
 
-    public ShopManageResponse(int id, List<Driver> driverList, List<Order> orderList, List<IngredientDetailResponse> ingredientList, Point mapPoint, int maxNum, Timestamp startTime, Timestamp endTime, String name, String address, String phone, String image, String openHours, double lat, double lon) {
+    public ShopManageResponse(int id, List<Driver> driverList, List<Order> orderList, List<IngredientEntity> ingredientList, Point mapPoint, int maxNum, Timestamp startTime, Timestamp endTime, String name, String address, String phone, String image, String openHours, double lat, double lon) {
         this.id = id;
         this.driverList = driverList;
         this.orderList = orderList;
@@ -71,11 +72,11 @@ public class ShopManageResponse{
         this.orderList = orderList;
     }
 
-    public List<IngredientDetailResponse> getIngredientList() {
+    public List<IngredientEntity> getIngredientList() {
         return ingredientList;
     }
 
-    public void setIngredientList(List<IngredientDetailResponse> ingredientList) {
+    public void setIngredientList(List<IngredientEntity> ingredientList) {
         this.ingredientList = ingredientList;
     }
 

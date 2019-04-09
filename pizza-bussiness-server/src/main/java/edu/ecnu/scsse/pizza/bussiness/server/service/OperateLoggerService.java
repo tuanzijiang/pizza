@@ -38,7 +38,7 @@ public class OperateLoggerService extends SessionService{
     }
 
     public List<Logger> getOperateLogger(){
-        List<OperateLoggerEntity> operateLoggerEntityList = operateLoggerJpaRepository.findAll();
+        List<OperateLoggerEntity> operateLoggerEntityList = operateLoggerJpaRepository.findAllLoggers();
         return operateLoggerEntityList.stream().map(this::convert).collect(Collectors.toList());
     }
 
