@@ -61,7 +61,7 @@ public class MenuServiceTest extends TestApplication{
 
     @Before
     public void setUp(){
-        request = new MenuDetailRequest(String.valueOf(1),"",null,"", Lists.emptyList(), 0.0,PizzaStatus.IN_SALE,PizzaTag.UNKNOWN);
+        request = new MenuDetailRequest(String.valueOf(1),"",null,"", Lists.emptyList(), 0.0,"使用中",PizzaTag.UNKNOWN);
     }
 
     @Test

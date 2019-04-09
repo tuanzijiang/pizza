@@ -140,7 +140,7 @@ public class Menu {
         this.name = menu.getName();
         this.description = menu.getDescription();
         this.price = menu.getPrice();
-        this.state = menu.getState();
+        this.state = PizzaStatus.fromExpression(menu.getState());
         this.tagName = menu.getTagName();
     }
 
