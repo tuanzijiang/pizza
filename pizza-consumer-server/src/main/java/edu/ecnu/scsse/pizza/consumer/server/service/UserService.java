@@ -272,11 +272,13 @@ public class UserService {
         if (signUpRequest.getEmail() == null || signUpRequest.getEmail().equals("")) {
             UserEntity userEntity = new UserEntity();
             userEntity.setPhone(signUpRequest.getPhone());
+            userEntity.setName("user" + userEntity.getPhone());
             try {
                 userJpaRepository.save(userEntity);
                 signUpResponse.setUser(EntityConverter.convert(userEntity));
             } catch (Exception e) {
                 signUpResponse.setResultType(ResultType.FAILURE);
+                signUpResponse.setErrorMsg("手机号已注册");
             }
             return signUpResponse;
         }
