@@ -63,6 +63,7 @@ public class ShopServiceTest extends TestApplication{
     @Test
     public void testEditShopDetailByName() throws BusinessServerException,ParseException{
         int shopId = 1;
+        int adminId = 1;
         String shopName = "newName";
         PizzaShopEntity shopEntity = FakeFactory.fakeShop();
         shopEntity.setName(shopName);
@@ -74,12 +75,13 @@ public class ShopServiceTest extends TestApplication{
         when(shopJpaRepository.findById(anyInt())).thenReturn(Optional.of(shopEntity));
         when(shopJpaRepository.saveAndFlush(any())).thenReturn(shopEntity);
 
-        ShopDetailResponse response = shopService.editShopDetail(request);
+        ShopDetailResponse response = shopService.editShopDetail(request,adminId);
         assertEquals(ResultType.SUCCESS,response.getResultType());
     }
 
     @Test
     public void testAddNewShop() throws BusinessServerException{
+        int adminId = 1;
         PizzaShopEntity shopEntity = FakeFactory.fakeShop();
         CopyUtils.copyProperties(shopEntity,request);
         request.setId(String.valueOf(shopEntity.getId()));
@@ -87,7 +89,7 @@ public class ShopServiceTest extends TestApplication{
         request.setStartTime("2019-04-07 15:16:00");
         request.setEndTime("2019-04-07 15:16:00");
         when(shopJpaRepository.saveAndFlush(shopEntity)).thenReturn(shopEntity);
-        ShopDetailResponse response = shopService.addNewShop(request);
+        ShopDetailResponse response = shopService.addNewShop(request,adminId);
         assertEquals(ResultType.SUCCESS,response.getResultType());
     }
 }

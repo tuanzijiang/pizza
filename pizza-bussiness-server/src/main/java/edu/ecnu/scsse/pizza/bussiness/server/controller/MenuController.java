@@ -62,7 +62,7 @@ public class MenuController extends BaseController{
     public SimpleResponse editMenuStatus(@RequestParam int menuId,@RequestParam int adminId){
         //int adminId = getCurrentAdminId();
         if(adminId!=-1)
-            return menuService.editMenuStatus(menuId);
+            return menuService.editMenuStatus(menuId, adminId);
         else{
             PermissionException e = new PermissionException("Admin is logout.");
             log.warn("Admin is logout.", e);
@@ -80,7 +80,7 @@ public class MenuController extends BaseController{
     public SimpleResponse editMenuStatus(@RequestBody MenuDetailRequest menuDetailRequest,@RequestParam int adminId) throws BusinessServerException {
         //int adminId = getCurrentAdminId();
         if (adminId != -1)
-            return menuService.editMenuDetail(menuDetailRequest);
+            return menuService.editMenuDetail(menuDetailRequest, adminId);
         else {
             PermissionException e = new PermissionException("Admin is logout.");
             log.warn("Admin is logout.", e);
@@ -98,7 +98,7 @@ public class MenuController extends BaseController{
     public SimpleResponse addNewMenu(@RequestBody MenuDetailRequest request,@RequestParam int adminId) throws ParseException,BusinessServerException{
         //int adminId = getCurrentAdminId();
         if(adminId!=-1) {
-            return menuService.addNewMenu(request);
+            return menuService.addNewMenu(request, adminId);
         }
         else{
             PermissionException e = new PermissionException("Admin is logout.");

@@ -79,7 +79,7 @@ public class MenuService extends SessionService {
         return tagNames;
     }
 
-    public SimpleResponse editMenuStatus(int menuId){
+    public SimpleResponse editMenuStatus(int menuId, int adminId){
         SimpleResponse simpleResponse;
         Optional<MenuEntity> menuEntityOptional = menuJpaRepository.findById(menuId);
         String type = OperateType.UPDATE.getExpression();//操作类型
@@ -103,18 +103,18 @@ public class MenuService extends SessionService {
 //                    log.error("Status error.");
                     break;
             }
-            operateLoggerService.addOperateLogger(type, object, OperateResult.SUCCESS.getExpression());
+            operateLoggerService.addOperateLogger(adminId, type, object, OperateResult.SUCCESS.getExpression());
         } else {
             NotFoundException e = new NotFoundException(String.format("menuId %s is not found.", menuId));
             simpleResponse = new SimpleResponse(e);
             log.warn("Menu {} is not found.", menuId, e);
-            operateLoggerService.addOperateLogger(type, object, OperateResult.FAILURE.getExpression() + " :Menu" + menuId + " is not found.");
+            operateLoggerService.addOperateLogger(adminId, type, object, OperateResult.FAILURE.getExpression() + " :Menu" + menuId + " is not found.");
         }
         return simpleResponse;
     }
 
     @Transactional
-    public SimpleResponse editMenuDetail(MenuDetailRequest request) throws BusinessServerException {
+    public SimpleResponse editMenuDetail(MenuDetailRequest request, int adminId) throws BusinessServerException {
         SimpleResponse response;
         Menu menu = new Menu(request);
         int menuId = Integer.parseInt(request.getId());
@@ -155,13 +155,13 @@ public class MenuService extends SessionService {
                         menuIngredientJpaRepository.saveAndFlush(entity);
                     }
                 }
-                operateLoggerService.addOperateLogger(type, object, OperateResult.SUCCESS.getExpression());
+                operateLoggerService.addOperateLogger(adminId, type, object, OperateResult.SUCCESS.getExpression());
             }
             else{
                 NotFoundException e = new NotFoundException(String.format("menuId %s is not found.", menuId));
                 response = new SimpleResponse(e);
                 log.warn("Menu {} is not found.", menuId, e);
-                operateLoggerService.addOperateLogger(type, object, OperateResult.FAILURE.getExpression() + " :Menu" + menuId + " is not found.");
+                operateLoggerService.addOperateLogger(adminId, type, object, OperateResult.FAILURE.getExpression() + " :Menu" + menuId + " is not found.");
             }
         }catch (Exception e){
             log.error("Fail to update menu.",e);
@@ -170,7 +170,7 @@ public class MenuService extends SessionService {
         return response;
     }
 
-    public SimpleResponse addNewMenu(MenuDetailRequest request) throws BusinessServerException{
+    public SimpleResponse addNewMenu(MenuDetailRequest request, int adminId) throws BusinessServerException{
         SimpleResponse response;
         Menu menu = new Menu(request);
         String type = OperateType.INSERT.getExpression();//操作类型
@@ -213,7 +213,7 @@ public class MenuService extends SessionService {
                     menuIngredientJpaRepository.saveAndFlush(entity);
                 }
             }
-            operateLoggerService.addOperateLogger(type, object+menuId, OperateResult.SUCCESS.getExpression());
+            operateLoggerService.addOperateLogger(adminId, type, object+menuId, OperateResult.SUCCESS.getExpression());
         }catch (Exception e){
             log.error("Fail to insert menu.",e);
             throw new BusinessServerException(ExceptionType.REPOSITORY, "Fail to insert menu.", e);

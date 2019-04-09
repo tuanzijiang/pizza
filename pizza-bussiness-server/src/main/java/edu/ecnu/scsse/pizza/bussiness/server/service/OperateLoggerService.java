@@ -24,7 +24,7 @@ public class OperateLoggerService extends SessionService{
     /**
      * 添加管理员操作日志
      * */
-    void addOperateLogger(String type, String object, String result){
+    void addOperateLogger(int adminId, String type, String object, String result){
         OperateLoggerEntity logger = new OperateLoggerEntity();
         logger.setOperateType(type);
         Date date = new Date();
@@ -32,7 +32,7 @@ public class OperateLoggerService extends SessionService{
         String dateStr = df.format(date);
         Timestamp ts = Timestamp.valueOf(dateStr);
         logger.setOperateTime(new Timestamp(ts.getTime()));
-        logger.setAdminId(getAdminId());
+        logger.setAdminId(adminId);
         logger.setOperateDetail(type+object+result);
         operateLoggerJpaRepository.save(logger);
     }

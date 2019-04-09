@@ -29,6 +29,8 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -70,7 +72,7 @@ public class DriverControllerTest {
         DriverDetailResponse response=new DriverDetailResponse();
         ObjectMapper mapper = new ObjectMapper();
         String requestBody = mapper.writeValueAsString(request);
-        when(driverService.editDriverDetail(request)).thenReturn(response);
+        when(driverService.editDriverDetail(eq(request), anyInt())).thenReturn(response);
         mockMvc.perform(MockMvcRequestBuilders.post("/driver/editDriverDetail")
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody)
@@ -84,7 +86,7 @@ public class DriverControllerTest {
         DriverDetailResponse response=new DriverDetailResponse();
         ObjectMapper mapper = new ObjectMapper();
         String requestBody = mapper.writeValueAsString(request);
-        when(driverService.editDriverDetail(request)).thenReturn(response);
+        when(driverService.editDriverDetail(eq(request), anyInt())).thenReturn(response);
         mockMvc.perform(MockMvcRequestBuilders.post("/driver/addNewDriver")
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody)

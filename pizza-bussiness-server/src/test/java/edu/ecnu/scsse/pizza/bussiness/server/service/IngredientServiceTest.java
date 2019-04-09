@@ -79,6 +79,7 @@ public class IngredientServiceTest extends TestApplication{
     @Test
     public void testEditIngredientDetailByName() throws BusinessServerException{
         int ingredientId = 1;
+        int adminId = 1;
         String ingredientName = "newName";
         IngredientEntity ingredientEntity = FakeFactory.fakeIngredient(ingredientId);
         ingredientEntity.setName(ingredientName);
@@ -90,38 +91,41 @@ public class IngredientServiceTest extends TestApplication{
         when(ingredientJpaRepository.findById(ingredientId)).thenReturn(Optional.of(ingredientEntity));
         when(ingredientJpaRepository.saveAndFlush(ingredientEntity)).thenReturn(ingredientEntity);
 
-        SimpleResponse response = ingredientService.editIngredientDetail(request);
+        SimpleResponse response = ingredientService.editIngredientDetail(request, adminId);
         assertEquals(ResultType.SUCCESS,response.getResultType());
     }
 
     @Test
     public void testEditIngredientStatusFromOnToOff() throws BusinessServerException{
         int ingredientId = 1;
+        int adminId = 1;
         IngredientEntity ingredientEntity = FakeFactory.fakeIngredient(ingredientId);
         ingredientEntity.setState(IngredientStatus.TERMINATED.getDbValue());
         when(ingredientJpaRepository.findById(ingredientId)).thenReturn(Optional.of(ingredientEntity));
         when(ingredientJpaRepository.saveAndFlush(ingredientEntity)).thenReturn(ingredientEntity);
-        SimpleResponse response = ingredientService.editIngredientStatus(ingredientId);
+        SimpleResponse response = ingredientService.editIngredientStatus(ingredientId, adminId);
         assertEquals(ResultType.SUCCESS,response.getResultType());
     }
 
     @Test
     public void testEditIngredientStatusFromOffToOn() throws BusinessServerException{
         int ingredientId = 1;
+        int adminId = 1;
         IngredientEntity ingredientEntity = FakeFactory.fakeIngredient(ingredientId);
         when(ingredientJpaRepository.findById(ingredientId)).thenReturn(Optional.of(ingredientEntity));
         when(ingredientJpaRepository.saveAndFlush(ingredientEntity)).thenReturn(ingredientEntity);
-        SimpleResponse response = ingredientService.editIngredientStatus(ingredientId);
+        SimpleResponse response = ingredientService.editIngredientStatus(ingredientId, adminId);
         assertEquals(ResultType.SUCCESS,response.getResultType());
     }
 
     @Test
     public void testAddNewIngredient() throws BusinessServerException{
+        int adminId = 1;
         IngredientEntity ingredientEntity = FakeFactory.fakeIngredient(2);
         CopyUtils.copyProperties(ingredientEntity,request);
         request.setStatus(IngredientStatus.fromDbValue(ingredientEntity.getState()));
         when(ingredientJpaRepository.saveAndFlush(ingredientEntity)).thenReturn(ingredientEntity);
-        SimpleResponse response = ingredientService.addNewIngredient(request);
+        SimpleResponse response = ingredientService.addNewIngredient(request,adminId);
         assertEquals(ResultType.SUCCESS,response.getResultType());
     }
 
@@ -138,6 +142,7 @@ public class IngredientServiceTest extends TestApplication{
     @Test
     public void testBuyIngredientWhenTotalNumSmallerThanBuyNum(){
         int ingredientId = 1;
+        int adminId = 1;
         int shopId = 1;
         int buyNum = 100;
         int totalNum = 50;
@@ -148,7 +153,7 @@ public class IngredientServiceTest extends TestApplication{
         when(shopIngredientJpaRepository.findByShopIdAndIngredientId(shopId,ingredientId)).thenReturn(Optional.of(FakeFactory.fakeShopIngredient(shopId,ingredientId)));
         when(shopIngredientJpaRepository.updateCountByShopIdAndIngredientId(totalNum,shopId,ingredientId)).thenReturn(1);
         when(ingredientJpaRepository.updateCountByIngredientId(totalNum,ingredientId)).thenReturn(1);
-        SimpleResponse response = ingredientService.buyIngredient(request);
+        SimpleResponse response = ingredientService.buyIngredient(request,adminId);
         assertEquals(ResultType.SUCCESS,response.getResultType());
     }
 
@@ -165,9 +170,10 @@ public class IngredientServiceTest extends TestApplication{
     @Test
     public void testBatchImportByExcelFile(){
         try {
+            int adminId = 1;
             File file = new File("src/main/resources/img/1494783328004.jpeg");
             MultipartFile testFile = new MockMultipartFile("1494783328004.jpeg", new FileInputStream(file));
-            BatchImportResponse response = ingredientService.batchImportByExcelFile(testFile);
+            BatchImportResponse response = ingredientService.batchImportByExcelFile(testFile, adminId);
             assertEquals(ResultType.SUCCESS,response.getResultType());
         } catch (IOException e) {
             e.printStackTrace();

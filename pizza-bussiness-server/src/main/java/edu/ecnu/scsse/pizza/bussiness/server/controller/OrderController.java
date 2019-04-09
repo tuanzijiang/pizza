@@ -30,20 +30,20 @@ public class OrderController {
      */
     @RequestMapping(value = "/getOrderList",method = RequestMethod.GET)
     @ResponseBody
-    public List<OrderManageResponse> getOrderList(){
+    public List<OrderManageResponse> getOrderList() throws Exception{
         return orderService.getOrderList();
     }
 
-//    /**
-//     * 查看订单详情
-//     * @param orderId
-//     * @return response
-//     */
-//    @RequestMapping(value = "/getOrderDetail",method = RequestMethod.GET)
-//    @ResponseBody
-//    public OrderDetailResponse getOrderDetail(@RequestParam int orderId){
-//        return orderService.getOrderDetail(orderId);
-//    }
+    /**
+     * 查看订单详情
+     * @param orderId
+     * @return response
+     */
+    @RequestMapping(value = "/getOrderDetail",method = RequestMethod.GET)
+    @ResponseBody
+    public OrderManageResponse getOrderDetail(@RequestParam int orderId) throws Exception{
+        return orderService.getOrderDetail(orderId);
+    }
 
     /**
      * 查看昨日订单指标

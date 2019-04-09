@@ -8,7 +8,7 @@ public class IngredientDetailRequest {
     private int count;
     private int alermNum;
     private String supplierName;
-    private IngredientStatus ingredientStatus;
+    private IngredientStatus status;
 
     public int getId() {
         return id;
@@ -50,29 +50,29 @@ public class IngredientDetailRequest {
         this.supplierName = supplierName;
     }
 
-    public IngredientStatus getIngredientStatus() {
-        return ingredientStatus;
+    public IngredientStatus getStatus() {
+        return status;
     }
 
-    public void setStatus(IngredientStatus ingredientStatus) {
-        this.ingredientStatus = ingredientStatus;
+    public void setStatus(IngredientStatus status) {
+        this.status = status;
     }
 
-    public IngredientDetailRequest( String name, int count, int alermNum, String supplierName, IngredientStatus ingredientStatus) {
+    public IngredientDetailRequest(String name, int count, int alermNum, String supplierName, IngredientStatus status) {
         this.name = name;
         this.count = count;
         this.alermNum = alermNum;
         this.supplierName = supplierName;
-        this.ingredientStatus = ingredientStatus;
+        this.status = status;
     }
 
-    public IngredientDetailRequest(int id, String name, int count, int alermNum, String supplierName, IngredientStatus ingredientStatus) {
+    public IngredientDetailRequest(int id, String name, int count, int alermNum, String supplierName, IngredientStatus status) {
         this.id = id;
         this.name = name;
         this.count = count;
         this.alermNum = alermNum;
         this.supplierName = supplierName;
-        this.ingredientStatus = ingredientStatus;
+        this.status = status;
     }
 
     public IngredientDetailRequest() {
