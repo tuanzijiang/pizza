@@ -77,7 +77,7 @@ public class MenuController extends BaseController{
      */
     @RequestMapping(value = "/editMenuDetail",method = RequestMethod.POST)
     @ResponseBody
-    public SimpleResponse editMenuDetail(@RequestBody MenuDetailRequest menuDetailRequest,@RequestParam int adminId) throws BusinessServerException {
+    public SimpleResponse editMenuStatus(@RequestBody MenuDetailRequest menuDetailRequest,@RequestParam int adminId) throws BusinessServerException {
         //int adminId = getCurrentAdminId();
         if (adminId != -1)
             return menuService.editMenuDetail(menuDetailRequest);
