@@ -14,15 +14,22 @@ export const fetchUserApi = async (param: FetchUserReq) => {
 
   if (resultType) {
     const { address } = user;
-    const { id } = address;
-    store.dispatch(entity.user.updateUser({
-      ...user,
-      address: id,
-    }));
-    store.dispatch(entity.addresses.updateAddress(Address.fromJS({
-      ...address,
-      sex: address.sex === Sex.FEMALE ? SexSchema.FEMALE : SexSchema.MALE,
-    })));
+    if (address) {
+      const { id } = address;
+      store.dispatch(entity.user.updateUser({
+        ...user,
+        address: id,
+      }));
+      store.dispatch(entity.addresses.updateAddress(Address.fromJS({
+        ...address,
+        sex: address.sex === Sex.FEMALE ? SexSchema.FEMALE : SexSchema.MALE,
+      })));
+    } else {
+      store.dispatch(entity.user.updateUser({
+        ...user,
+        address: 0,
+      }));
+    }
 
     // 插入数据库
     await add(OBJECT_STORE_NAMES.USER, [user as unknown as User]);

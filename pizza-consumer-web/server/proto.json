@@ -206,6 +206,10 @@
             "resultType": {
               "type": "ResultType",
               "id": 1
+            },
+            "code": {
+              "type": "string",
+              "id": 2
             }
           }
         },

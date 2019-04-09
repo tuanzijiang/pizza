@@ -122,7 +122,7 @@ export default class Register extends React.PureComponent<RegisterProps, Registe
     if (result) {
       history.push('./MainAssets');
     } else {
-      openToast('密码错误');
+      openToast('该手机号已经注册');
     }
   }
 

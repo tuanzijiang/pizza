@@ -12,15 +12,23 @@ export const registerApi = async (param: RegisterReq) => {
 
   if (resultType) {
     const { address } = user;
-    const { id } = address;
-    store.dispatch(entity.user.updateUser({
-      ...user,
-      address: id,
-    }));
-    store.dispatch(entity.addresses.updateAddress(Address.fromJS({
-      ...address,
-      sex: address.sex === Sex.FEMALE ? SexSchema.FEMALE : SexSchema.MALE,
-    })));
+    if (address) {
+      const { id } = address;
+      store.dispatch(entity.user.updateUser({
+        ...user,
+        address: id,
+      }));
+      store.dispatch(entity.addresses.updateAddress(Address.fromJS({
+        ...address,
+        sex: address.sex === Sex.FEMALE ? SexSchema.FEMALE : SexSchema.MALE,
+      })));
+    } else {
+      store.dispatch(entity.user.updateUser({
+        ...user,
+        address: 0,
+      }));
+    }
+
     return true;
   }
 
