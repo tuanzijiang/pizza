@@ -57,7 +57,7 @@ public class DriverService {
 
     public DriverDetailResponse editDriverDetail(DriverDetailRequest request) throws BusinessServerException{
         DriverDetailResponse driverDetailResponse;
-        int driverId = request.getDriverId();
+        int driverId = request.getId();
         String operateType = OperateType.UPDATE.getExpression();
         String operateObj = OperateObject.DRIVER.getExpression() + String.valueOf(driverId);
         try {

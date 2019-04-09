@@ -1,17 +1,17 @@
 package edu.ecnu.scsse.pizza.bussiness.server.model.request_response.driver;
 
 public class DriverDetailRequest {
-    private int driverId;
+    private int id;
     private String name;
     private String phone;
     private int shopId;
 
-    public int getDriverId() {
-        return driverId;
+    public int getId() {
+        return id;
     }
 
     public void setDriverId(int driverId) {
-        this.driverId = driverId;
+        this.id = driverId;
     }
 
     public String getName() {
@@ -47,8 +47,8 @@ public class DriverDetailRequest {
         this.shopId = shopId;
     }
 
-    public DriverDetailRequest(int driverId, String name, String phone, int shopId) {
-        this.driverId = driverId;
+    public DriverDetailRequest(int id, String name, String phone, int shopId) {
+        this.id = id;
         this.name = name;
         this.phone = phone;
         this.shopId = shopId;

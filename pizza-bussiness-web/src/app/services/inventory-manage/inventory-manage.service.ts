@@ -31,19 +31,19 @@ export class InventoryManageService {
   }
 
   editIngredientDetail(material: Material):Observable<any> {
-    return this.http.post(AddressService.editIngredientDetail() + '?adminId=' + AuthService.UserName, material, httpOptions)
+    return this.http.post(AddressService.editIngredientDetail() + '?adminId=' + AuthService.UserId, material, httpOptions)
       .pipe()
   }
 
   addNewIngredient(material: Material):Observable<any> {
-    return this.http.post(AddressService.addNewIngredient() + '?adminId=' + AuthService.UserName, material, httpOptions)
+    return this.http.post(AddressService.addNewIngredient() + '?adminId=' + AuthService.UserId, material, httpOptions)
       .pipe()
   }
 
   uploadIngredient(file: File):Observable<any> {
     let formData = new FormData();
     formData.append('file', file, file.name);
-    return this.http.post(AddressService.uploadIngredients() + '?adminId=' + AuthService.UserName, formData, fileOptions)
+    return this.http.post(AddressService.uploadIngredients() + '?adminId=' + AuthService.UserId, formData, fileOptions)
       .pipe()
   }
 
@@ -53,12 +53,12 @@ export class InventoryManageService {
   }
 
   buyIngredient(ingredient: BuyIngredient):Observable<any> {
-    return this.http.post(AddressService.buyIngredient() + '?adminId=' + AuthService.UserName, ingredient, httpOptions)
+    return this.http.post(AddressService.buyIngredient() + '?adminId=' + AuthService.UserId, ingredient, httpOptions)
       .pipe()
   }
 
   removeIngredient(id: string):Observable<any> {
-    return this.http.get(AddressService.removeIngredient() + id + '&adminId=' + AuthService.UserName, httpOptions)
+    return this.http.get(AddressService.removeIngredient() + id + '&adminId=' + AuthService.UserId, httpOptions)
       .pipe()
   }
 }

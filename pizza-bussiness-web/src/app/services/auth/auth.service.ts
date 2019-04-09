@@ -17,6 +17,7 @@ const httpOptions = {
 export class AuthService {
 
   static UserName: string;
+  static UserId: string;
   isLoggedIn = false;
   redirectUrl: string;
 
