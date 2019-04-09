@@ -1,10 +1,16 @@
-<div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 operation-record-page">
+<div class="text-center pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3" *ngIf="!showPage">
+  <div class="progress text-center mt-lg-2">
+    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100"
+         aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+  </div>
+</div>
+<div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 operation-record-page" *ngIf="showPage">
   <div class="operation-record-title">
     <h5>管理员操作记录</h5>
   </div>
   <div class="mt-lg-2 pr-lg-2">
     <p-table #dt [value]="operations" [paginator]="true" [rows]="10"
-             [globalFilterFields]="['adminId', 'operateType', 'operateDetail', 'operateTime']">
+             [globalFilterFields]="['adminId', 'operateType', 'operateDetail', 'operateTime']" [tableStyle]="{'table-layout':'auto'}" >
       <ng-template pTemplate="caption">
         <div style="text-align: right">
           <i class="pi pi-search" style="margin:4px 4px 0 0"></i>

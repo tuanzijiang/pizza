@@ -1,10 +1,16 @@
-<div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 menu-manage-page">
+<div class="text-center pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3" *ngIf="!showPage">
+  <div class="progress text-center mt-lg-2">
+    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100"
+         aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+  </div>
+</div>
+<div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 menu-manage-page" *ngIf="showPage">
   <div class="menu-manage-title">
     <h5>披萨菜单</h5>
   </div>
   <div class="mt-lg-2 pr-lg-2">
     <p-table #dt [value]="menuList" [paginator]="true" [rows]="10"
-      [globalFilterFields]="['id', 'name', 'tagName', 'price', 'description', 'state']">
+      [globalFilterFields]="['id', 'name', 'tagName', 'price', 'description', 'state']" [tableStyle]="{'table-layout':'auto'}" >
       <ng-template pTemplate="caption">
         <div class="row">
           <div class="col-lg-6" style="text-align: left">
@@ -165,11 +171,11 @@
     <div class="mt-lg-2">
       <div class="row">
         <div class="col-lg-3">
-          <h6 class="control-label mt-lg-2">上下架</h6>
+          <h6 class="control-label mt-lg-2">状态</h6>
         </div>
         <div class="col-lg-6 offset-lg-0">
-          <p-radioButton name="group1" value="上架" label="上架"  [(ngModel)]="tempMenu.state" inputId="opt1"></p-radioButton>
-          <p-radioButton name="group1" value="下架" label="下架" class="ml-lg-3" [(ngModel)]="tempMenu.state" inputId="opt2"></p-radioButton>
+          <p-radioButton name="group1" value="售卖中" label="售卖中"  [(ngModel)]="tempMenu.state" inputId="opt1"></p-radioButton>
+          <p-radioButton name="group1" value="已下架" label="已下架" class="ml-lg-3" [(ngModel)]="tempMenu.state" inputId="opt2"></p-radioButton>
         </div>
       </div>
     </div>
@@ -279,11 +285,11 @@
     <div class="mt-lg-2">
       <div class="row">
         <div class="col-lg-3">
-          <h6 class="control-label mt-lg-2">上下架</h6>
+          <h6 class="control-label mt-lg-2">状态</h6>
         </div>
         <div class="col-lg-6 offset-lg-0">
-          <p-radioButton name="group1" value="上架" label="上架" [(ngModel)]="tempMenu.state" inputId="opt1"></p-radioButton>
-          <p-radioButton name="group1" value="下架" label="下架" class="ml-lg-3" [(ngModel)]="tempMenu.state" inputId="opt2"></p-radioButton>
+          <p-radioButton name="group1" value="售卖中" label="售卖中" [(ngModel)]="tempMenu.state" inputId="opt1"></p-radioButton>
+          <p-radioButton name="group1" value="已下架" label="已下架" class="ml-lg-3" [(ngModel)]="tempMenu.state" inputId="opt2"></p-radioButton>
         </div>
       </div>
     </div>

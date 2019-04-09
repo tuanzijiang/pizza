@@ -19,16 +19,16 @@ export class ChargebackService {
 
   getPendingList(): Observable<any> {
     return this.http.get(AddressService.getPendingList(), httpOptions)
-      .pipe(map((result: Response) => result.json()))
+      .pipe()
   }
 
   allowOrder(id: string): Observable<any> {
     return this.http.get(AddressService.allowOrder() + id, httpOptions)
-      .pipe(map((result: Response) => result.json()))
+      .pipe()
   }
 
   denyOrder(id: string): Observable<any> {
     return this.http.get(AddressService.denyOrder() + id, httpOptions)
-      .pipe(map((result: Response) => result.json()))
+      .pipe()
   }
 }

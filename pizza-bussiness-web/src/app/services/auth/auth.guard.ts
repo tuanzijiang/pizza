@@ -43,8 +43,8 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
     // Set our navigation extras object
     // that contains our global query params and fragment
     let navigationExtras: NavigationExtras = {
-      queryParams: { 'session_id': sessionId },
-      fragment: 'anchor'
+      // queryParams: { 'session_id': sessionId },
+      // fragment: 'anchor'
     };
 
     // Navigate to the login page with extras

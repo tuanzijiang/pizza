@@ -1,4 +1,4 @@
-import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
+import { NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrderListComponent } from './order/order-list/order-list.component';
 import { OrderCountComponent } from './order/order-count/order-count.component';
@@ -19,6 +19,7 @@ import {MultiSelectModule} from "primeng/multiselect";
 import {InputTextModule} from 'primeng/inputtext';
 import {ButtonModule} from "primeng/button";
 import {DialogModule} from "primeng/dialog";
+import {ProgressBarModule} from 'primeng/progressbar';
 import {
   CalendarModule,
   CardModule,
@@ -61,7 +62,8 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     FileUploadModule,
     RadioButtonModule,
     PanelModule,
-    TabViewModule
+    TabViewModule,
+    ProgressBarModule
   ],
 })
 export class MainModule {

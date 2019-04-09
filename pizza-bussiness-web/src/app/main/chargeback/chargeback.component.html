@@ -1,11 +1,17 @@
-<div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 chargeback-page">
+<div class="text-center pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3" *ngIf="!showPage">
+  <div class="progress text-center mt-lg-2">
+    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100"
+         aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+  </div>
+</div>
+<div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 chargeback-page" [hidden]="!showPage">
   <div class="chargeback-title">
     <h5>退单管理</h5>
   </div>
   <div class="mt-lg-2 pr-lg-4 pl-lg-4">
     <p-tabView>
       <p-tabPanel header="待审核请求" [selected]="true">
-        <p-table #dt [value]="chargebackPendings" [paginator]="true" [rows]="10">
+        <p-table #dt [value]="chargebackPendings" [paginator]="true" [rows]="10" [tableStyle]="{'table-layout':'auto'}" >
           <ng-template pTemplate="header" filterStyle="display:none">
             <tr>
               <th *ngFor="let col of pendingCols" [pSortableColumn]="col.field">
@@ -81,13 +87,14 @@
             <tr>
               <td *ngFor="let col of columns" [ngSwitch]="true">
                 <span *ngSwitchCase="col.field == 'state'">
-                  <span *ngIf="rowData[col.field] == '通过'" style="color: green">
-                    {{rowData[col.field]}}
+                  <span *ngIf="rowData[col.field] == 'CANCELED'" style="color: green">
+                    通过
                   </span>
-                  <span *ngIf="rowData[col.field] == '未通过'" style="color: red">
-                    {{rowData[col.field]}}
+                  <span *ngIf="rowData[col.field] == 'CANCEL_FAILED'" style="color: red">
+                    未通过
                   </span>
                 </span>
+                <span *ngSwitchCase="col.field == 'commitTime'">{{rowData[col.field].toLocaleString()}}</span>
                 <span *ngSwitchDefault>{{rowData[col.field]}}</span>
               </td>
             </tr>

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import {Observable} from "rxjs";
-import { map } from 'rxjs/operators';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {AddressService} from "../address/address.service";
+import {OrderCountDate} from "../../modules/order/orderCountDate";
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -19,17 +19,22 @@ export class OrderService {
 
   getOrders():Observable<any> {
     return this.http.get(AddressService.getOrderList(), httpOptions)
-      .pipe(map((result: Response) => result.json()))
+      .pipe()
   }
 
   getYesterdayOrder(): Observable<any> {
     return this.http.get(AddressService.getYesterdayOrder(), httpOptions)
-      .pipe(map((result: Response) => result.json()))
+      .pipe()
   }
 
-  getOrderCountStatus(): Observable<any> {
-    return this.http.get(AddressService.getOrderCountList(), httpOptions)
-      .pipe(map((result: Response) => result.json()))
+  getOrderCountStatus(orderCountDate: OrderCountDate): Observable<any> {
+    return this.http.post(AddressService.getOrderCountList(), orderCountDate, httpOptions)
+      .pipe()
+  }
+
+  getCancelOrderList(): Observable<any> {
+    return this.http.get(AddressService.getCancelOrderList(), httpOptions)
+      .pipe()
   }
 
 

@@ -1,4 +1,9 @@
-<div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 order-count-page">
+<div class="text-center pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 order-count-page" *ngIf="!showOrderCountPage">
+  <div class="progress text-center mt-lg-2">
+    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+  </div>
+</div>
+<div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 order-count-page" [hidden]="!showOrderCountPage">
   <div class="order-count-title">
     <h5>订单数据</h5>
   </div>
@@ -34,7 +39,7 @@
   </div>
   <div class="mt-lg-3 pr-lg-2">
     <p-card header="订单日统计" [style]="{width: '100%'}">
-      <p-table #myTable [columns]="cols" [value]="orderCount" [paginator]="true" [rows]="10">
+      <p-table #myTable [columns]="cols" [value]="orderCountList" [paginator]="true" [rows]="10" [tableStyle]="{'table-layout':'auto'}" >
         <ng-template pTemplate="header" let-columns>
           <tr>
             <th *ngFor="let col of columns">{{col.header}}</th>

@@ -19,6 +19,6 @@ export class OperationRecordService {
 
   getOperationLogger():Observable<any> {
     return this.http.get(AddressService.getOperationLogger(), httpOptions)
-      .pipe(map((result: Response) => result.json()))
+      .pipe()
   }
 }

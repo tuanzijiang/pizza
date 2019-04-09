@@ -17,7 +17,7 @@ public class OrderReceiveController {
     /**
      * 判断商家是否接单，并返回接单信息
      */
-    @RequestMapping(value= "/getReceiveShopId",method = RequestMethod.GET)
+    @RequestMapping(value= "/getReceiveShopId",method = RequestMethod.POST)
     @ResponseBody
     public OrderReceiveResponse getReceiveShopId(@RequestBody OrderReceiveRequest orderReceiveRequest){
         return orderReceiveService.getReceiveShopId(orderReceiveRequest);

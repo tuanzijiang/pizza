@@ -56,8 +56,8 @@ public class ShopController extends BaseController{
      */
     @RequestMapping(value = "/editShopDetail",method = RequestMethod.POST)
     @ResponseBody
-    public ShopDetailResponse editShopDetail(@RequestBody ShopDetailRequest request) throws ParseException,BusinessServerException{
-        int adminId = getCurrentAdminId();
+    public ShopDetailResponse editShopDetail(@RequestBody ShopDetailRequest request,@RequestParam int adminId) throws ParseException,BusinessServerException{
+        //int adminId = getCurrentAdminId();
         if(adminId!=-1) {
             return shopService.editShopDetail(request);
         }
@@ -75,8 +75,8 @@ public class ShopController extends BaseController{
      */
     @RequestMapping(value = "/addNewShop",method = RequestMethod.POST)
     @ResponseBody
-    public ShopDetailResponse addNewShop(@RequestBody ShopDetailRequest request) throws ParseException,BusinessServerException{
-        int adminId = getCurrentAdminId();
+    public ShopDetailResponse addNewShop(@RequestBody ShopDetailRequest request,@RequestParam int adminId) throws ParseException,BusinessServerException{
+        //int adminId = getCurrentAdminId();
         if(adminId!=-1) {
             return shopService.addNewShop(request);
         }

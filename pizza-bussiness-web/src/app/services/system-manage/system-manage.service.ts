@@ -5,6 +5,7 @@ import {AddressService} from "../address/address.service";
 import {map} from "rxjs/operators";
 import {Menu} from "../../modules/system-manage/menu";
 import {Factory} from "../../modules/system-manage/factory";
+import {AuthService} from "../auth/auth.service";
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -21,47 +22,47 @@ export class SystemManageService {
 
   getUserList():Observable<any> {
     return this.http.get(AddressService.getUserList(), httpOptions)
-      .pipe(map((result: Response) => result.json()))
+      .pipe()
   }
 
   getTagList(): Observable<any> {
     return this.http.get(AddressService.getTagList(), httpOptions)
-      .pipe(map((result: Response) => result.json()))
+      .pipe()
   }
 
   getMenuList():Observable<any> {
     return this.http.get(AddressService.getMenuList(), httpOptions)
-      .pipe(map((result: Response) => result.json()))
+      .pipe()
   }
 
   editMenu(menu: Menu):Observable<any> {
-    return this.http.post(AddressService.editMenu(), menu, httpOptions)
-      .pipe(map((result: Response) => result.json()))
+    return this.http.post(AddressService.editMenu() + '?adminId=' + AuthService.UserName, menu, httpOptions)
+      .pipe()
   }
 
   addMenu(menu: Menu):Observable<any> {
-    return this.http.post(AddressService.addMenu(), menu, httpOptions)
-      .pipe(map((result: Response) => result.json()))
+    return this.http.post(AddressService.addMenu() + '?adminId=' + AuthService.UserName, menu, httpOptions)
+      .pipe()
   }
 
   changeMenuState(id: string):Observable<any> {
-    return this.http.post(AddressService.changeMenuState() + id, httpOptions)
-      .pipe(map((result: Response) => result.json()))
+    return this.http.get(AddressService.changeMenuState() + id + '&adminId=' + AuthService.UserName, httpOptions)
+      .pipe()
   }
 
   getShopList():Observable<any> {
     return this.http.get(AddressService.getShopList(), httpOptions)
-      .pipe(map((result: Response) => result.json()))
+      .pipe()
   }
 
   editShop(shop: Factory):Observable<any> {
-    return this.http.post(AddressService.editShop(), shop, httpOptions)
-      .pipe(map((result: Response) => result.json()))
+    return this.http.post(AddressService.editShop() + '?adminId=' + AuthService.UserName, shop, httpOptions)
+      .pipe()
   }
 
   addShop(shop: Factory):Observable<any> {
-    return this.http.post(AddressService.addShop(), shop, httpOptions)
-      .pipe(map((result: Response) => result.json()))
+    return this.http.post(AddressService.addShop() + '?adminId=' + AuthService.UserName, shop, httpOptions)
+      .pipe()
   }
 
 }

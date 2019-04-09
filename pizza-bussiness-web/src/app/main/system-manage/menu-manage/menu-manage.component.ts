@@ -20,6 +20,7 @@ export class MenuManageComponent implements OnInit {
   displayChangeDialog: boolean;
   tempMenu: Menu;
   imgUrl: string;
+  showPage: boolean;
 
   constructor(private systemManageService: SystemManageService) {
   }
@@ -28,19 +29,15 @@ export class MenuManageComponent implements OnInit {
     this.displayAddDialog = false;
     this.displayChangeDialog = false;
     this.tempMenu = null;
+    this.showPage = false;
+    this.pizzaType = [];
+
+    this.getPizzaType();
 
     this.systemManageService.getMenuList().subscribe(
       (menuList: Menu[]) => {
         this.menuList = menuList;
-      }
-    );
-
-    this.systemManageService.getTagList().subscribe(
-      (tagList: any[]) => {
-        this.pizzaType.push({label: '请选择种类', value: null});
-        for(let tag of tagList) {
-          this.pizzaType.push({label: tag, value: tag});
-        }
+        this.showPage = true;
       }
     );
 
@@ -61,18 +58,21 @@ export class MenuManageComponent implements OnInit {
 
     this.states = [
       {label: '请选择状态', value: null},
-      {label: '上架', value: '上架'},
-      {label: '下架', value: '下架'},
+      {label: '售卖中', value: '售卖中'},
+      {label: '已下架', value: '已下架'},
     ];
 
-    this.pizzaType = [
-      {label: '请选择种类', value: null},
-      {label: '大方薄底披萨', value: '大方薄底披萨'},
-      {label: '手拍纯珍披萨', value: '手拍纯珍披萨'},
-      {label: '皇冠芝心披萨', value: '皇冠芝心披萨'},
-      {label: '芝香烤肠披萨', value: '芝香烤肠披萨'},
-    ];
+  }
 
+  getPizzaType() {
+    this.systemManageService.getTagList().subscribe(
+      (tagList: any[]) => {
+        this.pizzaType.push({label: '请选择种类', value: null});
+        for(let tag of tagList) {
+          this.pizzaType.push({label: tag, value: tag});
+        }
+      }
+    );
   }
 
   changeStatus(menu: Menu) {
@@ -81,14 +81,21 @@ export class MenuManageComponent implements OnInit {
         if (response.resultType == 'FAILURE') {
           alert(response.errorMsg);
         } else {
-          menu.state = this.contraryStatus(menu);
+          menu.state = this.showContraryState(menu);
         }
       }
     )
   }
 
+  showContraryState(state) {
+    if(state == '已下架')
+      return '售卖中';
+    else
+      return '已下架';
+  }
+
   contraryStatus(menu: Menu): string {
-    if (menu.state == '下架') return '上架';
+    if (menu.state == '已下架') return '上架';
     else return '下架';
   }
 

@@ -42,17 +42,13 @@ public class DriverService {
     private OperateLoggerService operateLoggerService;
 
     public List<Driver> getDriverList(){
-//        DriverManageResponse driverManageResponse;
         List<Driver> driverList = new ArrayList<>();
         List<DriverEntity> driverEntityList = driverJpaRepository.findAll();
         if(driverEntityList.size()!=0){
-//            driverManageResponse = new DriverManageResponse();
             driverList = driverEntityList.stream().map(this::convert).collect(Collectors.toList());
-//            driverManageResponse.setDriverList(driverList);
         }
         else{
             NotFoundException e = new NotFoundException("Driver list is not found.");
-//            driverManageResponse = new DriverManageResponse(e);
             log.warn("Fail to find the driver list.", e);
         }
 

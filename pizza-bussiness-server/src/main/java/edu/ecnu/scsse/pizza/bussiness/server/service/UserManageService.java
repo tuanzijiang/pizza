@@ -34,16 +34,12 @@ public class UserManageService {
         List<User> userList = new ArrayList<>();
         List<UserEntity> userEntityList = userJpaRepository.findAll();
         if(userEntityList.size()!=0){
-            //userManageResponse = new UserManageResponse();
             userList = userEntityList.stream().map(this::convert).collect(Collectors.toList());
-            //userManageResponse.setUserList(userList);
         }
         else{
             NotFoundException e = new NotFoundException("User list is not found.");
-//            userManageResponse = new UserManageResponse(e);
             log.warn("Fail to find the user list.", e);
         }
-
         return userList;
     }
 
@@ -71,9 +67,8 @@ public class UserManageService {
                 String userAddressDetail = userAddressEntity.getAddressDetail();
                 user.setDefaultUserAddress(userAddressDetail);
             }
-            else{
+            else
                 user.setDefaultUserAddress("无");
-            }
         }
         return user;
     }

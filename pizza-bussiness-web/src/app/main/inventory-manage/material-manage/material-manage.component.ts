@@ -20,11 +20,13 @@ export class MaterialManageComponent implements OnInit {
   tempMaterial: Material;
   selectedFile: File;
   showAlert: boolean;
+  showPage: boolean;
 
   constructor(private inventoryManageService: InventoryManageService) {
   }
 
   ngOnInit() {
+    this.showPage = false;
     this.displayChangeDialog = false;
     this.displayAddDialog = false;
     this.displayImportDialog = false;
@@ -33,6 +35,7 @@ export class MaterialManageComponent implements OnInit {
     this.inventoryManageService.getIngredientList().subscribe(
       (materials: Material[]) => {
         this.materials = materials;
+        this.showPage = true;
       }
     );
 

@@ -16,11 +16,13 @@ export class DeliveryComponent implements OnInit {
   dialogHeader: string;
   displayChangeDialog: boolean;
   displayAddDialog: boolean;
+  showPage: boolean;
 
   constructor(private deliveryService: DeliveryService) {
   }
 
   ngOnInit() {
+    this.showPage = false;
     this.dialogHeader = '';
     this.displayChangeDialog = false;
     this.displayAddDialog = false;
@@ -28,6 +30,7 @@ export class DeliveryComponent implements OnInit {
     this.deliveryService.getDriverList().subscribe(
       (driverList: Delivery[]) => {
         this.deliveries = driverList;
+        this.showPage = true;
       }
     );
 
@@ -47,9 +50,17 @@ export class DeliveryComponent implements OnInit {
   }
 
   onRowCancel(del: Delivery) {
-    if (this.deliveries.find(obj => obj.id == del.id) != null) {
-      this.deliveries = this.deliveries.filter(obj => obj.id != del.id);
-    }
+    this.deliveryService.removeDriver(del.id).subscribe(
+      (response: BaseResponse) => {
+        if (response.resultType == 'FAILURE') {
+          alert(response.errorMsg);
+        } else {
+          if (this.deliveries.find(obj => obj.id == del.id) != null) {
+            this.deliveries = this.deliveries.filter(obj => obj.id != del.id);
+          }
+        }
+      }
+    );
   }
 
   editDelivery(del: Delivery) {

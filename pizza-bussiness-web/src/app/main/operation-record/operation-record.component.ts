@@ -12,14 +12,16 @@ export class OperationRecordComponent implements OnInit {
   cols: any[];
   operations: OperationRecord[];
   opType: any[];
+  showPage: boolean;
 
   constructor(private operationRecordService: OperationRecordService) { }
 
   ngOnInit() {
-
+    this.showPage = false;
     this.operationRecordService.getOperationLogger().subscribe(
       (operations: OperationRecord[]) => {
         this.operations = operations;
+        this.showPage = true;
       }
     );
 
@@ -32,7 +34,7 @@ export class OperationRecordComponent implements OnInit {
 
     this.opType = [
       {label: '请选择类别', value: null},
-      {label: '新增', value: '新增'},
+      {label: '增加', value: '增加'},
       {label: '删除', value: '删除'},
       {label: '修改', value: '修改'},
     ];

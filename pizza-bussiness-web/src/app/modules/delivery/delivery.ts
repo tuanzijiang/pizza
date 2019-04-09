@@ -1,5 +1,5 @@
 export class Delivery {
-  id: string;
+  id: any;
   name: string;
   phone: string;
   shopId: string;

@@ -1,5 +1,5 @@
 export class ChargebackProcessed {
-  orderId: string;
+  orderId: any;
   receiveName: string;
   receivePhone: string;
   commitTime: Date;

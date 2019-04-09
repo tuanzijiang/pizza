@@ -54,7 +54,7 @@ public class OrderService {
 
     public List<OrderManageResponse> getOrderList(){
         List<OrderManageResponse> orderList = new ArrayList<>();
-        List<OrderEntity> orderEntityList = orderJpaRepository.findAll();
+        List<OrderEntity> orderEntityList = orderJpaRepository.findAllOrders();
         if(orderEntityList.size()!=0){
             orderList = orderEntityList.stream().map(this::convert).collect(Collectors.toList());
         }
@@ -80,18 +80,17 @@ public class OrderService {
     }
 
     public YesterdaySaleResponse getYesterdaySaleStatus(String yesterday) throws ParseException{
-        SaleResponse saleResponse = getSaleStatusList(yesterday,yesterday);
-        List<SaleStatus> saleStatusList = saleResponse.getSaleStatusList();
-        if(saleStatusList.size()!=0)
-            return new YesterdaySaleResponse(saleResponse.getSaleStatusList().get(0));
-        else{
-            NotFoundException e = new NotFoundException("Data is not found.");
-            log.warn("Fail to find yesterday order data.", e);
-            return new YesterdaySaleResponse(e);
-        }
+        List<SaleStatus> saleStatusList = getSaleStatusList(yesterday,yesterday);
+//        if(saleStatusList.size()!=0)
+            return new YesterdaySaleResponse(saleStatusList.get(0));
+//        else{
+//            NotFoundException e = new NotFoundException("Data is not found.");
+//            log.warn("Fail to find yesterday order data.", e);
+//            return new YesterdaySaleResponse(e);
+//        }
     }
 
-    public SaleResponse getSaleStatusList(String startDate,String endDate) throws ParseException {
+    public List<SaleStatus> getSaleStatusList(String startDate,String endDate) throws ParseException {
         List<SaleStatus> saleStatusList = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         long end = sdf.parse(endDate).getTime();
@@ -106,7 +105,7 @@ public class OrderService {
             saleStatusList.add(saleStatus);
             calendar.add(Calendar.DATE,+1);
         }
-        return new SaleResponse(saleStatusList);
+        return saleStatusList;
     }
 
     private SaleStatus getDaySaleStatus(String date){
