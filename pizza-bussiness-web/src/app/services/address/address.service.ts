@@ -17,6 +17,10 @@ export class AddressService {
     return `${local}/order/getOrderList`
   }
 
+  static getOrderDetail() {
+    return `${local}/order/getOrderDetail?orderId=`
+  }
+
   static getYesterdayOrder() {
     return `${local}/order/getYesterdaySaleStatus`
   }

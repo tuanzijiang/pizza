@@ -85,7 +85,8 @@ export class FactoryManageComponent implements OnInit {
   }
 
   submitChangedFac() {
-    this.tempFactory.openHours = this.dateToStr(this.startDate) + "-" + this.dateToStr(this.endDate);
+    this.tempFactory.startTime = this.dateToStr(this.startDate);
+    this.tempFactory.endTime = this.dateToStr(this.endDate);
     this.systemManageService.editShop(this.tempFactory).subscribe(
       (response: BaseResponse) => {
         if (response.resultType == 'FAILURE') {
@@ -101,7 +102,8 @@ export class FactoryManageComponent implements OnInit {
   }
 
   submitAddFac() {
-    this.tempFactory.openHours = this.dateToStr(this.startDate) + "-" + this.dateToStr(this.endDate);
+    this.tempFactory.startTime = this.dateToStr(this.startDate);
+    this.tempFactory.endTime = this.dateToStr(this.endDate);
     this.systemManageService.addShop(this.tempFactory).subscribe(
       (response: BaseResponse) => {
         if (response.resultType == 'FAILURE') {
@@ -144,7 +146,7 @@ export class FactoryManageComponent implements OnInit {
   dateToStr(date: Date) {
     let hour: string = this.pad(date.getHours(), 2);
     let min: string = this.pad(date.getMinutes(), 2);
-    return hour + ":" + min
+    return '2019-01-01 ' + hour + ":" + min + ':00'
   }
 
   /**

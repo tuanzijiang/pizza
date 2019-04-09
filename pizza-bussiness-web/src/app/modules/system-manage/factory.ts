@@ -11,4 +11,6 @@ export class Factory {
   lon: string;
   lat: string;
   ingredientList: Ingredient[];
+  startTime: string;
+  endTime: string;
 }
