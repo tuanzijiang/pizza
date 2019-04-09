@@ -89,11 +89,12 @@ public class MenuServiceTest extends TestApplication{
     @Test
     public void testEditMenuStatusFromOnToOff(){
         int menuId = 1;
+        int adminId = 1;
         MenuEntity menuEntity = FakeFactory.fakeMenu();
         when(menuJpaRepository.findById(menuId)).thenReturn(Optional.of(menuEntity));
         when(menuJpaRepository.saveAndFlush(menuEntity)).thenReturn(menuEntity);
 
-        SimpleResponse response = mockMenuService.editMenuStatus(menuId);
+        SimpleResponse response = mockMenuService.editMenuStatus(menuId,adminId);
         assertEquals(ResultType.SUCCESS,response.getResultType());
 
     }
@@ -101,12 +102,13 @@ public class MenuServiceTest extends TestApplication{
     @Test
     public void testEditMenuStatusFromOffToOn(){
         int menuId = 1;
+        int adminId = 1;
         MenuEntity menuEntity = FakeFactory.fakeMenu();
         menuEntity.setState(PizzaStatus.OFF_SHELF.getDbValue());
         when(menuJpaRepository.findById(menuId)).thenReturn(Optional.of(menuEntity));
         when(menuJpaRepository.saveAndFlush(menuEntity)).thenReturn(menuEntity);
 
-        SimpleResponse response = mockMenuService.editMenuStatus(menuId);
+        SimpleResponse response = mockMenuService.editMenuStatus(menuId,adminId);
         assertEquals(ResultType.SUCCESS,response.getResultType());
 
     }
@@ -126,6 +128,7 @@ public class MenuServiceTest extends TestApplication{
     @Test
     public void testEditMenuDetailByName() throws BusinessServerException{
         int menuId = 1;
+        int adminId = 1;
         String menuName = "newName";
         MenuEntity menuEntity = FakeFactory.fakeMenu();
         menuEntity.setName(menuName);
@@ -139,12 +142,13 @@ public class MenuServiceTest extends TestApplication{
         when(menuJpaRepository.saveAndFlush(menuEntity)).thenReturn(menuEntity);
         when(menuIngredientJpaRepository.saveAndFlush(menuIngredients.get(0))).thenReturn(menuIngredients.get(0));
 
-        SimpleResponse response = mockMenuService.editMenuDetail(request);
+        SimpleResponse response = mockMenuService.editMenuDetail(request,adminId);
         assertEquals(ResultType.SUCCESS,response.getResultType());
     }
 
     @Test
     public void testAddNewMenuWithNoImg() throws BusinessServerException{
+        int adminId = 1;
         MenuEntity menuEntity = FakeFactory.fakeMenu();
         CopyUtils.copyProperties(menuEntity,request);
         List<Integer> ingredientIds = Lists.newArrayList(1,2);
@@ -156,7 +160,7 @@ public class MenuServiceTest extends TestApplication{
         when(menuJpaRepository.saveAndFlush(menuEntity)).thenReturn(menuEntity);
         when(menuIngredientJpaRepository.saveAndFlush(menuIngredients.get(0))).thenReturn(menuIngredients.get(0));
 
-        SimpleResponse response = mockMenuService.addNewMenu(request);
+        SimpleResponse response = mockMenuService.addNewMenu(request,adminId);
         assertEquals(ResultType.SUCCESS,response.getResultType());
     }
 }

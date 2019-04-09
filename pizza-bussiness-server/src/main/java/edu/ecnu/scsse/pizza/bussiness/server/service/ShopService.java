@@ -88,7 +88,7 @@ public class ShopService{
     }
 
     @Transactional
-    public ShopDetailResponse editShopDetail(ShopDetailRequest request) throws ParseException,BusinessServerException{
+    public ShopDetailResponse editShopDetail(ShopDetailRequest request, int adminId) throws ParseException,BusinessServerException{
         PizzaShopEntity shopEntity;
         ShopDetailResponse response;
         int shopId = Integer.parseInt(request.getId());
@@ -106,12 +106,12 @@ public class ShopService{
                 shopJpaRepository.saveAndFlush(shopEntity);
                 response = new ShopDetailResponse();
                 response.setShopId(shopId);
-                operateLoggerService.addOperateLogger(type, object, OperateResult.SUCCESS.getExpression());
+                operateLoggerService.addOperateLogger(adminId, type, object, OperateResult.SUCCESS.getExpression());
             } else {
                 NotFoundException e = new NotFoundException(String.format("shopId %s is not found.", shopId));
                 response = new ShopDetailResponse(e);
                 log.warn("Shop {} is not found.", shopId, e);
-                operateLoggerService.addOperateLogger(type, object, OperateResult.FAILURE.getExpression() + " :Shop" + shopId + " is not found.");
+                operateLoggerService.addOperateLogger(adminId, type, object, OperateResult.FAILURE.getExpression() + " :Shop" + shopId + " is not found.");
             }
         }catch (Exception e){
             log.error("Fail to update shop.",e);
@@ -121,7 +121,7 @@ public class ShopService{
 
     }
 
-    public ShopDetailResponse addNewShop(ShopDetailRequest request) throws BusinessServerException{
+    public ShopDetailResponse addNewShop(ShopDetailRequest request, int adminId) throws BusinessServerException{
         PizzaShopEntity shopEntity;
         ShopDetailResponse response;
         String type = OperateType.INSERT.getExpression();//操作类型
@@ -137,7 +137,7 @@ public class ShopService{
             shopEntity.setLon(new BigDecimal(request.getLon()));
             shopJpaRepository.saveAndFlush(shopEntity);
             response = new ShopDetailResponse();
-            operateLoggerService.addOperateLogger(type, object, OperateResult.SUCCESS.getExpression());
+            operateLoggerService.addOperateLogger(adminId, type, object, OperateResult.SUCCESS.getExpression());
         }catch (Exception e){
             log.error("Fail to insert shop.",e);
             throw new BusinessServerException(ExceptionType.REPOSITORY, "Fail to insert shop.", e);

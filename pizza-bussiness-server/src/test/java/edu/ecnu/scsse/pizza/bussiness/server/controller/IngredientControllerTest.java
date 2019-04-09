@@ -42,6 +42,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -92,7 +94,7 @@ public class IngredientControllerTest {
         SimpleResponse response = new SimpleResponse();
         ObjectMapper mapper = new ObjectMapper();
         String requestBody = mapper.writeValueAsString(request);
-        when(ingredientService.editIngredientDetail(request)).thenReturn(response);
+        when(ingredientService.editIngredientDetail(eq(request), anyInt())).thenReturn(response);
         mockMvc.perform(MockMvcRequestBuilders.post("/ingredient/editIngredientDetail")
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody)
@@ -106,7 +108,7 @@ public class IngredientControllerTest {
         SimpleResponse response=new SimpleResponse();
         ObjectMapper mapper = new ObjectMapper();
         String requestBody = mapper.writeValueAsString(request);
-        when(ingredientService.addNewIngredient(request)).thenReturn(response);
+        when(ingredientService.addNewIngredient(eq(request), anyInt())).thenReturn(response);
         mockMvc.perform(MockMvcRequestBuilders.post("/ingredient/addNewIngredient")
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody)
@@ -143,7 +145,7 @@ public class IngredientControllerTest {
         SimpleResponse response = new SimpleResponse();
         ObjectMapper mapper = new ObjectMapper();
         String requestBody = mapper.writeValueAsString(request);
-        when(ingredientService.buyIngredient(request)).thenReturn(response);
+        when(ingredientService.buyIngredient(eq(request), anyInt())).thenReturn(response);
         mockMvc.perform(MockMvcRequestBuilders.get("/ingredient/buyIngredient")
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody)

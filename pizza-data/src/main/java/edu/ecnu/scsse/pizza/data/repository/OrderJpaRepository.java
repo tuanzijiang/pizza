@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.NamedNativeQuery;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
@@ -84,9 +83,88 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
     @Query(value = "select * from pizza_order", nativeQuery = true)
     List<OrderEntity> findAllOrders();
 
-//    @NamedNativeQuery(
-//            name = "getAllOrders",
-//            query = "select ",
-//            resultSetMapping = "OrderBean"
-//    )
+    @Query(value = "select o.id,o.address_id as addressId,o.state,o.total_price as totalAmount,\n" +
+"o.driver_id as driverId, o.shop_id as shopId, o.commit_time as commitTime,o.deliver_start_time as startDeliverTime, o.deliver_end_time as arriveTime, o.order_uuid as orderUuid,\n" +
+            "order_detail.shop_name as shopName,order_detail.buy_phone as buyPhone,\n" +
+            "order_detail.receive_name as receiveName,order_detail.receive_phone as receivePhone,order_detail.receive_address as receiveAddress,\n" +
+            "order_detail.driver_name as driverName,order_detail.driver_phone as driverPhone\n" +
+                    "from pizza_order as o natural join\n" +
+                    "(SELECT shop_user.id,shop_user.shop_name,shop_user.buy_phone,\n" +
+                    "address_driver.receive_name,address_driver.receive_phone,address_driver.receive_address,\n" +
+                    "address_driver.driver_name,address_driver.driver_phone\n" +
+                    "FROM\n" +
+                    "(select order_shop.id,order_shop.shop_name,order_user.buy_phone\n" +
+                    "from\n" +
+                    "(select o.id,s.            name as shop_name\n"+
+"from pizza_order as o left join pizza_shop as s\n" +
+                    "on o.shop_id = s.id) as order_shop\n" +
+                    "LEFT JOIN\n" + "(select o.id,u.phone as buy_phone\n"+
+"from pizza_order as o left join user as u\n"+
+"on o.user_id = u.id) as order_user\n" +
+                    "on order_shop.id = order_user.id\n" +
+                    ") as shop_user\n" +
+                    "NATURAL JOIN\n" +
+                    "(select order_address.id, order_address.receive_name, order_address.receive_phone, order_address.receive_address,\n" +
+                    "order_driver.driver_name,order_driver.driver_phone\n" +
+                    "from (select o.id,ua.name as receive_name, ua.phone as receive_phone, ua.address_detail as receive_address \n" +
+                    "from pizza_order as o left join user_address as ua\n" +
+                    "on o.address_id = ua.address_id\n" +
+                    ") as order_address\n" +
+                    "left join\n" +
+                    "(select o.id,driver.id as driver_id, driver.name as driver_name, driver.phone as driver_phone\n" +
+                    "from pizza_order as o left join driver\n" +
+                    "on o.driver_id = driver.id\n" +
+                    ") as order_driver\n" +
+                    "on order_address.id = order_driver.id\n" +
+                    ") as address_driver\n" +
+                    ") as order_detail",
+            nativeQuery = true)
+    List<Object[]> getOrderBeans();
+
+    @Query(value = "select o.id,o.address_id as addressId,o.state,o.total_price as totalAmount,\n" +
+            "o.driver_id as driverId, o.shop_id as shopId, o.commit_time as commitTime,o.deliver_start_time as startDeliverTime, o.deliver_end_time as arriveTime, o.order_uuid as orderUuid,\n" +
+            "order_detail.shop_name as shopName,order_detail.buy_phone as buyPhone,\n" +
+            "order_detail.receive_name as receiveName,order_detail.receive_phone as receivePhone,order_detail.receive_address as receiveAddress,\n" +
+            "order_detail.driver_name as driverName,order_detail.driver_phone as driverPhone\n" +
+            "from pizza_order as o natural join\n" +
+            "(SELECT shop_user.id,shop_user.shop_name,shop_user.buy_phone,\n" +
+            "address_driver.receive_name,address_driver.receive_phone,address_driver.receive_address,\n" +
+            "address_driver.driver_name,address_driver.driver_phone\n" +
+            "FROM\n" +
+            "(select order_shop.id,order_shop.shop_name,order_user.buy_phone\n" +
+            "from\n" +
+            "(select o.id,s.name as shop_name\n" +
+            "from pizza_order as o left join pizza_shop as s\n" +
+            "on o.shop_id = s.id) as order_shop\n" +
+            "LEFT JOIN\n" +
+            "(select o.id,u.phone as buy_phone\n" +
+            "from pizza_order as o left join user as u\n" +
+            "on o.user_id = u.id) as order_user\n" +
+            "on order_shop.id = order_user.id\n" +
+            ") as shop_user\n" +
+            "NATURAL JOIN\n" +
+            "(select order_address.id, order_address.receive_name, order_address.receive_phone, order_address.receive_address,\n" +
+            "order_driver.driver_name,order_driver.driver_phone\n" +
+            "from (select o.id,ua.name as receive_name, ua.phone as receive_phone, ua.address_detail as receive_address \n" +
+            "from pizza_order as o left join user_address as ua\n" +
+            "on o.address_id = ua.address_id\n" +
+            ") as order_address\n" +
+            "left join\n" +
+            "(select o.id,driver.id as driver_id, driver.name as driver_name, driver.phone as driver_phone\n" +
+            "from pizza_order as o left join driver\n" +
+            "on o.driver_id = driver.id\n" +
+            ") as order_driver\n" +
+            "on order_address.id = order_driver.id\n" +
+            ") as address_driver\n" +
+            ") as order_detail\n" +
+            "where o.id = ?1",nativeQuery = true
+    )
+    List<Object[]> getOrderBeanById(int orderId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update pizza_order\n" +
+            "set driver_id = null \n" +
+            "where driver_id = ?1", nativeQuery = true)
+    int updateOrdersDriver(int driverId);
 }

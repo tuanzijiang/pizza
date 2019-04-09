@@ -38,6 +38,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.text.ParseException;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -77,7 +79,7 @@ public class ShopControllerTest {
         ShopDetailResponse response=new ShopDetailResponse();
         ObjectMapper mapper = new ObjectMapper();
         String requestBody = mapper.writeValueAsString(request);
-        when(shopService.editShopDetail(request)).thenReturn(response);
+        when(shopService.editShopDetail(eq(request), anyInt())).thenReturn(response);
         mockMvc.perform(MockMvcRequestBuilders.post("/shop/editShopDetail")
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody)
@@ -92,7 +94,7 @@ public class ShopControllerTest {
         ShopDetailResponse response=new ShopDetailResponse();
         ObjectMapper mapper = new ObjectMapper();
         String requestBody = mapper.writeValueAsString(request);
-        when(shopService.addNewShop(request)).thenReturn(response);
+        when(shopService.addNewShop(eq(request), anyInt())).thenReturn(response);
         mockMvc.perform(MockMvcRequestBuilders.post("/shop/addNewShop")
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody)

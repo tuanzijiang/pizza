@@ -39,7 +39,7 @@ public class OperateLoggerServiceTest extends TestApplication{
         String result = "success";
         OperateLoggerEntity entity = FakeAdmin.fakeOperateLogger(adminId,type,object,result);
         when(operateLoggerJpaRepository.save(entity)).thenReturn(entity);
-        operateLoggerService.addOperateLogger(type,object,result);
+        operateLoggerService.addOperateLogger(adminId,type,object,result);
         verify(operateLoggerJpaRepository).save(isA(OperateLoggerEntity.class));
     }
 

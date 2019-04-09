@@ -71,7 +71,7 @@ public class IngredientService {
         return ingredientList;
     }
 
-    public SimpleResponse editIngredientDetail(IngredientDetailRequest request) throws BusinessServerException {
+    public SimpleResponse editIngredientDetail(IngredientDetailRequest request, int adminId) throws BusinessServerException {
         IngredientEntity entity;
         SimpleResponse response;
         int ingredientId = request.getId();
@@ -85,13 +85,13 @@ public class IngredientService {
                 entity.setState(request.getIngredientStatus().getDbValue());
                 ingredientJpaRepository.saveAndFlush(entity);
                 response = new SimpleResponse();
-                operateLoggerService.addOperateLogger(type, object, OperateResult.SUCCESS.getExpression());
+                operateLoggerService.addOperateLogger(adminId, type, object, OperateResult.SUCCESS.getExpression());
             } else {
                 String msg = String.format("Ingredient %s is not found.", ingredientId);
                 NotFoundException e = new NotFoundException(msg);
                 response = new SimpleResponse(e);
                 log.warn(msg, e);
-                operateLoggerService.addOperateLogger(type, object, OperateResult.FAILURE.getExpression() + " :"+msg);
+                operateLoggerService.addOperateLogger(adminId, type, object, OperateResult.FAILURE.getExpression() + " :"+msg);
             }
         }catch (Exception e){
             log.error("Fail to update shop.",e);
@@ -101,7 +101,7 @@ public class IngredientService {
 
     }
 
-    public SimpleResponse editIngredientStatus(int id){
+    public SimpleResponse editIngredientStatus(int id, int adminId){
         SimpleResponse response;
         Optional<IngredientEntity> optional = ingredientJpaRepository.findById(id);
         String type = OperateType.UPDATE.getExpression();//操作类型
@@ -125,18 +125,18 @@ public class IngredientService {
                     log.error("Status error.");
                     break;
             }
-            operateLoggerService.addOperateLogger(type, object, OperateResult.SUCCESS.getExpression());
+            operateLoggerService.addOperateLogger(adminId, type, object, OperateResult.SUCCESS.getExpression());
         } else {
             String msg = String.format("Ingredient %s is not found.", id);
             NotFoundException e = new NotFoundException(msg);
             response = new SimpleResponse(e);
             log.warn(msg, e);
-            operateLoggerService.addOperateLogger(type, object, OperateResult.FAILURE.getExpression() + " :"+msg);
+            operateLoggerService.addOperateLogger(adminId, type, object, OperateResult.FAILURE.getExpression() + " :"+msg);
         }
         return response;
     }
 
-    public SimpleResponse addNewIngredient(IngredientDetailRequest request) throws BusinessServerException{
+    public SimpleResponse addNewIngredient(IngredientDetailRequest request, int adminId) throws BusinessServerException{
         IngredientEntity entity;
         SimpleResponse response;
         String type = OperateType.INSERT.getExpression();//操作类型
@@ -147,7 +147,7 @@ public class IngredientService {
             entity.setState(request.getIngredientStatus().getDbValue());
             ingredientJpaRepository.saveAndFlush(entity);
             response = new SimpleResponse();
-            operateLoggerService.addOperateLogger(type, object, OperateResult.SUCCESS.getExpression());
+            operateLoggerService.addOperateLogger(adminId,type, object, OperateResult.SUCCESS.getExpression());
         }catch (Exception e){
             log.error("Fail to insert ingredient.",e);
             throw new BusinessServerException(ExceptionType.REPOSITORY, "Fail to insert ingredient.", e);
@@ -155,7 +155,7 @@ public class IngredientService {
         return response;
     }
 
-    public BatchImportResponse batchImportByExcelFile(MultipartFile file){
+    public BatchImportResponse batchImportByExcelFile(MultipartFile file, int adminId){
         String msg = "";
         BatchImportResponse response = new BatchImportResponse();
         response.setResultType(ResultType.FAILURE);
@@ -172,7 +172,7 @@ public class IngredientService {
                 String object = OperateObject.INGREDIENT.getExpression()+"（通过Excel文件）";//操作对象
                 response.setResultType(ResultType.SUCCESS);
                 response.setSuccessMsg(msg);
-                operateLoggerService.addOperateLogger(type,object,OperateResult.SUCCESS.getExpression());
+                operateLoggerService.addOperateLogger(adminId, type,object,OperateResult.SUCCESS.getExpression());
             }
             else
                 response.setErrorMsg(msg);
@@ -281,7 +281,7 @@ public class IngredientService {
     /**
      * 向仓库订购原料，仓库分发原料给店铺
      * */
-    public SimpleResponse buyIngredient(BuyIngredientRequest request){
+    public SimpleResponse buyIngredient(BuyIngredientRequest request, int adminId){
         SimpleResponse response = new SimpleResponse();
         int shopId = request.getShopId();
         int ingredientId = request.getIngredientId();
@@ -303,7 +303,7 @@ public class IngredientService {
                 int curNum = entity.getCount(); //现在这个商家的原料量
                 shopIngredientJpaRepository.updateCountByShopIdAndIngredientId(curNum + orderNum, shopId, ingredientId);
                 ingredientJpaRepository.updateCountByIngredientId(curTotalNum - orderNum, ingredientId);
-                operateLoggerService.addOperateLogger(operateType, operateObj, OperateResult.SUCCESS.getExpression());
+                operateLoggerService.addOperateLogger(adminId,operateType, operateObj, OperateResult.SUCCESS.getExpression());
             } else {
                 NotFoundException e = new NotFoundException("The shop doesn't have this ingredient.");
                 response = new SimpleResponse(e);
