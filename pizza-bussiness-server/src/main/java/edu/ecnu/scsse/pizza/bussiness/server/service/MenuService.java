@@ -14,7 +14,9 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDet
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuManageResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Ingredient;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Menu;
+import edu.ecnu.scsse.pizza.bussiness.server.utils.CastEntity;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
+import edu.ecnu.scsse.pizza.data.bean.IngredientBean;
 import edu.ecnu.scsse.pizza.data.domain.IngredientEntity;
 import edu.ecnu.scsse.pizza.data.domain.MenuEntity;
 import edu.ecnu.scsse.pizza.data.domain.MenuIngredientEntity;
@@ -57,9 +59,9 @@ public class MenuService extends SessionService {
     @Autowired
     OperateLoggerService operateLoggerService;
 
-    public List<MenuDetailResponse> getMenuList(){
+    public List<MenuDetailResponse> getMenuList() throws Exception{
         List<MenuDetailResponse> menuList = new ArrayList<>();
-        List<MenuEntity> menuEntityList = menuJpaRepository.findAll();
+        List<MenuEntity> menuEntityList = menuJpaRepository.findAllMenuEntities();
         if(menuEntityList.size()!=0){
             menuList = menuEntityList.stream().map(this::convert).collect(Collectors.toList());
         }
@@ -276,20 +278,25 @@ public class MenuService extends SessionService {
         menu.setId(String.valueOf(menuEntity.getId()));
         menu.setState(PizzaStatus.fromDbValue(menuEntity.getState()).getExpression());
         menu.setTagName(PizzaTag.fromDbValue(menuEntity.getTag()).getExpression());
-        List<IngredientDetailResponse> ingredientList = new ArrayList<>();
-        List<IngredientEntity> allIngredientEntityList = ingredientJpaRepository.findAll();
-        for(IngredientEntity ingredientEntity:allIngredientEntityList){
-            IngredientDetailResponse ingredient = new IngredientDetailResponse(ingredientEntity);
-            int ingredientId = ingredientEntity.getId();
-            ingredient.setIngredientStatus(IngredientStatus.fromDbValue(ingredientEntity.getState()).getExpression());
-            Optional<MenuIngredientEntity> menuIngredientEntityOptional = menuIngredientJpaRepository.findByMenuIdAndIngredientId(menuEntity.getId(),ingredientId);
-            if(menuIngredientEntityOptional.isPresent()){
-                MenuIngredientEntity menuIngredientEntity = menuIngredientEntityOptional.get();
-                ingredient.setMenuNeedCount(menuIngredientEntity.getCount());
-            }
-            ingredientList.add(ingredient);
+        try {
+            List<IngredientDetailResponse> ingredientList = new ArrayList<>();
+            List<Object[]> objects = ingredientJpaRepository.findIngredientsByMenuId(menuEntity.getId());
+            List<IngredientBean> ingredientBeans = null;
+            ingredientBeans = CastEntity.castEntityToIngredientBean(objects,IngredientBean.class);
+            ingredientList = ingredientBeans.stream().map(this::convertIngredientBeanToResponse).collect(Collectors.toList());
+            menu.setIngredients(ingredientList);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        menu.setIngredients(ingredientList);
         return menu;
     }
+
+    private IngredientDetailResponse convertIngredientBeanToResponse(IngredientBean ingredientBean){
+        IngredientDetailResponse response = new IngredientDetailResponse();
+        CopyUtils.copyProperties(ingredientBean,response);
+        response.setIngredientStatus(IngredientStatus.fromDbValue(ingredientBean.getState()).getExpression());
+        return response;
+    }
+
+
 }

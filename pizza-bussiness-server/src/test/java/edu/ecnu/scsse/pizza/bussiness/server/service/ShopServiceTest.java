@@ -51,7 +51,7 @@ public class ShopServiceTest extends TestApplication{
     }
 
     @Test
-    public void testGetShopList(){
+    public void testGetShopList() throws Exception{
         List<PizzaShopEntity> shopEntities = FakeFactory.fakeShops();
         when(shopJpaRepository.findAll()).thenReturn(shopEntities);
         when(shopIngredientJpaRepository.findByShopId(anyInt())).thenReturn(FakeFactory.fakeShopIngredients(1));

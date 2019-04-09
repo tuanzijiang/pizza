@@ -42,4 +42,18 @@ public enum PizzaTag {
 
         return UNKNOWN;
     }
+
+    public static PizzaTag fromExpression(String expression) {
+        if (expression != null) {
+            Optional<PizzaTag> pizzaTag =  Arrays.stream(PizzaTag.values())
+                    .filter(s -> s.expression.equals(expression))
+                    .findFirst();
+
+            if (pizzaTag.isPresent()) {
+                return pizzaTag.get();
+            }
+        }
+
+        return UNKNOWN;
+    }
 }

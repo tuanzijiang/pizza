@@ -33,7 +33,7 @@ public class DriverController extends BaseController{
      */
     @RequestMapping(value = "/getDriverList",method = RequestMethod.GET)
     @ResponseBody
-    public List<Driver> getDriverList(){
+    public List<DriverManageResponse> getDriverList() throws Exception{
         return driverService.getDriverList();
     }
 

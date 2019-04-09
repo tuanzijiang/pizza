@@ -9,6 +9,7 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.shop.ShopDet
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.shop.ShopIngredientResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.shop.ShopManageResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.service.ShopService;
+import edu.ecnu.scsse.pizza.data.domain.IngredientEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,20 +35,20 @@ public class ShopController extends BaseController{
      */
     @RequestMapping(value = "/getShopList",method = RequestMethod.GET)
     @ResponseBody
-    public List<ShopManageResponse> getShopList(){
+    public List<ShopManageResponse> getShopList() throws Exception{
         return shopService.getShopList();
     }
 
-//    /***
-//     * 查看工厂原料库
-//     * @request
-//     * @return
-//     */
-//    @RequestMapping(value = "/getIngredientListByShopId",method = RequestMethod.GET)
-//    @ResponseBody
-//    public List<Ingredient> getIngredientListByShopId(@RequestParam int shopId){
-//        return shopService.getIngredientListByShopId(shopId);
-//    }
+    /***
+     * 查看工厂原料库
+     * @request
+     * @return
+     */
+    @RequestMapping(value = "/getIngredientListByShopId",method = RequestMethod.GET)
+    @ResponseBody
+    public List<IngredientEntity> getIngredientListByShopId(@RequestParam int shopId){
+        return shopService.getIngredientListByShopId(shopId);
+    }
 
     /***
      * 修改工厂信息

@@ -37,7 +37,7 @@ public class MenuController extends BaseController{
      */
     @RequestMapping(value = "/getMenuList",method = RequestMethod.GET)
     @ResponseBody
-    public List<MenuDetailResponse> getMenuList(){
+    public List<MenuDetailResponse> getMenuList() throws Exception{
         return menuService.getMenuList();
     }
 
