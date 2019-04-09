@@ -1,17 +1,13 @@
 package edu.ecnu.scsse.pizza.data.repository;
 
-import edu.ecnu.scsse.pizza.data.bean.OrderBean;
 import edu.ecnu.scsse.pizza.data.domain.OrderEntity;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.NamedNativeQuery;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
