@@ -9,11 +9,14 @@ import autobind from 'autobind-decorator';
 import cx from 'classnames';
 import Shopping from './Shopping';
 import { fetchMenuApi } from '@services/api-fetch-menu';
+import Image from '@components/Image';
 
 interface MenuProps {
   menu: Order;
   pizzas: Pizza[];
   handleToPay: () => void;
+  cartId: any;
+  userId: number;
 }
 
 interface MenuState {
@@ -69,9 +72,14 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
   }
 
   componentDidMount() {
+    const { userId } = this.props;
     fetchMenuApi({
-      userId: 123,
+      userId,
     });
+  }
+
+  componentWillUnmount() {
+    this.menuScrollEl.current.scrollTop = 0;
   }
 
   componentDidUpdate(prevProps: MenuProps, prevState: MenuState) {
@@ -157,11 +165,12 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
 
   @autobind
   handleMenuUpdateClick(pizzaId: number, count: number) {
+    const { cartId } = this.props;
     return () => {
       updateOrderApi({
         pizzaId,
         count,
-        orderId: CART_ORDER_ID,
+        orderId: cartId,
       });
     };
   }
@@ -180,7 +189,7 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
             const needTag = tags.includes(pizzaId);
             const {
               name: title, description: desc,
-              price, id,
+              price, id, img,
             } = currPizza;
             const count = menu.num[pizzaId];
 
@@ -199,7 +208,9 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
                 }
                 <div className="menu-pizzaItem">
                   <div className="menu-pizzaItemImage">
-                    <Icon name="pisa" classnames="menu-pizzaItemPisa" />
+                    <Image url={img}>
+                      <Icon name="pisa" classnames="menu-pizzaItemPisa" />
+                    </Image>
                   </div>
                   <div className="menu-pizzaItemFont">
                     <div className="menu-pizzaItemTitle">
@@ -238,7 +249,7 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
   }
 
   render() {
-    const { menu, pizzas, handleToPay } = this.props;
+    const { menu, pizzas, handleToPay, cartId } = this.props;
     return (
       <div className="menu-wrapper">
         <div className="menu-main">
@@ -261,7 +272,7 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
         <div className="menu-shopping">
           <div className="menu-shoppingHeader">{i18n('购物车')}</div>
           <div className="menu-shoppingContent">
-            <Shopping menu={menu} pizzas={pizzas} handleToPay={handleToPay}/>
+            <Shopping menu={menu} pizzas={pizzas} handleToPay={handleToPay} cartId={cartId}/>
           </div>
         </div>
       </div>

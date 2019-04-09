@@ -9,6 +9,7 @@ import autobind from 'autobind-decorator';
 import MenuPage from './MenuPage';
 import Order from './Order';
 import { CART_ORDER_ID } from '@src/entity/Order';
+import { fetchAddressApi } from '@src/services/api-fetch-address';
 
 export enum PageName {
   MENU = 1,
@@ -18,6 +19,7 @@ export enum PageName {
 interface MainAssetsProps {
   mainStore: any;
   entityStore: any;
+  commonStore: any;
 }
 
 interface MainAssetsState {
@@ -42,16 +44,14 @@ export class MainAssets extends React.PureComponent<MainAssetsProps, MainAssetsS
   }
 
   componentDidMount() {
-    fetchUserApi({
-      userId: 123,
-    });
   }
 
   render() {
-    const { entityStore, mainStore } = this.props;
+    const { entityStore, mainStore, commonStore } = this.props;
     const { pizzas, addresses, orders, user } = entityStore;
     const { orderIds } = mainStore;
     const { navIdx } = this.state;
+    const { cart_id } = commonStore;
     const menu = orders[CART_ORDER_ID];
 
     return (
@@ -86,7 +86,7 @@ export class MainAssets extends React.PureComponent<MainAssetsProps, MainAssetsS
           </div>
           <div className="mainAssets-content">
             {navIdx === PageName.MENU && <MenuPage
-             menu={menu} pizzas={pizzas} addresses={addresses} user={user}/>}
+             menu={menu} pizzas={pizzas} addresses={addresses} user={user} cartId={cart_id}/>}
             {navIdx === PageName.ORDER && <Order
               orders={orders} addresses={addresses} orderIds={orderIds}
               pizzas={pizzas}
@@ -102,6 +102,7 @@ export default connect((state: any) => {
   return {
     mainStore: state.pagePc.main,
     entityStore: state.entity,
+    commonStore: state.common,
   };
 }, (dispatch) => {
   return {

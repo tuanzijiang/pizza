@@ -620,6 +620,26 @@
               "id": 2
             }
           }
+        },
+        "PayOrderReq": {
+          "fields": {
+            "orderId": {
+              "type": "string",
+              "id": 1
+            },
+            "totalPrice": {
+              "type": "double",
+              "id": 2
+            }
+          }
+        },
+        "PayOrderResp": {
+          "fields": {
+            "form": {
+              "type": "string",
+              "id": 1
+            }
+          }
         }
       }
     },
