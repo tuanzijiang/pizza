@@ -27,5 +27,19 @@
   <div id="app"></div>
 </body>
 <script>
+  let iLastTouch;
+  // 解决ios双击上下移动的问题
+  document.body.addEventListener('touchend', (event) => {
+    const iNow = new Date()
+      .getTime();
+    iLastTouch = iLastTouch || iNow + 1 /** 第一次时将iLastTouch设为当前时间+1 */;
+    const delta = iNow - iLastTouch;
+    if (delta < 500 && delta > 0) {
+      event.preventDefault();
+      return false;
+    }
+    iLastTouch = iNow;
+  }, false);
 </script>
+
 </html>

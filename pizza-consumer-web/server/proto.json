@@ -630,14 +630,30 @@
             "totalPrice": {
               "type": "double",
               "id": 2
+            },
+            "type": {
+              "type": "payType",
+              "id": 3
+            }
+          },
+          "nested": {
+            "payType": {
+              "values": {
+                "app": 0,
+                "pc": 1
+              }
             }
           }
         },
         "PayOrderResp": {
           "fields": {
+            "resultType": {
+              "type": "ResultType",
+              "id": 1
+            },
             "form": {
               "type": "string",
-              "id": 1
+              "id": 2
             }
           }
         }

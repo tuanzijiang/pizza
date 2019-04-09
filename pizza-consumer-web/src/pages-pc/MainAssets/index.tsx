@@ -10,6 +10,7 @@ import MenuPage from './MenuPage';
 import Order from './Order';
 import { CART_ORDER_ID } from '@src/entity/Order';
 import { fetchAddressApi } from '@src/services/api-fetch-address';
+import history from '@src/utils/history';
 
 export enum PageName {
   MENU = 1,
@@ -44,6 +45,11 @@ export class MainAssets extends React.PureComponent<MainAssetsProps, MainAssetsS
   }
 
   componentDidMount() {
+    const { entityStore } = this.props;
+    const { user } = entityStore;
+    if (user.id === 0) {
+      history.push('./LoginAssets');
+    }
   }
 
   render() {

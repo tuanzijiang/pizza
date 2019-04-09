@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { pageMobile as pageActionCreator, entity as entityActionCreator } from '@store/action';
 import autobind from 'autobind-decorator';
 import { OrderWeakSchema, OrderSchema } from '@src/entity/schema';
+import history from '@src/utils/history';
 
 interface LoginAssetsProps {
   mainStore: any;
@@ -55,6 +56,14 @@ export class MainAssets extends React.PureComponent<LoginAssetsProps, LoginAsset
   constructor(props: LoginAssetsProps) {
     super(props);
     this.state = {};
+  }
+
+  componentDidMount() {
+    const { entityStore } = this.props;
+    const { user } = entityStore;
+    if (user.id === 0) {
+      history.push('./LoginAssets');
+    }
   }
 
   @autobind
