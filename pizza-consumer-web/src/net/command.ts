@@ -12,6 +12,7 @@ import { UpdateAddressReq, UpdateAddressResp } from './api-update-address';
 import { FetchOrderReq, FetchOrderResp } from './api-fetch-order';
 import { SendOrderReq, SendOrderResp } from './api-send-order';
 import { CancelOrderReq, CancelOrderResp } from './api-cancel-order';
+import { PayOrderReq, PayOrderResp } from './api-pay-order';
 
 export enum Command {
   // user
@@ -30,6 +31,7 @@ export enum Command {
   FETCH_ORDER = 'FETCH_ORDER',
   SEND_ORDER = 'SEND_ORDER',
   CANCEL_ORDER = 'CANCEL_ORDER',
+  PAY_ORDER = 'PAY_ORDER',
 
   // address
   FETCH_ADDRESS = 'FETCH_ADDRESS',
@@ -52,6 +54,7 @@ export type CommandReq<T extends Command> =
   T extends Command.FETCH_ORDER? [FetchOrderReq] :
   T extends Command.SEND_ORDER? [SendOrderReq] :
   T extends Command.CANCEL_ORDER? [CancelOrderReq] :
+  T extends Command.PAY_ORDER? [PayOrderReq] :
   [];
 
 export type CommandResp<T extends Command> =
@@ -69,4 +72,5 @@ export type CommandResp<T extends Command> =
   T extends Command.FETCH_ORDER? FetchOrderResp:
   T extends Command.SEND_ORDER? SendOrderResp:
   T extends Command.CANCEL_ORDER? CancelOrderResp:
+  T extends Command.PAY_ORDER? PayOrderResp:
   void;

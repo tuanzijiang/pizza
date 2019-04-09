@@ -11,6 +11,10 @@ import { CART_ORDER_ID } from '@entity/Order';
 import { timerFormater } from '@utils/time';
 import Icon from '@biz-components/Icon';
 import { fetchOrderApi } from '@src/services/api-fetch-order';
+import history from '@utils/history';
+import { payOrderApi } from '@services/api-pay-order';
+import { openToast } from '@src/utils/store';
+import { PayType } from '@src/net/api-pay-order';
 
 enum PAY_KIND {
   ALIPAY = 0,
@@ -57,6 +61,10 @@ export default class Pay extends React.PureComponent<PayProps, PayState> {
     }, 1000);
   }
 
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+
   @autobind
   handleOrderClick() {
 
@@ -93,6 +101,32 @@ export default class Pay extends React.PureComponent<PayProps, PayState> {
         pay_kind,
       });
     };
+  }
+
+  @autobind
+  async handlePayClick() {
+    const { entityStore } = this.props;
+    const { currOrderId } = this.state;
+    const { orders, pizzas } = entityStore;
+    const currOrder = orders[CART_ORDER_ID];
+
+    let price = 0;
+    if (currOrder && currOrder.num) {
+      const { num } = currOrder;
+      price = Object.entries(num).reduce((prev, [pizzaId, count]) => {
+        const currPizza = pizzas[parseInt(pizzaId, 10)];
+        const perPrice = currPizza.price;
+        return prev + (count as number) * perPrice;
+      }, 0);
+    }
+    const result = await payOrderApi({
+      orderId: currOrderId,
+      totalPrice: price,
+      type: PayType.MOBILE,
+    });
+    if (!result) {
+      openToast('支付失败');
+    }
   }
 
   renderMiddle() {
@@ -193,7 +227,7 @@ export default class Pay extends React.PureComponent<PayProps, PayState> {
             {i18n('选择支付方式')}
           </div>
           {this.renderPayKind()}
-          <div className="pay-button">
+          <div className="pay-button" onClick={this.handlePayClick}>
             {i18n('支付')}
           </div>
         </div>

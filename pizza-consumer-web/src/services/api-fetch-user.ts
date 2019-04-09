@@ -12,7 +12,7 @@ export const fetchUserApi = async (param: FetchUserReq) => {
   const resp = await net.request(Command.FETCH_USER, param);
   const { resultType, user } = resp as FetchUserResp;
 
-  if (resultType) {
+  if (resultType && user) {
     const { address } = user;
     if (address) {
       const { id } = address;
