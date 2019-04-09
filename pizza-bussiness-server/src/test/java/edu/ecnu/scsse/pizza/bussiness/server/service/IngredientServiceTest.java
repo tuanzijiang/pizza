@@ -86,7 +86,7 @@ public class IngredientServiceTest extends TestApplication{
         CopyUtils.copyProperties(ingredientEntity,request);
         request.setId(ingredientEntity.getId());
         request.setName(ingredientEntity.getName());
-        request.setStatus(IngredientStatus.fromDbValue(ingredientEntity.getState()));
+        request.setStatus(IngredientStatus.fromDbValue(ingredientEntity.getState()).getExpression());
 
         when(ingredientJpaRepository.findById(ingredientId)).thenReturn(Optional.of(ingredientEntity));
         when(ingredientJpaRepository.saveAndFlush(ingredientEntity)).thenReturn(ingredientEntity);
@@ -123,7 +123,7 @@ public class IngredientServiceTest extends TestApplication{
         int adminId = 1;
         IngredientEntity ingredientEntity = FakeFactory.fakeIngredient(2);
         CopyUtils.copyProperties(ingredientEntity,request);
-        request.setStatus(IngredientStatus.fromDbValue(ingredientEntity.getState()));
+        request.setStatus(IngredientStatus.fromDbValue(ingredientEntity.getState()).getExpression());
         when(ingredientJpaRepository.saveAndFlush(ingredientEntity)).thenReturn(ingredientEntity);
         SimpleResponse response = ingredientService.addNewIngredient(request,adminId);
         assertEquals(ResultType.SUCCESS,response.getResultType());

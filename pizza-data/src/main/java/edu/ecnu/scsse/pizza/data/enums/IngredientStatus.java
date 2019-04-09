@@ -37,4 +37,19 @@ public enum IngredientStatus {
             return null;
         }
     }
+
+    public static IngredientStatus fromExpression(String expression) {
+        if (expression == null) {
+            return null;
+        }
+        Optional<IngredientStatus> ingredientStatus =  Arrays.stream(IngredientStatus.values())
+                .filter(s -> s.expression.equals(expression))
+                .findFirst();
+
+        if (ingredientStatus.isPresent()) {
+            return ingredientStatus.get();
+        } else {
+            return null;
+        }
+    }
 }
