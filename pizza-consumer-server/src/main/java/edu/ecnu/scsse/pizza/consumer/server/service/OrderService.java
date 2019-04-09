@@ -281,6 +281,8 @@ public class OrderService {
         model.setTotalAmount(String.valueOf(totalPrice));
         model.setProductCode(AlipayConfig.PRODUCT_CODE);
         alipayRequest.setBizModel(model);
+        alipayRequest.setNotifyUrl(AlipayConfig.NOTIFY_URL);
+        alipayRequest.setReturnUrl(AlipayConfig.RETURN_URL);
 
         try {
             AlipayTradeWapPayResponse response = client.pageExecute(alipayRequest);

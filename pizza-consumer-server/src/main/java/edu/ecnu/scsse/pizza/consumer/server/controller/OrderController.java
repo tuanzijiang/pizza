@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +37,7 @@ public class OrderController {
     /**
      * 获取单个订单详情
      */
-    @RequestMapping("/fetchOrder")
+    @RequestMapping(value = "/fetchOrder", method = RequestMethod.POST)
     @ResponseBody
     public FetchOrderResponse fetchOrder(@RequestBody FetchOrderRequest request) {
         try {
@@ -52,7 +53,7 @@ public class OrderController {
     /**
      * 分页批量获取订单详情
      */
-    @RequestMapping("/fetchOrders")
+    @RequestMapping(value = "/fetchOrders", method = RequestMethod.POST)
     @ResponseBody
     public FetchOrdersResponse fetchOrders(@RequestBody FetchOrdersRequest request) {
         try {
@@ -71,7 +72,7 @@ public class OrderController {
     /**
      * 获取菜单和购物车
      */
-    @RequestMapping("/fetchMenu")
+    @RequestMapping(value = "/fetchMenu", method = RequestMethod.POST)
     @ResponseBody
     public FetchMenuResponse fetchMenu(@RequestBody FetchMenuRequest request) {
         FetchMenuResponse response = new FetchMenuResponse();
@@ -87,7 +88,7 @@ public class OrderController {
     /**
      * 更新购物车商品
      */
-    @RequestMapping("/updateOrder")
+    @RequestMapping(value = "/updateOrder", method = RequestMethod.POST)
     @ResponseBody
     public UpdateOrderResponse updateOrder(@RequestBody UpdateOrderRequest request) {
         UpdateOrderResponse response = new UpdateOrderResponse();
@@ -105,7 +106,7 @@ public class OrderController {
     /**
      * 确认订单
      */
-    @RequestMapping("/sendOrder")
+    @RequestMapping(value = "/sendOrder", method = RequestMethod.POST)
     @ResponseBody
     public SendOrderResponse sendOrder(@RequestBody SendOrderRequest request) {
         try {
@@ -121,7 +122,7 @@ public class OrderController {
     /**
      * 取消订单
      */
-    @RequestMapping("/cancelOrder")
+    @RequestMapping(value = "/cancelOrder", method = RequestMethod.POST)
     @ResponseBody
     public CancelOrderResponse cancelOrder(@RequestBody CancelOrderRequest request) {
         try {
@@ -142,7 +143,7 @@ public class OrderController {
     /**
      * 获取服务电话、商家电话、配送员电话
      */
-    @RequestMapping("/fetchPhone")
+    @RequestMapping(value = "/fetchPhone", method = RequestMethod.POST)
     @ResponseBody
     public FetchPhoneResponse fetchPhone(@RequestBody FetchPhoneRequest request) {
         try {
@@ -161,7 +162,7 @@ public class OrderController {
     /**
      * 发起订单支付请求
      */
-    @RequestMapping("/pay")
+    @RequestMapping(value = "/pay", method = RequestMethod.POST)
     @ResponseBody
     public PayOrderResponse pay(@RequestBody PayOrderRequest request) {
         try {
@@ -178,7 +179,8 @@ public class OrderController {
     /**
      * 支付宝 notify_url（异步通知），表示支付完成，可更新数据库状态。
      */
-    @RequestMapping("/paid")
+    @RequestMapping(value = "/paid", method = RequestMethod.POST)
+    @ResponseBody
     public String paid(HttpServletRequest request) {
         orderService.paid(request);
         return "success";
