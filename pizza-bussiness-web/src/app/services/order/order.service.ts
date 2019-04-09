@@ -22,6 +22,11 @@ export class OrderService {
       .pipe()
   }
 
+  getOrderDetail(id: string):Observable<any> {
+    return this.http.get(AddressService.getOrderDetail() + id, httpOptions)
+      .pipe()
+  }
+
   getYesterdayOrder(): Observable<any> {
     return this.http.get(AddressService.getYesterdayOrder(), httpOptions)
       .pipe()

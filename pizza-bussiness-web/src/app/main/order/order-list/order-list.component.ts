@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {OrderDetail} from "../../../modules/order/orderDetail";
 import {TranslateService} from "../../../services/translate.service";
 import {OrderService} from "../../../services/order/order.service";
+import {Order} from "../../../modules/order/order";
 
 @Component({
   selector: 'app-order-list',
@@ -10,7 +11,7 @@ import {OrderService} from "../../../services/order/order.service";
 })
 export class OrderListComponent implements OnInit {
 
-  orders: OrderDetail[];
+  orders: Order[];
   cols: any[];
   states: any[];
   selectedOrder: OrderDetail;
@@ -72,15 +73,19 @@ export class OrderListComponent implements OnInit {
     };
 
     this.orderService.getOrders().subscribe(
-      (orders: OrderDetail[]) => {
+      (orders: Order[]) => {
         this.orders = orders;
         this.displayPage = true;
       }
     );
   }
 
-  selectOrderWithButton(order: OrderDetail) {
-    this.selectedOrder = order;
-    this.displayDetail = true;
+  selectOrderWithButton(order: Order) {
+    this.orderService.getOrderDetail(order.orderId).subscribe(
+      (orderDetail: OrderDetail) => {
+        this.selectedOrder = orderDetail;
+        this.displayDetail = true;
+      }
+    );
   }
 }
