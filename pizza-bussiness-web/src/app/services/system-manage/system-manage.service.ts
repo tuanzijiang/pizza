@@ -36,17 +36,17 @@ export class SystemManageService {
   }
 
   editMenu(menu: Menu):Observable<any> {
-    return this.http.post(AddressService.editMenu() + '?adminId=' + AuthService.UserName, menu, httpOptions)
+    return this.http.post(AddressService.editMenu() + '?adminId=' + AuthService.UserId, menu, httpOptions)
       .pipe()
   }
 
   addMenu(menu: Menu):Observable<any> {
-    return this.http.post(AddressService.addMenu() + '?adminId=' + AuthService.UserName, menu, httpOptions)
+    return this.http.post(AddressService.addMenu() + '?adminId=' + AuthService.UserId, menu, httpOptions)
       .pipe()
   }
 
   changeMenuState(id: string):Observable<any> {
-    return this.http.get(AddressService.changeMenuState() + id + '&adminId=' + AuthService.UserName, httpOptions)
+    return this.http.get(AddressService.changeMenuState() + id + '&adminId=' + AuthService.UserId, httpOptions)
       .pipe()
   }
 
@@ -56,12 +56,12 @@ export class SystemManageService {
   }
 
   editShop(shop: Factory):Observable<any> {
-    return this.http.post(AddressService.editShop() + '?adminId=' + AuthService.UserName, shop, httpOptions)
+    return this.http.post(AddressService.editShop() + '?adminId=' + AuthService.UserId, shop, httpOptions)
       .pipe()
   }
 
   addShop(shop: Factory):Observable<any> {
-    return this.http.post(AddressService.addShop() + '?adminId=' + AuthService.UserName, shop, httpOptions)
+    return this.http.post(AddressService.addShop() + '?adminId=' + AuthService.UserId, shop, httpOptions)
       .pipe()
   }
 

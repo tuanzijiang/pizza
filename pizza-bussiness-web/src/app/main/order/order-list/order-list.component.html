@@ -61,16 +61,16 @@
 <p-dialog header="订单详情" [(visible)]="displayDetail" [modal]="true" [responsive]="true"
           [style]="{width: '600px', minWidth: '200px'}" [minY]="100"
           [maximizable]="true">
-  <div class="mt-lg-2 ml-lg-2 mr-lg-2" *ngIf="orders != null">
+  <div class="mt-lg-2 ml-lg-2 mr-lg-2" *ngIf="selectedOrder != null">
     <span *ngFor="let key of orderListKeys">
       <span *ngIf="key != 'menuList'">
-        <b>{{translateService.orderDetails[key]}}: </b>{{selectedOrder[key]}}<br>
+        <b>{{orderTranslate[key]}}: </b>{{selectedOrder[key]}}<br>
       </span>
       <span *ngIf="key == 'menuList'">
         <br>
         <span *ngFor="let menu of selectedOrder[key]">
           <span *ngFor="let menuKey of MenuListKeys">
-            <b>{{translateService.orderDetails[menuKey]}}: </b>{{menu[menuKey]}} &nbsp;
+            <b>{{orderTranslate[menuKey]}}: </b>{{menu[menuKey]}} &nbsp;
           </span>
           <br>
         </span>

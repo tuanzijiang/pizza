@@ -7,7 +7,7 @@
   <div class="order-count-title">
     <h5>订单数据</h5>
   </div>
-  <div class="mt-lg-3 pr-lg-2">
+  <div class="mt-lg-3 pr-lg-2" *ngIf="yesterdayOrder != null">
     <p-card header="昨日订单指标" [style]="{width: '100%'}">
       <div class="row">
         <div class="col-lg-4  yesterday-order text-center">

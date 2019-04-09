@@ -14,7 +14,6 @@ import {BaseResponse} from "../modules/baseResponse";
 export class LoginComponent implements OnInit {
 
   formGroup: FormGroup;
-  buttonDisabled: boolean;
   userName: string;
   password: string;
   admin: Admin;
@@ -45,7 +44,6 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.admin = new Admin();
-    this.buttonDisabled = false;
     this.formGroup = new FormGroup({
       UserName: new FormControl('', [
         Validators.required,
@@ -61,15 +59,14 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.buttonDisabled = true;
     this.admin.adminName = this.userName;
     this.admin.password = this.password;
     this.authService.login(this.admin).subscribe(
       (response: BaseResponse) => {
         if(response.resultType == 'FAILURE') {
           alert(response.errorMsg);
-          this.buttonDisabled = false;
         } else {
+          AuthService.UserId = response.adminId;
           let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/order-list';
           // Set our navigation extras object
           // that passes on our global query params and fragment
@@ -87,7 +84,6 @@ export class LoginComponent implements OnInit {
 
   onReset() {
     this.formGroup.reset();
-    this.buttonDisabled = false;
   }
 
 }

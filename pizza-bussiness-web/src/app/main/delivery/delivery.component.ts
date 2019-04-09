@@ -27,12 +27,7 @@ export class DeliveryComponent implements OnInit {
     this.displayChangeDialog = false;
     this.displayAddDialog = false;
 
-    this.deliveryService.getDriverList().subscribe(
-      (driverList: Delivery[]) => {
-        this.deliveries = driverList;
-        this.showPage = true;
-      }
-    );
+    this.getDriverList();
 
     this.cols = [
       {field: 'id', header: '配送员ID'},
@@ -41,6 +36,15 @@ export class DeliveryComponent implements OnInit {
       {field: 'shopId', header: '绑定的店ID'},
     ];
 
+  }
+
+  getDriverList() {
+    this.deliveryService.getDriverList().subscribe(
+      (driverList: Delivery[]) => {
+        this.deliveries = driverList;
+        this.showPage = true;
+      }
+    );
   }
 
   addDelivery() {
@@ -76,7 +80,9 @@ export class DeliveryComponent implements OnInit {
           alert(response.errorMsg);
         } else {
           this.displayChangeDialog = false;
+          this.showPage = false;
           this.tempDel = null;
+          this.getDriverList();
         }
       }
     );
@@ -89,7 +95,9 @@ export class DeliveryComponent implements OnInit {
           alert(response.errorMsg);
         } else {
           this.displayAddDialog = false;
+          this.showPage = false;
           this.tempDel = null;
+          this.getDriverList();
         }
       }
     );

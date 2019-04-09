@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Menu} from "../../../modules/system-manage/menu";
 import {Ingredient} from "../../../modules/system-manage/ingredient";
 import {SystemManageService} from "../../../services/system-manage/system-manage.service";
 import {BaseResponse} from "../../../modules/baseResponse";
+import {Table} from "primeng/table";
 
 @Component({
   selector: 'app-menu-manage',
@@ -11,6 +12,7 @@ import {BaseResponse} from "../../../modules/baseResponse";
 })
 export class MenuManageComponent implements OnInit {
 
+  @ViewChild('dt') table: Table;
   cols: any[];
   igcols: any[];
   menuList: Menu[];
@@ -33,13 +35,7 @@ export class MenuManageComponent implements OnInit {
     this.pizzaType = [];
 
     this.getPizzaType();
-
-    this.systemManageService.getMenuList().subscribe(
-      (menuList: Menu[]) => {
-        this.menuList = menuList;
-        this.showPage = true;
-      }
-    );
+    this.getMenuList();
 
     this.cols = [
       {field: 'id', header: '编号'},
@@ -64,11 +60,20 @@ export class MenuManageComponent implements OnInit {
 
   }
 
+  getMenuList() {
+    this.systemManageService.getMenuList().subscribe(
+      (menuList: Menu[]) => {
+        this.menuList = menuList;
+        this.showPage = true;
+      }
+    );
+  }
+
   getPizzaType() {
     this.systemManageService.getTagList().subscribe(
       (tagList: any[]) => {
         this.pizzaType.push({label: '请选择种类', value: null});
-        for(let tag of tagList) {
+        for (let tag of tagList) {
           this.pizzaType.push({label: tag, value: tag});
         }
       }
@@ -81,14 +86,18 @@ export class MenuManageComponent implements OnInit {
         if (response.resultType == 'FAILURE') {
           alert(response.errorMsg);
         } else {
-          menu.state = this.showContraryState(menu);
+          let index = this.menuList.findIndex(obj => obj.id == menu.id);
+          this.menuList[index]['state'] = this.showContraryState(menu);
+          this.table.reset();
+          this.showPage = false;
+          this.getMenuList();
         }
       }
     )
   }
 
   showContraryState(state) {
-    if(state == '已下架')
+    if (state == '已下架')
       return '售卖中';
     else
       return '已下架';
@@ -111,6 +120,12 @@ export class MenuManageComponent implements OnInit {
   }
 
   submitNewMenu() {
+    let newMenu = this.tempMenu;
+    if (this.tempMenu.state == '售卖中') {
+      newMenu.state = 'IN_SALE'
+    } else {
+      newMenu.state = 'OFF_SHELF'
+    }
     this.systemManageService.addMenu(this.tempMenu).subscribe(
       (response: BaseResponse) => {
         if (response.resultType == 'FAILURE') {
@@ -118,6 +133,8 @@ export class MenuManageComponent implements OnInit {
         } else {
           this.displayAddDialog = false;
           this.tempMenu = null;
+          this.showPage = false;
+          this.getMenuList();
         }
       }
     );
@@ -131,6 +148,8 @@ export class MenuManageComponent implements OnInit {
         } else {
           this.displayChangeDialog = false;
           this.tempMenu = null;
+          this.showPage = false;
+          this.getMenuList();
         }
       }
     );

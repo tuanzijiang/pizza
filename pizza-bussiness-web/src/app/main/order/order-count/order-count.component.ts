@@ -67,6 +67,7 @@ export class OrderCountComponent implements OnInit, AfterViewInit {
     orderCountDate.endDate = '2019/04/30';
     this.orderService.getOrderCountStatus(orderCountDate).subscribe(
       (orderCountList: OrderCount[]) => {
+        this.orderCountList = [];
         for(let orderCount of orderCountList) {
           let newOrder = new OrderCount();
           newOrder.date = new Date(orderCount.date);

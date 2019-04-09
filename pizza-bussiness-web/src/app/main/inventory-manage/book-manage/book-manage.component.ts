@@ -1,9 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {BookAlert} from "../../../modules/inventory-manage/book-alert";
 import {InventoryManageService} from "../../../services/inventory-manage/inventory-manage.service";
 import {BuyIngredient} from "../../../modules/inventory-manage/buy-ingredient";
 import {BaseResponse} from "../../../modules/baseResponse";
-
 @Component({
   selector: 'app-book-manage',
   templateUrl: './book-manage.component.html',

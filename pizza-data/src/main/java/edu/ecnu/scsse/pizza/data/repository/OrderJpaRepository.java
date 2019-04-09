@@ -1,6 +1,5 @@
 package edu.ecnu.scsse.pizza.data.repository;
 
-import edu.ecnu.scsse.pizza.data.bean.OrderBean;
 import edu.ecnu.scsse.pizza.data.domain.OrderEntity;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

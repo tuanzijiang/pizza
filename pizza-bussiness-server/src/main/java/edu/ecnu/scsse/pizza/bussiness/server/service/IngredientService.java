@@ -1,5 +1,6 @@
 package edu.ecnu.scsse.pizza.bussiness.server.service;
 
+import com.oracle.tools.packager.Log;
 import edu.ecnu.scsse.pizza.bussiness.server.exception.BusinessServerException;
 import edu.ecnu.scsse.pizza.bussiness.server.exception.ExceptionType;
 import edu.ecnu.scsse.pizza.bussiness.server.exception.NotFoundException;
@@ -81,7 +82,7 @@ public class IngredientService {
             if (optional.isPresent()) {
                 entity = optional.get();
                 CopyUtils.copyProperties(request, entity);
-                entity.setState(request.getStatus().getDbValue());
+                entity.setState(request.getIngredientStatus().getDbValue());
                 ingredientJpaRepository.saveAndFlush(entity);
                 response = new SimpleResponse();
                 operateLoggerService.addOperateLogger(type, object, OperateResult.SUCCESS.getExpression());
@@ -143,7 +144,7 @@ public class IngredientService {
         try {
             entity = new IngredientEntity();
             CopyUtils.copyProperties(request, entity);
-            entity.setState(request.getStatus().getDbValue());
+            entity.setState(request.getIngredientStatus().getDbValue());
             ingredientJpaRepository.saveAndFlush(entity);
             response = new SimpleResponse();
             operateLoggerService.addOperateLogger(type, object, OperateResult.SUCCESS.getExpression());

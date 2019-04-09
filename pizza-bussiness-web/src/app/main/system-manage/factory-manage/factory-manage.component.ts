@@ -30,12 +30,8 @@ export class FactoryManageComponent implements OnInit {
     this.displayAddDialog = false;
     this.displayChangeDialog = false;
     this.checkIgDialog = false;
-    this.systemManageService.getShopList().subscribe(
-      (shopList: Factory[]) => {
-        this.factories = shopList;
-        this.showPage = true;
-      }
-    );
+
+    this.getShopList();
 
     this.cols = [
       {field: 'id', header: '编号'},
@@ -47,6 +43,15 @@ export class FactoryManageComponent implements OnInit {
       {field: 'maxNum', header: '最大接单量'},
     ];
 
+  }
+
+  getShopList() {
+    this.systemManageService.getShopList().subscribe(
+      (shopList: Factory[]) => {
+        this.factories = shopList;
+        this.showPage = true;
+      }
+    );
   }
 
   addFactory() {
@@ -87,7 +92,9 @@ export class FactoryManageComponent implements OnInit {
           alert(response.errorMsg);
         } else {
           this.displayChangeDialog = false;
+          this.showPage = false;
           this.tempFactory = null;
+          this.getShopList();
         }
       }
     );
@@ -101,7 +108,9 @@ export class FactoryManageComponent implements OnInit {
           alert(response.errorMsg);
         } else {
           this.displayAddDialog = false;
+          this.showPage = false;
           this.tempFactory = null;
+          this.getShopList();
         }
       }
     );

@@ -24,17 +24,17 @@ export class DeliveryService {
   }
 
   editDriver(driver: Delivery): Observable<any> {
-    return this.http.post(AddressService.editDriver() + '?adminId=' + AuthService.UserName, driver, httpOptions)
+    return this.http.post(AddressService.editDriver() + '?adminId=' + AuthService.UserId, driver, httpOptions)
       .pipe()
   }
 
   addDriver(driver: Delivery): Observable<any> {
-    return this.http.post(AddressService.addDriver() + '?adminId=' + AuthService.UserName, driver, httpOptions)
+    return this.http.post(AddressService.addDriver() + '?adminId=' + AuthService.UserId, driver, httpOptions)
       .pipe()
   }
 
   removeDriver(id: string): Observable<any> {
-    return this.http.get(AddressService.removeDriver() + id + '&adminId=' + AuthService.UserName, httpOptions)
+    return this.http.get(AddressService.removeDriver() + id + '&adminId=' + AuthService.UserId, httpOptions)
       .pipe()
   }
 

@@ -32,12 +32,7 @@ export class MaterialManageComponent implements OnInit {
     this.displayImportDialog = false;
     this.showAlert = false;
 
-    this.inventoryManageService.getIngredientList().subscribe(
-      (materials: Material[]) => {
-        this.materials = materials;
-        this.showPage = true;
-      }
-    );
+    this.getMaterialList();
 
     this.cols = [
       {field: 'id', header: '原料ID'},
@@ -53,6 +48,16 @@ export class MaterialManageComponent implements OnInit {
       {label: '使用中', value: '使用中'},
       {label: '停用中', value: '停用中'},
       ];
+  }
+
+  getMaterialList() {
+    this.inventoryManageService.getIngredientList().subscribe(
+      (materials: Material[]) => {
+        this.materials = materials;
+        this.showPage = true;
+      }
+    );
+
   }
 
   onRowCancel(mat: Material) {
@@ -89,7 +94,9 @@ export class MaterialManageComponent implements OnInit {
           alert(response.errorMsg);
         } else {
           this.displayChangeDialog = false;
+          this.showPage = false;
           this.tempMaterial = null;
+          this.getMaterialList();
         }
       }
     );
@@ -102,7 +109,9 @@ export class MaterialManageComponent implements OnInit {
           alert(response.errorMsg);
         } else {
           this.displayChangeDialog = false;
+          this.showPage = false;
           this.tempMaterial = null;
+          this.getMaterialList();
         }
       }
     );
@@ -132,6 +141,8 @@ export class MaterialManageComponent implements OnInit {
           } else {
             this.selectedFile = null;
             this.displayImportDialog = false;
+            this.showPage = false;
+            this.getMaterialList();
           }
         }
       );

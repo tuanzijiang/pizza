@@ -18,11 +18,15 @@ export class OrderListComponent implements OnInit {
   displayPage: boolean;
   orderListKeys: Array<string>;
   MenuListKeys: Array<string>;
+  orderTranslate: any;
+  showDialog: boolean;
 
   constructor(private translateService: TranslateService, private orderService: OrderService) {
   }
 
   ngOnInit() {
+    this.orders = [];
+    this.showDialog = false;
     this.displayPage = false;
     this.displayDetail = false;
     this.orderListKeys = ['receiveName', 'receivePhone', 'receiveAddress', 'totalAmount', 'menuList', 'buyPhone', 'commitTime', 'shopId', 'driverId', 'startDeliverTime', 'arriveTime', 'state'];
@@ -49,6 +53,24 @@ export class OrderListComponent implements OnInit {
       {label: '待配送', value: '待配送'},
       {label: '商家接单失败', value: '商家接单失败'},
     ];
+    this.orderTranslate = {
+      receiveName: '收货人名称',
+      orderId: '订单号',
+      receivePhone: '收货人电话',
+      receiveAddress: '收货地址',
+      name: '商品名称',
+      price: '单价',
+      count: '数量',
+      totalAmount: '订单总金额',
+      buyPhone: '购买人电话',
+      commitTime: '下单时间',
+      shopId: '商家ID',
+      driverId: '配送员ID',
+      startDeliverTime: '开始配送时间',
+      arriveTime: '送达时间',
+      state: '状态'
+    };
+
     this.orderService.getOrders().subscribe(
       (orders: OrderDetail[]) => {
         this.orders = orders;
