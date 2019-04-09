@@ -6,6 +6,7 @@ import Icon from '@biz-components/Icon';
 import Modal from '@components/Modal';
 import autobind from 'autobind-decorator';
 import cx from 'classnames';
+import Image from '@components/Image';
 
 enum PAY_KIND {
   ALIPAY = 0,
@@ -171,6 +172,7 @@ export default class Pay extends React.PureComponent<PayProps, PayState> {
           const currPizza = pizzas[pizzaId];
           const currNums = menu.num;
           const currNum = currNums[pizzaId];
+          const img = currPizza.img;
 
           if (currNum === 0) {
             return null;
@@ -179,7 +181,9 @@ export default class Pay extends React.PureComponent<PayProps, PayState> {
           return (
             <div className="pay-pizzaItem" key={pizzaId}>
               <div className="pay-pizzaItemImage">
-                <Icon name="pisa" classnames="settlement-pizzaItemPisa" />
+                <Image url={img}>
+                  <Icon name="pisa" classnames="settlement-pizzaItemPisa" />
+                </Image>
               </div>
               <div className="pay-pizzaItemName">
                 {currPizza.name}
