@@ -15,12 +15,12 @@ public class MenuDetailRequest {
     private List<Ingredient> ingredients;
     private double price;
     private String state;
-    private PizzaTag tagName;
+    private String tagName;
 
     public MenuDetailRequest() {
     }
 
-    public MenuDetailRequest( String name, Object image, String description, List<Ingredient> ingredients, double price, String state, PizzaTag tagName) {
+    public MenuDetailRequest( String name, Object image, String description, List<Ingredient> ingredients, double price, String state, String tagName) {
         this.name = name;
         this.image = image;
         this.description = description;
@@ -30,7 +30,7 @@ public class MenuDetailRequest {
         this.tagName = tagName;
     }
 
-    public MenuDetailRequest(String id, String name, Object image, String description, List<Ingredient> ingredients, double price, String state, PizzaTag tagName) {
+    public MenuDetailRequest(String id, String name, Object image, String description, List<Ingredient> ingredients, double price, String state, String tagName) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -97,11 +97,11 @@ public class MenuDetailRequest {
         this.state = state;
     }
 
-    public PizzaTag getTagName() {
+    public String getTagName() {
         return tagName;
     }
 
-    public void setTagName(PizzaTag tagName) {
+    public void setTagName(String tagName) {
         this.tagName = tagName;
     }
 

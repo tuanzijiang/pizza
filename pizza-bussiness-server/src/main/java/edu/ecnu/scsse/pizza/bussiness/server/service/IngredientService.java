@@ -58,7 +58,7 @@ public class IngredientService {
 
     public List<IngredientDetailResponse> getIngredientList(){
         List<IngredientDetailResponse> ingredientList = new ArrayList<>();
-        List<IngredientEntity> ingredientEntityList = ingredientJpaRepository.findAll();
+        List<IngredientEntity> ingredientEntityList = ingredientJpaRepository.findAllIngredients();
         if(ingredientEntityList.size()!=0){
             ingredientList = ingredientEntityList.stream().map(this::convert).collect(Collectors.toList());
         }

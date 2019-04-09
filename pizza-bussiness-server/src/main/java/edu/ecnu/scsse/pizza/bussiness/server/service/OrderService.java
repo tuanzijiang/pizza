@@ -38,19 +38,7 @@ public class OrderService {
     private OrderJpaRepository orderJpaRepository;
 
     @Autowired
-    private UserJpaRepository userJpaRepository;
-
-    @Autowired
     private UserAddressJpaRepository userAddressJpaRepository;
-
-    @Autowired
-    private PizzaShopJpaRepository pizzaShopJpaRepository;
-
-    @Autowired
-    private DriverJpaRepository driverJpaRepository;
-
-    @Autowired
-    private MenuJpaRepository menuJpaRepository;
 
     @Autowired
     private OrderMenuJpaRepository  orderMenuJpaRepository;
@@ -88,13 +76,7 @@ public class OrderService {
 
     public YesterdaySaleResponse getYesterdaySaleStatus(String yesterday) throws ParseException{
         List<SaleStatus> saleStatusList = getSaleStatusList(yesterday,yesterday);
-//        if(saleStatusList.size()!=0)
-            return new YesterdaySaleResponse(saleStatusList.get(0));
-//        else{
-//            NotFoundException e = new NotFoundException("Data is not found.");
-//            log.warn("Fail to find yesterday order data.", e);
-//            return new YesterdaySaleResponse(e);
-//        }
+        return new YesterdaySaleResponse(saleStatusList.get(0));
     }
 
     public List<SaleStatus> getSaleStatusList(String startDate,String endDate) throws ParseException {
@@ -237,82 +219,10 @@ public class OrderService {
         return menu;
     }
 
-    private OrderManageResponse convert(OrderEntity orderEntity){
-        OrderManageResponse response = new OrderManageResponse();
-        CopyUtils.copyProperties(orderEntity, response);
-
-        response.setState(OrderStatus.fromDbValue(orderEntity.getState()).getExpression());
-        response.setOrderId(String.valueOf(orderEntity.getId()));
-
-        //设置收货人信息
-        Optional<UserAddressEntity> userAddressEntityOptional = userAddressJpaRepository.findByUserIdAndAddressId(orderEntity.getUserId(),orderEntity.getAddressId());
-        if(userAddressEntityOptional.isPresent()){
-            UserAddressEntity userAddressEntity = userAddressEntityOptional.get();
-            response.setReceiveName(userAddressEntity.getName());
-            response.setReceivePhone(userAddressEntity.getPhone());
-            response.setReceiveAddress(userAddressEntity.getAddressDetail());
-        }
-
-        //下单时间的格式转换
-        String commitTimePattern = "yyyy/MM/dd hh:MM:ss";
-        DateFormat df = new SimpleDateFormat(commitTimePattern);
-        if(orderEntity.getCommitTime()!=null)
-            response.setCommitTime(df.format(orderEntity.getCommitTime()));
-
-        //设置订购的披萨信息
-        List<MenuDetailResponse> menuList = new ArrayList<>();
-        List<OrderMenuEntity> orderMenuEntityList = orderMenuJpaRepository.findByOrderId(orderEntity.getId());
-        for(OrderMenuEntity orderMenuEntity : orderMenuEntityList){
-            MenuDetailResponse menu = new MenuDetailResponse();
-            menu.setCount(orderMenuEntity.getCount());
-            Optional<MenuEntity> menuEntityOptional = menuJpaRepository.findById(orderMenuEntity.getMenuId());
-            if(menuEntityOptional.isPresent()){
-                MenuEntity menuEntity = menuEntityOptional.get();
-                CopyUtils.copyProperties(menuEntity,menu);
-                menu.setId(String.valueOf(menuEntity.getId()));
-            }
-            menuList.add(menu);
-        }
-        response.setMenuList(menuList);
-
-        //设置购买人电话
-        Optional<UserEntity> userEntityOptional = userJpaRepository.findById(orderEntity.getUserId());
-        if(userEntityOptional.isPresent()) {
-            UserEntity userEntity = userEntityOptional.get();
-            response.setBuyPhone(userEntity.getPhone());
-        }
-
-        //设置商家信息
-        if(orderEntity.getShopId()!=null){
-            response.setShopId(String.valueOf(orderEntity.getShopId()));
-            Optional<PizzaShopEntity> pizzaShopEntityOptional = pizzaShopJpaRepository.findById(orderEntity.getShopId());
-            if(pizzaShopEntityOptional.isPresent()){
-                PizzaShopEntity pizzaShopEntity = pizzaShopEntityOptional.get();
-                response.setShopName(pizzaShopEntity.getName());
-            }
-        }
-
-        //设置配送信息
-        if(orderEntity.getDriverId()!=null){
-            response.setDriverId(String.valueOf(orderEntity.getDriverId()));
-            Optional<DriverEntity> driverEntityOptional = driverJpaRepository.findById(orderEntity.getDriverId());
-            if(driverEntityOptional.isPresent()){
-                DriverEntity driverEntity = driverEntityOptional.get();
-                response.setDriverName(driverEntity.getName());
-                response.setDriverPhone(driverEntity.getPhone());
-            }
-            if(orderEntity.getDeliverStartTime()!=null)
-                response.setStartDeliverTime(df.format(orderEntity.getDeliverStartTime()));
-            if(orderEntity.getDeliverEndTime()!=null)
-                response.setArriveTime(df.format(orderEntity.getDeliverEndTime()));
-        }
-        return response;
-    }
-
     private PendingOrder convertToPendingOrder(OrderEntity orderEntity){
         PendingOrder pendingOrder = new PendingOrder();
         CopyUtils.copyProperties(orderEntity,pendingOrder);
-        pendingOrder.setState(OrderStatus.fromDbValue(orderEntity.getState()));
+        pendingOrder.setState(OrderStatus.fromDbValue(orderEntity.getState()).getExpression());
         pendingOrder.setOrderId(String.valueOf(orderEntity.getId()));
 
         //设置收货人信息
@@ -333,93 +243,13 @@ public class OrderService {
             long cur = (new Date()).getTime();
             double period = (cur-date)/1000/60;
             pendingOrder.setPeriod(period);
-            pendingOrder.setPaidPeriod((int)period+"min");
+            String p;
+            if(period>10)
+                p = ">10min";
+            else
+                p = (int)period+"min";
+            pendingOrder.setPaidPeriod(p);
         }
         return pendingOrder;
-    }
-
-    private Order convertSimple(OrderEntity orderEntity){
-        Order order = new Order();
-        CopyUtils.copyProperties(orderEntity, order);
-
-        order.setState(OrderStatus.fromDbValue(orderEntity.getState()));
-        order.setOrderId(String.valueOf(orderEntity.getId()));
-
-        //设置收货人信息
-        Optional<UserAddressEntity> userAddressEntityOptional = userAddressJpaRepository.findByUserIdAndAddressId(orderEntity.getUserId(),orderEntity.getAddressId());
-        if(userAddressEntityOptional.isPresent()){
-            UserAddressEntity userAddressEntity = userAddressEntityOptional.get();
-            order.setReceiveName(userAddressEntity.getName());
-            order.setReceivePhone(userAddressEntity.getPhone());
-            order.setReceiveAddress(userAddressEntity.getAddressDetail());
-        }
-
-        //下单时间的格式转换
-        String commitTimePattern = "yyyy/MM/dd hh:MM:ss";
-        DateFormat df = new SimpleDateFormat(commitTimePattern);
-        if(orderEntity.getCommitTime()!=null)
-            order.setCommitTime(df.format(orderEntity.getCommitTime()));
-        return order;
-    }
-
-    private Order convertDetail(OrderEntity orderEntity){
-        Date time1 = new Date();
-        Order order = convertSimple(orderEntity);
-        String commitTimePattern = "yyyy/MM/dd hh:MM:ss";
-        DateFormat df = new SimpleDateFormat(commitTimePattern);
-        Date time2 = new Date();
-        //设置订购的披萨信息
-        List<Menu> menuList = new ArrayList<>();
-
-//        List<OrderMenuEntity> orderMenuEntityList = orderMenuJpaRepository.findByOrderId(orderEntity.getId());
-//        for(OrderMenuEntity orderMenuEntity : orderMenuEntityList){
-//            Menu menu = new Menu();
-//            menu.setCount(orderMenuEntity.getCount());
-//            Optional<MenuEntity> menuEntityOptional = menuJpaRepository.findById(orderMenuEntity.getMenuId());
-//            if(menuEntityOptional.isPresent()){
-//                MenuEntity menuEntity = menuEntityOptional.get();
-//                CopyUtils.copyProperties(menuEntity,menu);
-//                menu.setId(String.valueOf(menuEntity.getId()));
-//            }
-//            menuList.add(menu);
-//        }
-        //if(menuList.size()!=0){
-        order.setMenuList(menuList);
-        //}
-        Date time3 = new Date();
-        //设置购买人电话
-        Optional<UserEntity> userEntityOptional = userJpaRepository.findById(orderEntity.getUserId());
-        if(userEntityOptional.isPresent()) {
-            UserEntity userEntity = userEntityOptional.get();
-            order.setBuyPhone(userEntity.getPhone());
-        }
-
-        //设置商家信息
-        if(orderEntity.getShopId()!=null){
-            order.setShopId(String.valueOf(orderEntity.getShopId()));
-            Optional<PizzaShopEntity> pizzaShopEntityOptional = pizzaShopJpaRepository.findById(orderEntity.getShopId());
-            if(pizzaShopEntityOptional.isPresent()){
-                PizzaShopEntity pizzaShopEntity = pizzaShopEntityOptional.get();
-                order.setShopName(pizzaShopEntity.getName());
-            }
-        }
-
-        //设置配送信息
-        if(orderEntity.getDriverId()!=null){
-            order.setDriverId(String.valueOf(orderEntity.getDriverId()));
-            Optional<DriverEntity> driverEntityOptional = driverJpaRepository.findById(orderEntity.getDriverId());
-            if(driverEntityOptional.isPresent()){
-                DriverEntity driverEntity = driverEntityOptional.get();
-                order.setDriverName(driverEntity.getName());
-                order.setDriverPhone(driverEntity.getPhone());
-            }
-            if(orderEntity.getDeliverStartTime()!=null)
-                order.setStartDeliverTime(df.format(orderEntity.getDeliverStartTime()));
-            if(orderEntity.getDeliverEndTime()!=null)
-                order.setArriveTime(df.format(orderEntity.getDeliverEndTime()));
-        }
-        Date time4 = new Date();
-        System.out.println("time:"+(time2.getTime()-time1.getTime())+" "+(time3.getTime()-time2.getTime())+" "+(time4.getTime()-time3.getTime())+" "+time4);
-        return order;
     }
 }

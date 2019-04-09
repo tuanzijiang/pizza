@@ -20,4 +20,9 @@ public interface DriverJpaRepository extends JpaRepository<DriverEntity,Integer>
     @Query(value = "select * from driver where id=?1 for update",nativeQuery = true)
     List<DriverEntity> findDriverByIdForUpdate(int driverId);
 
+    @Query(value = "select driver.id,driver.name,driver.phone,driver.state,shop_id as shopId,pizza_shop.`name` as shopName\n" +
+            "from driver LEFT JOIN pizza_shop\n" +
+            "on driver.shop_id = pizza_shop.id",nativeQuery = true)
+    List<Object[]> findAllDrivers();
+
 }
