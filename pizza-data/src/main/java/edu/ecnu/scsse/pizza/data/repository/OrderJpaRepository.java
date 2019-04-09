@@ -84,7 +84,7 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
     List<OrderEntity> findAllOrders();
 
     @Query(value = "select o.id,o.address_id as addressId,o.state,o.total_price as totalAmount,\n" +
-"o.driver_id as driverId, o.shop_id as shopId, o.commit_time as commitTime,o.deliver_start_time as startDeliverTime, o.deliver_end_time as arriveTime, o.order_uuid as orderUuid,\n" +
+            "o.driver_id as driverId, o.shop_id as shopId, o.commit_time as commitTime,o.deliver_start_time as startDeliverTime, o.deliver_end_time as arriveTime, o.order_uuid as orderUuid,\n" +
             "order_detail.shop_name as shopName,order_detail.buy_phone as buyPhone,\n" +
             "order_detail.receive_name as receiveName,order_detail.receive_phone as receivePhone,order_detail.receive_address as receiveAddress,\n" +
             "order_detail.driver_name as driverName,order_detail.driver_phone as driverPhone\n" +
@@ -95,12 +95,13 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
                     "FROM\n" +
                     "(select order_shop.id,order_shop.shop_name,order_user.buy_phone\n" +
                     "from\n" +
-                    "(select o.id,s.            name as shop_name\n"+
-"from pizza_order as o left join pizza_shop as s\n" +
+                    "(select o.id,s.name as shop_name\n" +
+                    "from pizza_order as o left join pizza_shop as s\n" +
                     "on o.shop_id = s.id) as order_shop\n" +
-                    "LEFT JOIN\n" + "(select o.id,u.phone as buy_phone\n"+
-"from pizza_order as o left join user as u\n"+
-"on o.user_id = u.id) as order_user\n" +
+                    "LEFT JOIN\n" +
+                    "(select o.id,u.phone as buy_phone\n" +
+                    "from pizza_order as o left join user as u\n" +
+                    "on o.user_id = u.id) as order_user\n" +
                     "on order_shop.id = order_user.id\n" +
                     ") as shop_user\n" +
                     "NATURAL JOIN\n" +
