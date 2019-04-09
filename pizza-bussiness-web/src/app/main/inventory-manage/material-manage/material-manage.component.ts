@@ -46,7 +46,7 @@ export class MaterialManageComponent implements OnInit {
     this.status = [
       {label: '请选择状态', value: null},
       {label: '使用中', value: '使用中'},
-      {label: '停用中', value: '停用中'},
+      {label: '已停用', value: '已停用'},
       ];
   }
 
@@ -88,6 +88,7 @@ export class MaterialManageComponent implements OnInit {
 
 
   submitChangedMat() {
+    console.log(this.tempMaterial);
     this.inventoryManageService.editIngredientDetail(this.tempMaterial).subscribe(
       (response: BaseResponse) => {
         if (response.resultType == 'FAILURE') {
