@@ -59,7 +59,7 @@ public class ShopController extends BaseController{
     public ShopDetailResponse editShopDetail(@RequestBody ShopDetailRequest request,@RequestParam int adminId) throws ParseException,BusinessServerException{
         //int adminId = getCurrentAdminId();
         if(adminId!=-1) {
-            return shopService.editShopDetail(request);
+            return shopService.editShopDetail(request, adminId);
         }
         else{
             PermissionException e = new PermissionException("Admin is logout.");
@@ -78,7 +78,7 @@ public class ShopController extends BaseController{
     public ShopDetailResponse addNewShop(@RequestBody ShopDetailRequest request,@RequestParam int adminId) throws ParseException,BusinessServerException{
         //int adminId = getCurrentAdminId();
         if(adminId!=-1) {
-            return shopService.addNewShop(request);
+            return shopService.addNewShop(request, adminId);
         }
         else{
             PermissionException e = new PermissionException("Admin is logout.");

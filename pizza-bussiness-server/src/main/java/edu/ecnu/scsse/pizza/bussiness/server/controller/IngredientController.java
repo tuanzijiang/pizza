@@ -46,8 +46,8 @@ public class IngredientController extends BaseController{
      */
     @RequestMapping(value = "/batchImportByExcelFile",method = RequestMethod.POST)
     @ResponseBody
-    public BatchImportResponse batchImportByExcelFile(@RequestParam MultipartFile file){
-        return ingredientService.batchImportByExcelFile(file);
+    public BatchImportResponse batchImportByExcelFile(@RequestParam MultipartFile file, int adminId){
+        return ingredientService.batchImportByExcelFile(file, adminId);
     }
 
     /**
@@ -60,7 +60,7 @@ public class IngredientController extends BaseController{
     public SimpleResponse editIngredientDetail(@RequestBody IngredientDetailRequest request,@RequestParam int adminId) throws BusinessServerException{
         //int adminId = getCurrentAdminId();
         if (adminId != -1)
-            return ingredientService.editIngredientDetail(request);
+            return ingredientService.editIngredientDetail(request, adminId);
         else {
             PermissionException e = new PermissionException("Admin is logout.");
             log.warn("Admin is logout.", e);
@@ -78,7 +78,7 @@ public class IngredientController extends BaseController{
     public SimpleResponse addNewIngredient(@RequestBody IngredientDetailRequest request,@RequestParam int adminId) throws BusinessServerException{
         //int adminId = getCurrentAdminId();
         if (adminId != -1)
-            return ingredientService.addNewIngredient(request);
+            return ingredientService.addNewIngredient(request, adminId);
         else {
             PermissionException e = new PermissionException("Admin is logout.");
             log.warn("Admin is logout.", e);
@@ -96,7 +96,7 @@ public class IngredientController extends BaseController{
     public SimpleResponse editIngredientStatus(@RequestParam int ingredientId,@RequestParam int adminId) throws BusinessServerException{
         //int adminId = getCurrentAdminId();
         if (adminId != -1)
-            return ingredientService.editIngredientStatus(ingredientId);
+            return ingredientService.editIngredientStatus(ingredientId, adminId);
         else {
             PermissionException e = new PermissionException("Admin is logout.");
             log.warn("Admin is logout.", e);
@@ -126,7 +126,7 @@ public class IngredientController extends BaseController{
     public SimpleResponse buyIngredient(@RequestBody BuyIngredientRequest request,@RequestParam int adminId){
         //int adminId = getCurrentAdminId();
         if(adminId!=-1) {
-            return ingredientService.buyIngredient(request);
+            return ingredientService.buyIngredient(request, adminId);
         }
         else{
             PermissionException e = new PermissionException("Admin is logout.");

@@ -57,7 +57,7 @@ public class OrderServiceTest extends TestApplication {
     private OrderService orderService;
 
     @Test
-    public void testGetOrderList(){
+    public void testGetOrderList() throws Exception{
         List<OrderEntity> orders = FakeFactory.fakeOrders();
         when(orderJpaRepository.findAll()).thenReturn(orders);
         when(userAddressJpaRepository.findByUserIdAndAddressId(anyInt(),anyInt())).thenReturn(Optional.of(FakeAdmin.fakeUserAddress(1,1)));
@@ -71,8 +71,8 @@ public class OrderServiceTest extends TestApplication {
     }
 
     @Test
-    public void testGetOrderDetailByRightMenuId(){
-        OrderDetailResponse orderDetailResponse = orderService.getOrderDetail(1);
+    public void testGetOrderDetailByRightMenuId() throws Exception{
+        OrderManageResponse orderDetailResponse = orderService.getOrderDetail(1);
         //OrderDetailResponse exceptedResponse = new OrderDetailResponse()
         assertEquals(1,Integer.parseInt(orderDetailResponse.getOrderId()));
        // Assert.assertEquals(1,orderDetailResponse.getState().getDbValue());
@@ -85,8 +85,8 @@ public class OrderServiceTest extends TestApplication {
     }
 
     @Test
-    public void testGetOrderDriverInfoByMenuId(){
-        OrderDetailResponse orderDetailResponse = orderService.getOrderDetail(2);
+    public void testGetOrderDriverInfoByMenuId()throws Exception{
+        OrderManageResponse orderDetailResponse = orderService.getOrderDetail(2);
         assertEquals(-1,Integer.parseInt((orderDetailResponse.getDriverId().equals(""))?"-1":orderDetailResponse.getDriverId()));
         assertEquals("13162308625",orderDetailResponse.getDriverPhone());
         assertEquals("cqh",orderDetailResponse.getDriverName());

@@ -5,22 +5,25 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Menu;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.PendingOrder;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.SaleStatus;
-import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ResultType;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.SimpleResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDetailResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.utils.CastEntity;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
+import edu.ecnu.scsse.pizza.data.bean.MenuBean;
+import edu.ecnu.scsse.pizza.data.bean.OrderBean;
 import edu.ecnu.scsse.pizza.data.domain.*;
 import edu.ecnu.scsse.pizza.data.enums.OrderStatus;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.order.*;
+import edu.ecnu.scsse.pizza.data.enums.PizzaStatus;
+import edu.ecnu.scsse.pizza.data.enums.PizzaTag;
 import edu.ecnu.scsse.pizza.data.repository.*;
-import org.aspectj.weaver.ast.Or;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
+import java.lang.reflect.Constructor;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -52,31 +55,35 @@ public class OrderService {
     @Autowired
     private OrderMenuJpaRepository  orderMenuJpaRepository;
 
-    public List<OrderManageResponse> getOrderList(){
+    public List<OrderManageResponse> getOrderList() throws Exception {
+        Date start = new Date();
         List<OrderManageResponse> orderList = new ArrayList<>();
-        List<OrderEntity> orderEntityList = orderJpaRepository.findAllOrders();
-        if(orderEntityList.size()!=0){
-            orderList = orderEntityList.stream().map(this::convert).collect(Collectors.toList());
+        List<Object[]> objects = orderJpaRepository.getOrderBeans();
+        List<OrderBean> orderBeans = CastEntity.castEntityToOrderBean(objects, OrderBean.class);
+        if(orderBeans.size()!=0){
+            orderList = orderBeans.stream().map(this::convertFromBeanToResponse).collect(Collectors.toList());
         }
         else{
             log.warn("Fail to find the order list.");
         }
-
+        Date end = new Date();
+        double time = (end.getTime()-start.getTime())/1000.0;
+        log.info("Query time:"+String.valueOf(time)+"s");
         return orderList;
     }
 
-    public OrderDetailResponse getOrderDetail(int orderId){
-        OrderDetailResponse orderDetailResponse;
-        Optional<OrderEntity> orderEntityOptional = orderJpaRepository.findById(orderId);
-        if(orderEntityOptional.isPresent()){
-            OrderEntity orderEntity = orderEntityOptional.get();
-            orderDetailResponse = new OrderDetailResponse(convertDetail(orderEntity));        }
+    public OrderManageResponse getOrderDetail(int orderId) throws Exception{
+        OrderManageResponse orderManageResponse = new OrderManageResponse();
+        List<Object[]> object = orderJpaRepository.getOrderBeanById(orderId);
+        if(object!=null){
+            OrderBean orderBean = (CastEntity.castEntityToOrderBean(object,OrderBean.class)).get(0);
+            orderManageResponse = convertFromBeanToResponseWithMenuList(orderBean);
+        }
         else{
             NotFoundException e = new NotFoundException("Order detail is not found.");
-            orderDetailResponse = new OrderDetailResponse(e);
             log.warn("Fail to find the order detail.", e);
         }
-        return orderDetailResponse;
+        return orderManageResponse;
     }
 
     public YesterdaySaleResponse getYesterdaySaleStatus(String yesterday) throws ParseException{
@@ -188,6 +195,46 @@ public class OrderService {
             log.warn("Fail to find cancel list.");
         }
         return cancelList;
+    }
+
+
+    private OrderManageResponse convertFromBeanToResponse(OrderBean orderBean){
+        OrderManageResponse response = new OrderManageResponse();
+        CopyUtils.copyProperties(orderBean,response);
+        response.setOrderId(String.valueOf(orderBean.getId()));
+        response.setShopId(String.valueOf(orderBean.getShopId()));
+        response.setDriverId(String.valueOf(orderBean.getDriverId()));
+        response.setState(OrderStatus.fromDbValue(orderBean.getState()).getExpression());
+        String commitTimePattern = "yyyy/MM/dd hh:MM:ss";
+        DateFormat df = new SimpleDateFormat(commitTimePattern);
+        if(orderBean.getCommitTime()!=null)
+            response.setCommitTime(df.format(orderBean.getCommitTime()));
+        if(orderBean.getStartDeliverTime()!=null)
+            response.setStartDeliverTime(df.format(orderBean.getStartDeliverTime()));
+        if(orderBean.getArriveTime()!=null)
+            response.setArriveTime(df.format(orderBean.getArriveTime()));
+        return response;
+    }
+
+    private OrderManageResponse convertFromBeanToResponseWithMenuList(OrderBean orderBean) throws Exception{
+        OrderManageResponse response = convertFromBeanToResponse(orderBean);
+        //设置订购的披萨信息
+        List<MenuDetailResponse> menuList = new ArrayList<>();
+        List<Object[]> objects = orderMenuJpaRepository.findMenuListByOrderId(orderBean.getId());
+        List<MenuBean> menuBeans = CastEntity.castEntityToMenuBean(objects,MenuBean.class);
+        menuList = menuBeans.stream().map(this::convertFromMenuBeanToMenuResponse).collect(Collectors.toList());
+        response.setMenuList(menuList);
+        return response;
+    }
+
+    private MenuDetailResponse convertFromMenuBeanToMenuResponse(MenuBean menuBean){
+        MenuDetailResponse menu = new MenuDetailResponse();
+        CopyUtils.copyProperties(menuBean,menu);
+        menu.setId(String.valueOf(menuBean.getMenuId()));
+        menu.setIngredients(new ArrayList<>());
+        menu.setState(PizzaStatus.fromDbValue(menuBean.getState()).getExpression());
+        menu.setTagName(PizzaTag.fromDbValue(menuBean.getTag()).getExpression());
+        return menu;
     }
 
     private OrderManageResponse convert(OrderEntity orderEntity){
@@ -316,28 +363,30 @@ public class OrderService {
     }
 
     private Order convertDetail(OrderEntity orderEntity){
+        Date time1 = new Date();
         Order order = convertSimple(orderEntity);
         String commitTimePattern = "yyyy/MM/dd hh:MM:ss";
         DateFormat df = new SimpleDateFormat(commitTimePattern);
-
+        Date time2 = new Date();
         //设置订购的披萨信息
         List<Menu> menuList = new ArrayList<>();
-        List<OrderMenuEntity> orderMenuEntityList = orderMenuJpaRepository.findByOrderId(orderEntity.getId());
-        for(OrderMenuEntity orderMenuEntity : orderMenuEntityList){
-            Menu menu = new Menu();
-            menu.setCount(orderMenuEntity.getCount());
-            Optional<MenuEntity> menuEntityOptional = menuJpaRepository.findById(orderMenuEntity.getMenuId());
-            if(menuEntityOptional.isPresent()){
-                MenuEntity menuEntity = menuEntityOptional.get();
-                CopyUtils.copyProperties(menuEntity,menu);
-                menu.setId(String.valueOf(menuEntity.getId()));
-            }
-            menuList.add(menu);
-        }
+
+//        List<OrderMenuEntity> orderMenuEntityList = orderMenuJpaRepository.findByOrderId(orderEntity.getId());
+//        for(OrderMenuEntity orderMenuEntity : orderMenuEntityList){
+//            Menu menu = new Menu();
+//            menu.setCount(orderMenuEntity.getCount());
+//            Optional<MenuEntity> menuEntityOptional = menuJpaRepository.findById(orderMenuEntity.getMenuId());
+//            if(menuEntityOptional.isPresent()){
+//                MenuEntity menuEntity = menuEntityOptional.get();
+//                CopyUtils.copyProperties(menuEntity,menu);
+//                menu.setId(String.valueOf(menuEntity.getId()));
+//            }
+//            menuList.add(menu);
+//        }
         //if(menuList.size()!=0){
         order.setMenuList(menuList);
         //}
-
+        Date time3 = new Date();
         //设置购买人电话
         Optional<UserEntity> userEntityOptional = userJpaRepository.findById(orderEntity.getUserId());
         if(userEntityOptional.isPresent()) {
@@ -369,6 +418,8 @@ public class OrderService {
             if(orderEntity.getDeliverEndTime()!=null)
                 order.setArriveTime(df.format(orderEntity.getDeliverEndTime()));
         }
+        Date time4 = new Date();
+        System.out.println("time:"+(time2.getTime()-time1.getTime())+" "+(time3.getTime()-time2.getTime())+" "+(time4.getTime()-time3.getTime())+" "+time4);
         return order;
     }
 }

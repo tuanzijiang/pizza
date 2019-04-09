@@ -69,6 +69,7 @@ public class DriverServiceTest extends TestApplication {
     @Test
     public void testEditDriverWithWrongId() throws BusinessServerException{
         int driverId = 1;
+        int adminId = 1;
         String driverName = "newName";
         DriverEntity driverEntity = FakeFactory.fakeDriver(driverId);
         driverEntity.setName(driverName);
@@ -78,13 +79,14 @@ public class DriverServiceTest extends TestApplication {
 
         when(driverJpaRepository.findById(driverId)).thenReturn(Optional.empty());
 
-        DriverDetailResponse response = mockDriverService.editDriverDetail(request);
+        DriverDetailResponse response = mockDriverService.editDriverDetail(request,adminId);
         assertEquals(ResultType.FAILURE,response.getResultType());
     }
 
     @Test
     public void testEditDriverDetailByName() throws BusinessServerException{
         int driverId = 1;
+        int adminId = 1;
         String driverName = "newName";
         DriverEntity driverEntity = FakeFactory.fakeDriver(driverId);
         driverEntity.setName(driverName);
@@ -95,7 +97,7 @@ public class DriverServiceTest extends TestApplication {
         when(driverJpaRepository.findById(driverId)).thenReturn(Optional.of(driverEntity));
         when(driverJpaRepository.saveAndFlush(driverEntity)).thenReturn(driverEntity);
 
-        DriverDetailResponse response = mockDriverService.editDriverDetail(request);
+        DriverDetailResponse response = mockDriverService.editDriverDetail(request,adminId);
         assertEquals(ResultType.SUCCESS,response.getResultType());
         assertEquals(response.getDriverId(),driverId);
     }
@@ -103,13 +105,14 @@ public class DriverServiceTest extends TestApplication {
     @Test
     public void testAddNewDriver() throws BusinessServerException{
         int driverId = 1;
+        int adminId = 1;
         DriverEntity driverEntity = FakeFactory.fakeDriver(driverId);
         CopyUtils.copyProperties(driverEntity,request);
         request.setDriverId(driverId);
 
         when(driverJpaRepository.saveAndFlush(driverEntity)).thenReturn(driverEntity);
 
-        DriverDetailResponse response = mockDriverService.addNewDriver(request);
+        DriverDetailResponse response = mockDriverService.addNewDriver(request,adminId);
         assertEquals(ResultType.SUCCESS,response.getResultType());
     }
 }
