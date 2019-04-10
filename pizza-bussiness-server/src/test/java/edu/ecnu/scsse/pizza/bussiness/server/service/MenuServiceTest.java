@@ -8,6 +8,7 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ResultType;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.SimpleResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDetailRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDetailResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.NewMenuResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
 import edu.ecnu.scsse.pizza.data.domain.IngredientEntity;
 import edu.ecnu.scsse.pizza.data.domain.MenuEntity;
@@ -160,7 +161,7 @@ public class MenuServiceTest extends TestApplication{
         when(menuJpaRepository.saveAndFlush(menuEntity)).thenReturn(menuEntity);
         when(menuIngredientJpaRepository.saveAndFlush(menuIngredients.get(0))).thenReturn(menuIngredients.get(0));
 
-        SimpleResponse response = mockMenuService.addNewMenu(request,adminId);
+        NewMenuResponse response = mockMenuService.addNewMenu(request,adminId);
         assertEquals(ResultType.SUCCESS,response.getResultType());
     }
 }

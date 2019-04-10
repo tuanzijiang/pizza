@@ -12,6 +12,7 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.SimpleRespon
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.admin.LoginRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDetailRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDetailResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.NewMenuResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.service.AdminService;
 import edu.ecnu.scsse.pizza.bussiness.server.service.MenuService;
 import edu.ecnu.scsse.pizza.data.enums.PizzaStatus;
@@ -116,7 +117,7 @@ public class MenuControllerTest{
     @Test
     public void testAddNewMenu()throws Exception{
         MenuDetailRequest request=new MenuDetailRequest();
-        SimpleResponse response=new SimpleResponse();
+        NewMenuResponse response=new NewMenuResponse();
         ObjectMapper mapper = new ObjectMapper();
         String requestBody = mapper.writeValueAsString(request);
         when(menuService.addNewMenu(eq(request), anyInt())).thenReturn(response);

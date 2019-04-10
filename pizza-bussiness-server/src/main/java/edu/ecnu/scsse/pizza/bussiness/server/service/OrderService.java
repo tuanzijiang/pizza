@@ -76,48 +76,22 @@ public class OrderService {
     }
 
     public YesterdaySaleResponse getYesterdaySaleStatus(String yesterday) throws ParseException{
-        List<SaleStatus> saleStatusList = getSaleStatusList(yesterday,yesterday);
-        return new YesterdaySaleResponse(saleStatusList.get(0));
+        SaleStatus saleStatus = getDaySaleStatus(yesterday);
+        return new YesterdaySaleResponse(saleStatus);
     }
 
-    public List<SaleStatus> getSaleStatusList(String startDate,String endDate) throws ParseException {
+    public List<SaleStatus> getSaleStatusList(String startDate,String endDate) throws ParseException,Exception {
         List<SaleStatus> saleStatusList = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-        long end = sdf.parse(endDate).getTime();
-        long start = sdf.parse(startDate).getTime();
-        int days = (int)((end-start)/(1000 * 60 * 60 * 24))+1;
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(sdf.parse(startDate));
-        for(int i=0;i<days;i++){
-            String date = sdf.format(calendar.getTime());
-            SaleStatus saleStatus = getDaySaleStatus(date);
-            //if(saleStatus.getOrderNum()!=0)
-            saleStatusList.add(saleStatus);
-            calendar.add(Calendar.DATE,+1);
-        }
+        List<Object[]> objects = orderJpaRepository.getSaleStatus();
+        saleStatusList = CastEntity.castEntity(objects,SaleStatus.class);
         return saleStatusList;
     }
 
     private SaleStatus getDaySaleStatus(String date){
-        List<OrderEntity> orderEntityList = orderJpaRepository.findOrderByCommitTime(date);
-        int orderNum = orderEntityList.size();
-        int completeNum = 0;
-        int cancelNum = 0;
-        double totalAmount = 0;
-        for(OrderEntity orderEntity : orderEntityList){
-            switch (OrderStatus.fromDbValue(orderEntity.getState())){
-                case RECEIVED:
-                    completeNum++;
-                    break;
-                case CANCELED:
-                    cancelNum++;
-                    break;
-                default:
-                    break;
-            }
-            if(orderEntity.getTotalPrice()!=null)
-                totalAmount += orderEntity.getTotalPrice();
-        }
+        int orderNum = orderJpaRepository.findTotalOrdersByCommitTime(date);
+        int completeNum = orderJpaRepository.findTotalOrdersByCommitTimeAndState(date,9);
+        int cancelNum = orderJpaRepository.findTotalOrdersByCommitTimeAndState(date,5);
+        double totalAmount = orderJpaRepository.findTotalAmountByCommitTime(date);
         return new SaleStatus(date,orderNum, completeNum, cancelNum, totalAmount);
     }
 
