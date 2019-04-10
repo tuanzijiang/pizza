@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,11 +51,13 @@ public class UserManageService {
         if(userEntity.getBirthday()!=null){
             String birthdayPattern = "yyyy/MM/dd";
             DateFormat df = new SimpleDateFormat(birthdayPattern);
+            df.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
             user.setBirthday(df.format(userEntity.getBirthday()));
         }
         if(userEntity.getLatestLoginTime()!=null){
-            String loginTimePattern = "yyyy/MM/dd hh:MM:ss";
+            String loginTimePattern = "yyyy/MM/dd HH:mm:ss";
             DateFormat df2 = new SimpleDateFormat(loginTimePattern);
+            df2.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
             user.setLatestLoginTime(df2.format(userEntity.getLatestLoginTime()));
         }
 
