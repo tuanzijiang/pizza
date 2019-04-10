@@ -639,8 +639,8 @@
           "nested": {
             "payType": {
               "values": {
-                "app": 0,
-                "pc": 1
+                "MOBILE": 0,
+                "PC": 1
               }
             }
           }

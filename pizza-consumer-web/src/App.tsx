@@ -56,7 +56,7 @@ export default class App extends React.PureComponent<AppProps, AppState> {
             <Switch>
               <Route component={isPc ? LoginPagePc : LoginPageMobile} path="/LoginAssets" />
               <Route component={isPc ? MainPagePc : MainPageMobile} path="/MainAssets" />
-              <Route component={isPc ? PaySuccessPc : PaySuccessMobile} path="/MainAssets" />
+              <Route component={isPc ? PaySuccessPc : PaySuccessMobile} path="/PaySuccess" />
               <Redirect to={{
                 pathname: '/LoginAssets',
               }} />
