@@ -18,6 +18,8 @@ public class CastEntity {
 
     private static Class[] driverBeanClass = new Class[]{Integer.class,String.class,String.class,Integer.class,Integer.class,String.class};
 
+    private static Class[] alarmClass = new Class[]{Integer.class,String.class,Integer.class,String.class,Integer.class,Integer.class};
+
     //转换OrderBean
     public static <T> List<T> castEntityToOrderBean(List<Object[]> list, Class<T> clazz) throws Exception {
         List<T> returnList = new ArrayList<T>();
@@ -61,6 +63,19 @@ public class CastEntity {
     public static <T> List<T> castEntityToDriverBean(List<Object[]> list, Class<T> clazz) throws Exception {
         List<T> returnList = new ArrayList<T>();
         Class[] c2 = driverBeanClass;
+
+        for (Object[] o : list) {
+            Constructor<T> constructor = clazz.getConstructor(c2);
+            returnList.add(constructor.newInstance(o));
+        }
+
+        return returnList;
+    }
+
+    //转换AlarmBean
+    public static <T> List<T> castEntityToAlarmBean(List<Object[]> list, Class<T> clazz) throws Exception {
+        List<T> returnList = new ArrayList<T>();
+        Class[] c2 = alarmClass;
 
         for (Object[] o : list) {
             Constructor<T> constructor = clazz.getConstructor(c2);

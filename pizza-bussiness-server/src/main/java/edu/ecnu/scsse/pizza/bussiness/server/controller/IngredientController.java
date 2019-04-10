@@ -112,7 +112,7 @@ public class IngredientController extends BaseController{
      */
     @RequestMapping(value = "/getAlarmList",method = RequestMethod.GET)
     @ResponseBody
-    public List<ShopIngredient> getAlarmList(){
+    public List<ShopIngredient> getAlarmList() throws Exception{
         return ingredientService.getAlarmList();
     }
 

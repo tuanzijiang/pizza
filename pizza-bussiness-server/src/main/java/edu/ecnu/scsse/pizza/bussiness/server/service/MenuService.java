@@ -14,6 +14,7 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDet
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuManageResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Ingredient;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Menu;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.NewMenuResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.CastEntity;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
 import edu.ecnu.scsse.pizza.data.bean.IngredientBean;
@@ -38,6 +39,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -172,24 +174,21 @@ public class MenuService extends SessionService {
         return response;
     }
 
-    public SimpleResponse addNewMenu(MenuDetailRequest request, int adminId) throws BusinessServerException{
-        SimpleResponse response;
+    public NewMenuResponse addNewMenu(MenuDetailRequest request, int adminId) throws BusinessServerException{
+        NewMenuResponse response;
         Menu menu = new Menu(request);
         String type = OperateType.INSERT.getExpression();//操作类型
         String object = OperateObject.MENU.getExpression();//操作对象
         try {
             //获得菜品信息
-            response = new SimpleResponse();
+            response = new NewMenuResponse();
             MenuEntity menuEntity = new MenuEntity();
             CopyUtils.copyProperties(menu,menuEntity);
             menuEntity.setState(menu.getState().getDbValue());
             menuEntity.setTag(menu.getTagName().getDbValue());
-
-            //获得菜品图片信息
-            MultipartFile imageFile = (MultipartFile)request.getImage();
-            uploadMenuImageFile(imageFile,menuEntity);
             menuJpaRepository.saveAndFlush(menuEntity);
             int menuId = menuEntity.getId();
+            response.setMenuId(menuId);
             //获得菜品原料信息
             List<Ingredient> ingredientList = request.getIngredients();//披萨的原料列表
             for(Ingredient ingredient:ingredientList) {
@@ -223,53 +222,40 @@ public class MenuService extends SessionService {
         return response;
     }
 
-    public String uploadImage(MultipartFile file){
-        String msg;
-        if (file.isEmpty())
-            msg = "Failed: empty file.";
-        else{
-            try {
+    public SimpleResponse uploadMenuImageFile(MultipartFile file, int menuId){
+        SimpleResponse response = new SimpleResponse();
+        if (file==null||file.isEmpty())
+            return new SimpleResponse(new NotFoundException("File not found."));
+        try {
+            Optional<MenuEntity> optional = menuJpaRepository.findById(menuId);
+            MenuEntity entity;
+            if(optional.isPresent()){
+                entity = optional.get();
                 // Get the file and save it somewhere
                 byte[] bytes = file.getBytes();
                 Path currentDir = Paths.get(".");
-                String p = currentDir.toAbsolutePath().toString()+"\\pizza-bussiness-server\\src\\main\\resources\\img\\";
-                Path path = Paths.get(p + file.getOriginalFilename());
-                Files.write(path, bytes);
-                //entity.setImage(path.toString());
-                msg = "Success: upload file successfully.";
-
-            } catch (IOException e) {
-                msg = e.getMessage();
-                e.printStackTrace();
-            }
-        }
-        return msg;
-    }
-
-    private String uploadMenuImageFile(MultipartFile file, MenuEntity entity){
-        String msg;
-        if (file==null||file.isEmpty()) {
-            entity.setImage("");
-            msg = "Failed: empty file.";
-        }
-        else{
-            try {
-                // Get the file and save it somewhere
-                byte[] bytes = file.getBytes();
-                Path currentDir = Paths.get(".");
-                String p = currentDir.toAbsolutePath().toString()+"\\pizza-bussiness-server\\src\\main\\resources\\img\\";
-                Path path = Paths.get(p + file.getOriginalFilename());
+                String p = currentDir.toAbsolutePath().toString()+"\\pizza-bussiness-server\\src\\main\\resources\\img\\menu\\";
+                Date date = new Date();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+                String dateMark = sdf.format(date);
+                String fileName = dateMark+file.getOriginalFilename();
+                Path path = Paths.get(p + fileName);
                 Files.write(path, bytes);
                 //将图片名称保存至数据库
-                entity.setImage(file.getOriginalFilename());
-                msg = "Success: upload file successfully.";
-
-            } catch (IOException e) {
-                msg = e.getMessage();
-                e.printStackTrace();
+                entity.setImage(fileName);
+                menuJpaRepository.saveAndFlush(entity);
+                response.setResultType(ResultType.SUCCESS);
             }
+            else{
+                return new SimpleResponse(new NotFoundException("Menu not found."));
+            }
+        } catch (IOException e) {
+            String msg = e.getMessage();
+            response.setResultType(ResultType.FAILURE);
+            response.setErrorMsg(msg);
+            e.printStackTrace();
         }
-        return msg;
+        return response;
     }
 
     private MenuDetailResponse convert(MenuEntity menuEntity){
@@ -278,6 +264,9 @@ public class MenuService extends SessionService {
         menu.setId(String.valueOf(menuEntity.getId()));
         menu.setState(PizzaStatus.fromDbValue(menuEntity.getState()).getExpression());
         menu.setTagName(PizzaTag.fromDbValue(menuEntity.getTag()).getExpression());
+        Path currentDir = Paths.get(".");
+        String p = currentDir.toAbsolutePath().toString()+"\\pizza-bussiness-server\\src\\main\\resources\\img\\menu\\";
+        menu.setImage(p+menuEntity.getImage());
         try {
             List<IngredientDetailResponse> ingredientList = new ArrayList<>();
             List<Object[]> objects = ingredientJpaRepository.findIngredientsByMenuId(menuEntity.getId());
