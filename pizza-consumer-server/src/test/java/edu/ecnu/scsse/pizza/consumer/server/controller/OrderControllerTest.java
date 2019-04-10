@@ -422,15 +422,15 @@ public class OrderControllerTest {
         verify(service).payRequest(ORDER_ID, price);
 
     }
-        @Test
-    public void paid() throws Exception {
-        mvc.perform(post("/paid")
-                .accept(MediaType.APPLICATION_JSON_UTF8)
-                .characterEncoding("UTF-8")
-                .contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk())
-                .andExpect(view().name("success"));
-
-        verify(service).paid(any());
-    }
+//        @Test
+//    public void paid() throws Exception {
+//        mvc.perform(post("/paid")
+//                .accept(MediaType.APPLICATION_JSON_UTF8)
+//                .characterEncoding("UTF-8")
+//                .contentType(MediaType.APPLICATION_JSON_UTF8))
+//                .andExpect(status().isOk())
+//                .andExpect(view().name("success"));
+//
+//        verify(service).paid(any());
+//    }
 }

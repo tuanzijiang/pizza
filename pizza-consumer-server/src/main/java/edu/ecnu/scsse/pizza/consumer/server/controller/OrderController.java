@@ -175,14 +175,14 @@ public class OrderController {
         }
 
     }
-
-    /**
-     * 支付宝 notify_url（异步通知），表示支付完成，可更新数据库状态。
-     */
-    @RequestMapping(value = "/paid", method = RequestMethod.POST)
-    @ResponseBody
-    public String paid(HttpServletRequest request) {
-        orderService.paid(request);
-        return "success";
-    }
+//
+//    /**
+//     * 支付宝 notify_url（异步通知），表示支付完成，可更新数据库状态。
+//     */
+//    @RequestMapping(value = "/paid", method = RequestMethod.POST)
+//    @ResponseBody
+//    public String paid(HttpServletRequest request) {
+//        orderService.paid(request);
+//        return "success";
+//    }
 }

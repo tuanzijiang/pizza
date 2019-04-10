@@ -281,7 +281,6 @@ public class OrderService {
         model.setTotalAmount(String.valueOf(totalPrice));
         model.setProductCode(AlipayConfig.PRODUCT_CODE);
         alipayRequest.setBizModel(model);
-        alipayRequest.setNotifyUrl(AlipayConfig.NOTIFY_URL);
         alipayRequest.setReturnUrl(AlipayConfig.RETURN_URL);
 
         try {
@@ -292,56 +291,14 @@ public class OrderService {
                 throw payFailureException;
             }
 
+            orderJpaRepository.updateStateAndTotalPriceByOrderUuid(OrderStatus.PAID.getDbValue(),
+                    totalPrice, orderUuid);
             return response.getBody();
         } catch (AlipayApiException e) {
             PayFailureException payFailureException =  new PayFailureException(e);
             log.error("Pay Failure. orderUuid = [{}].", orderUuid, payFailureException);
             throw payFailureException;
         }
-    }
-
-    public boolean paid(HttpServletRequest request) {
-        //获取支付宝POST过来反馈信息
-        Map<String, String> params = new HashMap<>();
-        Map requestParams = request.getParameterMap();
-        for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext(); ) {
-            String name = (String) iter.next();
-            String[] values = (String[]) requestParams.get(name);
-            String valueStr = "";
-            for (int i = 0; i < values.length; i++) {
-                valueStr = (i == values.length - 1) ? valueStr + values[i]
-                        : valueStr + values[i] + ",";
-            }
-            //乱码解决，这段代码在出现乱码时使用。
-            //valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
-            params.put(name, valueStr);
-        }
-//        //切记alipaypublickey是支付宝的公钥，请去open.alipay.com对应应用下查看。
-//        //boolean AlipaySignature.rsaCheckV1(Map<String, String> params, String publicKey, String charset, String sign_type)
-//        boolean signVerified = false;
-//        try {
-//            signVerified = AlipaySignature.rsaCheckV1(params, AlipayConfig.ALIPAY_PUBLIC_KEY, AlipayConfig.CHARSET, AlipayConfig.SIGNTYPE);
-//        } catch (AlipayApiException e) {
-//            log.error("Fail in rsa check. orderUuid = [{}].", params.get("out_trade_no"), e);
-//        }
-//
-//        if (signVerified) {
-            try {
-                //商户订单号
-                String orderUuid = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"), "UTF-8");
-                //付款金额
-                String totalPriceStr = new String(request.getParameter("total_amount").getBytes("ISO-8859-1"), "UTF-8");
-
-                return orderJpaRepository.updateStateAndTotalPriceByOrderUuid(OrderStatus.PAID.getDbValue(),
-                        Double.valueOf(totalPriceStr), orderUuid) > 0;
-            } catch (UnsupportedEncodingException e) {
-                log.error("Check Encoding!", e);
-            }
-//        } else {
-//            log.warn("Fail during sign verify. params={}", GSON.toJson(params));
-//        }
-
-        return false;
     }
 
     public static class Phones {
