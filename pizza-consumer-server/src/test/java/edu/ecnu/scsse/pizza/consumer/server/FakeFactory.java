@@ -5,9 +5,12 @@ import edu.ecnu.scsse.pizza.consumer.server.exception.ExceptionType;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Order;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Pizza;
 import edu.ecnu.scsse.pizza.consumer.server.service.OrderService;
+import edu.ecnu.scsse.pizza.data.bean.PizzaBean;
+import edu.ecnu.scsse.pizza.data.bean.UserAddressBean;
 import edu.ecnu.scsse.pizza.data.domain.*;
 import edu.ecnu.scsse.pizza.data.enums.OrderStatus;
 import edu.ecnu.scsse.pizza.data.enums.PizzaStatus;
+import edu.ecnu.scsse.pizza.data.enums.Sex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,6 +107,17 @@ public class FakeFactory {
         return Optional.of(order);
     }
 
+    public static Optional<UserAddressBean> fakeUserAddressBean(Integer userId, Integer addressId) {
+        UserAddressBean entity = new UserAddressBean();
+        entity.setId(userId * 10 + addressId);
+        entity.setAddressDetail("ADDRESS DETAIL");
+        entity.setAddress("ADDRESS");
+        entity.setName("NAME");
+        entity.setPhone("PHONE");
+        entity.setSex(Sex.FEMALE.getDbValue());
+        return Optional.of(entity);
+    }
+
     public static Optional<UserAddressEntity> fakeUserAddressEntity(Integer userId, Integer addressId) {
         UserAddressEntity entity = new UserAddressEntity();
         entity.setId(addressId);
@@ -140,6 +154,17 @@ public class FakeFactory {
             e.setOrderId(i);
             e.setMenuId(i);
             e.setCount(1);
+            entities.add(e);
+        });
+        return entities;
+    }
+
+    public static List<PizzaBean> fakePizzaBeans(List<Integer> menuIds) {
+        List<PizzaBean> entities = new ArrayList<>();
+        menuIds.stream().forEach(i -> {
+            PizzaBean e = new PizzaBean();
+            e.setId(i);
+            e.setName("pizza" + i);
             entities.add(e);
         });
         return entities;

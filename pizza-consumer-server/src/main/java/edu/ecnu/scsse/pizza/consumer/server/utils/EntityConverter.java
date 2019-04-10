@@ -4,6 +4,8 @@ import edu.ecnu.scsse.pizza.consumer.server.model.entity.Address;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Order;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Pizza;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.User;
+import edu.ecnu.scsse.pizza.data.bean.PizzaBean;
+import edu.ecnu.scsse.pizza.data.bean.UserAddressBean;
 import edu.ecnu.scsse.pizza.data.domain.*;
 import edu.ecnu.scsse.pizza.data.enums.OrderStatus;
 import edu.ecnu.scsse.pizza.data.enums.PizzaStatus;
@@ -41,14 +43,35 @@ public class EntityConverter {
     public static Address convert(UserAddressEntity userAddressEntity, AddressEntity addressEntity) {
         Address address = new Address();
 
-        address.setAddress(addressEntity.getAddress());
-
         address.setId(userAddressEntity.getId());
         address.setAddressDetail(userAddressEntity.getAddressDetail());
         address.setName(userAddressEntity.getName());
+        address.setSex(Sex.fromDbValue(userAddressEntity.getSex()));
         address.setPhone(userAddressEntity.getPhone());
 
-        address.setSex(Sex.fromDbValue(userAddressEntity.getSex()));
+        address.setAddress(addressEntity.getAddress());
+
+
+        return address;
+    }
+
+    /**
+     * Construct Address.
+     *
+     * @param userAddressBean userAddressBean
+     * @return Address
+     */
+    public static Address convert(UserAddressBean userAddressBean) {
+        Address address = new Address();
+
+        address.setAddress(userAddressBean.getAddress());
+
+        address.setId(userAddressBean.getId());
+        address.setAddressDetail(userAddressBean.getAddressDetail());
+        address.setName(userAddressBean.getName());
+        address.setPhone(userAddressBean.getPhone());
+
+        address.setSex(Sex.fromDbValue(userAddressBean.getSex()));
 
         return address;
     }
@@ -83,14 +106,34 @@ public class EntityConverter {
             pizza.setDescription(menuEntity.getDescription());
             pizza.setImg(menuEntity.getImage());
             pizza.setPrice(menuEntity.getPrice());
-            pizza.setState(PizzaStatus.fromDbValue(menuEntity.getState()));
             pizza.setTag(PizzaTag.fromDbValue(menuEntity.getTag()).getExpression());
+            pizza.setState(PizzaStatus.fromDbValue(menuEntity.getState()));
         }
 
         return pizza;
     }
 
-    public static User convert (UserEntity userEntity) {
+    /**
+     * Construct Pizza.
+     *
+     * @param pizzaBean pizzaBean
+     * @return Pizza
+     */
+    public static Pizza convert(PizzaBean pizzaBean) {
+        Pizza pizza = new Pizza();
+        pizza.setCount(pizzaBean.getCount());
+        pizza.setId(pizzaBean.getId());
+        pizza.setName(pizzaBean.getName());
+        pizza.setDescription(pizzaBean.getDescription());
+        pizza.setImg(pizzaBean.getImg());
+        pizza.setPrice(pizzaBean.getPrice());
+        pizza.setState(PizzaStatus.fromDbValue(pizzaBean.getState()));
+        pizza.setTag(PizzaTag.fromDbValue(pizzaBean.getTag()).getExpression());
+
+        return pizza;
+    }
+
+    public static User convert(UserEntity userEntity) {
         User user = new User(userEntity.getId(), userEntity.getName(), userEntity.getPhone(),
                 userEntity.getEmail(), userEntity.getBirthday(), userEntity.getCity(), userEntity.getImage());
         return user;

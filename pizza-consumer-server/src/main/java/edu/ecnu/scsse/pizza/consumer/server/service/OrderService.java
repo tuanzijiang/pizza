@@ -18,6 +18,8 @@ import edu.ecnu.scsse.pizza.consumer.server.model.entity.Pizza;
 import edu.ecnu.scsse.pizza.consumer.server.utils.AlipayConfig;
 import edu.ecnu.scsse.pizza.consumer.server.utils.EntityConverter;
 import edu.ecnu.scsse.pizza.consumer.server.utils.HttpUtils;
+import edu.ecnu.scsse.pizza.data.bean.PizzaBean;
+import edu.ecnu.scsse.pizza.data.bean.UserAddressBean;
 import edu.ecnu.scsse.pizza.data.domain.*;
 import edu.ecnu.scsse.pizza.data.enums.*;
 import edu.ecnu.scsse.pizza.data.repository.*;
@@ -48,21 +50,11 @@ public class OrderService {
 
     private static final String SERVICE_PHONE = "021-9999-9999";
 
-    private final ExecutorService WORKER = Executors.newFixedThreadPool(8, r -> {
-        Thread thread = new Thread(r);
-        thread.setDaemon(true);
-        thread.setName("order-service-query-worker-" + WORKER_COUNTER.incrementAndGet());
-        return thread;
-    });
-
     @Autowired
     private OrderJpaRepository orderJpaRepository;
 
     @Autowired
     private UserAddressJpaRepository userAddressJpaRepository;
-
-    @Autowired
-    private AddressJpaRepository addressJpaRepository;
 
     @Autowired
     private OrderMenuJpaRepository orderMenuJpaRepository;
@@ -89,17 +81,9 @@ public class OrderService {
             Order order = EntityConverter.convert(entity);
             if (order.getStatus() != OrderStatus.CART) {
                 // query Address
-                Future queryFuture = WORKER.submit(() -> this.supplementAddress(entity, order));
+                this.supplementAddress(entity, order);
                 // query Pizzas
                 this.supplementPizzas(entity, order, order.getStatus() == OrderStatus.CART);
-
-                try {
-                    queryFuture.get(1, TimeUnit.SECONDS);
-                } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                    throw new ConsumerServerException(ExceptionType.REPOSITORY,
-                            "Fail to query Address while assembling the order entity."
-                            , e);
-                }
             } else {
                 // query Pizzas
                 this.supplementPizzas(entity, order, order.getStatus() == OrderStatus.CART);
@@ -174,6 +158,9 @@ public class OrderService {
         }
         return result;
     }
+
+
+
 
     /**
      * Query pizza menus.
@@ -326,8 +313,8 @@ public class OrderService {
         model.setSubject(AlipayConfig.SUBJECT);
         model.setTotalAmount(String.valueOf(totalPrice));
         model.setProductCode(AlipayConfig.PRODUCT_CODE);
-        request.setBizModel(model);
         request.setReturnUrl(AlipayConfig.RETURN_URL);
+        request.setBizModel(model);
         return request;
     }
 
@@ -437,20 +424,11 @@ public class OrderService {
      * @param order order to supplement.
      */
     private void supplementAddress(OrderEntity entity, Order order) {
-        Optional<UserAddressEntity> userAddressEntityOptional =
-                userAddressJpaRepository.findByUserIdAndAddressId(entity.getUserId(), entity.getAddressId());
-        if (userAddressEntityOptional.isPresent()) {
-            UserAddressEntity userAddressEntity = userAddressEntityOptional.get();
-
-            Optional<AddressEntity> addressEntityOptional =
-                    addressJpaRepository.findById(userAddressEntity.getAddressId());
-            addressEntityOptional.ifPresent(addressEntity -> order.setAddress(EntityConverter.convert(userAddressEntity, addressEntity)));
-
-            if (addressEntityOptional.isPresent()) {
-                AddressEntity addressEntity = addressEntityOptional.get();
-                order.setAddress(EntityConverter.convert(userAddressEntity, addressEntity));
-            }
-        }
+        Optional<UserAddressBean> userAddressBean =
+                userAddressJpaRepository.findUserAddressBeanByUserIdAndAddressId(entity.getUserId(), entity.getAddressId());
+        userAddressBean.ifPresent(addressEntity -> {
+            order.setAddress(EntityConverter.convert(addressEntity));
+        });
     }
 
     /**
@@ -488,32 +466,20 @@ public class OrderService {
      * @param order order to supplement.
      */
     private void supplementPizzas(OrderEntity entity, Order order, boolean onlyOnSale) {
-        List<OrderMenuEntity> orderMenuEntities = orderMenuJpaRepository.findByOrderId(entity.getId());
-        if (!CollectionUtils.isEmpty(orderMenuEntities)) {
-            List<MenuEntity> menuEntities = null;
-            if (onlyOnSale) {
-                menuEntities = menuJpaRepository.findAllByStateAndIdIn(
-                        PizzaStatus.IN_SALE.getDbValue(),
-                        orderMenuEntities.stream()
-                                .mapToInt(OrderMenuEntity::getMenuId)
-                                .boxed().collect(Collectors.toSet()));
-            } else {
-                menuEntities = menuJpaRepository.findAllById(
-                        orderMenuEntities.stream()
-                                .mapToInt(OrderMenuEntity::getMenuId)
-                                .boxed().collect(Collectors.toSet()));
-            }
-            List<Pizza> pizzas = new ArrayList<>();
-            for (OrderMenuEntity om : orderMenuEntities) {
-                menuEntities.stream()
-                        .filter(m -> Objects.equals(m.getId(), om.getMenuId()))
-                        .findFirst()
-                        .ifPresent(m -> pizzas.add(EntityConverter.convert(om, m)));
-            }
-            order.setPizzas(pizzas);
+        List<PizzaBean> menuEntities = null;
+        if (onlyOnSale) {
+            menuEntities = menuJpaRepository.findPizzaBeansByStateAndOrderId(
+                    PizzaStatus.IN_SALE.getDbValue(),
+                    entity.getId());
         } else {
-            order.setPizzas(Collections.EMPTY_LIST);
+            menuEntities = menuJpaRepository.findPizzaBeansByOrderId(
+                    entity.getId());
         }
+        List<Pizza> pizzas = new ArrayList<>();
+        for (PizzaBean bean : menuEntities) {
+            pizzas.add(EntityConverter.convert(bean));
+        }
+        order.setPizzas(pizzas);
     }
 
     
