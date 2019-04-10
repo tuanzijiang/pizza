@@ -69,7 +69,7 @@ export class DeliveryComponent implements OnInit {
 
   editDelivery(del: Delivery) {
     this.dialogHeader = '配送员基本信息修改';
-    this.tempDel = del;
+    this.tempDel = this.cloneDriver(del);
     this.displayChangeDialog = true;
   }
 
@@ -107,6 +107,16 @@ export class DeliveryComponent implements OnInit {
     this.displayChangeDialog = false;
     this.displayAddDialog = false;
     this.tempDel = null;
+  }
+
+  cloneDriver(del: Delivery) {
+    let newDel = new Delivery();
+    for (const key in del) {
+      if (del.hasOwnProperty(key)) {
+        newDel[key] = del[key];
+      }
+    }
+    return newDel
   }
 
 

@@ -1,5 +1,7 @@
 export class BaseResponse {
   resultType: string;
   errorMsg: string;
-  adminId?: string
+  adminId?: string;
+  menuId?: string;
+  shopId?: string;
 }

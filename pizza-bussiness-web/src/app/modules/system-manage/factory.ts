@@ -10,7 +10,6 @@ export class Factory {
   maxNum: number;
   lon: string;
   lat: string;
-  ingredientList: Ingredient[];
   startTime: string;
   endTime: string;
 }

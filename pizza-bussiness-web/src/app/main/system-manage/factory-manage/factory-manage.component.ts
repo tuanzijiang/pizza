@@ -22,6 +22,8 @@ export class FactoryManageComponent implements OnInit {
   header: string;
   startDate: Date;
   endDate: Date;
+  ingredients: Ingredient[];
+  image: File;
 
   constructor(private systemManageService: SystemManageService) {
   }
@@ -66,12 +68,17 @@ export class FactoryManageComponent implements OnInit {
 
   checkIg(factory: Factory) {
     this.tempFactory = factory;
-    this.checkIgDialog = true;
+    this.systemManageService.getIngredientListByShopId(factory.id).subscribe(
+      (ingredients: Ingredient[]) => {
+        this.ingredients = ingredients;
+        this.checkIgDialog = true;
+      }
+    );
   }
 
   alterFactory(factory: Factory) {
     this.header = "修改";
-    this.tempFactory = factory;
+    this.tempFactory = this.cloneFactory(factory);
     this.imgUrl = this.tempFactory.image;
     this.strToDate();
     this.displayChangeDialog = true;
@@ -92,10 +99,14 @@ export class FactoryManageComponent implements OnInit {
         if (response.resultType == 'FAILURE') {
           alert(response.errorMsg);
         } else {
-          this.displayChangeDialog = false;
-          this.showPage = false;
-          this.tempFactory = null;
-          this.getShopList();
+          if(this.image == null) {
+            this.displayChangeDialog = false;
+            this.showPage = false;
+            this.tempFactory = null;
+            this.getShopList();
+          } else {
+            this.uploadImage(this.tempFactory.id);
+          }
         }
       }
     );
@@ -109,9 +120,30 @@ export class FactoryManageComponent implements OnInit {
         if (response.resultType == 'FAILURE') {
           alert(response.errorMsg);
         } else {
+          if(this.image == null) {
+            this.displayAddDialog = false;
+            this.showPage = false;
+            this.tempFactory = null;
+            this.getShopList();
+          } else {
+            this.uploadImage(response.shopId);
+          }
+        }
+      }
+    );
+  }
+
+  uploadImage(shopId: string) {
+    this.systemManageService.uploadShopImage(this.image, shopId).subscribe(
+      (response: BaseResponse) => {
+        if (response.resultType == 'FAILURE') {
+          alert(response.errorMsg);
+        } else {
           this.displayAddDialog = false;
-          this.showPage = false;
+          this.displayChangeDialog = false;
           this.tempFactory = null;
+          this.image = null;
+          this.showPage = false;
           this.getShopList();
         }
       }
@@ -123,7 +155,7 @@ export class FactoryManageComponent implements OnInit {
       let reader = new FileReader();
 
       reader.readAsDataURL(event.target.files[0]); // read file as data url
-      this.tempFactory.image = event.target.files[0];
+      this.image = event.target.files[0];
 
       reader.onload = (event: any) => { // called once readAsDataURL is completed
         this.imgUrl = event.target.result;
@@ -158,5 +190,15 @@ export class FactoryManageComponent implements OnInit {
     let s = num + "";
     while (s.length < size) s = "0" + s;
     return s;
+  }
+
+  cloneFactory(fac: Factory) {
+    let newFac = new Factory();
+    for(const key in fac) {
+      if(fac.hasOwnProperty(key)) {
+        newFac[key] = fac[key];
+      }
+    }
+    return newFac;
   }
 }

@@ -49,8 +49,16 @@ export class AddressService {
     return `${local}/menu/addNewMenu`
   }
 
+  static uploadMenuImage() {
+    return `${local}/menu/uploadImage?menuId=`
+  }
+
   static changeMenuState() {
     return `${local}/menu/editMenuStatus?menuId=`
+  }
+
+  static getMenuIngredients() {
+    return `${local}/menu/getMenuIngredients?menuId=`
   }
 
   static getShopList() {
@@ -61,8 +69,16 @@ export class AddressService {
     return `${local}/shop/editShopDetail`
   }
 
+  static uploadShopImage() {
+    return `${local}/menu/uploadImage?shopId=`
+  }
+
   static addShop() {
     return `${local}/shop/addNewShop`
+  }
+
+  static getIngredientListByShopId() {
+    return `${local}/shop/getIngredientListByShopId?shopId=`
   }
 
   static getDriverList() {
