@@ -103,14 +103,14 @@ public class OrderServiceTest extends TestApplication {
     }
 
     @Test
-    public void testGetSaleStatusList() throws ParseException{
+    public void testGetSaleStatusList() throws ParseException,Exception{
         String startDate = "2019/04/08";
         String endDate = "2019/04/09";
         List<List<OrderEntity>> days = new ArrayList<>();
         for(int i=0;i<2;i++) {
             String date = "2019/04/0"+String.valueOf(i+8);
             List<OrderEntity> oneDay = FakeFactory.fakeOrdersByOneDate(date);
-            when(orderJpaRepository.findOrderByCommitTime(date)).thenReturn(oneDay);
+            when(orderJpaRepository.findTotalOrdersByCommitTime(date)).thenReturn(5);
             days.add(oneDay);
         }
         List<SaleStatus> saleStatusList = orderService.getSaleStatusList(startDate,endDate);
@@ -121,7 +121,7 @@ public class OrderServiceTest extends TestApplication {
     public void testGetYesterdaySaleStatus() throws ParseException{
         String date = "2019/04/08";
         List<OrderEntity> oneDay = FakeFactory.fakeOrdersByOneDate(date);
-        when(orderJpaRepository.findOrderByCommitTime(date)).thenReturn(oneDay);
+        when(orderJpaRepository.findTotalOrdersByCommitTime(date)).thenReturn(5);
         YesterdaySaleResponse response = orderService.getYesterdaySaleStatus(date);
         assertEquals(response.getOrderNum(),oneDay.size());
     }

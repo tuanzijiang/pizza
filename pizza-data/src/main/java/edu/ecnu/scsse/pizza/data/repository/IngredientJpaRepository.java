@@ -38,4 +38,11 @@ public interface IngredientJpaRepository extends JpaRepository<IngredientEntity,
             "where shop_id = ?1\n" +
             ")",nativeQuery = true)
     List<IngredientEntity> findIngredientsByShopId(int shopId);
+
+    @Query(value = "select ingredient.id,ingredient.name,pizza_shop.id as shopId,pizza_shop.`name` as shopName,ingredient.alerm_num as alertNum,shop_ingredient.count\n" +
+            "from shop_ingredient,pizza_shop,ingredient\n" +
+            "where shop_ingredient.ingredient_id = ingredient.id \n" +
+            "and shop_ingredient.shop_id = pizza_shop.id\n" +
+            "and shop_ingredient.count<ingredient.alerm_num",nativeQuery = true)
+    List<Object[]> findAlarmList();
 }

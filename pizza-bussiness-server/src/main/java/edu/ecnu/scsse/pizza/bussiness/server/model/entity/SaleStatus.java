@@ -2,6 +2,10 @@ package edu.ecnu.scsse.pizza.bussiness.server.model.entity;
 
 import com.alibaba.fastjson.JSONObject;
 
+import java.math.BigInteger;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+
 public class SaleStatus{
     private String date;
     private int orderNum;
@@ -17,6 +21,15 @@ public class SaleStatus{
         this.orderNum = orderNum;
         this.completeNum = completeNum;
         this.cancelNum = cancelNum;
+        this.totalAmount = totalAmount;
+    }
+
+    public SaleStatus(Date date, BigInteger orderNum, BigInteger completeNum, BigInteger cancelNum, Double totalAmount) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        this.date = sdf.format(date);
+        this.orderNum = orderNum.intValue();
+        this.completeNum = completeNum.intValue();
+        this.cancelNum = cancelNum.intValue();
         this.totalAmount = totalAmount;
     }
 

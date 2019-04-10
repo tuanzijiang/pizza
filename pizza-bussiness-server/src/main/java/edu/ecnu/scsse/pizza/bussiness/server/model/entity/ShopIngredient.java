@@ -20,6 +20,15 @@ public class ShopIngredient {
         this.count = count;
     }
 
+    public ShopIngredient(Integer id, String name, Integer shopId, String shopName, Integer alertNum, Integer count) {
+        this.id = id;
+        this.name = name;
+        this.shopId = shopId;
+        this.shopName = shopName;
+        this.alertNum = alertNum;
+        this.count = count;
+    }
+
     public int getId() {
         return id;
     }
