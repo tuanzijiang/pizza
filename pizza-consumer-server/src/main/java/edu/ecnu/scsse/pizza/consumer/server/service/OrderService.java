@@ -1,13 +1,18 @@
 package edu.ecnu.scsse.pizza.consumer.server.service;
 
 import com.alipay.api.AlipayApiException;
+import com.alipay.api.AlipayRequest;
+import com.alipay.api.AlipayResponse;
 import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.domain.AlipayTradePagePayModel;
 import com.alipay.api.domain.AlipayTradeWapPayModel;
+import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.api.request.AlipayTradeWapPayRequest;
 import com.alipay.api.response.AlipayTradeWapPayResponse;
 import com.google.gson.Gson;
 import edu.ecnu.scsse.pizza.consumer.server.exception.*;
 import edu.ecnu.scsse.pizza.consumer.server.exception.IllegalArgumentException;
+import edu.ecnu.scsse.pizza.consumer.server.model.PayType;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Order;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Pizza;
 import edu.ecnu.scsse.pizza.consumer.server.utils.AlipayConfig;
@@ -263,7 +268,7 @@ public class OrderService {
     }
 
 
-    public String payRequest(String orderUuid, double totalPrice) throws ConsumerServerException {
+    public String payRequest(String orderUuid, double totalPrice, PayType type) throws ConsumerServerException {
         // arg check
         if (orderUuid == null) {
             throw new IllegalArgumentException("orderUuid can't be null.");
@@ -273,18 +278,17 @@ public class OrderService {
         }
 
         DefaultAlipayClient client = new DefaultAlipayClient(AlipayConfig.GATE_WAY, AlipayConfig.APP_ID, AlipayConfig.PRIVATE_KEY, AlipayConfig.FORMAT, AlipayConfig.CHARSET, AlipayConfig.ALIPAY_PUBLIC_KEY, AlipayConfig.SIGNTYPE);
-        AlipayTradeWapPayRequest alipayRequest = new AlipayTradeWapPayRequest();
-        // 封装请求支付信息
-        AlipayTradeWapPayModel model = new AlipayTradeWapPayModel();
-        model.setOutTradeNo(orderUuid);
-        model.setSubject(AlipayConfig.SUBJECT);
-        model.setTotalAmount(String.valueOf(totalPrice));
-        model.setProductCode(AlipayConfig.PRODUCT_CODE);
-        alipayRequest.setBizModel(model);
-        alipayRequest.setReturnUrl(AlipayConfig.RETURN_URL);
 
+        AlipayRequest request;
+        switch (type) {
+            case PC: request = this.pcRequest(orderUuid, totalPrice);break;
+            case MOBILE: request = this.mobileRequest(orderUuid, totalPrice); break;
+            default:
+                throw new IllegalArgumentException(String.format(
+                        "Illeagal pay type: [%s]", type == null ? "NULL" : type.name()));
+        }
         try {
-            AlipayTradeWapPayResponse response = client.pageExecute(alipayRequest);
+            AlipayResponse response = client.pageExecute(request);
             if (!response.isSuccess()) {
                 PayFailureException payFailureException = new PayFailureException(response.getMsg());
                 log.warn("Pay Failure. orderUuid = [{}].", orderUuid, payFailureException);
@@ -299,6 +303,32 @@ public class OrderService {
             log.error("Pay Failure. orderUuid = [{}].", orderUuid, payFailureException);
             throw payFailureException;
         }
+    }
+
+    private AlipayTradeWapPayRequest mobileRequest (String orderUuid, double totalPrice) {
+        AlipayTradeWapPayRequest alipayRequest = new AlipayTradeWapPayRequest();
+        // 封装请求支付信息
+        AlipayTradeWapPayModel model = new AlipayTradeWapPayModel();
+        model.setOutTradeNo(orderUuid);
+        model.setSubject(AlipayConfig.SUBJECT);
+        model.setTotalAmount(String.valueOf(totalPrice));
+        model.setProductCode(AlipayConfig.PRODUCT_CODE);
+        alipayRequest.setBizModel(model);
+        alipayRequest.setReturnUrl(AlipayConfig.RETURN_URL);
+        return alipayRequest;
+    }
+
+    private AlipayTradePagePayRequest pcRequest (String orderUuid, double totalPrice) {
+        AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
+        // 封装请求支付信息
+        AlipayTradePagePayModel model = new AlipayTradePagePayModel();
+        model.setOutTradeNo(orderUuid);
+        model.setSubject(AlipayConfig.SUBJECT);
+        model.setTotalAmount(String.valueOf(totalPrice));
+        model.setProductCode(AlipayConfig.PRODUCT_CODE);
+        request.setBizModel(model);
+        request.setReturnUrl(AlipayConfig.RETURN_URL);
+        return request;
     }
 
     public static class Phones {

@@ -166,7 +166,7 @@ public class OrderController {
     @ResponseBody
     public PayOrderResponse pay(@RequestBody PayOrderRequest request) {
         try {
-            String form = orderService.payRequest(request.getOrderId(), request.getTotalPrice());
+            String form = orderService.payRequest(request.getOrderId(), request.getTotalPrice(), request.getType());
             PayOrderResponse response = new PayOrderResponse();
             response.setForm(form);
             return response;

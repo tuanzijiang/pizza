@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import edu.ecnu.scsse.pizza.consumer.server.FakeFactory;
 import edu.ecnu.scsse.pizza.consumer.server.exception.*;
 import edu.ecnu.scsse.pizza.consumer.server.exception.IllegalArgumentException;
+import edu.ecnu.scsse.pizza.consumer.server.model.PayType;
 import edu.ecnu.scsse.pizza.consumer.server.model.ResultType;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Order;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Pizza;
@@ -383,7 +384,7 @@ public class OrderControllerTest {
     public void pay() throws Exception {
         double price = 100.01;
         String returnForm = "<form>";
-        when(service.payRequest(ORDER_ID, price)).thenReturn(returnForm);
+        when(service.payRequest(ORDER_ID, price, PayType.MOBILE)).thenReturn(returnForm);
 
         PayOrderRequest request  = new PayOrderRequest();
         request.setOrderId(ORDER_ID);
@@ -399,14 +400,14 @@ public class OrderControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(GSON.toJson(response)));
 
-        verify(service).payRequest(ORDER_ID, price);
+        verify(service).payRequest(ORDER_ID, price, PayType.MOBILE);
 
     }
 
     @Test
     public void payWithException() throws Exception {
         double price = 100.01;
-        when(service.payRequest(ORDER_ID, price)).thenThrow(ConsumerServerException.class);
+        when(service.payRequest(ORDER_ID, price, PayType.MOBILE)).thenThrow(ConsumerServerException.class);
 
         PayOrderRequest request = new PayOrderRequest();
         request.setOrderId(ORDER_ID);
@@ -419,7 +420,7 @@ public class OrderControllerTest {
                 .content(GSON.toJson(request)))
                 .andExpect(status().isOk());
 
-        verify(service).payRequest(ORDER_ID, price);
+        verify(service).payRequest(ORDER_ID, price, PayType.MOBILE);
 
     }
 //        @Test
