@@ -70,7 +70,7 @@ export class AddressService {
   }
 
   static uploadShopImage() {
-    return `${local}/menu/uploadImage?shopId=`
+    return `${local}/shop/uploadImage?shopId=`
   }
 
   static addShop() {
