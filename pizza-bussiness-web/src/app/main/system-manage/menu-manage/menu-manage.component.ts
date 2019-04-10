@@ -51,7 +51,7 @@ export class MenuManageComponent implements OnInit {
     ];
 
     this.igcols = [
-      {field: 'name', header: '名称'},
+      {field: 'name', header: '原料名称'},
       {field: 'menuNeedCount', header: '数量(可修改)'},
     ];
 
@@ -76,6 +76,7 @@ export class MenuManageComponent implements OnInit {
   getIngredientList() {
     this.inventoryManageService.getIngredientList().subscribe(
       (ingredientList: Ingredient[]) => {
+        this.ingredientList = ingredientList;
         for(let menu of this.menuList) {
           menu.ingredients = this.filterIngredient(menu.ingredients, ingredientList);
         }
@@ -88,7 +89,7 @@ export class MenuManageComponent implements OnInit {
   filterIngredient(fromList: Ingredient[], toList: Ingredient[]) {
     for(let ing of fromList) {
       let index = toList.findIndex(obj => obj.id == ing.id);
-      toList[index]['menuNeedCount'] = fromList[index]['menuNeedCount'];
+      toList[index].menuNeedCount = ing.menuNeedCount;
     }
     return toList;
   }
@@ -234,6 +235,12 @@ export class MenuManageComponent implements OnInit {
       }
     }
     return tmpMenu;
+  }
+
+  clearNeedCount() {
+    for(let ing of this.ingredientList) {
+      ing.menuNeedCount = 0;
+    }
   }
 
 

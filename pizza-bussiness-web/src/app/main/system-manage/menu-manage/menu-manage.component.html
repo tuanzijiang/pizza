@@ -115,8 +115,10 @@
           <p-table [value]="tempMenu.ingredients" [scrollable]="true" scrollHeight="130px">
             <ng-template pTemplate="header">
               <tr>
-                <th>原料名称</th>
-                <th>数量</th>
+                <th *ngFor="let col of igcols" [pSortableColumn]="col.field">
+                  {{col.header}}
+                  <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                </th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowData>
@@ -224,14 +226,16 @@
           <p-table [value]="tempMenu.ingredients" [scrollable]="true" scrollHeight="130px">
             <ng-template pTemplate="header">
               <tr>
-                <th>原料名称</th>
-                <th>数量</th>
+                <th *ngFor="let col of igcols" [pSortableColumn]="col.field">
+                  {{col.header}}
+                  <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                </th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowData>
               <tr>
                 <td>
-                  {{rowData.menuNeedCount}}
+                  {{rowData.name}}
                 </td>
                 <td pEditableColumn>
                   <p-cellEditor>
