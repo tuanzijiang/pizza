@@ -63,40 +63,40 @@ public class OrderServiceTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
-
-    @Test
-    public void testPaid() {
-        double price = 20.12;
-        String orderUuid = "AAA";
-        when(orderJpaRepository.updateStateAndTotalPriceByOrderUuid(OrderStatus.PAID.getDbValue(), price, orderUuid))
-                .thenReturn(1);
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        Map<String, String[]> map = new HashMap<>();
-        map.put("out_trade_no", new String[]{orderUuid});
-        map.put("total_amount", new String[]{String.valueOf(price)});
-        when(request.getParameterMap()).thenReturn(map);
-        when(request.getParameter("out_trade_no")).thenReturn(orderUuid);
-        when(request.getParameter("total_amount")).thenReturn(String.valueOf(price));
-
-        boolean result = orderService.paid(request);
-        assertTrue(result);
-        verify(orderJpaRepository).updateStateAndTotalPriceByOrderUuid(OrderStatus.PAID.getDbValue(), price, orderUuid);
-    }
-
-    @Test
-    public void testPaidFail() {
-        double price = 20.12;
-        String orderUuid = "AAA";
-        when(orderJpaRepository.updateStateAndTotalPriceByOrderUuid(OrderStatus.PAID.getDbValue(), price, orderUuid))
-                .thenReturn(0);
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getParameter("out_trade_no")).thenReturn(orderUuid);
-        when(request.getParameter("total_amount")).thenReturn(String.valueOf(price));
-
-        boolean result = orderService.paid(request);
-        assertFalse(result);
-        verify(orderJpaRepository).updateStateAndTotalPriceByOrderUuid(OrderStatus.PAID.getDbValue(), price, orderUuid);
-    }
+//
+//    @Test
+//    public void testPaid() {
+//        double price = 20.12;
+//        String orderUuid = "AAA";
+//        when(orderJpaRepository.updateStateAndTotalPriceByOrderUuid(OrderStatus.PAID.getDbValue(), price, orderUuid))
+//                .thenReturn(1);
+//        HttpServletRequest request = mock(HttpServletRequest.class);
+//        Map<String, String[]> map = new HashMap<>();
+//        map.put("out_trade_no", new String[]{orderUuid});
+//        map.put("total_amount", new String[]{String.valueOf(price)});
+//        when(request.getParameterMap()).thenReturn(map);
+//        when(request.getParameter("out_trade_no")).thenReturn(orderUuid);
+//        when(request.getParameter("total_amount")).thenReturn(String.valueOf(price));
+//
+//        boolean result = orderService.paid(request);
+//        assertTrue(result);
+//        verify(orderJpaRepository).updateStateAndTotalPriceByOrderUuid(OrderStatus.PAID.getDbValue(), price, orderUuid);
+//    }
+//
+//    @Test
+//    public void testPaidFail() {
+//        double price = 20.12;
+//        String orderUuid = "AAA";
+//        when(orderJpaRepository.updateStateAndTotalPriceByOrderUuid(OrderStatus.PAID.getDbValue(), price, orderUuid))
+//                .thenReturn(0);
+//        HttpServletRequest request = mock(HttpServletRequest.class);
+//        when(request.getParameter("out_trade_no")).thenReturn(orderUuid);
+//        when(request.getParameter("total_amount")).thenReturn(String.valueOf(price));
+//
+//        boolean result = orderService.paid(request);
+//        assertFalse(result);
+//        verify(orderJpaRepository).updateStateAndTotalPriceByOrderUuid(OrderStatus.PAID.getDbValue(), price, orderUuid);
+//    }
 
 
     @Test
