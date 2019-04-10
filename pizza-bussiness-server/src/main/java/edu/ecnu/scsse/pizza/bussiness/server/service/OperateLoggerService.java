@@ -14,6 +14,7 @@ import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,6 +49,7 @@ public class OperateLoggerService extends SessionService{
 
         String commitTimePattern = "yyyy/MM/dd hh:MM:ss";
         DateFormat df = new SimpleDateFormat(commitTimePattern);
+        df.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
         logger.setOperateTime(df.format(entity.getOperateTime()));
         return logger;
     }

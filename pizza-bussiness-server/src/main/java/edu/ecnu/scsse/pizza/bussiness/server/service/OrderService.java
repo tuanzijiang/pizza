@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Constructor;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -187,8 +188,9 @@ public class OrderService {
         response.setShopId(String.valueOf(orderBean.getShopId()));
         response.setDriverId(String.valueOf(orderBean.getDriverId()));
         response.setState(OrderStatus.fromDbValue(orderBean.getState()).getExpression());
-        String commitTimePattern = "yyyy/MM/dd hh:MM:ss";
+        String commitTimePattern = "yyyy-MM-dd HH:mm:ss";
         DateFormat df = new SimpleDateFormat(commitTimePattern);
+        df.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
         if(orderBean.getCommitTime()!=null)
             response.setCommitTime(df.format(orderBean.getCommitTime()));
         if(orderBean.getStartDeliverTime()!=null)
