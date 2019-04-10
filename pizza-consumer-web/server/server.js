@@ -42,5 +42,5 @@ routers.forEach(({ reqUrl, reqRouter }) => {
 
 app.use(router.routes(), router.allowedMethods());
 
-app.listen(3000);
+app.listen(3000, '0.0.0.0');
 log.info(`mock server start as port: ${PORT}`);
