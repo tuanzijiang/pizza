@@ -37,7 +37,6 @@ const request = async <T extends Command>
     });
   } catch (e) {
     error(LogTag.NET, `${T} error`, e);
-    this.printLarkError(e.code);
     return Promise.reject(e);
   }
 };
