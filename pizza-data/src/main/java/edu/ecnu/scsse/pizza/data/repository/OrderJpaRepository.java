@@ -90,6 +90,11 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
     @Query(value = "update pizza_order set state=?1, driver_id=?2 where id=?3",nativeQuery = true)
     int updateStateAndDriverIdByOrderId(int state,int driverId,int orderId);
 
+    @Transactional
+    @Modifying
+    @Query(value = "update pizza_order set commit_time=?1 where id=?2",nativeQuery = true)
+    int updateCommitTime(Timestamp commitTime,int orderId);
+
     @Query(value = "select * from pizza_order", nativeQuery = true)
     List<OrderEntity> findAllOrders();
 
