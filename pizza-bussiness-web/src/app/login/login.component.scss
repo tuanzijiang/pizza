@@ -4,6 +4,10 @@
   width: 100%;
   margin: 0;
   background-image: url("../../assets/images/login_bg.jpg");
+  filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale')";
+  -moz-background-size:100% 100%;
+  background-size:100% 100%;
+  background-attachment: fixed;
   .login-card {
     margin: 180px auto;
     width: 800px;
