@@ -299,7 +299,7 @@ public class OrderService {
         model.setOutTradeNo(orderUuid);
         model.setSubject(AlipayConfig.SUBJECT);
         model.setTotalAmount(String.valueOf(totalPrice));
-        model.setProductCode(AlipayConfig.PRODUCT_CODE);
+        model.setProductCode(AlipayConfig.MOBILE_PRODUCT_CODE);
         alipayRequest.setBizModel(model);
         alipayRequest.setReturnUrl(AlipayConfig.RETURN_URL);
         return alipayRequest;
@@ -312,7 +312,7 @@ public class OrderService {
         model.setOutTradeNo(orderUuid);
         model.setSubject(AlipayConfig.SUBJECT);
         model.setTotalAmount(String.valueOf(totalPrice));
-        model.setProductCode(AlipayConfig.PRODUCT_CODE);
+        model.setProductCode(AlipayConfig.PC_PRODUCT_CODE);
         request.setReturnUrl(AlipayConfig.RETURN_URL);
         request.setBizModel(model);
         return request;
