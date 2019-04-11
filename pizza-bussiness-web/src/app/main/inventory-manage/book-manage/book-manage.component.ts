@@ -21,6 +21,9 @@ export class BookManageComponent implements OnInit {
     this.showPage = false;
     this.inventoryManageService.getAlarmList().subscribe(
       (alerts: BookAlert[]) => {
+        for(let alert of alerts) {
+          alert.orderNum = 500;
+        }
         this.alerts = alerts;
         this.showPage = true;
       }
