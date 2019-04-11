@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {local} from "./domain";
+import {server} from "./domain";
 
 @Injectable({
   providedIn: 'root'
@@ -10,139 +10,139 @@ export class AddressService {
   }
 
   static getLogin() {
-    return `${local}/admin/login`
+    return `${server}/admin/login`
   }
 
   static getOrderList() {
-    return `${local}/order/getOrderList`
+    return `${server}/order/getOrderList`
   }
 
   static getOrderDetail() {
-    return `${local}/order/getOrderDetail?orderId=`
+    return `${server}/order/getOrderDetail?orderId=`
   }
 
   static getYesterdayOrder() {
-    return `${local}/order/getYesterdaySaleStatus`
+    return `${server}/order/getYesterdaySaleStatus`
   }
 
   static getOrderCountList() {
-    return `${local}/order/getMonthSaleStatus`
+    return `${server}/order/getMonthSaleStatus`
   }
 
   static getUserList() {
-    return `${local}/user/getUserList`
+    return `${server}/user/getUserList`
   }
 
   static getTagList() {
-    return `${local}/menu/getTagList`
+    return `${server}/menu/getTagList`
   }
 
   static getMenuList() {
-    return `${local}/menu/getMenuList`
+    return `${server}/menu/getMenuList`
   }
 
   static editMenu() {
-    return `${local}/menu/editMenuDetail`
+    return `${server}/menu/editMenuDetail`
   }
 
   static addMenu() {
-    return `${local}/menu/addNewMenu`
+    return `${server}/menu/addNewMenu`
   }
 
   static uploadMenuImage() {
-    return `${local}/menu/uploadImage?menuId=`
+    return `${server}/menu/uploadImage?menuId=`
   }
 
   static changeMenuState() {
-    return `${local}/menu/editMenuStatus?menuId=`
+    return `${server}/menu/editMenuStatus?menuId=`
   }
 
   static getMenuIngredients() {
-    return `${local}/menu/getMenuIngredients?menuId=`
+    return `${server}/menu/getMenuIngredients?menuId=`
   }
 
   static getShopList() {
-    return `${local}/shop/getShopList`
+    return `${server}/shop/getShopList`
   }
 
   static editShop() {
-    return `${local}/shop/editShopDetail`
+    return `${server}/shop/editShopDetail`
   }
 
   static uploadShopImage() {
-    return `${local}/shop/uploadImage?shopId=`
+    return `${server}/shop/uploadImage?shopId=`
   }
 
   static addShop() {
-    return `${local}/shop/addNewShop`
+    return `${server}/shop/addNewShop`
   }
 
   static getIngredientListByShopId() {
-    return `${local}/shop/getIngredientListByShopId?shopId=`
+    return `${server}/shop/getIngredientListByShopId?shopId=`
   }
 
   static getDriverList() {
-    return `${local}/driver/getDriverList`
+    return `${server}/driver/getDriverList`
   }
 
   static editDriver() {
-    return `${local}/driver/editDriverDetail`
+    return `${server}/driver/editDriverDetail`
   }
 
   static addDriver() {
-    return `${local}/driver/addNewDriver`
+    return `${server}/driver/addNewDriver`
   }
 
   static removeDriver() {
-    return `${local}/driver/removeDriver?id=`
+    return `${server}/driver/removeDriver?id=`
   }
 
   static getIngredientList() {
-    return `${local}/ingredient/getIngredientList`
+    return `${server}/ingredient/getIngredientList`
   }
 
   static editIngredientDetail() {
-    return `${local}/ingredient/editIngredientDetail`
+    return `${server}/ingredient/editIngredientDetail`
   }
 
   static addNewIngredient() {
-    return `${local}/ingredient/addNewIngredient`
+    return `${server}/ingredient/addNewIngredient`
   }
 
   static uploadIngredients() {
-    return `${local}/ingredient/batchImportByExcelFile`
+    return `${server}/ingredient/batchImportByExcelFile`
   }
 
   static getAlarmList() {
-    return `${local}/ingredient/getAlarmList`
+    return `${server}/ingredient/getAlarmList`
   }
 
   static buyIngredient() {
-    return `${local}/ingredient/buyIngredient`
+    return `${server}/ingredient/buyIngredient`
   }
 
   static removeIngredient() {
-    return `${local}/ingredient/deleteIngredient?id=`
+    return `${server}/ingredient/deleteIngredient?id=`
   }
 
   static allowOrder() {
-    return `${local}/order/allowCancel?orderId=`
+    return `${server}/order/allowCancel?orderId=`
   }
 
   static getCancelOrderList() {
-    return `${local}/order/getCancelOrderList`
+    return `${server}/order/getCancelOrderList`
   }
 
   static denyOrder() {
-    return `${local}/order/denyCancel?orderId=`
+    return `${server}/order/denyCancel?orderId=`
   }
 
   static getOperationLogger() {
-    return `${local}/admin/getOperateLogger`
+    return `${server}/admin/getOperateLogger`
   }
 
   static getPendingList() {
-    return `${local}/order/getPendingRequestList`
+    return `${server}/order/getPendingRequestList`
   }
 
 }
