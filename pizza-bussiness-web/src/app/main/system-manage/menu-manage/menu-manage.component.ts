@@ -80,7 +80,6 @@ export class MenuManageComponent implements OnInit {
         for(let menu of this.menuList) {
           menu.ingredients = this.filterIngredient(menu.ingredients, ingredientList);
         }
-        console.log(this.menuList);
         this.showPage = true;
       }
     )
