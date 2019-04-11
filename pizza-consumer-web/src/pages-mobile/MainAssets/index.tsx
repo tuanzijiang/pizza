@@ -5,12 +5,15 @@ import Main from './Main';
 import OrderDetail from './OrderDetail';
 import Settlement from './Settlement';
 import AddressList from './Address';
+import store from '@store/index';
 import AddressEdit from './AddressEdit';
 import Pay from './Pay';
 import { connect } from 'react-redux';
 import { pageMobile as pageActionCreator, entity as entityActionCreator } from '@store/action';
 import autobind from 'autobind-decorator';
 import { OrderWeakSchema, OrderSchema } from '@src/entity/schema';
+import { fetch, OBJECT_STORE_NAMES } from '@utils/db';
+import history from '@src/utils/history';
 
 interface LoginAssetsProps {
   mainStore: any;
@@ -55,6 +58,26 @@ export class MainAssets extends React.PureComponent<LoginAssetsProps, LoginAsset
   constructor(props: LoginAssetsProps) {
     super(props);
     this.state = {};
+  }
+
+  componentDidMount() {
+    const { entityStore } = this.props;
+    const { user } = entityStore;
+
+    if (user.id === 0) {
+      let shouldLogout = true;
+
+      fetch(OBJECT_STORE_NAMES.USER, (obj) => {
+        shouldLogout = false;
+        store.dispatch(entityActionCreator.user.updateUser({
+          ...obj,
+        }));
+      }, () => {
+        if (shouldLogout) {
+          history.push('./LoginAssets');
+        }
+      });
+    }
   }
 
   @autobind

@@ -20,21 +20,19 @@ export class MaterialManageComponent implements OnInit {
   tempMaterial: Material;
   selectedFile: File;
   showAlert: boolean;
+  showPage: boolean;
 
   constructor(private inventoryManageService: InventoryManageService) {
   }
 
   ngOnInit() {
+    this.showPage = false;
     this.displayChangeDialog = false;
     this.displayAddDialog = false;
     this.displayImportDialog = false;
     this.showAlert = false;
 
-    this.inventoryManageService.getIngredientList().subscribe(
-      (materials: Material[]) => {
-        this.materials = materials;
-      }
-    );
+    this.getMaterialList();
 
     this.cols = [
       {field: 'id', header: '原料ID'},
@@ -48,8 +46,18 @@ export class MaterialManageComponent implements OnInit {
     this.status = [
       {label: '请选择状态', value: null},
       {label: '使用中', value: '使用中'},
-      {label: '停用中', value: '停用中'},
+      {label: '已停用', value: '已停用'},
       ];
+  }
+
+  getMaterialList() {
+    this.inventoryManageService.getIngredientList().subscribe(
+      (materials: Material[]) => {
+        this.materials = materials;
+        this.showPage = true;
+      }
+    );
+
   }
 
   onRowCancel(mat: Material) {
@@ -73,7 +81,7 @@ export class MaterialManageComponent implements OnInit {
   }
 
   editMaterial(mat: Material) {
-    this.tempMaterial = mat;
+    this.tempMaterial = this.cloneMaterial(mat);
     this.dialogHeader = "修改原料";
     this.displayChangeDialog = true;
   }
@@ -86,7 +94,9 @@ export class MaterialManageComponent implements OnInit {
           alert(response.errorMsg);
         } else {
           this.displayChangeDialog = false;
+          this.showPage = false;
           this.tempMaterial = null;
+          this.getMaterialList();
         }
       }
     );
@@ -98,8 +108,10 @@ export class MaterialManageComponent implements OnInit {
         if (response.resultType == 'FAILURE') {
           alert(response.errorMsg);
         } else {
-          this.displayChangeDialog = false;
+          this.displayAddDialog = false;
+          this.showPage = false;
           this.tempMaterial = null;
+          this.getMaterialList();
         }
       }
     );
@@ -129,6 +141,8 @@ export class MaterialManageComponent implements OnInit {
           } else {
             this.selectedFile = null;
             this.displayImportDialog = false;
+            this.showPage = false;
+            this.getMaterialList();
           }
         }
       );
@@ -143,6 +157,16 @@ export class MaterialManageComponent implements OnInit {
       this.selectedFile = event.target.files[0];
       this.showAlert = false;
     }
+  }
+
+  cloneMaterial(mat: Material) {
+    let newMat = new Material();
+    for(const key in mat) {
+      if(mat.hasOwnProperty(key)) {
+        newMat[key] = mat[key];
+      }
+    }
+    return newMat;
   }
 
 }

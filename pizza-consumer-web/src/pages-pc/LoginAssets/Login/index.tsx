@@ -6,6 +6,10 @@ import autobind from 'autobind-decorator';
 import { timerFormater } from '@utils/time';
 import { PageName } from '..';
 import history from '@utils/history';
+import { LoginType, VerificationType } from '@src/net/common';
+import { loginApi } from '@services/api-login';
+import { openToast } from '@utils/store';
+import { isTel, isVarify, isEmail, isPW } from '@utils/check';
 
 interface LoginProps {
   currentTime: number;
@@ -38,7 +42,46 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
 
   @autobind
   handleLoginClick() {
-    history.push('./MainAssets');
+    const { navIdx, tel, varify,
+      account, pw,
+    } = this.state;
+    if (navIdx) {
+      if (!isTel(tel)) {
+        openToast('手机号格式错误');
+        return;
+      }
+      if (!isVarify(varify)) {
+        openToast('验证码格式错误');
+        return;
+      }
+      this.handleLogin();
+    }
+    if (!navIdx) {
+      if (!isEmail(account)) {
+        openToast('邮箱格式错误');
+        return;
+      }
+      if (!isPW(pw)) {
+        openToast('密码格式错误');
+        return;
+      }
+      this.handleLogin();
+    }
+  }
+
+  @autobind
+  async handleLogin() {
+    const { navIdx, account, varify, tel, pw } = this.state;
+    const result = await loginApi({
+      account: navIdx ? tel : account,
+      password: navIdx ? varify : pw,
+      type: navIdx ? LoginType.VERIFICATION : LoginType.PASSWORD,
+    });
+    if (result) {
+      history.push('./MainAssets');
+    } else {
+      openToast('密码错误');
+    }
   }
 
   @autobind
@@ -108,7 +151,7 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
       <div className="login-account">
         <input
           value={account}
-          placeholder={i18n('手机号/邮箱')}
+          placeholder={i18n('邮箱')}
           onChange={this.handleAccountChange}
         />
       </div>

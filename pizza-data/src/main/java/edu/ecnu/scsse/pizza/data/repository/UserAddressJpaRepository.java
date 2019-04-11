@@ -1,5 +1,6 @@
 package edu.ecnu.scsse.pizza.data.repository;
 
+import edu.ecnu.scsse.pizza.data.bean.UserAddressBean;
 import edu.ecnu.scsse.pizza.data.domain.UserAddressEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -14,9 +15,12 @@ public interface UserAddressJpaRepository extends JpaRepository<UserAddressEntit
 
     Optional<UserAddressEntity> findByUserIdAndAddressId(Integer userId, Integer addressId);
 
-    List<UserAddressEntity> findByUserIdAndAddressIdIn(Integer userId, List<Integer> addressId);
-
     List<UserAddressEntity> findByUserId(Integer userId);
+
+    @Query(value = "select new edu.ecnu.scsse.pizza.data.bean.UserAddressBean (ua.id, ua.name, ua.sex, a.address, ua.addressDetail, ua.phone) "
+            + "from AddressEntity a, UserAddressEntity ua where a.id = ua.addressId and"
+            + " ua.userId = :userId and ua.addressId = :addressId")
+    Optional<UserAddressBean> findUserAddressBeanByUserIdAndAddressId(@Param("userId") Integer userId, @Param("addressId") Integer addressId);
 
     @Transactional
     @Modifying

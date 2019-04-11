@@ -1,10 +1,16 @@
-<div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 order-list-page">
+<div class="text-center pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 order-list-page" *ngIf="!displayPage">
+  <div class="progress text-center mt-lg-2">
+    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+  </div>
+</div>
+
+<div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3" *ngIf="displayPage">
   <div class="order-list-title">
     <h5>订单列表</h5>
   </div>
   <div class="mt-lg-2 pr-lg-2">
     <p-table #dt [value]="orders" [paginator]="true" [rows]="10"
-             [globalFilterFields]="['orderId', 'receiveName', 'receivePhone', 'receiveAddress', 'totalAmount', 'commitTime', 'state', 'operation']">
+             [globalFilterFields]="['orderId', 'receiveName', 'receivePhone', 'receiveAddress', 'totalAmount', 'commitTime', 'state', 'operation']" [tableStyle]="{'table-layout':'auto'}" >
       <ng-template pTemplate="caption">
         <div style="text-align: right">
           <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
@@ -55,16 +61,16 @@
 <p-dialog header="订单详情" [(visible)]="displayDetail" [modal]="true" [responsive]="true"
           [style]="{width: '600px', minWidth: '200px'}" [minY]="100"
           [maximizable]="true">
-  <div class="mt-lg-2 ml-lg-2 mr-lg-2">
-    <span *ngFor="let key of getKeys(selectedOrderDetail)">
-      <span *ngIf="key != 'menu'">
-        <b>{{translateService.orderDetails[key]}}: </b>{{selectedOrderDetail[key]}}<br>
+  <div class="mt-lg-2 ml-lg-2 mr-lg-2" *ngIf="selectedOrder != null">
+    <span *ngFor="let key of orderListKeys">
+      <span *ngIf="key != 'menuList'">
+        <b>{{orderTranslate[key]}}: </b>{{selectedOrder[key]}}<br>
       </span>
-      <span *ngIf="key == 'menu'">
+      <span *ngIf="key == 'menuList'">
         <br>
-        <span *ngFor="let menu of selectedOrderDetail[key]">
-          <span *ngFor="let menuKey of getKeys(menu)">
-            <b>{{translateService.orderDetails[menuKey]}}: </b>{{menu[menuKey]}} &nbsp;
+        <span *ngFor="let menu of selectedOrder[key]">
+          <span *ngFor="let menuKey of MenuListKeys">
+            <b>{{orderTranslate[menuKey]}}: </b>{{menu[menuKey]}} &nbsp;
           </span>
           <br>
         </span>

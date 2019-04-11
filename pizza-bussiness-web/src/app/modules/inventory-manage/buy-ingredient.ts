@@ -1,5 +1,5 @@
 export class BuyIngredient {
-  ingredientId: string;
+  ingredientId: any;
   shopId: string;
   orderNum: number;
 }

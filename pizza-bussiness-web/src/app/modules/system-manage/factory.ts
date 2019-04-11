@@ -1,7 +1,7 @@
 import {Ingredient} from "./ingredient";
 
 export class Factory {
-  id: string;
+  id: any;
   name: string;
   image: any;
   address: string;
@@ -10,5 +10,6 @@ export class Factory {
   maxNum: number;
   lon: string;
   lat: string;
-  ingredientList: Ingredient[];
+  startTime: string;
+  endTime: string;
 }

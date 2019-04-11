@@ -12,17 +12,24 @@ export const fetchUserApi = async (param: FetchUserReq) => {
   const resp = await net.request(Command.FETCH_USER, param);
   const { resultType, user } = resp as FetchUserResp;
 
-  if (resultType) {
+  if (resultType && user) {
     const { address } = user;
-    const { id } = address;
-    store.dispatch(entity.user.updateUser({
-      ...user,
-      address: id,
-    }));
-    store.dispatch(entity.addresses.updateAddress(Address.fromJS({
-      ...address,
-      sex: address.sex === Sex.FEMALE ? SexSchema.FEMALE : SexSchema.MALE,
-    })));
+    if (address) {
+      const { id } = address;
+      store.dispatch(entity.user.updateUser({
+        ...user,
+        address: id,
+      }));
+      store.dispatch(entity.addresses.updateAddress(Address.fromJS({
+        ...address,
+        sex: address.sex === Sex.FEMALE ? SexSchema.FEMALE : SexSchema.MALE,
+      })));
+    } else {
+      store.dispatch(entity.user.updateUser({
+        ...user,
+        address: 0,
+      }));
+    }
 
     // 插入数据库
     await add(OBJECT_STORE_NAMES.USER, [user as unknown as User]);

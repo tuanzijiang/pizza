@@ -92,3 +92,23 @@ export const clear = (name: OBJECT_STORE_NAMES) => {
 
   objectStore.clear();
 };
+
+export const fetch =
+  (name: OBJECT_STORE_NAMES, fn?: (obj: any) => any, fnEnd?: () => any) => {
+    const transaction = db.transaction([name], 'readwrite');
+    const objectStore = transaction.objectStore(name);
+
+    objectStore.openCursor().onsuccess = (event: any) => {
+      const cursor = event.target.result;
+      if (cursor) {
+        if (fn) {
+          fn(cursor.value);
+        }
+        cursor.continue();
+      } else {
+        if (fnEnd) {
+          fnEnd();
+        }
+      }
+    };
+  };

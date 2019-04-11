@@ -1,10 +1,16 @@
-<div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 factory-manage-page">
+<div class="text-center pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3" *ngIf="!showPage">
+  <div class="progress text-center mt-lg-2">
+    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100"
+         aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+  </div>
+</div>
+<div class="pt-lg-2 pl-lg-3 pr-lg-3 mb-lg-3 factory-manage-page" *ngIf="showPage">
   <div class="factory-manage-title">
     <h5>披萨工厂</h5>
   </div>
   <div class="mt-lg-2 pr-lg-2">
     <p-table #dt [value]="factories" [paginator]="true" [rows]="10"
-             [globalFilterFields]="['id', 'name', 'address', 'openHours', 'phone']">
+             [globalFilterFields]="['id', 'name', 'address', 'openHours', 'phone']" [tableStyle]="{'table-layout':'auto'}" >
       <ng-template pTemplate="caption">
         <div class="row">
           <div class="col-lg-6" style="text-align: left">
@@ -67,12 +73,12 @@
 <p-dialog header="原料库" [(visible)]="checkIgDialog" [modal]="true" [responsive]="true"
           [style]="{width: '600px', minWidth: '200px'}" [minY]="100"
           [maximizable]="true">
-  <div class="mt-lg-2 ml-lg-2 mr-lg-2" *ngIf="tempFactory != null">
+  <div class="mt-lg-2 ml-lg-2 mr-lg-2" *ngIf="ingredients != null">
     <span>
       <span><b>工厂名称: </b>{{tempFactory.name}}</span><br>
       <span><b>原料份数: </b></span><br>
       <table>
-        <tr *ngFor="let ig of tempFactory.ingredientList">
+        <tr *ngFor="let ig of ingredients">
           <td>{{ig.name}}</td>
           <td>{{ig.count}}</td>
         </tr>

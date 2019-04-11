@@ -1,4 +1,5 @@
 export class Ingredient {
-  name: string;
-  count: number;
+  id: string;
+  name: any;
+  menuNeedCount: number;
 }

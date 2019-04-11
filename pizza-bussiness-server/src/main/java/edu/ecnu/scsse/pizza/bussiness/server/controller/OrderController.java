@@ -2,6 +2,7 @@ package edu.ecnu.scsse.pizza.bussiness.server.controller;
 
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.PendingOrder;
+import edu.ecnu.scsse.pizza.bussiness.server.model.entity.SaleStatus;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.SimpleResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.order.*;
@@ -29,20 +30,20 @@ public class OrderController {
      */
     @RequestMapping(value = "/getOrderList",method = RequestMethod.GET)
     @ResponseBody
-    public List<OrderManageResponse> getOrderList(){
+    public List<OrderManageResponse> getOrderList() throws Exception{
         return orderService.getOrderList();
     }
 
-//    /**
-//     * 查看订单详情
-//     * @param orderId
-//     * @return response
-//     */
-//    @RequestMapping(value = "/getOrderDetail",method = RequestMethod.GET)
-//    @ResponseBody
-//    public OrderDetailResponse getOrderDetail(@RequestParam int orderId){
-//        return orderService.getOrderDetail(orderId);
-//    }
+    /**
+     * 查看订单详情
+     * @param orderId
+     * @return response
+     */
+    @RequestMapping(value = "/getOrderDetail",method = RequestMethod.GET)
+    @ResponseBody
+    public OrderManageResponse getOrderDetail(@RequestParam int orderId) throws Exception{
+        return orderService.getOrderDetail(orderId);
+    }
 
     /**
      * 查看昨日订单指标
@@ -65,9 +66,9 @@ public class OrderController {
      * @param request
      * @return response
      */
-    @RequestMapping(value = "/getMonthSaleStatus",method = RequestMethod.GET)
+    @RequestMapping(value = "/getMonthSaleStatus",method = RequestMethod.POST)
     @ResponseBody
-    public SaleResponse getMonthSaleStatus(@RequestBody SaleRequest request) throws ParseException {
+    public List<SaleStatus> getMonthSaleStatus(@RequestBody SaleRequest request) throws ParseException,Exception {
         String startDate = request.getStartDate();
         String endDate = request.getEndDate();
         return orderService.getSaleStatusList(startDate,endDate);

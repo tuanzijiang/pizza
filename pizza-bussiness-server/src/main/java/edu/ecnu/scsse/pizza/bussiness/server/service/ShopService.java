@@ -3,21 +3,18 @@ package edu.ecnu.scsse.pizza.bussiness.server.service;
 import edu.ecnu.scsse.pizza.bussiness.server.exception.BusinessServerException;
 import edu.ecnu.scsse.pizza.bussiness.server.exception.ExceptionType;
 import edu.ecnu.scsse.pizza.bussiness.server.exception.NotFoundException;
-import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Ingredient;
-import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Shop;
 import edu.ecnu.scsse.pizza.bussiness.server.model.enums.OperateObject;
 import edu.ecnu.scsse.pizza.bussiness.server.model.enums.OperateResult;
 import edu.ecnu.scsse.pizza.bussiness.server.model.enums.OperateType;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ResultType;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.SimpleResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ingredient.IngredientDetailResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.shop.ShopDetailRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.shop.ShopDetailResponse;
-import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.shop.ShopIngredientResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.shop.ShopManageResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
 import edu.ecnu.scsse.pizza.data.domain.IngredientEntity;
 import edu.ecnu.scsse.pizza.data.domain.PizzaShopEntity;
-import edu.ecnu.scsse.pizza.data.domain.ShopIngredientEntity;
-import edu.ecnu.scsse.pizza.data.enums.IngredientStatus;
 import edu.ecnu.scsse.pizza.data.repository.IngredientJpaRepository;
 import edu.ecnu.scsse.pizza.data.repository.PizzaShopJpaRepository;
 import edu.ecnu.scsse.pizza.data.repository.ShopIngredientJpaRepository;
@@ -26,9 +23,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.channels.InterruptedByTimeoutException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -55,9 +56,9 @@ public class ShopService{
     @Autowired
     OperateLoggerService operateLoggerService;
 
-    public List<ShopManageResponse> getShopList(){
+    public List<ShopManageResponse> getShopList() throws Exception{
         List<ShopManageResponse> shopList = new ArrayList<>();
-        List<PizzaShopEntity> shopEntityList = shopJpaRepository.findAll();
+        List<PizzaShopEntity> shopEntityList = shopJpaRepository.findAllShops();
         if(shopEntityList.size()!=0){
             shopList = shopEntityList.stream().map(this::convert).collect(Collectors.toList());
         }
@@ -69,26 +70,12 @@ public class ShopService{
         return shopList;
     }
 
-    public List<IngredientDetailResponse> getIngredientListByShopId(int shopId){
-        List<ShopIngredientEntity> shopIngredientEntityList = shopIngredientJpaRepository.findByShopId(shopId);
-        List<IngredientDetailResponse> shopIngredientList = new ArrayList<>();
-        for(ShopIngredientEntity entity:shopIngredientEntityList){
-            Optional<IngredientEntity> ingredientEntityOptional = ingredientJpaRepository.findById(entity.getIngredientId());
-            if(ingredientEntityOptional.isPresent()){
-                IngredientEntity ingredientEntity = ingredientEntityOptional.get();
-                IngredientDetailResponse ingredient = new IngredientDetailResponse(ingredientEntity);
-                ingredient.setIngredientStatus(IngredientStatus.fromDbValue(ingredientEntity.getState()).getExpression());
-                shopIngredientList.add(ingredient);
-            }
-            else{
-                log.warn("Fail to find ingredient.");
-            }
-        }
-        return shopIngredientList;
+    public List<IngredientEntity> getIngredientListByShopId(int shopId){
+        return ingredientJpaRepository.findIngredientsByShopId(shopId);
     }
 
     @Transactional
-    public ShopDetailResponse editShopDetail(ShopDetailRequest request) throws ParseException,BusinessServerException{
+    public ShopDetailResponse editShopDetail(ShopDetailRequest request, int adminId) throws ParseException,BusinessServerException{
         PizzaShopEntity shopEntity;
         ShopDetailResponse response;
         int shopId = Integer.parseInt(request.getId());
@@ -106,12 +93,12 @@ public class ShopService{
                 shopJpaRepository.saveAndFlush(shopEntity);
                 response = new ShopDetailResponse();
                 response.setShopId(shopId);
-                operateLoggerService.addOperateLogger(type, object, OperateResult.SUCCESS.getExpression());
+                operateLoggerService.addOperateLogger(adminId, type, object, OperateResult.SUCCESS.getExpression());
             } else {
                 NotFoundException e = new NotFoundException(String.format("shopId %s is not found.", shopId));
                 response = new ShopDetailResponse(e);
                 log.warn("Shop {} is not found.", shopId, e);
-                operateLoggerService.addOperateLogger(type, object, OperateResult.FAILURE.getExpression() + " :Shop" + shopId + " is not found.");
+                operateLoggerService.addOperateLogger(adminId, type, object, OperateResult.FAILURE.getExpression() + " :Shop" + shopId + " is not found.");
             }
         }catch (Exception e){
             log.error("Fail to update shop.",e);
@@ -121,7 +108,7 @@ public class ShopService{
 
     }
 
-    public ShopDetailResponse addNewShop(ShopDetailRequest request) throws BusinessServerException{
+    public ShopDetailResponse addNewShop(ShopDetailRequest request, int adminId) throws BusinessServerException{
         PizzaShopEntity shopEntity;
         ShopDetailResponse response;
         String type = OperateType.INSERT.getExpression();//操作类型
@@ -136,11 +123,49 @@ public class ShopService{
             shopEntity.setLat(new BigDecimal(request.getLat()));
             shopEntity.setLon(new BigDecimal(request.getLon()));
             shopJpaRepository.saveAndFlush(shopEntity);
+            int shopId = shopEntity.getId();
             response = new ShopDetailResponse();
-            operateLoggerService.addOperateLogger(type, object, OperateResult.SUCCESS.getExpression());
+            response.setShopId(shopId);
+            operateLoggerService.addOperateLogger(adminId, type, object, OperateResult.SUCCESS.getExpression());
         }catch (Exception e){
             log.error("Fail to insert shop.",e);
             throw new BusinessServerException(ExceptionType.REPOSITORY, "Fail to insert shop.", e);
+        }
+        return response;
+    }
+
+    public SimpleResponse uploadShopImageFile(MultipartFile file, int menuId){
+        SimpleResponse response = new SimpleResponse();
+        if (file==null||file.isEmpty())
+            return new SimpleResponse(new NotFoundException("File not found."));
+        try {
+            Optional<PizzaShopEntity> optional = shopJpaRepository.findById(menuId);
+            PizzaShopEntity entity;
+            if(optional.isPresent()){
+                entity = optional.get();
+                // Get the file and save it somewhere
+                byte[] bytes = file.getBytes();
+                Path currentDir = Paths.get(".");
+                String p = currentDir.toAbsolutePath().toString()+"\\pizza-bussiness-server\\src\\main\\resources\\img\\shop\\";
+                Date date = new Date();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+                String dateMark = sdf.format(date);
+                String fileName = dateMark+file.getOriginalFilename();
+                Path path = Paths.get(p + fileName);
+                Files.write(path, bytes);
+                //将图片名称保存至数据库
+                entity.setImage(fileName);
+                shopJpaRepository.saveAndFlush(entity);
+                response.setResultType(ResultType.SUCCESS);
+            }
+            else{
+                return new SimpleResponse(new NotFoundException("Shop not found."));
+            }
+        } catch (IOException e) {
+            String msg = e.getMessage();
+            response.setResultType(ResultType.FAILURE);
+            response.setErrorMsg(msg);
+            e.printStackTrace();
         }
         return response;
     }
@@ -155,9 +180,9 @@ public class ShopService{
         String open = df.format(entity.getStartTime()).split(" ")[1];
         String close = df.format(entity.getEndTime()).split(" ")[1];
         shop.setOpenHours(open+"-"+close);
-        shop.setIngredientList(getIngredientListByShopId(entity.getId()));
+        Path currentDir = Paths.get(".");
+        String p = currentDir.toAbsolutePath().toString()+"\\pizza-bussiness-server\\src\\main\\resources\\img\\shop\\";
+        shop.setImage(p+entity.getImage());
         return shop;
     }
-
-
 }

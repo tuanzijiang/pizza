@@ -142,3 +142,21 @@ message FetchUserAddressesResp {
   ResultType result_type = 1;
   repeated Address addresses = 2;
 }
+
+// 支付接口，响应为表单html
+// [post] /pay
+message PayOrderReq {
+  enum payType {
+    MOBILE = 0;
+    PC = 1;
+  }
+
+  string order_id = 1;
+  double total_price = 2;
+  payType type = 3;
+}
+
+message PayOrderResp {
+  ResultType result_type = 1;
+  string form = 2;
+}

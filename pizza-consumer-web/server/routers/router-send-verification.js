@@ -16,10 +16,28 @@ const router = new Router();
 router.post('/', async (ctx, next) => {
   const protoBuff = ctx.proto;
   const result = reqType.decode(protoBuff);
+  const { tel } = result;
 
   // mock
-  const body = {
-    resultType: 1,
+  let body;
+
+  if (isMock) {
+    body = {
+      resultType: 1,
+    };
+  } else {
+    try {
+      response = await net.post('/sendVerificationCode', {
+        phone: tel,
+      });
+      body = {
+        resultType: 1, 
+      }
+    } catch (e) {
+      body = {
+        resultType: 0,
+      }
+    }
   }
 
   const decodeBody = respType.encode(respType.create(body)).finish();

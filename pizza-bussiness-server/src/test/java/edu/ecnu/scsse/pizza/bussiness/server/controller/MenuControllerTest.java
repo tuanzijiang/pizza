@@ -12,6 +12,7 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.SimpleRespon
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.admin.LoginRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDetailRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDetailResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.NewMenuResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.service.AdminService;
 import edu.ecnu.scsse.pizza.bussiness.server.service.MenuService;
 import edu.ecnu.scsse.pizza.data.enums.PizzaStatus;
@@ -41,6 +42,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -102,7 +106,7 @@ public class MenuControllerTest{
         SimpleResponse response=new SimpleResponse();
         ObjectMapper mapper = new ObjectMapper();
         String requestBody = mapper.writeValueAsString(request);
-        when(menuService.editMenuDetail(request)).thenReturn(response);
+        when(menuService.editMenuDetail(eq(request), anyInt())).thenReturn(response);
         mockMvc.perform(MockMvcRequestBuilders.post("/menu/editMenuDetail")
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody)
@@ -113,10 +117,10 @@ public class MenuControllerTest{
     @Test
     public void testAddNewMenu()throws Exception{
         MenuDetailRequest request=new MenuDetailRequest();
-        SimpleResponse response=new SimpleResponse();
+        NewMenuResponse response=new NewMenuResponse();
         ObjectMapper mapper = new ObjectMapper();
         String requestBody = mapper.writeValueAsString(request);
-        when(menuService.addNewMenu(request)).thenReturn(response);
+        when(menuService.addNewMenu(eq(request), anyInt())).thenReturn(response);
         mockMvc.perform(MockMvcRequestBuilders.post("/menu/addNewMenu")
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody)

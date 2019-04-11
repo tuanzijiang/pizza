@@ -9,6 +9,7 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.SimpleRespon
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDetailRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuDetailResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.MenuManageResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.menu.NewMenuResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.service.MenuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,7 @@ public class MenuController extends BaseController{
      */
     @RequestMapping(value = "/getMenuList",method = RequestMethod.GET)
     @ResponseBody
-    public List<MenuDetailResponse> getMenuList(){
+    public List<MenuDetailResponse> getMenuList() throws Exception{
         return menuService.getMenuList();
     }
 
@@ -59,10 +60,10 @@ public class MenuController extends BaseController{
      */
     @RequestMapping(value = "/editMenuStatus",method = RequestMethod.GET)
     @ResponseBody
-    public SimpleResponse editMenuStatus(@RequestParam int menuId){
-        int adminId = getCurrentAdminId();
+    public SimpleResponse editMenuStatus(@RequestParam int menuId,@RequestParam int adminId){
+        //int adminId = getCurrentAdminId();
         if(adminId!=-1)
-            return menuService.editMenuStatus(menuId);
+            return menuService.editMenuStatus(menuId, adminId);
         else{
             PermissionException e = new PermissionException("Admin is logout.");
             log.warn("Admin is logout.", e);
@@ -71,16 +72,16 @@ public class MenuController extends BaseController{
     }
 
     /**
-     * 修改菜单信息
+     * 修改菜单信息(不包括图片)
      * @request request
      * @return response
      */
     @RequestMapping(value = "/editMenuDetail",method = RequestMethod.POST)
     @ResponseBody
-    public SimpleResponse editMenuStatus(@RequestBody MenuDetailRequest menuDetailRequest) throws BusinessServerException {
-        int adminId = getCurrentAdminId();
+    public SimpleResponse editMenuStatus(@RequestBody MenuDetailRequest menuDetailRequest,@RequestParam int adminId) throws BusinessServerException {
+        //int adminId = getCurrentAdminId();
         if (adminId != -1)
-            return menuService.editMenuDetail(menuDetailRequest);
+            return menuService.editMenuDetail(menuDetailRequest, adminId);
         else {
             PermissionException e = new PermissionException("Admin is logout.");
             log.warn("Admin is logout.", e);
@@ -89,21 +90,21 @@ public class MenuController extends BaseController{
     }
 
     /***
-     * 新增披萨
+     * 新增披萨(不包括图片)
      * @request
      * @return
      */
     @RequestMapping(value = "/addNewMenu",method = RequestMethod.POST)
     @ResponseBody
-    public SimpleResponse addNewMenu(@RequestBody MenuDetailRequest request) throws ParseException,BusinessServerException{
-        int adminId = getCurrentAdminId();
+    public NewMenuResponse addNewMenu(@RequestBody MenuDetailRequest request, @RequestParam int adminId) throws ParseException,BusinessServerException{
+        //int adminId = getCurrentAdminId();
         if(adminId!=-1) {
-            return menuService.addNewMenu(request);
+            return menuService.addNewMenu(request, adminId);
         }
         else{
             PermissionException e = new PermissionException("Admin is logout.");
             log.warn("Admin is logout.", e);
-            return new SimpleResponse(e);
+            return new NewMenuResponse(e);
         }
     }
 
@@ -114,8 +115,8 @@ public class MenuController extends BaseController{
      */
     @RequestMapping(value = "/uploadImage",method = RequestMethod.POST)
     @ResponseBody
-    public String uploadImage(@RequestParam MultipartFile file) throws ParseException,BusinessServerException{
-        return menuService.uploadImage(file);
+    public SimpleResponse uploadImage(@RequestParam MultipartFile file,@RequestParam int menuId) throws ParseException,BusinessServerException{
+        return menuService.uploadMenuImageFile(file,menuId);
     }
 
 

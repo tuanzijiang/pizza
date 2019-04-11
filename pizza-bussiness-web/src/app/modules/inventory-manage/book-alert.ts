@@ -1,5 +1,5 @@
 export class BookAlert {
-  id: string;
+  id: any;
   name: string;
   shopId: string;
   shopName: string;

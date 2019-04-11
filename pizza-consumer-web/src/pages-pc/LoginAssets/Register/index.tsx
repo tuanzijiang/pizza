@@ -5,6 +5,10 @@ import i18n from '@src/utils/i18n';
 import autobind from 'autobind-decorator';
 import { timerFormater } from '@utils/time';
 import { PageName } from '..';
+import { openToast } from '@utils/store';
+import { isTel, isVarify, isEmail, isPW } from '@utils/check';
+import { registerApi } from '@src/services/api-register';
+import history from '@utils/history';
 
 interface LoginProps {
   currentTime: number;
@@ -39,6 +43,50 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
   handleLoginClick() {
     const { handlePageChange } = this.props;
     handlePageChange(PageName.LOGIN);
+  }
+
+  @autobind
+  handleRegisterClick() {
+    const { navIdx, tel, varify,
+      account, pw,
+    } = this.state;
+    if (navIdx) {
+      if (!isTel(tel)) {
+        openToast('手机号格式错误');
+        return;
+      }
+      if (!isVarify(varify)) {
+        openToast('验证码格式错误');
+        return;
+      }
+      this.handleRegister();
+    }
+    if (!navIdx) {
+      if (!isEmail(account)) {
+        openToast('邮箱格式错误');
+        return;
+      }
+      if (!isPW(pw)) {
+        openToast('密码格式错误');
+        return;
+      }
+      this.handleRegister();
+    }
+  }
+
+  @autobind
+  async handleRegister() {
+    const { navIdx, account, varify, tel, pw } = this.state;
+    const result = await registerApi({
+      email: account,
+      password: pw,
+      phone: tel,
+    });
+    if (result) {
+      history.push('./MainAssets');
+    } else {
+      openToast('注册失败');
+    }
   }
 
   @autobind
@@ -198,7 +246,7 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
           {navIdx === 0 && this.renderAccountInput()}
           {navIdx === 1 && this.renderVarifyInput()}
         </div>
-        <div className="register-button">{i18n('注册')}</div>
+        <div className="register-button" onClick={this.handleRegisterClick}>{i18n('注册')}</div>
         <div className="register-extraInfo">
           <div></div>
           <div>

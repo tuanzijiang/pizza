@@ -16,20 +16,18 @@ export class DeliveryComponent implements OnInit {
   dialogHeader: string;
   displayChangeDialog: boolean;
   displayAddDialog: boolean;
+  showPage: boolean;
 
   constructor(private deliveryService: DeliveryService) {
   }
 
   ngOnInit() {
+    this.showPage = false;
     this.dialogHeader = '';
     this.displayChangeDialog = false;
     this.displayAddDialog = false;
 
-    this.deliveryService.getDriverList().subscribe(
-      (driverList: Delivery[]) => {
-        this.deliveries = driverList;
-      }
-    );
+    this.getDriverList();
 
     this.cols = [
       {field: 'id', header: '配送员ID'},
@@ -40,6 +38,15 @@ export class DeliveryComponent implements OnInit {
 
   }
 
+  getDriverList() {
+    this.deliveryService.getDriverList().subscribe(
+      (driverList: Delivery[]) => {
+        this.deliveries = driverList;
+        this.showPage = true;
+      }
+    );
+  }
+
   addDelivery() {
     this.tempDel = new Delivery();
     this.dialogHeader = '新增配送员';
@@ -47,14 +54,22 @@ export class DeliveryComponent implements OnInit {
   }
 
   onRowCancel(del: Delivery) {
-    if (this.deliveries.find(obj => obj.id == del.id) != null) {
-      this.deliveries = this.deliveries.filter(obj => obj.id != del.id);
-    }
+    this.deliveryService.removeDriver(del.id).subscribe(
+      (response: BaseResponse) => {
+        if (response.resultType == 'FAILURE') {
+          alert(response.errorMsg);
+        } else {
+          if (this.deliveries.find(obj => obj.id == del.id) != null) {
+            this.deliveries = this.deliveries.filter(obj => obj.id != del.id);
+          }
+        }
+      }
+    );
   }
 
   editDelivery(del: Delivery) {
     this.dialogHeader = '配送员基本信息修改';
-    this.tempDel = del;
+    this.tempDel = this.cloneDriver(del);
     this.displayChangeDialog = true;
   }
 
@@ -65,7 +80,9 @@ export class DeliveryComponent implements OnInit {
           alert(response.errorMsg);
         } else {
           this.displayChangeDialog = false;
+          this.showPage = false;
           this.tempDel = null;
+          this.getDriverList();
         }
       }
     );
@@ -78,7 +95,9 @@ export class DeliveryComponent implements OnInit {
           alert(response.errorMsg);
         } else {
           this.displayAddDialog = false;
+          this.showPage = false;
           this.tempDel = null;
+          this.getDriverList();
         }
       }
     );
@@ -88,6 +107,16 @@ export class DeliveryComponent implements OnInit {
     this.displayChangeDialog = false;
     this.displayAddDialog = false;
     this.tempDel = null;
+  }
+
+  cloneDriver(del: Delivery) {
+    let newDel = new Delivery();
+    for (const key in del) {
+      if (del.hasOwnProperty(key)) {
+        newDel[key] = del[key];
+      }
+    }
+    return newDel
   }
 
 

@@ -1,9 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {BookAlert} from "../../../modules/inventory-manage/book-alert";
 import {InventoryManageService} from "../../../services/inventory-manage/inventory-manage.service";
 import {BuyIngredient} from "../../../modules/inventory-manage/buy-ingredient";
 import {BaseResponse} from "../../../modules/baseResponse";
-
 @Component({
   selector: 'app-book-manage',
   templateUrl: './book-manage.component.html',
@@ -13,14 +12,20 @@ export class BookManageComponent implements OnInit {
 
   cols: any[];
   alerts: BookAlert[];
+  showPage: boolean;
 
   constructor(private inventoryManageService: InventoryManageService) {
   }
 
   ngOnInit() {
+    this.showPage = false;
     this.inventoryManageService.getAlarmList().subscribe(
       (alerts: BookAlert[]) => {
+        for(let alert of alerts) {
+          alert.orderNum = 500;
+        }
         this.alerts = alerts;
+        this.showPage = true;
       }
     );
     this.cols = [

@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {AddressService} from "../address/address.service";
-import {map} from "rxjs/operators";
 import {Delivery} from "../../modules/delivery/delivery";
+import {AuthService} from "../auth/auth.service";
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -18,19 +18,24 @@ export class DeliveryService {
 
   constructor(private http: HttpClient) { }
 
-  getDriverList():Observable<any> {
+  getDriverList(): Observable<any> {
     return this.http.get(AddressService.getDriverList(), httpOptions)
-      .pipe(map((result: Response) => result.json()))
+      .pipe()
   }
 
-  editDriver(driver: Delivery):Observable<any> {
-    return this.http.post(AddressService.editDriver(), driver, httpOptions)
-      .pipe(map((result: Response) => result.json()))
+  editDriver(driver: Delivery): Observable<any> {
+    return this.http.post(AddressService.editDriver() + '?adminId=' + AuthService.UserId, driver, httpOptions)
+      .pipe()
   }
 
-  addDriver(driver: Delivery):Observable<any> {
-    return this.http.post(AddressService.addDriver(), driver, httpOptions)
-      .pipe(map((result: Response) => result.json()))
+  addDriver(driver: Delivery): Observable<any> {
+    return this.http.post(AddressService.addDriver() + '?adminId=' + AuthService.UserId, driver, httpOptions)
+      .pipe()
+  }
+
+  removeDriver(id: string): Observable<any> {
+    return this.http.get(AddressService.removeDriver() + id + '&adminId=' + AuthService.UserId, httpOptions)
+      .pipe()
   }
 
 }

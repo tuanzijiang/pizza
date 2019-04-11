@@ -11,11 +11,13 @@ export class UserManageComponent implements OnInit {
 
   userList: User[];
   cols: any[];
+  showPage: boolean;
 
   constructor(private systemManageService: SystemManageService) {
   }
 
   ngOnInit() {
+    this.showPage = false;
     this.systemManageService.getUserList().subscribe(
       (userList: User[]) => {
         this.userList = [];
@@ -32,6 +34,7 @@ export class UserManageComponent implements OnInit {
           newUser.latestLoginTime = new Date(user.latestLoginTime);
           this.userList.push(newUser);
         }
+        this.showPage = true;
       }
     );
 

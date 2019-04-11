@@ -3,14 +3,16 @@ import { Router, Route, Switch, Redirect } from 'react-router-dom';
 import { Provider, connect } from 'react-redux';
 import store from './store';
 import history from '@utils/history';
-import ToastComponent from '@biz-components/Toast';
+import ToastComponent, { ToastKind } from '@biz-components/Toast';
 import {
   LoginAssets as LoginPagePc,
   MainAssets as MainPagePc,
+  PaySuccess as PaySuccessPc,
 } from './pages-pc';
 import {
   LoginAssets as LoginPageMobile,
   MainAssets as MainPageMobile,
+  PaySuccess as PaySuccessMobile,
 } from './pages-mobile';
 import { neetStatusBar, isPc } from '@utils/device';
 import { open } from '@utils/db';
@@ -26,6 +28,7 @@ export interface AppState { }
 
 const Toast = connect((state: any) => {
   return {
+    kind: isPc ? ToastKind.PC : ToastKind.MOBILE,
     visibility: state.common.toast_isOpen,
     text: state.common.toast_text,
   };
@@ -53,13 +56,14 @@ export default class App extends React.PureComponent<AppProps, AppState> {
             <Switch>
               <Route component={isPc ? LoginPagePc : LoginPageMobile} path="/LoginAssets" />
               <Route component={isPc ? MainPagePc : MainPageMobile} path="/MainAssets" />
+              <Route component={isPc ? PaySuccessPc : PaySuccessMobile} path="/PaySuccess" />
               <Redirect to={{
                 pathname: '/LoginAssets',
               }} />
             </Switch>
           </Router>
         </div>
-        <Toast />
+        <Toast/>
       </Provider>
     );
   }

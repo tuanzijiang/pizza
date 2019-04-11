@@ -4,6 +4,7 @@ import { Order, Pizza, Address } from '@src/entity';
 import i18n from '@src/utils/i18n';
 import Icon from '@biz-components/Icon';
 import { OrderStatusSchema } from '@entity/Order/schema';
+import Image from '@components/Image';
 
 enum PAY_KIND {
   ALIPAY = 0,
@@ -140,6 +141,7 @@ export default class OrderDetail extends React.PureComponent<OrderDetailProps, O
           const currPizza = pizzas[pizzaId];
           const currNums = menu.num;
           const currNum = currNums[pizzaId];
+          const currImg = currPizza.img;
 
           if (currNum === 0) {
             return null;
@@ -148,7 +150,9 @@ export default class OrderDetail extends React.PureComponent<OrderDetailProps, O
           return (
             <div className="orderDetail-pizzaItem" key={pizzaId}>
               <div className="orderDetail-pizzaItemImage">
-                <Icon name="pisa" classnames="settlement-pizzaItemPisa" />
+                <Image url={currImg}>
+                  <Icon name="pisa" classnames="settlement-pizzaItemPisa" />
+                </Image>
               </div>
               <div className="orderDetail-pizzaItemName">
                 {currPizza.name}

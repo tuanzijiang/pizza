@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 export class TranslateService {
 
   constructor() {}
-  public orderDetails = {
+  public orderTranslate = {
     orderId: '订单号',
     receiveName: '收货人名称',
     receivePhone: '收货人电话',

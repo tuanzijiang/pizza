@@ -42,9 +42,6 @@ public class OrderServiceTest {
     private UserAddressJpaRepository userAddressJpaRepository;
 
     @Mock
-    private AddressJpaRepository addressJpaRepository;
-
-    @Mock
     private OrderMenuJpaRepository orderMenuJpaRepository;
 
     @Mock
@@ -63,40 +60,40 @@ public class OrderServiceTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
-
-    @Test
-    public void testPaid() {
-        double price = 20.12;
-        String orderUuid = "AAA";
-        when(orderJpaRepository.updateStateAndTotalPriceByOrderUuid(OrderStatus.PAID.getDbValue(), price, orderUuid))
-                .thenReturn(1);
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        Map<String, String[]> map = new HashMap<>();
-        map.put("out_trade_no", new String[]{orderUuid});
-        map.put("total_amount", new String[]{String.valueOf(price)});
-        when(request.getParameterMap()).thenReturn(map);
-        when(request.getParameter("out_trade_no")).thenReturn(orderUuid);
-        when(request.getParameter("total_amount")).thenReturn(String.valueOf(price));
-
-        boolean result = orderService.paid(request);
-        assertTrue(result);
-        verify(orderJpaRepository).updateStateAndTotalPriceByOrderUuid(OrderStatus.PAID.getDbValue(), price, orderUuid);
-    }
-
-    @Test
-    public void testPaidFail() {
-        double price = 20.12;
-        String orderUuid = "AAA";
-        when(orderJpaRepository.updateStateAndTotalPriceByOrderUuid(OrderStatus.PAID.getDbValue(), price, orderUuid))
-                .thenReturn(0);
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getParameter("out_trade_no")).thenReturn(orderUuid);
-        when(request.getParameter("total_amount")).thenReturn(String.valueOf(price));
-
-        boolean result = orderService.paid(request);
-        assertFalse(result);
-        verify(orderJpaRepository).updateStateAndTotalPriceByOrderUuid(OrderStatus.PAID.getDbValue(), price, orderUuid);
-    }
+//
+//    @Test
+//    public void testPaid() {
+//        double price = 20.12;
+//        String orderUuid = "AAA";
+//        when(orderJpaRepository.updateStateAndTotalPriceByOrderUuid(OrderStatus.PAID.getDbValue(), price, orderUuid))
+//                .thenReturn(1);
+//        HttpServletRequest request = mock(HttpServletRequest.class);
+//        Map<String, String[]> map = new HashMap<>();
+//        map.put("out_trade_no", new String[]{orderUuid});
+//        map.put("total_amount", new String[]{String.valueOf(price)});
+//        when(request.getParameterMap()).thenReturn(map);
+//        when(request.getParameter("out_trade_no")).thenReturn(orderUuid);
+//        when(request.getParameter("total_amount")).thenReturn(String.valueOf(price));
+//
+//        boolean result = orderService.paid(request);
+//        assertTrue(result);
+//        verify(orderJpaRepository).updateStateAndTotalPriceByOrderUuid(OrderStatus.PAID.getDbValue(), price, orderUuid);
+//    }
+//
+//    @Test
+//    public void testPaidFail() {
+//        double price = 20.12;
+//        String orderUuid = "AAA";
+//        when(orderJpaRepository.updateStateAndTotalPriceByOrderUuid(OrderStatus.PAID.getDbValue(), price, orderUuid))
+//                .thenReturn(0);
+//        HttpServletRequest request = mock(HttpServletRequest.class);
+//        when(request.getParameter("out_trade_no")).thenReturn(orderUuid);
+//        when(request.getParameter("total_amount")).thenReturn(String.valueOf(price));
+//
+//        boolean result = orderService.paid(request);
+//        assertFalse(result);
+//        verify(orderJpaRepository).updateStateAndTotalPriceByOrderUuid(OrderStatus.PAID.getDbValue(), price, orderUuid);
+//    }
 
 
     @Test
@@ -140,19 +137,14 @@ public class OrderServiceTest {
         Optional<OrderEntity> orderEntity = FakeFactory.fakeOrderEntity(orderId, orderUuid, userId, addressId);
         when(orderJpaRepository.findByOrderUuid(orderUuid)).thenReturn(orderEntity);
 
-        when(userAddressJpaRepository.findByUserIdAndAddressId(userId, addressId))
-                .thenReturn(FakeFactory.fakeUserAddressEntity(userId, addressId));
-        when(addressJpaRepository.findById(addressId))
-                .thenReturn(FakeFactory.fakeAddressEntity(addressId));
-        when(orderMenuJpaRepository.findByOrderId(orderId))
-                .thenReturn(FakeFactory.fakeOrderMenuEntities(orderId, menuIds));
-        when(menuJpaRepository.findAllById(anyList()))
-                .thenReturn(FakeFactory.fakeMenuEntities(menuIds));
+        when(userAddressJpaRepository.findUserAddressBeanByUserIdAndAddressId(userId, addressId))
+                .thenReturn(FakeFactory.fakeUserAddressBean(userId, addressId));
+        when(menuJpaRepository.findPizzaBeansByOrderId(orderId))
+                .thenReturn(FakeFactory.fakePizzaBeans(menuIds));
 
         Order order = orderService.fetchOrder(orderUuid);
         assertEquals(order.getId(), orderUuid);
-        assertEquals(order.getAddress().getId(), addressId);
-        // assertEquals(order.getPizzas().size(), menuIds.size());
+        assertEquals(order.getAddress().getId(), Integer.valueOf(11));
         assertNotEquals(order.getStatus(), OrderStatus.CART);
     }
 
@@ -165,25 +157,7 @@ public class OrderServiceTest {
         Optional<OrderEntity> orderEntity = FakeFactory.fakeOrderEntity(orderId, orderUuid, userId, addressId);
         when(orderJpaRepository.findByOrderUuid(orderUuid)).thenReturn(orderEntity);
 
-        when(userAddressJpaRepository.findByUserIdAndAddressId(userId, addressId))
-                .thenReturn(Optional.empty());
-
-        Order order = orderService.fetchOrder(orderUuid);
-        assertNull(order.getAddress());
-    }
-
-    @Test
-    public void testFetchOrderWithUnknownAddress() throws ConsumerServerException {
-        Integer orderId = 1;
-        String orderUuid = "AAA";
-        Integer userId = 1;
-        Integer addressId = 1;
-        Optional<OrderEntity> orderEntity = FakeFactory.fakeOrderEntity(orderId, orderUuid, userId, addressId);
-        when(orderJpaRepository.findByOrderUuid(orderUuid)).thenReturn(orderEntity);
-
-        when(userAddressJpaRepository.findByUserIdAndAddressId(userId, addressId))
-                .thenReturn(FakeFactory.fakeUserAddressEntity(userId, addressId));
-        when(addressJpaRepository.findById(addressId))
+        when(userAddressJpaRepository.findUserAddressBeanByUserIdAndAddressId(userId, addressId))
                 .thenReturn(Optional.empty());
 
         Order order = orderService.fetchOrder(orderUuid);
@@ -200,51 +174,13 @@ public class OrderServiceTest {
         Optional<OrderEntity> orderEntity = FakeFactory.fakeOrderEntity(orderId, orderUuid, userId, addressId);
         when(orderJpaRepository.findByOrderUuid(orderUuid)).thenReturn(orderEntity);
 
-        when(userAddressJpaRepository.findByUserIdAndAddressId(userId, addressId))
-                .thenReturn(FakeFactory.fakeUserAddressEntity(userId, addressId));
-        when(addressJpaRepository.findById(addressId))
-                .thenReturn(FakeFactory.fakeAddressEntity(addressId));
-        when(orderMenuJpaRepository.findByOrderId(orderId))
+        when(userAddressJpaRepository.findUserAddressBeanByUserIdAndAddressId(userId, addressId))
+                .thenReturn(FakeFactory.fakeUserAddressBean(userId, addressId));
+        when(menuJpaRepository.findPizzaBeansByOrderId(orderId))
                 .thenReturn(Collections.EMPTY_LIST);
 
         Order order = orderService.fetchOrder(orderUuid);
         assertEquals(order.getPizzas().size(), 0);
-    }
-
-    @Test
-    public void testFetchOrderWithEmptyMenu() throws ConsumerServerException {
-        Integer orderId = 1;
-        String orderUuid = "AAA";
-        Integer userId = 1;
-        Integer addressId = 1;
-        List<Integer> menuIds = Lists.newArrayList(1,2,3);
-        Optional<OrderEntity> orderEntity = FakeFactory.fakeOrderEntity(orderId, orderUuid, userId, addressId);
-        when(orderJpaRepository.findByOrderUuid(orderUuid)).thenReturn(orderEntity);
-
-        when(userAddressJpaRepository.findByUserIdAndAddressId(userId, addressId))
-                .thenReturn(FakeFactory.fakeUserAddressEntity(userId, addressId));
-        when(addressJpaRepository.findById(addressId))
-                .thenReturn(FakeFactory.fakeAddressEntity(addressId));
-        when(orderMenuJpaRepository.findByOrderId(orderId))
-                .thenReturn(FakeFactory.fakeOrderMenuEntities(orderId, menuIds));
-        when(menuJpaRepository.findAllById(anyList()))
-                .thenReturn(Collections.EMPTY_LIST);
-
-        Order order = orderService.fetchOrder(orderUuid);
-        assertEquals(order.getPizzas().size(), 0);
-    }
-
-    @Test
-    public void testFetchOrderFailure() {
-        Integer orderId = 1;
-        String orderUuid = "AAA";
-        Integer userId = 1;
-        Integer addressId = 1;
-        Optional<OrderEntity> orderEntity = FakeFactory.fakeOrderEntity(orderId, orderUuid, userId, addressId);
-        when(orderJpaRepository.findByOrderUuid(orderUuid)).thenReturn(orderEntity);
-
-        ConsumerServerException e = (ConsumerServerException) thrownBy(() -> orderService.fetchOrder(orderUuid));
-        // assertEquals(e.getMessage(), "Fail to query Address while assembling the order entity.");
     }
 
     @Test

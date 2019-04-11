@@ -6,7 +6,7 @@ import { Command, CommandReq, CommandResp } from './command';
 import { reqProto, reqUrl, respProto } from './config';
 export { Command } from './command';
 
-const BASE_URL = `http://${ip_4}:3000/`;
+const BASE_URL = `http://139.224.37.12:3000/`;
 
 const request = async <T extends Command>
   (T: Command, ...param: CommandReq<T>): Promise<CommandResp<T>> => {
@@ -37,7 +37,6 @@ const request = async <T extends Command>
     });
   } catch (e) {
     error(LogTag.NET, `${T} error`, e);
-    this.printLarkError(e.code);
     return Promise.reject(e);
   }
 };

@@ -3,6 +3,7 @@ package edu.ecnu.scsse.pizza.bussiness.server.controller;
 import edu.ecnu.scsse.pizza.bussiness.server.exception.BusinessServerException;
 import edu.ecnu.scsse.pizza.bussiness.server.exception.PermissionException;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Driver;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.SimpleResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.driver.DriverDetailRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.driver.DriverDetailResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.driver.DriverManageResponse;
@@ -32,7 +33,7 @@ public class DriverController extends BaseController{
      */
     @RequestMapping(value = "/getDriverList",method = RequestMethod.GET)
     @ResponseBody
-    public List<Driver> getDriverList(){
+    public List<DriverManageResponse> getDriverList() throws Exception{
         return driverService.getDriverList();
     }
 
@@ -43,10 +44,10 @@ public class DriverController extends BaseController{
      */
     @RequestMapping(value = "/editDriverDetail",method = RequestMethod.POST)
     @ResponseBody
-    public DriverDetailResponse editShopDetail(@RequestBody DriverDetailRequest request) throws ParseException,BusinessServerException {
-        int adminId = getCurrentAdminId();
+    public DriverDetailResponse editShopDetail(@RequestBody DriverDetailRequest request,@RequestParam int adminId) throws ParseException,BusinessServerException {
+        //int adminId = getCurrentAdminId();
         if (adminId != -1) {
-            return driverService.editDriverDetail(request);
+            return driverService.editDriverDetail(request, adminId);
         } else {
             PermissionException e = new PermissionException("Admin is logout.");
             log.warn("Admin is logout.", e);
@@ -61,16 +62,36 @@ public class DriverController extends BaseController{
      */
     @RequestMapping(value = "/addNewDriver",method = RequestMethod.POST)
     @ResponseBody
-    public DriverDetailResponse addNewDriver(@RequestBody DriverDetailRequest request) throws ParseException,BusinessServerException{
-        int adminId = getCurrentAdminId();
+    public DriverDetailResponse addNewDriver(@RequestBody DriverDetailRequest request,@RequestParam int adminId) throws ParseException,BusinessServerException{
+        //int adminId = getCurrentAdminId();
         if(adminId!=-1) {
-            return driverService.addNewDriver(request);
+            return driverService.addNewDriver(request, adminId);
         }
         else{
             PermissionException e = new PermissionException("Admin is logout.");
             log.warn("Admin is logout.", e);
             return new DriverDetailResponse(e);
         }
+    }
+
+    /**
+     * 删除配送员
+     * @request
+     * @return response
+     */
+    @RequestMapping(value = "/removeDriver",method = RequestMethod.GET)
+    @ResponseBody
+    public SimpleResponse deleteDriver(@RequestParam int id, @RequestParam int adminId){
+        //int adminId = getCurrentAdminId();
+        if(adminId!=-1) {
+            return driverService.deleteDriver(id, adminId);
+        }
+        else{
+            PermissionException e = new PermissionException("Admin is logout.");
+            log.warn("Admin is logout.", e);
+            return new SimpleResponse(e);
+        }
+
     }
 
 }

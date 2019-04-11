@@ -1,11 +1,12 @@
 import {
-  UPDATE_TOAST, UPDATE_CART_ID,
+  UPDATE_TOAST, UPDATE_CART_ID, UPDATE_PAYFORM,
 } from './action';
 
 const initState = {
   toast_text: '',
   toast_isOpen: false,
   cart_id: '',
+  pay_form: '',
 };
 
 export default (state = initState, action: any) => {
@@ -21,6 +22,12 @@ export default (state = initState, action: any) => {
       return {
         ...state,
         cart_id: action.cartId,
+      };
+    }
+    case UPDATE_PAYFORM: {
+      return {
+        ...state,
+        pay_form: action.form,
       };
     }
     default:

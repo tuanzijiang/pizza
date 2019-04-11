@@ -29,20 +29,23 @@ const post = (path = '/', data = {}) => new Promise((resolve, reject) => {
   }
 
   const req = http.request(options, (res) => {
+    let chunks = "";
+
     res.setEncoding('utf8');
     res.on('data', function (chunk) {
+      chunks += chunk;
+    }).on('end', function () {
       try {
         // resultType枚举映射
-        const obj = JSON.parse(chunk);
+        const obj = JSON.parse(chunks);
         obj.resultType = obj.resultType === 'SUCCESS' ? 1 : 0;
         console.log(`[post] ${totalPath} end: ${JSON.stringify(obj)}`);
         resolve(obj);
       } catch (e) {
-        console.warn(`[post] origin`, chunk);
+        console.warn(`[post] origin`, chunks);
         console.error(`[post] error`, e);
         reject(e);
       }
-
     });
   });
 

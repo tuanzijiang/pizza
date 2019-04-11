@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,16 +35,12 @@ public class UserManageService {
         List<User> userList = new ArrayList<>();
         List<UserEntity> userEntityList = userJpaRepository.findAll();
         if(userEntityList.size()!=0){
-            //userManageResponse = new UserManageResponse();
             userList = userEntityList.stream().map(this::convert).collect(Collectors.toList());
-            //userManageResponse.setUserList(userList);
         }
         else{
             NotFoundException e = new NotFoundException("User list is not found.");
-//            userManageResponse = new UserManageResponse(e);
             log.warn("Fail to find the user list.", e);
         }
-
         return userList;
     }
 
@@ -54,11 +51,13 @@ public class UserManageService {
         if(userEntity.getBirthday()!=null){
             String birthdayPattern = "yyyy/MM/dd";
             DateFormat df = new SimpleDateFormat(birthdayPattern);
+            df.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
             user.setBirthday(df.format(userEntity.getBirthday()));
         }
         if(userEntity.getLatestLoginTime()!=null){
-            String loginTimePattern = "yyyy/MM/dd hh:MM:ss";
+            String loginTimePattern = "yyyy/MM/dd HH:mm:ss";
             DateFormat df2 = new SimpleDateFormat(loginTimePattern);
+            df2.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
             user.setLatestLoginTime(df2.format(userEntity.getLatestLoginTime()));
         }
 
@@ -71,9 +70,8 @@ public class UserManageService {
                 String userAddressDetail = userAddressEntity.getAddressDetail();
                 user.setDefaultUserAddress(userAddressDetail);
             }
-            else{
+            else
                 user.setDefaultUserAddress("无");
-            }
         }
         return user;
     }

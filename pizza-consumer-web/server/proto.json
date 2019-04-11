@@ -206,6 +206,10 @@
             "resultType": {
               "type": "ResultType",
               "id": 1
+            },
+            "code": {
+              "type": "string",
+              "id": 2
             }
           }
         },
@@ -613,6 +617,42 @@
             "addresses": {
               "rule": "repeated",
               "type": "Address",
+              "id": 2
+            }
+          }
+        },
+        "PayOrderReq": {
+          "fields": {
+            "orderId": {
+              "type": "string",
+              "id": 1
+            },
+            "totalPrice": {
+              "type": "double",
+              "id": 2
+            },
+            "type": {
+              "type": "payType",
+              "id": 3
+            }
+          },
+          "nested": {
+            "payType": {
+              "values": {
+                "MOBILE": 0,
+                "PC": 1
+              }
+            }
+          }
+        },
+        "PayOrderResp": {
+          "fields": {
+            "resultType": {
+              "type": "ResultType",
+              "id": 1
+            },
+            "form": {
+              "type": "string",
               "id": 2
             }
           }

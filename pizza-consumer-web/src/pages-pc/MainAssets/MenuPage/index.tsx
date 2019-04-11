@@ -5,12 +5,15 @@ import { fetchAddressApi } from '@src/services/api-fetch-address';
 import Menu from './Menu';
 import Pay from './Pay';
 import autobind from 'autobind-decorator';
+import { fetchUserApi } from '@src/services/api-fetch-user';
+import { fetchMenuApi } from '@src/services/api-fetch-menu';
 
 interface MenuPageProps {
   menu: Order;
   pizzas: Pizza[];
   addresses: Address[];
   user: User;
+  cartId: any;
 }
 
 interface MenuPageState {
@@ -26,9 +29,14 @@ export default class MenuPage extends React.PureComponent<MenuPageProps, MenuPag
   }
 
   componentDidMount() {
-    fetchAddressApi({
-      userId: 123,
+    const { user } = this.props;
+    fetchUserApi({
+      userId: user.id,
     });
+    fetchAddressApi({
+      userId: user.id,
+    });
+
   }
 
   @autobind
@@ -41,14 +49,15 @@ export default class MenuPage extends React.PureComponent<MenuPageProps, MenuPag
   }
 
   render() {
-    const { menu, pizzas, addresses, user } = this.props;
+    const { menu, pizzas, addresses, user, cartId } = this.props;
     const { navIdx } = this.state;
     const payAddresses = user.addresses.map(id => addresses[id]);
     payAddresses.unshift(addresses[user.address]);
     return (
       <div className="menuPage-wrapper">
         {navIdx === 0 && <Menu
-          menu={menu} pizzas={pizzas} handleToPay={this.handleNavChange(1)} />
+          menu={menu} pizzas={pizzas}
+          handleToPay={this.handleNavChange(1)} cartId={cartId} userId={user.id} />
         }
         {navIdx === 1 && <Pay
           menu={menu} pizzas={pizzas}

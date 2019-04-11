@@ -11,9 +11,6 @@ public class BaseController{
     @Autowired
     protected HttpServletRequest request;
 
-
-
-
     public int getCurrentAdminId(){
         try {
             HttpSession session = request.getSession();

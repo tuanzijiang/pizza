@@ -9,6 +9,7 @@ import edu.ecnu.scsse.pizza.consumer.server.exception.ConsumerServerException;
 import edu.ecnu.scsse.pizza.consumer.server.exception.IllegalArgumentException;
 import edu.ecnu.scsse.pizza.consumer.server.exception.PayFailureException;
 import edu.ecnu.scsse.pizza.consumer.server.exception.ServiceException;
+import edu.ecnu.scsse.pizza.consumer.server.model.PayType;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Order;
 import edu.ecnu.scsse.pizza.consumer.server.utils.HttpUtils;
 import edu.ecnu.scsse.pizza.data.domain.OrderEntity;
@@ -45,19 +46,19 @@ public class OrderServiceStaticTest {
 
     @Test
     public void testPayRequestWithNullOrderId() {
-        IllegalArgumentException e = (IllegalArgumentException) thrownBy(() -> orderService.payRequest(null, 20.12));
+        IllegalArgumentException e = (IllegalArgumentException) thrownBy(() -> orderService.payRequest(null, 20.12, PayType.MOBILE));
         assertEquals(e.getMessage(), "orderUuid can't be null.");
     }
 
     @Test
     public void testPayRequestWithZeroPrice() {
-        IllegalArgumentException e = (IllegalArgumentException) thrownBy(() -> orderService.payRequest("AAA", 0));
+        IllegalArgumentException e = (IllegalArgumentException) thrownBy(() -> orderService.payRequest("AAA", 0, PayType.MOBILE));
         assertEquals(e.getMessage(), "totalPrice must be positive.");
     }
 
     @Test
     public void testPayRequestWithNegativePrice() {
-        IllegalArgumentException e = (IllegalArgumentException) thrownBy(() -> orderService.payRequest("AAA", -10));
+        IllegalArgumentException e = (IllegalArgumentException) thrownBy(() -> orderService.payRequest("AAA", -10, PayType.MOBILE));
         assertEquals(e.getMessage(), "totalPrice must be positive.");
     }
 
@@ -73,7 +74,7 @@ public class OrderServiceStaticTest {
         double price = 20.12;
         String orderUuid = "AAA";
 
-        String result = orderService.payRequest(orderUuid, price);
+        String result = orderService.payRequest(orderUuid, price, PayType.MOBILE);
         assertEquals(returnString, result);
     }
 
@@ -90,7 +91,7 @@ public class OrderServiceStaticTest {
         double price = 20.12;
         String orderUuid = "AAA";
 
-        PayFailureException e = (PayFailureException) thrownBy(() -> orderService.payRequest(orderUuid, price));
+        PayFailureException e = (PayFailureException) thrownBy(() -> orderService.payRequest(orderUuid, price, PayType.MOBILE));
         assertEquals(e.getMessage(), payResponse.getMsg());
     }
 
@@ -104,7 +105,7 @@ public class OrderServiceStaticTest {
         double price = 20.12;
         String orderUuid = "AAA";
 
-        PayFailureException e = (PayFailureException) thrownBy(() -> orderService.payRequest(orderUuid, price));
+        PayFailureException e = (PayFailureException) thrownBy(() -> orderService.payRequest(orderUuid, price, PayType.MOBILE));
         assertEquals(e.getCause(), exception);
     }
 

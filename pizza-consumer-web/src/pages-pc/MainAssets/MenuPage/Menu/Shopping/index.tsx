@@ -6,11 +6,13 @@ import i18n from '@src/utils/i18n';
 import autobind from 'autobind-decorator';
 import { CART_ORDER_ID } from '@entity/Order';
 import { updateOrderApi } from '@services/api-update-order';
+import Image from '@components/Image';
 
 interface ShoppingCartProps {
   menu: Order;
   pizzas: Pizza[];
   handleToPay: () => void;
+  cartId: any;
 }
 
 interface ShoppingCartState {
@@ -21,11 +23,12 @@ export default class Shopping extends React.PureComponent<ShoppingCartProps, Sho
 
   @autobind
   handleMenuUpdateClick(pizzaId: number, count: number) {
+    const { cartId } = this.props;
     return () => {
       updateOrderApi({
         pizzaId,
         count,
-        orderId: CART_ORDER_ID,
+        orderId: cartId,
       });
     };
   }
@@ -44,13 +47,16 @@ export default class Shopping extends React.PureComponent<ShoppingCartProps, Sho
             const orderPizzaNum = num[orderPizzaId];
             const orderPizzaPrice = orderPizza.price;
             const orderPizzaName = orderPizza.name;
+            const img = orderPizza.img;
             return (
               <div
                 key={orderPizzaId}
                 className="shoppingCart-pizzaItem"
               >
                 <div className="shoppingCart-pizzaItemImg">
-                  <Icon name="pisa" classnames="shoppingCart-pizzaItemPisa" />
+                  <Image url={img}>
+                    <Icon name="pisa" classnames="shoppingCart-pizzaItemPisa" />
+                  </Image>
                 </div>
                 <div className="shoppingCart-pizzaItemContent">
                   <div className="shoppingCart-pizzaItemName">

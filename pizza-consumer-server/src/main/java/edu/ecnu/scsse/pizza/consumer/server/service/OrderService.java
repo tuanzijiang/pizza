@@ -1,18 +1,25 @@
 package edu.ecnu.scsse.pizza.consumer.server.service;
 
 import com.alipay.api.AlipayApiException;
+import com.alipay.api.AlipayRequest;
+import com.alipay.api.AlipayResponse;
 import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.domain.AlipayTradePagePayModel;
 import com.alipay.api.domain.AlipayTradeWapPayModel;
+import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.api.request.AlipayTradeWapPayRequest;
 import com.alipay.api.response.AlipayTradeWapPayResponse;
 import com.google.gson.Gson;
 import edu.ecnu.scsse.pizza.consumer.server.exception.*;
 import edu.ecnu.scsse.pizza.consumer.server.exception.IllegalArgumentException;
+import edu.ecnu.scsse.pizza.consumer.server.model.PayType;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Order;
 import edu.ecnu.scsse.pizza.consumer.server.model.entity.Pizza;
 import edu.ecnu.scsse.pizza.consumer.server.utils.AlipayConfig;
 import edu.ecnu.scsse.pizza.consumer.server.utils.EntityConverter;
 import edu.ecnu.scsse.pizza.consumer.server.utils.HttpUtils;
+import edu.ecnu.scsse.pizza.data.bean.PizzaBean;
+import edu.ecnu.scsse.pizza.data.bean.UserAddressBean;
 import edu.ecnu.scsse.pizza.data.domain.*;
 import edu.ecnu.scsse.pizza.data.enums.*;
 import edu.ecnu.scsse.pizza.data.repository.*;
@@ -35,8 +42,6 @@ import java.util.stream.Collectors;
 @Service
 public class OrderService {
 
-    private final Gson GSON = new Gson();
-
     private static final Logger log = LoggerFactory.getLogger(OrderService.class);
 
     private final AtomicInteger WORKER_COUNTER = new AtomicInteger();
@@ -45,21 +50,11 @@ public class OrderService {
 
     private static final String SERVICE_PHONE = "021-9999-9999";
 
-    private final ExecutorService WORKER = Executors.newFixedThreadPool(8, r -> {
-        Thread thread = new Thread(r);
-        thread.setDaemon(true);
-        thread.setName("order-service-query-worker-" + WORKER_COUNTER.incrementAndGet());
-        return thread;
-    });
-
     @Autowired
     private OrderJpaRepository orderJpaRepository;
 
     @Autowired
     private UserAddressJpaRepository userAddressJpaRepository;
-
-    @Autowired
-    private AddressJpaRepository addressJpaRepository;
 
     @Autowired
     private OrderMenuJpaRepository orderMenuJpaRepository;
@@ -86,17 +81,9 @@ public class OrderService {
             Order order = EntityConverter.convert(entity);
             if (order.getStatus() != OrderStatus.CART) {
                 // query Address
-                Future queryFuture = WORKER.submit(() -> this.supplementAddress(entity, order));
+                this.supplementAddress(entity, order);
                 // query Pizzas
                 this.supplementPizzas(entity, order, order.getStatus() == OrderStatus.CART);
-
-                try {
-                    queryFuture.get(1, TimeUnit.SECONDS);
-                } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                    throw new ConsumerServerException(ExceptionType.REPOSITORY,
-                            "Fail to query Address while assembling the order entity."
-                            , e);
-                }
             } else {
                 // query Pizzas
                 this.supplementPizzas(entity, order, order.getStatus() == OrderStatus.CART);
@@ -171,6 +158,9 @@ public class OrderService {
         }
         return result;
     }
+
+
+
 
     /**
      * Query pizza menus.
@@ -265,7 +255,7 @@ public class OrderService {
     }
 
 
-    public String payRequest(String orderUuid, double totalPrice) throws ConsumerServerException {
+    public String payRequest(String orderUuid, double totalPrice, PayType type) throws ConsumerServerException {
         // arg check
         if (orderUuid == null) {
             throw new IllegalArgumentException("orderUuid can't be null.");
@@ -275,23 +265,25 @@ public class OrderService {
         }
 
         DefaultAlipayClient client = new DefaultAlipayClient(AlipayConfig.GATE_WAY, AlipayConfig.APP_ID, AlipayConfig.PRIVATE_KEY, AlipayConfig.FORMAT, AlipayConfig.CHARSET, AlipayConfig.ALIPAY_PUBLIC_KEY, AlipayConfig.SIGNTYPE);
-        AlipayTradeWapPayRequest alipayRequest = new AlipayTradeWapPayRequest();
-        // 封装请求支付信息
-        AlipayTradeWapPayModel model = new AlipayTradeWapPayModel();
-        model.setOutTradeNo(orderUuid);
-        model.setSubject(AlipayConfig.SUBJECT);
-        model.setTotalAmount(String.valueOf(totalPrice));
-        model.setProductCode(AlipayConfig.PRODUCT_CODE);
-        alipayRequest.setBizModel(model);
 
+        AlipayRequest request;
+        switch (type) {
+            case PC: request = this.pcRequest(orderUuid, totalPrice);break;
+            case MOBILE: request = this.mobileRequest(orderUuid, totalPrice); break;
+            default:
+                throw new IllegalArgumentException(String.format(
+                        "Illeagal pay type: [%s]", type == null ? "NULL" : type.name()));
+        }
         try {
-            AlipayTradeWapPayResponse response = client.pageExecute(alipayRequest);
+            AlipayResponse response = client.pageExecute(request);
             if (!response.isSuccess()) {
                 PayFailureException payFailureException = new PayFailureException(response.getMsg());
                 log.warn("Pay Failure. orderUuid = [{}].", orderUuid, payFailureException);
                 throw payFailureException;
             }
 
+            orderJpaRepository.updateStateAndTotalPriceByOrderUuid(OrderStatus.PAID.getDbValue(),
+                    totalPrice, orderUuid);
             return response.getBody();
         } catch (AlipayApiException e) {
             PayFailureException payFailureException =  new PayFailureException(e);
@@ -300,48 +292,30 @@ public class OrderService {
         }
     }
 
-    public boolean paid(HttpServletRequest request) {
-        //获取支付宝POST过来反馈信息
-        Map<String, String> params = new HashMap<>();
-        Map requestParams = request.getParameterMap();
-        for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext(); ) {
-            String name = (String) iter.next();
-            String[] values = (String[]) requestParams.get(name);
-            String valueStr = "";
-            for (int i = 0; i < values.length; i++) {
-                valueStr = (i == values.length - 1) ? valueStr + values[i]
-                        : valueStr + values[i] + ",";
-            }
-            //乱码解决，这段代码在出现乱码时使用。
-            //valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
-            params.put(name, valueStr);
-        }
-//        //切记alipaypublickey是支付宝的公钥，请去open.alipay.com对应应用下查看。
-//        //boolean AlipaySignature.rsaCheckV1(Map<String, String> params, String publicKey, String charset, String sign_type)
-//        boolean signVerified = false;
-//        try {
-//            signVerified = AlipaySignature.rsaCheckV1(params, AlipayConfig.ALIPAY_PUBLIC_KEY, AlipayConfig.CHARSET, AlipayConfig.SIGNTYPE);
-//        } catch (AlipayApiException e) {
-//            log.error("Fail in rsa check. orderUuid = [{}].", params.get("out_trade_no"), e);
-//        }
-//
-//        if (signVerified) {
-            try {
-                //商户订单号
-                String orderUuid = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"), "UTF-8");
-                //付款金额
-                String totalPriceStr = new String(request.getParameter("total_amount").getBytes("ISO-8859-1"), "UTF-8");
+    private AlipayTradeWapPayRequest mobileRequest (String orderUuid, double totalPrice) {
+        AlipayTradeWapPayRequest alipayRequest = new AlipayTradeWapPayRequest();
+        // 封装请求支付信息
+        AlipayTradeWapPayModel model = new AlipayTradeWapPayModel();
+        model.setOutTradeNo(orderUuid);
+        model.setSubject(AlipayConfig.SUBJECT);
+        model.setTotalAmount(String.valueOf(totalPrice));
+        model.setProductCode(AlipayConfig.PRODUCT_CODE);
+        alipayRequest.setBizModel(model);
+        alipayRequest.setReturnUrl(AlipayConfig.RETURN_URL);
+        return alipayRequest;
+    }
 
-                return orderJpaRepository.updateStateAndTotalPriceByOrderUuid(OrderStatus.PAID.getDbValue(),
-                        Double.valueOf(totalPriceStr), orderUuid) > 0;
-            } catch (UnsupportedEncodingException e) {
-                log.error("Check Encoding!", e);
-            }
-//        } else {
-//            log.warn("Fail during sign verify. params={}", GSON.toJson(params));
-//        }
-
-        return false;
+    private AlipayTradePagePayRequest pcRequest (String orderUuid, double totalPrice) {
+        AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
+        // 封装请求支付信息
+        AlipayTradePagePayModel model = new AlipayTradePagePayModel();
+        model.setOutTradeNo(orderUuid);
+        model.setSubject(AlipayConfig.SUBJECT);
+        model.setTotalAmount(String.valueOf(totalPrice));
+        model.setProductCode(AlipayConfig.PRODUCT_CODE);
+        request.setReturnUrl(AlipayConfig.RETURN_URL);
+        request.setBizModel(model);
+        return request;
     }
 
     public static class Phones {
@@ -450,20 +424,11 @@ public class OrderService {
      * @param order order to supplement.
      */
     private void supplementAddress(OrderEntity entity, Order order) {
-        Optional<UserAddressEntity> userAddressEntityOptional =
-                userAddressJpaRepository.findByUserIdAndAddressId(entity.getUserId(), entity.getAddressId());
-        if (userAddressEntityOptional.isPresent()) {
-            UserAddressEntity userAddressEntity = userAddressEntityOptional.get();
-
-            Optional<AddressEntity> addressEntityOptional =
-                    addressJpaRepository.findById(userAddressEntity.getAddressId());
-            addressEntityOptional.ifPresent(addressEntity -> order.setAddress(EntityConverter.convert(userAddressEntity, addressEntity)));
-
-            if (addressEntityOptional.isPresent()) {
-                AddressEntity addressEntity = addressEntityOptional.get();
-                order.setAddress(EntityConverter.convert(userAddressEntity, addressEntity));
-            }
-        }
+        Optional<UserAddressBean> userAddressBean =
+                userAddressJpaRepository.findUserAddressBeanByUserIdAndAddressId(entity.getUserId(), entity.getAddressId());
+        userAddressBean.ifPresent(addressEntity -> {
+            order.setAddress(EntityConverter.convert(addressEntity));
+        });
     }
 
     /**
@@ -501,32 +466,20 @@ public class OrderService {
      * @param order order to supplement.
      */
     private void supplementPizzas(OrderEntity entity, Order order, boolean onlyOnSale) {
-        List<OrderMenuEntity> orderMenuEntities = orderMenuJpaRepository.findByOrderId(entity.getId());
-        if (!CollectionUtils.isEmpty(orderMenuEntities)) {
-            List<MenuEntity> menuEntities = null;
-            if (onlyOnSale) {
-                menuEntities = menuJpaRepository.findAllByStateAndIdIn(
-                        PizzaStatus.IN_SALE.getDbValue(),
-                        orderMenuEntities.stream()
-                                .mapToInt(OrderMenuEntity::getMenuId)
-                                .boxed().collect(Collectors.toSet()));
-            } else {
-                menuEntities = menuJpaRepository.findAllById(
-                        orderMenuEntities.stream()
-                                .mapToInt(OrderMenuEntity::getMenuId)
-                                .boxed().collect(Collectors.toSet()));
-            }
-            List<Pizza> pizzas = new ArrayList<>();
-            for (OrderMenuEntity om : orderMenuEntities) {
-                menuEntities.stream()
-                        .filter(m -> Objects.equals(m.getId(), om.getMenuId()))
-                        .findFirst()
-                        .ifPresent(m -> pizzas.add(EntityConverter.convert(om, m)));
-            }
-            order.setPizzas(pizzas);
+        List<PizzaBean> menuEntities = null;
+        if (onlyOnSale) {
+            menuEntities = menuJpaRepository.findPizzaBeansByStateAndOrderId(
+                    PizzaStatus.IN_SALE.getDbValue(),
+                    entity.getId());
         } else {
-            order.setPizzas(Collections.EMPTY_LIST);
+            menuEntities = menuJpaRepository.findPizzaBeansByOrderId(
+                    entity.getId());
         }
+        List<Pizza> pizzas = new ArrayList<>();
+        for (PizzaBean bean : menuEntities) {
+            pizzas.add(EntityConverter.convert(bean));
+        }
+        order.setPizzas(pizzas);
     }
 
     

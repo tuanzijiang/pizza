@@ -17,6 +17,10 @@ export class AddressService {
     return `${local}/order/getOrderList`
   }
 
+  static getOrderDetail() {
+    return `${local}/order/getOrderDetail?orderId=`
+  }
+
   static getYesterdayOrder() {
     return `${local}/order/getYesterdaySaleStatus`
   }
@@ -45,8 +49,16 @@ export class AddressService {
     return `${local}/menu/addNewMenu`
   }
 
+  static uploadMenuImage() {
+    return `${local}/menu/uploadImage?menuId=`
+  }
+
   static changeMenuState() {
     return `${local}/menu/editMenuStatus?menuId=`
+  }
+
+  static getMenuIngredients() {
+    return `${local}/menu/getMenuIngredients?menuId=`
   }
 
   static getShopList() {
@@ -57,8 +69,16 @@ export class AddressService {
     return `${local}/shop/editShopDetail`
   }
 
+  static uploadShopImage() {
+    return `${local}/shop/uploadImage?shopId=`
+  }
+
   static addShop() {
     return `${local}/shop/addNewShop`
+  }
+
+  static getIngredientListByShopId() {
+    return `${local}/shop/getIngredientListByShopId?shopId=`
   }
 
   static getDriverList() {
@@ -71,6 +91,10 @@ export class AddressService {
 
   static addDriver() {
     return `${local}/driver/addNewDriver`
+  }
+
+  static removeDriver() {
+    return `${local}/driver/removeDriver?id=`
   }
 
   static getIngredientList() {
@@ -98,11 +122,15 @@ export class AddressService {
   }
 
   static removeIngredient() {
-    return `${local}/ingredient/removeIngredient?id=`
+    return `${local}/ingredient/deleteIngredient?id=`
   }
 
   static allowOrder() {
     return `${local}/order/allowCancel?orderId=`
+  }
+
+  static getCancelOrderList() {
+    return `${local}/order/getCancelOrderList`
   }
 
   static denyOrder() {

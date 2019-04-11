@@ -30,7 +30,7 @@ router.post('/', async (ctx, next) => {
     try {
       response = await net.post('/fetchLoginStatus', result);
       body = {
-        resultType: 1, 
+        resultType: response.resultType, 
         user: User.fromJS(response.user),
       }
     } catch (e) {

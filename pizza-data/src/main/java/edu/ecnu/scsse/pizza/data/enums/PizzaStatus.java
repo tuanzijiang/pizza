@@ -38,4 +38,19 @@ public enum  PizzaStatus {
             return null;
         }
     }
+
+    public static PizzaStatus fromExpression(String expression) {
+        if (expression == null) {
+            return null;
+        }
+        Optional<PizzaStatus> pizzaStatus =  Arrays.stream(PizzaStatus.values())
+                .filter(s -> s.expression.equals(expression))
+                .findFirst();
+
+        if (pizzaStatus.isPresent()) {
+            return pizzaStatus.get();
+        } else {
+            return null;
+        }
+    }
 }
