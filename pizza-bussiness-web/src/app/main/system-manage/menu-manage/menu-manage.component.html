@@ -115,12 +115,9 @@
           <p-table [value]="tempMenu.ingredients" [scrollable]="true" scrollHeight="130px">
             <ng-template pTemplate="header">
               <tr>
-                <th>原料名称</th>
-                <th [pSortableColumn]="'ig_num'">
-                  数量
-                  <p-sortIcon [field]="'ig_num'" ariaLabel="Activate to sort"
-                                                 ariaLabelDesc="Activate to sort in descending order"
-                                                 ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                <th *ngFor="let col of igcols" [pSortableColumn]="col.field">
+                  {{col.header}}
+                  <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
                 </th>
               </tr>
             </ng-template>
@@ -132,10 +129,10 @@
                 <td pEditableColumn>
                   <p-cellEditor>
                     <ng-template pTemplate="input">
-                      <input pInputText type="number" [(ngModel)]="rowData.count" required>
+                      <input pInputText type="number" [(ngModel)]="rowData.menuNeedCount" required>
                     </ng-template>
                     <ng-template pTemplate="output">
-                      {{rowData.count}}
+                      {{rowData.menuNeedCount}}
                     </ng-template>
                   </p-cellEditor>
                 </td>
@@ -229,12 +226,9 @@
           <p-table [value]="tempMenu.ingredients" [scrollable]="true" scrollHeight="130px">
             <ng-template pTemplate="header">
               <tr>
-                <th>原料名称</th>
-                <th [pSortableColumn]="'ig_num'">
-                  数量
-                  <p-sortIcon [field]="'ig_num'" ariaLabel="Activate to sort"
-                                                 ariaLabelDesc="Activate to sort in descending order"
-                                                 ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                <th *ngFor="let col of igcols" [pSortableColumn]="col.field">
+                  {{col.header}}
+                  <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
                 </th>
               </tr>
             </ng-template>
@@ -246,10 +240,10 @@
                 <td pEditableColumn>
                   <p-cellEditor>
                     <ng-template pTemplate="input">
-                      <input pInputText type="number" [(ngModel)]="rowData.count" required>
+                      <input pInputText type="number" [(ngModel)]="rowData.menuNeedCount" required>
                     </ng-template>
                     <ng-template pTemplate="output">
-                      {{rowData.count}}
+                      {{rowData.menuNeedCount}}
                     </ng-template>
                   </p-cellEditor>
                 </td>
@@ -300,4 +294,3 @@
             class="ui-button-secondary"></button>
   </p-footer>
 </p-dialog>
-

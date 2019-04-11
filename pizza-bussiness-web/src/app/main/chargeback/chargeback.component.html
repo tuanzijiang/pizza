@@ -87,11 +87,11 @@
             <tr>
               <td *ngFor="let col of columns" [ngSwitch]="true">
                 <span *ngSwitchCase="col.field == 'state'">
-                  <span *ngIf="rowData[col.field] == 'CANCELED'" style="color: green">
-                    通过
+                  <span *ngIf="rowData[col.field] == '已取消'" style="color: green">
+                    已取消
                   </span>
-                  <span *ngIf="rowData[col.field] == 'CANCEL_FAILED'" style="color: red">
-                    未通过
+                  <span *ngIf="rowData[col.field] == '取消失败'" style="color: red">
+                    取消失败
                   </span>
                 </span>
                 <span *ngSwitchCase="col.field == 'commitTime'">{{rowData[col.field].toLocaleString()}}</span>

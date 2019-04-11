@@ -12,6 +12,7 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ResultType;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.SimpleResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ingredient.*;
+import edu.ecnu.scsse.pizza.bussiness.server.utils.CastEntity;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.ExcelUtils;
 import edu.ecnu.scsse.pizza.data.domain.IngredientEntity;
@@ -242,38 +243,10 @@ public class IngredientService {
         return msg;
     }
 
-    public List<ShopIngredient> getAlarmList(){
+    public List<ShopIngredient> getAlarmList() throws Exception{
         List<ShopIngredient> alarmList = new ArrayList<>();
-        List<ShopIngredientEntity> shopIngredientEntityList = shopIngredientJpaRepository.findAll();
-        if(shopIngredientEntityList.size()!=0){
-            for(ShopIngredientEntity entity:shopIngredientEntityList){
-                int count = entity.getCount(); //现有库存
-                Optional<IngredientEntity> optional = ingredientJpaRepository.findById(entity.getIngredientId());
-                if(optional.isPresent()){
-                    IngredientEntity ingredientEntity = optional.get();
-                    int alarmNum = ingredientEntity.getAlermNum()==null?DEFAULT_ALARM_NUM:ingredientEntity.getAlermNum();
-                    if(count<=alarmNum) {
-                        ShopIngredient ingredient = new ShopIngredient();
-                        ingredient.setId(ingredientEntity.getId());
-                        ingredient.setName(ingredientEntity.getName());
-                        ingredient.setAlertNum(ingredientEntity.getAlermNum());
-                        ingredient.setCount(entity.getCount());
-                        Optional<PizzaShopEntity> shopOptional = shopJpaRepository.findPizzaShopEntityById(entity.getShopId());
-                        if(shopOptional.isPresent()){
-                            PizzaShopEntity pizzaShopEntity = shopOptional.get();
-                            ingredient.setShopId(pizzaShopEntity.getId());
-                            String shopName = pizzaShopEntity.getName();
-                            ingredient.setShopName(shopName);
-                        }
-                        else {
-                            ingredient.setShopId(0);
-                            ingredient.setShopName("");
-                        }
-                        alarmList.add(ingredient);
-                    }
-                }
-            }
-        }
+        List<Object[]> objects = ingredientJpaRepository.findAlarmList();
+        alarmList = CastEntity.castEntityToAlarmBean(objects,ShopIngredient.class);
         return alarmList;
     }
 

@@ -130,7 +130,7 @@ public class IngredientServiceTest extends TestApplication{
     }
 
     @Test
-    public void testGetAlarmList(){
+    public void testGetAlarmList() throws Exception{
         List<ShopIngredientEntity> shopIngredientEntityList = FakeFactory.fakeShopIngredients();
         when(shopIngredientJpaRepository.findAll()).thenReturn(shopIngredientEntityList);
         when(ingredientJpaRepository.findById(anyInt())).thenReturn(Optional.of(FakeFactory.fakeIngredient(1)));

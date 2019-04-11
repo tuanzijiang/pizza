@@ -172,6 +172,7 @@ const handleTest = async (args, func) => {
   const run = async () => {
     // 应当结束运行
     const shouldEnd = new Date().valueOf() - startTime >= testDuration * 1000;
+
     if (shouldEnd && totalPageNum === 0) {
       clearInterval(timer);
       timer = null;

@@ -1,9 +1,10 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Menu} from "../../../modules/system-manage/menu";
-import {Ingredient} from "../../../modules/system-manage/ingredient";
 import {SystemManageService} from "../../../services/system-manage/system-manage.service";
 import {BaseResponse} from "../../../modules/baseResponse";
 import {Table} from "primeng/table";
+import {InventoryManageService} from "../../../services/inventory-manage/inventory-manage.service";
+import {Ingredient} from "../../../modules/system-manage/ingredient";
 
 @Component({
   selector: 'app-menu-manage',
@@ -23,8 +24,10 @@ export class MenuManageComponent implements OnInit {
   tempMenu: Menu;
   imgUrl: string;
   showPage: boolean;
+  image: File;
+  ingredientList: Ingredient[];
 
-  constructor(private systemManageService: SystemManageService) {
+  constructor(private systemManageService: SystemManageService, private inventoryManageService: InventoryManageService) {
   }
 
   ngOnInit() {
@@ -48,8 +51,8 @@ export class MenuManageComponent implements OnInit {
     ];
 
     this.igcols = [
-      {field: 'name', header: '名称'},
-      {field: 'count', header: '数量(可修改)'},
+      {field: 'name', header: '原料名称'},
+      {field: 'menuNeedCount', header: '数量(可修改)'},
     ];
 
     this.states = [
@@ -60,13 +63,34 @@ export class MenuManageComponent implements OnInit {
 
   }
 
+
   getMenuList() {
     this.systemManageService.getMenuList().subscribe(
       (menuList: Menu[]) => {
         this.menuList = menuList;
-        this.showPage = true;
+        this.getIngredientList();
       }
     );
+  }
+
+  getIngredientList() {
+    this.inventoryManageService.getIngredientList().subscribe(
+      (ingredientList: Ingredient[]) => {
+        this.ingredientList = ingredientList;
+        for(let menu of this.menuList) {
+          menu.ingredients = this.filterIngredient(menu.ingredients, ingredientList);
+        }
+        this.showPage = true;
+      }
+    )
+  }
+
+  filterIngredient(fromList: Ingredient[], toList: Ingredient[]) {
+    for(let ing of fromList) {
+      let index = toList.findIndex(obj => obj.id == ing.id);
+      toList[index].menuNeedCount = ing.menuNeedCount;
+    }
+    return toList;
   }
 
   getPizzaType() {
@@ -109,47 +133,52 @@ export class MenuManageComponent implements OnInit {
   }
 
   alterMenu(menu: Menu) {
-    this.tempMenu = menu;
+    this.tempMenu = this.cloneMenu(menu);
     this.imgUrl = this.tempMenu.image;
     this.displayChangeDialog = true;
   }
 
   addMenu() {
     this.tempMenu = new Menu();
+    this.tempMenu.ingredients = this.ingredientList;
     this.displayAddDialog = true;
   }
 
   submitNewMenu() {
-    let newMenu = this.tempMenu;
-    if (this.tempMenu.state == '售卖中') {
-      newMenu.state = 'IN_SALE'
-    } else {
-      newMenu.state = 'OFF_SHELF'
-    }
+    this.tempMenu.ingredients = this.tempMenu.ingredients.filter(obj => obj.menuNeedCount != 0);
     this.systemManageService.addMenu(this.tempMenu).subscribe(
       (response: BaseResponse) => {
         if (response.resultType == 'FAILURE') {
           alert(response.errorMsg);
         } else {
-          this.displayAddDialog = false;
-          this.tempMenu = null;
-          this.showPage = false;
-          this.getMenuList();
+          if(this.image == null) {
+            this.displayAddDialog = false;
+            this.tempMenu = null;
+            this.showPage = false;
+            this.getMenuList();
+          } else {
+            this.uploadImage(response.menuId);
+          }
         }
       }
     );
   }
 
   submitChangedMenu() {
+    this.tempMenu.ingredients = this.tempMenu.ingredients.filter(obj => obj.menuNeedCount != 0);
     this.systemManageService.editMenu(this.tempMenu).subscribe(
       (response: BaseResponse) => {
         if (response.resultType == 'FAILURE') {
           alert(response.errorMsg);
         } else {
-          this.displayChangeDialog = false;
-          this.tempMenu = null;
-          this.showPage = false;
-          this.getMenuList();
+          if(this.image == null) {
+            this.displayChangeDialog = false;
+            this.tempMenu = null;
+            this.showPage = false;
+            this.getMenuList();
+          } else {
+            this.uploadImage(this.tempMenu.id);
+          }
         }
       }
     );
@@ -157,12 +186,31 @@ export class MenuManageComponent implements OnInit {
 
   closeNewMenuDialog() {
     this.tempMenu = null;
+    this.image = null;
     this.displayAddDialog = false;
   }
 
   closeChangeDialog() {
     this.tempMenu = null;
+    this.image = null;
     this.displayChangeDialog = false;
+  }
+
+  uploadImage(menuId: string) {
+    this.systemManageService.uploadMenuImage(this.image, menuId).subscribe(
+      (response: BaseResponse) => {
+        if (response.resultType == 'FAILURE') {
+          alert(response.errorMsg);
+        } else {
+          this.displayAddDialog = false;
+          this.displayChangeDialog = false;
+          this.tempMenu = null;
+          this.image = null;
+          this.showPage = false;
+          this.getMenuList();
+        }
+      }
+    );
   }
 
   onSelectFile(event) {
@@ -170,12 +218,29 @@ export class MenuManageComponent implements OnInit {
       let reader = new FileReader();
 
       reader.readAsDataURL(event.target.files[0]); // read file as data url
-      this.tempMenu.image = event.target.files[0];
-
+      this.image = event.target.files[0];
       reader.onload = (event: any) => { // called once readAsDataURL is completed
         this.imgUrl = event.target.result;
-      }
+      };
     }
   }
+
+
+  cloneMenu(menu: Menu) {
+    let tmpMenu = new Menu();
+    for (const key in menu) {
+      if(menu.hasOwnProperty(key)) {
+        tmpMenu[key] = menu[key];
+      }
+    }
+    return tmpMenu;
+  }
+
+  clearNeedCount() {
+    for(let ing of this.ingredientList) {
+      ing.menuNeedCount = 0;
+    }
+  }
+
 
 }

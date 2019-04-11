@@ -28,10 +28,20 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
                                                                Integer lastOrderId,
                                                                Pageable pageable);
 
-    @Query(value="select *\n" +
+    @Query(value="select count(*)\n" +
             "    from pizza_order\n" +
             "    where DATEDIFF(DATE(commit_time),?1)=0",nativeQuery = true)
-    List<OrderEntity> findOrderByCommitTime(String date);
+    int findTotalOrdersByCommitTime(String date);
+
+    @Query(value="select count(*)\n" +
+            "    from pizza_order\n" +
+            "    where DATEDIFF(DATE(commit_time),?1)=0 and pizza_order.state = ?2",nativeQuery = true)
+    int findTotalOrdersByCommitTimeAndState(String date,int state);
+
+    @Query(value="select ifnull(sum(total_price),0)\n" +
+            "    from pizza_order\n" +
+            "    where DATEDIFF(DATE(commit_time),?1)=0",nativeQuery = true)
+    double findTotalAmountByCommitTime(String date);
 
     // update
     @Transactional
@@ -118,7 +128,8 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
                     ") as order_driver\n" +
                     "on order_address.id = order_driver.id\n" +
                     ") as address_driver\n" +
-                    ") as order_detail",
+                    ") as order_detail" +
+                    "where o.state<>1",
             nativeQuery = true)
     List<Object[]> getOrderBeans();
 
@@ -168,4 +179,27 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
             "set driver_id = null \n" +
             "where driver_id = ?1", nativeQuery = true)
     int updateOrdersDriver(int driverId);
+
+    @Query(value = "select sale.date,orderNum,ifnull(completeNum,0),ifnull(cancelNum,0),totalAmount\n" +
+            "from\n" +
+            "(select total.date,orderNum,completeNum,totalAmount\n" +
+            "from\n" +
+            "(select DATE(commit_time) as date, count(*) as orderNum,ifnull(sum(total_price),0) as totalAmount\n" +
+            "from pizza_order\n" +
+            "where DATE(commit_time) is not null\n" +
+            "group by date) as total\n" +
+            "left join \n" +
+            "(select DATE(commit_time) as date, count(*) as completeNum\n" +
+            "from pizza_order\n" +
+            "where DATE(commit_time) is not null and state = 9\n" +
+            "group by date) as complete\n" +
+            "on total.date = complete.date) as sale\n" +
+            "left join\n" +
+            "(select DATE(commit_time) as date, count(*) as cancelNum\n" +
+            "from pizza_order\n" +
+            "where DATE(commit_time) is not null and state = 5\n" +
+            "group by date) as cancel\n" +
+            "on sale.date = cancel.date\n" +
+            "order by sale.date asc",nativeQuery = true)
+    List<Object[]> getSaleStatus();
 }
