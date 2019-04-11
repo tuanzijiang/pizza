@@ -90,6 +90,11 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
     @Query(value = "update pizza_order set state=?1, driver_id=?2 where id=?3",nativeQuery = true)
     int updateStateAndDriverIdByOrderId(int state,int driverId,int orderId);
 
+    @Transactional
+    @Modifying
+    @Query(value = "update pizza_order set commit_time=?1 where id=?2",nativeQuery = true)
+    int updateCommitTime(Timestamp commitTime,int orderId);
+
     @Query(value = "select * from pizza_order", nativeQuery = true)
     List<OrderEntity> findAllOrders();
 
@@ -128,7 +133,7 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
                     ") as order_driver\n" +
                     "on order_address.id = order_driver.id\n" +
                     ") as address_driver\n" +
-                    ") as order_detail" +
+                    ") as order_detail\n" +
                     "where o.state<>1",
             nativeQuery = true)
     List<Object[]> getOrderBeans();
@@ -202,4 +207,10 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
             "on sale.date = cancel.date\n" +
             "order by sale.date asc",nativeQuery = true)
     List<Object[]> getSaleStatus();
+
+    @Transactional
+    @Modifying
+    @Query(value = "update pizza_order set commit_time=?1 where id=?2",nativeQuery = true)
+    int updateCommitTime(Timestamp commitTime,int orderId);
 }
+
