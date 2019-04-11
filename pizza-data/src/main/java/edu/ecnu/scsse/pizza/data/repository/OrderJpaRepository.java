@@ -202,4 +202,10 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
             "on sale.date = cancel.date\n" +
             "order by sale.date asc",nativeQuery = true)
     List<Object[]> getSaleStatus();
+
+    @Transactional
+    @Modifying
+    @Query(value = "update pizza_order set commit_time=?1 where id=?2",nativeQuery = true)
+    int updateCommitTime(Timestamp commitTime,int orderId);
 }
+
