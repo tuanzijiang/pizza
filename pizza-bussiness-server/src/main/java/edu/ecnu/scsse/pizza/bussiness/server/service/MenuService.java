@@ -30,12 +30,15 @@ import edu.ecnu.scsse.pizza.data.repository.MenuJpaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -47,7 +50,11 @@ import java.util.stream.Collectors;
 public class MenuService extends SessionService {
     private static final Logger log = LoggerFactory.getLogger(MenuService.class);
 
-    //private static String UPLOADED_FOLDER = "./resources/img/";
+    @Value("${file.uploadUrl}")
+    private String UPLOAD_URL;
+
+    @Value("${file.savePath}")
+    private String SAVE_PATH;
 
     @Autowired
     MenuJpaRepository menuJpaRepository;
@@ -222,7 +229,7 @@ public class MenuService extends SessionService {
         return response;
     }
 
-    public SimpleResponse uploadMenuImageFile(MultipartFile file, int menuId){
+    public SimpleResponse uploadMenuImageFile(MultipartFile file,int menuId){
         SimpleResponse response = new SimpleResponse();
         if (file==null||file.isEmpty())
             return new SimpleResponse(new NotFoundException("File not found."));
@@ -233,16 +240,17 @@ public class MenuService extends SessionService {
                 entity = optional.get();
                 // Get the file and save it somewhere
                 byte[] bytes = file.getBytes();
-                Path currentDir = Paths.get(".");
-                String p = currentDir.toAbsolutePath().toString()+"\\pizza-bussiness-server\\src\\main\\resources\\img\\menu\\";
+                String suffix = file.getOriginalFilename();
                 Date date = new Date();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
                 String dateMark = sdf.format(date);
-                String fileName = dateMark+file.getOriginalFilename();
-                Path path = Paths.get(p + fileName);
-                Files.write(path, bytes);
-                //将图片名称保存至数据库
-                entity.setImage(fileName);
+                String fileName = dateMark+suffix;
+                File dest = new File(SAVE_PATH+"menu/"+fileName);
+                if(!dest.getParentFile().exists())
+                    dest.getParentFile().mkdirs();
+                file.transferTo(dest);
+                //将图片链接保存至数据库
+                entity.setImage(UPLOAD_URL+"menu/"+fileName);
                 menuJpaRepository.saveAndFlush(entity);
                 response.setResultType(ResultType.SUCCESS);
             }
@@ -264,13 +272,11 @@ public class MenuService extends SessionService {
         menu.setId(String.valueOf(menuEntity.getId()));
         menu.setState(PizzaStatus.fromDbValue(menuEntity.getState()).getExpression());
         menu.setTagName(PizzaTag.fromDbValue(menuEntity.getTag()).getExpression());
-        Path currentDir = Paths.get(".");
-        String p = currentDir.toAbsolutePath().toString()+"\\pizza-bussiness-server\\src\\main\\resources\\img\\menu\\";
-        menu.setImage(p+menuEntity.getImage());
+        menu.setImage(menuEntity.getImage());
         try {
             List<IngredientDetailResponse> ingredientList = new ArrayList<>();
             List<Object[]> objects = ingredientJpaRepository.findIngredientsByMenuId(menuEntity.getId());
-            List<IngredientBean> ingredientBeans = null;
+            List<IngredientBean> ingredientBeans = new ArrayList<>();
             ingredientBeans = CastEntity.castEntityToIngredientBean(objects,IngredientBean.class);
             ingredientList = ingredientBeans.stream().map(this::convertIngredientBeanToResponse).collect(Collectors.toList());
             menu.setIngredients(ingredientList);
@@ -283,7 +289,12 @@ public class MenuService extends SessionService {
     private IngredientDetailResponse convertIngredientBeanToResponse(IngredientBean ingredientBean){
         IngredientDetailResponse response = new IngredientDetailResponse();
         CopyUtils.copyProperties(ingredientBean,response);
-        response.setIngredientStatus(IngredientStatus.fromDbValue(ingredientBean.getState()).getExpression());
+        if(ingredientBean.getState()!=null)
+            response.setIngredientStatus(IngredientStatus.fromDbValue(ingredientBean.getState()).getExpression());
+        else {
+            response.setState(0);
+            response.setIngredientStatus("使用中");
+        }
         return response;
     }
 

@@ -21,10 +21,12 @@ import edu.ecnu.scsse.pizza.data.repository.ShopIngredientJpaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
@@ -43,6 +45,12 @@ import java.util.stream.Collectors;
 @Service
 public class ShopService{
     private static final Logger log = LoggerFactory.getLogger(ShopService.class);
+
+    @Value("${file.uploadUrl}")
+    private String UPLOAD_URL;
+
+    @Value("${file.savePath}")
+    private String SAVE_PATH;
 
     @Autowired
     PizzaShopJpaRepository shopJpaRepository;
@@ -151,10 +159,12 @@ public class ShopService{
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
                 String dateMark = sdf.format(date);
                 String fileName = dateMark+file.getOriginalFilename();
-                Path path = Paths.get(p + fileName);
-                Files.write(path, bytes);
-                //将图片名称保存至数据库
-                entity.setImage(fileName);
+                File dest = new File(SAVE_PATH+"shop/"+fileName);
+                if(!dest.getParentFile().exists())
+                    dest.getParentFile().mkdirs();
+                file.transferTo(dest);
+                //将图片链接保存至数据库
+                entity.setImage(UPLOAD_URL+"shop/"+fileName);
                 shopJpaRepository.saveAndFlush(entity);
                 response.setResultType(ResultType.SUCCESS);
             }
@@ -180,9 +190,7 @@ public class ShopService{
         String open = df.format(entity.getStartTime()).split(" ")[1];
         String close = df.format(entity.getEndTime()).split(" ")[1];
         shop.setOpenHours(open+"-"+close);
-        Path currentDir = Paths.get(".");
-        String p = currentDir.toAbsolutePath().toString()+"\\pizza-bussiness-server\\src\\main\\resources\\img\\shop\\";
-        shop.setImage(p+entity.getImage());
+        shop.setImage(entity.getImage());
         return shop;
     }
 }

@@ -133,7 +133,7 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
                     ") as order_driver\n" +
                     "on order_address.id = order_driver.id\n" +
                     ") as address_driver\n" +
-                    ") as order_detail" +
+                    ") as order_detail\n" +
                     "where o.state<>1",
             nativeQuery = true)
     List<Object[]> getOrderBeans();
