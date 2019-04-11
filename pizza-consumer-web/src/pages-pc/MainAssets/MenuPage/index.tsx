@@ -62,6 +62,7 @@ export default class MenuPage extends React.PureComponent<MenuPageProps, MenuPag
         {navIdx === 1 && <Pay
           menu={menu} pizzas={pizzas}
           addresses={addresses}
+          cartId={cartId}
           handleToMenu={this.handleNavChange(0)} addressIds={[
             user.address,
             ...user.addresses,
