@@ -5,6 +5,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "order_menu", schema = "pizza_project", catalog = "")
 public class OrderMenuEntity {
+
     private Integer id;
     private int orderId;
     private int menuId;
@@ -21,6 +22,7 @@ public class OrderMenuEntity {
     }
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id")
     public Integer getId() {
         return id;
