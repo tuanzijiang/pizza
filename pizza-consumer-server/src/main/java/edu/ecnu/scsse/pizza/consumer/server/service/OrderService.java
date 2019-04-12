@@ -181,14 +181,22 @@ public class OrderService {
      * @throws NotFoundException
      * @throws IllegalArgumentException
      */
-    public int updateOrder(String orderUuid, Integer menuId, Integer count) throws ConsumerServerException {
+    public boolean updateOrder(String orderUuid, Integer menuId, Integer count) throws ConsumerServerException {
         if (orderUuid == null || !this.isPositive(menuId) || !this.isPositive(count)) {
             throw new IllegalArgumentException("IllegalArgument orderUuid[%s], menuId[%s], count[%s]", orderUuid, menuId, count);
         }
-        Integer orderId = orderJpaRepository.findCartIdByOrderUuid(orderUuid)
-                .orElseThrow(() -> new NotFoundException("Fail to find cart order with orderUuid=[%s]", orderUuid));
+        Optional<OrderMenuEntity> orderMenu = orderMenuJpaRepository.findByOrderUuidAndMenuId(orderUuid, menuId);
 
-        return orderMenuJpaRepository.updateCount(count, orderId, menuId);
+        OrderMenuEntity entity;
+        if (orderMenu.isPresent()) {
+            entity = orderMenu.get();
+            entity.setCount(count);
+        } else {
+            Integer orderId = orderJpaRepository.findCartIdByOrderUuid(orderUuid).orElseThrow(() ->
+                    new NotFoundException("Fail to find cart order with orderUuid=[%s]", orderUuid));
+            entity = new OrderMenuEntity(null, orderId, menuId, count);
+        }
+        return orderMenuJpaRepository.saveAndFlush(entity) != null;
     }
 
     /**

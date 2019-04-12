@@ -189,7 +189,7 @@ public class OrderControllerTest {
 
     @Test
     public void updateOrder() throws Exception {
-        when(service.updateOrder(ORDER_ID, PIZZA_ID, 2)).thenReturn(1);
+        when(service.updateOrder(ORDER_ID, PIZZA_ID, 2)).thenReturn(true);
         UpdateOrderRequest request = new UpdateOrderRequest();
         request.setOrderId(ORDER_ID);
         request.setCount(2);
@@ -209,7 +209,7 @@ public class OrderControllerTest {
 
     @Test
     public void updateOrderFailure() throws Exception {
-        when(service.updateOrder(ORDER_ID, PIZZA_ID, 2)).thenReturn(0);
+        when(service.updateOrder(ORDER_ID, PIZZA_ID, 2)).thenReturn(false);
         UpdateOrderRequest request = new UpdateOrderRequest();
         request.setOrderId(ORDER_ID);
         request.setCount(2);
