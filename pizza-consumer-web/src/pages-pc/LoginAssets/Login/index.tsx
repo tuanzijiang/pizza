@@ -10,6 +10,7 @@ import { LoginType, VerificationType } from '@src/net/common';
 import { loginApi } from '@services/api-login';
 import { openToast } from '@utils/store';
 import { isTel, isVarify, isEmail, isPW } from '@utils/check';
+import { sendVerificationApi } from '@src/services/api-send-verification';
 
 interface LoginProps {
   currentTime: number;
@@ -140,6 +141,17 @@ export default class Login extends React.PureComponent<LoginProps, LoginState> {
     const { loginStore, onVarifyClick, currentTime } = this.props;
     const { varifyTime } = loginStore;
     if (varifyTime < currentTime) {
+      const { tel } = this.state;
+      if (!isTel(tel)) {
+        openToast('手机格式错误');
+        return;
+      }
+
+      sendVerificationApi({
+        tel,
+        type: VerificationType.LOGIN,
+      });
+
       onVarifyClick(new Date().valueOf() + VARIFY_TIME);
     }
   }
