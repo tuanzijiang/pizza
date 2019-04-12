@@ -72,6 +72,18 @@ public class ShopControllerTest {
         Assert.assertTrue("正确",status==200);
     }
 
+    @Test
+    public void testGetIngredientListByShopId() throws Exception{
+        RequestBuilder request = MockMvcRequestBuilders.get("/shop/getIngredientListByShopId").param("shopId","1")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(JSON.toJSONString(null));
+        MvcResult mvcResult = mockMvc.perform(request).andReturn();
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getContentAsString();
+        Assert.assertTrue("正确",status==200);
+    }
+
+
 
     @Test
     public void testEditShopDetailAdminNotLogin()throws Exception{
@@ -80,7 +92,7 @@ public class ShopControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         String requestBody = mapper.writeValueAsString(request);
         when(shopService.editShopDetail(eq(request), anyInt())).thenReturn(response);
-        mockMvc.perform(MockMvcRequestBuilders.post("/shop/editShopDetail")
+        mockMvc.perform(MockMvcRequestBuilders.post("/shop/editShopDetail").param("adminId","1")
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -95,7 +107,7 @@ public class ShopControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         String requestBody = mapper.writeValueAsString(request);
         when(shopService.addNewShop(eq(request), anyInt())).thenReturn(response);
-        mockMvc.perform(MockMvcRequestBuilders.post("/shop/addNewShop")
+        mockMvc.perform(MockMvcRequestBuilders.post("/shop/addNewShop").param("adminId","1")
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON)

@@ -3,6 +3,7 @@ package edu.ecnu.scsse.pizza.bussiness.server.controller;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Driver;
+import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.SimpleResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.driver.DriverDetailRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.driver.DriverDetailResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.service.DriverService;
@@ -73,7 +74,7 @@ public class DriverControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         String requestBody = mapper.writeValueAsString(request);
         when(driverService.editDriverDetail(eq(request), anyInt())).thenReturn(response);
-        mockMvc.perform(MockMvcRequestBuilders.post("/driver/editDriverDetail")
+        mockMvc.perform(MockMvcRequestBuilders.post("/driver/editDriverDetail").param("adminId","1")
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -86,10 +87,21 @@ public class DriverControllerTest {
         DriverDetailResponse response=new DriverDetailResponse();
         ObjectMapper mapper = new ObjectMapper();
         String requestBody = mapper.writeValueAsString(request);
-        when(driverService.editDriverDetail(eq(request), anyInt())).thenReturn(response);
-        mockMvc.perform(MockMvcRequestBuilders.post("/driver/addNewDriver")
+        when(driverService.addNewDriver(eq(request), anyInt())).thenReturn(response);
+        mockMvc.perform(MockMvcRequestBuilders.post("/driver/addNewDriver").param("adminId","1")
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
+    }
+
+    @Test
+    public void testRemoveDriver() throws Exception{
+        SimpleResponse response=new SimpleResponse();
+        ObjectMapper mapper = new ObjectMapper();
+        when(driverService.deleteDriver(anyInt(), anyInt())).thenReturn(response);
+        mockMvc.perform(MockMvcRequestBuilders.get("/driver/removeDriver").param("id","1").param("adminId","1")
+                .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk());
     }

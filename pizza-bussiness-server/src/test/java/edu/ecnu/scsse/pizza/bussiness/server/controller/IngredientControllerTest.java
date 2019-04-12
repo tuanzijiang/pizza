@@ -38,6 +38,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -95,7 +96,7 @@ public class IngredientControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         String requestBody = mapper.writeValueAsString(request);
         when(ingredientService.editIngredientDetail(eq(request), anyInt())).thenReturn(response);
-        mockMvc.perform(MockMvcRequestBuilders.post("/ingredient/editIngredientDetail")
+        mockMvc.perform(MockMvcRequestBuilders.post("/ingredient/editIngredientDetail").param("adminId","1")
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -109,7 +110,7 @@ public class IngredientControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         String requestBody = mapper.writeValueAsString(request);
         when(ingredientService.addNewIngredient(eq(request), anyInt())).thenReturn(response);
-        mockMvc.perform(MockMvcRequestBuilders.post("/ingredient/addNewIngredient")
+        mockMvc.perform(MockMvcRequestBuilders.post("/ingredient/addNewIngredient").param("adminId","1")
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -119,7 +120,7 @@ public class IngredientControllerTest {
 
     @Test
     public void testEditIngredientStatus() throws Exception{
-        RequestBuilder request = MockMvcRequestBuilders.get("/ingredient/editIngredientStatus").param("ingredientId","1")
+        RequestBuilder request = MockMvcRequestBuilders.get("/ingredient/editIngredientStatus").param("ingredientId","1").param("adminId","1")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(JSON.toJSONString(null));
         MvcResult mvcResult = mockMvc.perform(request).andReturn();
@@ -146,7 +147,7 @@ public class IngredientControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         String requestBody = mapper.writeValueAsString(request);
         when(ingredientService.buyIngredient(eq(request), anyInt())).thenReturn(response);
-        mockMvc.perform(MockMvcRequestBuilders.get("/ingredient/buyIngredient")
+        mockMvc.perform(MockMvcRequestBuilders.post("/ingredient/buyIngredient").param("adminId","1")
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -155,7 +156,7 @@ public class IngredientControllerTest {
 
     @Test
     public void testDeleteIngredient() throws Exception{
-        RequestBuilder request = MockMvcRequestBuilders.get("/ingredient/deleteIngredient").param("id","1")
+        RequestBuilder request = MockMvcRequestBuilders.get("/ingredient/deleteIngredient").param("id","1").param("adminId","1")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(JSON.toJSONString(null));
         MvcResult mvcResult = mockMvc.perform(request).andReturn();
