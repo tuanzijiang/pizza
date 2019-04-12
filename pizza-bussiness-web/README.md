@@ -1,31 +1,35 @@
 # pizza-business-web
 
-披萨订购系统商家版本，前端
+披萨订购系统后台管理前端
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.3.
+[查看项目](http://139.224.238.171:81/)
 
-## Development server
+本项目使用 [Angular CLI](https://github.com/angular/angular-cli) version 7.3.3.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Git地址
 
-## Code scaffolding
+- https://github.com/tuanzijiang/pizza/tree/master/pizza-bussiness-web 
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## 系统需求
 
-## Build
+- Angular 7.2.12, MySql 14.14, Node 10.15.1
 
-Run `npm install` to install necessary packages before running `ng build`.
+##本地运行方式
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+### 开发者模式
 
-## Running unit tests
+- 运行 `ng serve` 后访问 `http://localhost:4200/`. 如果您更改任何源文件，应用程序将自动重新加载。
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### 组件操作
 
-## Running end-to-end tests
+- 运行 `ng generate component component-name` 来生成新的组件。 也可以使用`ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+### Build
 
-## Further help
+- 在运行`ng build`之前运行 `npm install` 下载所需包.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+- 运行 `ng build` 来构建项目. 构建工件将存储在`dist /`目录中。 使用`--prod`标志进行生产构建。
+
+### 更多帮助
+
+- 若要获取更多关于Angular Cli的帮助，使用`ng help`或访问 [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
