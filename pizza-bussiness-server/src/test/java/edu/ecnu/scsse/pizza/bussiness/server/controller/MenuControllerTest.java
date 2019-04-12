@@ -90,7 +90,7 @@ public class MenuControllerTest{
 
     @Test
     public void testEditMenuStatus()throws Exception{
-        RequestBuilder request = MockMvcRequestBuilders.get("/menu/editMenuStatus").param("menuId","1")
+        RequestBuilder request = MockMvcRequestBuilders.get("/menu/editMenuStatus").param("menuId","1").param("adminId","1")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(JSON.toJSONString(null));
         MvcResult mvcResult = mockMvc.perform(request).andReturn();
@@ -107,7 +107,7 @@ public class MenuControllerTest{
         ObjectMapper mapper = new ObjectMapper();
         String requestBody = mapper.writeValueAsString(request);
         when(menuService.editMenuDetail(eq(request), anyInt())).thenReturn(response);
-        mockMvc.perform(MockMvcRequestBuilders.post("/menu/editMenuDetail")
+        mockMvc.perform(MockMvcRequestBuilders.post("/menu/editMenuDetail").param("adminId","1")
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -121,7 +121,7 @@ public class MenuControllerTest{
         ObjectMapper mapper = new ObjectMapper();
         String requestBody = mapper.writeValueAsString(request);
         when(menuService.addNewMenu(eq(request), anyInt())).thenReturn(response);
-        mockMvc.perform(MockMvcRequestBuilders.post("/menu/addNewMenu")
+        mockMvc.perform(MockMvcRequestBuilders.post("/menu/addNewMenu").param("adminId","1")
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON)
