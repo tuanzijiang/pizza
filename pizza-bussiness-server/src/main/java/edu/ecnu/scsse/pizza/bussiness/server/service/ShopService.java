@@ -3,6 +3,7 @@ package edu.ecnu.scsse.pizza.bussiness.server.service;
 import edu.ecnu.scsse.pizza.bussiness.server.exception.BusinessServerException;
 import edu.ecnu.scsse.pizza.bussiness.server.exception.ExceptionType;
 import edu.ecnu.scsse.pizza.bussiness.server.exception.NotFoundException;
+import edu.ecnu.scsse.pizza.bussiness.server.model.entity.ShopIngredient;
 import edu.ecnu.scsse.pizza.bussiness.server.model.enums.OperateObject;
 import edu.ecnu.scsse.pizza.bussiness.server.model.enums.OperateResult;
 import edu.ecnu.scsse.pizza.bussiness.server.model.enums.OperateType;
@@ -12,7 +13,9 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ingredient.I
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.shop.ShopDetailRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.shop.ShopDetailResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.shop.ShopManageResponse;
+import edu.ecnu.scsse.pizza.bussiness.server.utils.CastEntity;
 import edu.ecnu.scsse.pizza.bussiness.server.utils.CopyUtils;
+import edu.ecnu.scsse.pizza.data.bean.ShopIngredientBean;
 import edu.ecnu.scsse.pizza.data.domain.IngredientEntity;
 import edu.ecnu.scsse.pizza.data.domain.PizzaShopEntity;
 import edu.ecnu.scsse.pizza.data.repository.IngredientJpaRepository;
@@ -78,8 +81,11 @@ public class ShopService{
         return shopList;
     }
 
-    public List<IngredientEntity> getIngredientListByShopId(int shopId){
-        return ingredientJpaRepository.findIngredientsByShopId(shopId);
+    public List<ShopIngredientBean> getIngredientListByShopId(int shopId) throws Exception{
+        List<Object[]> objects = ingredientJpaRepository.findIngredientsByShopId(shopId);
+        List<ShopIngredientBean> shopIngredientBeans = new ArrayList<>();
+        shopIngredientBeans = CastEntity.castEntity(objects,ShopIngredientBean.class);
+        return shopIngredientBeans;
     }
 
     @Transactional
