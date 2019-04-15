@@ -79,7 +79,9 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
   }
 
   componentWillUnmount() {
-    this.menuScrollEl.current.scrollTop = 0;
+    if (this.menuScrollEl && this.menuScrollEl.current) {
+      this.menuScrollEl.current.scrollTop = 0;
+    }
   }
 
   componentDidUpdate(prevProps: MenuProps, prevState: MenuState) {
@@ -272,7 +274,7 @@ export default class Menu extends React.PureComponent<MenuProps, MenuState> {
         <div className="menu-shopping">
           <div className="menu-shoppingHeader">{i18n('购物车')}</div>
           <div className="menu-shoppingContent">
-            <Shopping menu={menu} pizzas={pizzas} handleToPay={handleToPay} cartId={cartId}/>
+            <Shopping menu={menu} pizzas={pizzas} handleToPay={handleToPay} cartId={cartId} />
           </div>
         </div>
       </div>

@@ -4,13 +4,14 @@ import { connect } from 'react-redux';
 import cx from 'classnames';
 import i18n from '@src/utils/i18n';
 import Icon from '@biz-components/Icon';
-import { fetchUserApi } from '@src/services/api-fetch-user';
+import { entity as entityActionCreator } from '@store/action';
 import autobind from 'autobind-decorator';
 import MenuPage from './MenuPage';
 import Order from './Order';
 import { CART_ORDER_ID } from '@src/entity/Order';
-import { fetchAddressApi } from '@src/services/api-fetch-address';
 import history from '@src/utils/history';
+import { fetch, OBJECT_STORE_NAMES } from '@src/utils/db';
+import store from '@src/store';
 
 export enum PageName {
   MENU = 1,
@@ -47,8 +48,20 @@ export class MainAssets extends React.PureComponent<MainAssetsProps, MainAssetsS
   componentDidMount() {
     const { entityStore } = this.props;
     const { user } = entityStore;
+
     if (user.id === 0) {
-      history.push('./LoginAssets');
+      let shouldLogout = true;
+
+      fetch(OBJECT_STORE_NAMES.USER, (obj) => {
+        shouldLogout = false;
+        store.dispatch(entityActionCreator.user.updateUser({
+          ...obj,
+        }));
+      }, () => {
+        if (shouldLogout) {
+          history.push('./LoginAssets');
+        }
+      });
     }
   }
 

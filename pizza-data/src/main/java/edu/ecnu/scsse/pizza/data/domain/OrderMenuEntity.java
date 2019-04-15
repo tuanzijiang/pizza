@@ -5,14 +5,26 @@ import javax.persistence.*;
 @Entity
 @Table(name = "order_menu", schema = "pizza_project", catalog = "")
 public class OrderMenuEntity {
-    private int id;
+
+    private Integer id;
     private int orderId;
     private int menuId;
     private Integer count;
 
+    public OrderMenuEntity() {
+    }
+
+    public OrderMenuEntity(Integer id, int orderId, int menuId, Integer count) {
+        this.id = id;
+        this.orderId = orderId;
+        this.menuId = menuId;
+        this.count = count;
+    }
+
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id")
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -57,7 +69,7 @@ public class OrderMenuEntity {
 
         OrderMenuEntity that = (OrderMenuEntity) o;
 
-        if (id != that.id) return false;
+        if (!id.equals(that.id)) return false;
         if (orderId != that.orderId) return false;
         if (menuId != that.menuId) return false;
         if (count != null ? !count.equals(that.count) : that.count != null) return false;

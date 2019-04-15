@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ecnu.scsse.pizza.bussiness.server.TestApplication;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.Order;
 import edu.ecnu.scsse.pizza.bussiness.server.model.entity.PendingOrder;
+import edu.ecnu.scsse.pizza.bussiness.server.model.entity.SaleStatus;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.BaseResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ResultType;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.order.*;
@@ -31,6 +32,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
@@ -77,19 +79,19 @@ public class OrderControllerTest {
         Assert.assertTrue("正确",status==200);
     }
 
-//    @Test
-//    public void testMonthSaleStatus() throws Exception{
-//        SaleRequest request = new SaleRequest();
-//        SaleResponse response = new SaleResponse();
-//        ObjectMapper mapper = new ObjectMapper();
-//        String requestBody = mapper.writeValueAsString(request);
-//        when(orderService.getSaleStatusList("2019-03-27 12:50:28","2019-03-27 13:06:12")).thenReturn(response);
-//        mockMvc.perform(MockMvcRequestBuilders.post("/order/getMonthSaleStatus")
-//                .accept(MediaType.APPLICATION_JSON)
-//                .content(requestBody)
-//                .contentType(MediaType.APPLICATION_JSON)
-//        ).andExpect(status().isOk());
-//    }
+    @Test
+    public void testMonthSaleStatus() throws Exception{
+        SaleRequest request = new SaleRequest();
+        List<SaleStatus> response = new ArrayList<>();
+        ObjectMapper mapper = new ObjectMapper();
+        String requestBody = mapper.writeValueAsString(request);
+        when(orderService.getSaleStatusList("2019-03-27 12:50:28","2019-03-27 13:06:12")).thenReturn(response);
+        mockMvc.perform(MockMvcRequestBuilders.post("/order/getMonthSaleStatus")
+                .accept(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
+    }
 
     @Test
     public void testGetPendingRequestList() throws Exception{

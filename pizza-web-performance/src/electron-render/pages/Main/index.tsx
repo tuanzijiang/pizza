@@ -311,6 +311,7 @@ export default class Main extends React.PureComponent<MainProps, MainState> {
         <div className="main-contentReport">
           {
             pageInfos.map((pageInfo, idx) => <div className="main-contentReportRow" key={idx}>
+              <div className="main-contentReportRowIdx">{idx}</div>
               {
                 [...Array(num).keys()].map((v, i) => {
                   const pageStatus = pageInfo[i];

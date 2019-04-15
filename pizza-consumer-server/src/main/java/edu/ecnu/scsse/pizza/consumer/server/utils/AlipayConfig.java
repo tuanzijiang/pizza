@@ -16,7 +16,9 @@ public class AlipayConfig {
 
     public static final String SUBJECT = "pizza_order";
 
-    public static final String PRODUCT_CODE = "QUICK_WAP_WAY";
+    public static final String MOBILE_PRODUCT_CODE = "QUICK_WAP_WAY";
+
+    public static final String PC_PRODUCT_CODE = "FAST_INSTANT_TRADE_PAY";
 
     public static final String NOTIFY_URL = "http://139.224.37.12:8080/pizza-consumer/paid";
 

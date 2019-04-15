@@ -7,6 +7,9 @@ import Modal from '@components/Modal';
 import autobind from 'autobind-decorator';
 import cx from 'classnames';
 import Image from '@components/Image';
+import { PayType } from '@src/net/api-pay-order';
+import { payOrderApi } from '@src/services/api-pay-order';
+import { openToast } from '@src/utils/store';
 
 enum PAY_KIND {
   ALIPAY = 0,
@@ -29,6 +32,7 @@ interface PayProps {
   addresses: {
     [key: number]: Address;
   };
+  cartId: any;
 }
 
 interface PayState {
@@ -85,6 +89,29 @@ export default class Pay extends React.PureComponent<PayProps, PayState> {
         tmp_address_id: addressId,
       });
     };
+  }
+
+  @autobind
+  async handlePayClick() {
+    const { menu, pizzas, cartId } = this.props;
+    let price = 0;
+    if (menu && menu.num) {
+      const { num } = menu;
+      price = Object.entries(num).reduce((prev, [pizzaId, count]) => {
+        const currPizza = pizzas[parseInt(pizzaId, 10)];
+        const perPrice = currPizza.price;
+        return prev + (count as number) * perPrice;
+      }, 0);
+    }
+
+    const result = await payOrderApi({
+      orderId: cartId,
+      totalPrice: price,
+      type: PayType.PC,
+    });
+    if (!result) {
+      openToast('支付失败');
+    }
   }
 
   renderAddress() {
@@ -245,7 +272,7 @@ export default class Pay extends React.PureComponent<PayProps, PayState> {
                 {this.renderPayKind()}
               </div>
               <div className="pay-itemFooter">
-                <div className="pay-button">
+                <div className="pay-button" onClick={this.handlePayClick}>
                   {i18n('支付')}
                 </div>
               </div>

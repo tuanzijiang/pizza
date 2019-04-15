@@ -351,11 +351,24 @@ public class OrderServiceTest {
     public void testUpdateOrder() throws ConsumerServerException {
         String orderUuid = "AAA";
         Integer menuId = 1;
+        Integer count = 2;
+
+        when(orderMenuJpaRepository.findByOrderUuidAndMenuId(orderUuid, menuId)).thenReturn(Optional.of(new OrderMenuEntity(1,1,1,1)));
+        when(orderJpaRepository.findCartIdByOrderUuid(orderUuid)).thenReturn(Optional.of(1));
+        when(orderMenuJpaRepository.saveAndFlush(any())).thenReturn(new OrderMenuEntity(1,1,1,2));
+        assertTrue(orderService.updateOrder(orderUuid, menuId, count));
+    }
+
+    @Test
+    public void testUpdateOrderFirstTime() throws ConsumerServerException {
+        String orderUuid = "AAA";
+        Integer menuId = 1;
         Integer count = 1;
 
+        when(orderMenuJpaRepository.findByOrderUuidAndMenuId(orderUuid, menuId)).thenReturn(Optional.empty());
         when(orderJpaRepository.findCartIdByOrderUuid(orderUuid)).thenReturn(Optional.of(1));
-        when(orderMenuJpaRepository.updateCount(count, 1, menuId)).thenReturn(1);
-        assertEquals(1, orderService.updateOrder(orderUuid, menuId, count));
+        when(orderMenuJpaRepository.saveAndFlush(any())).thenReturn(new OrderMenuEntity(1,1,1,1));
+        assertTrue(orderService.updateOrder(orderUuid, menuId, count));
     }
 
     @Test
@@ -364,6 +377,7 @@ public class OrderServiceTest {
         Integer menuId = 1;
         Integer count = 1;
 
+        when(orderMenuJpaRepository.findByOrderUuidAndMenuId(orderUuid, menuId)).thenReturn(Optional.empty());
         when(orderJpaRepository.findCartIdByOrderUuid(orderUuid)).thenReturn(Optional.empty());
         NotFoundException e = (NotFoundException) thrownBy(() -> orderService.updateOrder(orderUuid, menuId, count));
         assertEquals(e.getMessage(), String.format("Fail to find cart order with orderUuid=[%s]", orderUuid));

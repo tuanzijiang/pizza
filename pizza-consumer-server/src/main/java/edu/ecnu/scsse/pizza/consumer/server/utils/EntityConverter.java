@@ -142,8 +142,8 @@ public class EntityConverter {
     public static AddressEntity convert(AmapLocation.Geocode geocode) {
         AddressEntity addressEntity=new AddressEntity();
         addressEntity.setAddress(geocode.getFormattedAddress());
-        addressEntity.setLat(new BigDecimal(geocode.getLocation().split(",")[0]));
-        addressEntity.setLon(new BigDecimal(geocode.getLocation().split(",")[1]));
+        addressEntity.setLon(new BigDecimal(geocode.getLocation().split(",")[0]));
+        addressEntity.setLat(new BigDecimal(geocode.getLocation().split(",")[1]));
         return addressEntity;
     }
 }
