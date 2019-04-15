@@ -48,7 +48,7 @@
         <tr>
           <td *ngFor="let col of cols" [ngSwitch]="true">
           <span *ngSwitchCase="col.field ==='image'">
-            <img src="../../../../assets/images/example.jpeg" alt="" style="width:50px; height:auto;">
+            <img src="{{userList[col.field]}}" alt="" style="width:50px; height:auto;">
           </span>
             <span *ngSwitchCase="col.field ==='birthday'">
             {{userList[col.field].toLocaleDateString()}}
