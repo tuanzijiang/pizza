@@ -10,6 +10,7 @@ import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.shop.ShopDet
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.shop.ShopIngredientResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.shop.ShopManageResponse;
 import edu.ecnu.scsse.pizza.bussiness.server.service.ShopService;
+import edu.ecnu.scsse.pizza.data.bean.ShopIngredientBean;
 import edu.ecnu.scsse.pizza.data.domain.IngredientEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,7 @@ public class ShopController extends BaseController{
      */
     @RequestMapping(value = "/getIngredientListByShopId",method = RequestMethod.GET)
     @ResponseBody
-    public List<IngredientEntity> getIngredientListByShopId(@RequestParam int shopId){
+    public List<ShopIngredientBean> getIngredientListByShopId(@RequestParam int shopId) throws Exception{
         return shopService.getIngredientListByShopId(shopId);
     }
 
