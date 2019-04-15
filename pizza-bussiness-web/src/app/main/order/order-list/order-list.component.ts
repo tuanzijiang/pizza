@@ -3,6 +3,7 @@ import {OrderDetail} from "../../../modules/order/orderDetail";
 import {TranslateService} from "../../../services/translate.service";
 import {OrderService} from "../../../services/order/order.service";
 import {Order} from "../../../modules/order/order";
+import {AppComponent} from "../../../app.component";
 
 @Component({
   selector: 'app-order-list',
@@ -72,12 +73,18 @@ export class OrderListComponent implements OnInit {
       state: '状态'
     };
 
-    this.orderService.getOrders().subscribe(
-      (orders: Order[]) => {
-        this.orders = orders;
-        this.displayPage = true;
-      }
-    );
+    if (!AppComponent.orders) {
+      this.orderService.getOrders().subscribe(
+        (orders: Order[]) => {
+          AppComponent.orders = orders;
+          this.orders = AppComponent.orders;
+          this.displayPage = true;
+        }
+      );
+    } else {
+      this.orders = AppComponent.orders;
+      this.displayPage = true;
+    }
   }
 
   selectOrderWithButton(order: Order) {
