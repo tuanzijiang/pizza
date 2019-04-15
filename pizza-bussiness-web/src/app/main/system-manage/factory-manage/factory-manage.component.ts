@@ -84,10 +84,13 @@ export class FactoryManageComponent implements OnInit {
     this.displayChangeDialog = true;
   }
 
-  closeDialog() {
-    this.checkIgDialog = false;
-    this.displayChangeDialog = false;
+  closeAddDialog() {
     this.displayAddDialog = false;
+    this.tempFactory = null;
+  }
+
+  closeChangeDialog() {
+    this.displayChangeDialog = false;
     this.tempFactory = null;
   }
 

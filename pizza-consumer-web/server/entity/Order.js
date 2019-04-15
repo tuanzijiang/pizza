@@ -17,7 +17,7 @@ class Order {
     }
   }
 
-  static fromJS() {
+  static fromJS(order) {
     return new Order(order);
   }
 

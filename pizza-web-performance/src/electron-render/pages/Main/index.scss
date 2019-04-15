@@ -113,6 +113,16 @@
   align-items: center
 }
 
+.main-contentReportRowIdx {
+  height: rem(45);
+  width: rem(40);
+  margin: 0 rem(1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: rem(12);
+}
+
 .main-contentReportCell {
   flex: 1 1 auto;
   height: rem(45);

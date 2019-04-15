@@ -25,13 +25,6 @@ public class OrderMenuJpaRepositoryTest {
     private MenuJpaRepository menuJpaRepository;
 
     @Test
-    public void updateCountTest() {
-        orderMenuJpaRepository.updateCount(5, 1, 1);
-        OrderMenuEntity orderMenuEntity = orderMenuJpaRepository.findByOrderIdAndMenuId(1, 1).get();
-        Assert.assertTrue(orderMenuEntity.getCount() == 5);
-    }
-
-    @Test
     public void test() {
         List<PizzaBean> pizzaBeans = menuJpaRepository.findPizzaBeansByStateAndOrderId(0,1);
         System.out.println(pizzaBeans.size());

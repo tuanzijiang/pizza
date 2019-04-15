@@ -30,14 +30,11 @@ public interface IngredientJpaRepository extends JpaRepository<IngredientEntity,
     @Query(value = "select * from ingredient",nativeQuery = true)
     List<IngredientEntity> findAllIngredients();
 
-    @Query(value = "select ingredient.*\n" +
-            "from ingredient\n" +
-            "where ingredient.id in\n" +
-            "(select shop_ingredient.ingredient_id\n" +
-            "from shop_ingredient\n" +
-            "where shop_id = ?1\n" +
-            ")",nativeQuery = true)
-    List<IngredientEntity> findIngredientsByShopId(int shopId);
+    @Query(value = "select ingredient.id,ingredient.name,shop_ingredient.count\n" +
+            "from shop_ingredient left join ingredient \n" +
+            "on shop_ingredient.ingredient_id = ingredient.id\n" +
+            "where shop_ingredient.shop_id = ?1",nativeQuery = true)
+    List<Object[]> findIngredientsByShopId(int shopId);
 
     @Query(value = "select ingredient.id,ingredient.name,pizza_shop.id as shopId,pizza_shop.`name` as shopName,ingredient.alerm_num as alertNum,shop_ingredient.count\n" +
             "from shop_ingredient,pizza_shop,ingredient\n" +

@@ -32,7 +32,7 @@ router.post('/', async (ctx, next) => {
       response = await net.post('/fetchOrders', result);
       body = {
         resultType: 1,
-        orders: response.orders.map(v => Order.fromJS(orders)),
+        orders: response.orders.map(v => Order.fromJS(v)),
       }
     } catch (e) {
       body = {

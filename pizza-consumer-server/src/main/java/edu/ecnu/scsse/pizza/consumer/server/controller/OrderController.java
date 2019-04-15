@@ -93,7 +93,7 @@ public class OrderController {
     public UpdateOrderResponse updateOrder(@RequestBody UpdateOrderRequest request) {
         UpdateOrderResponse response = new UpdateOrderResponse();
         try {
-            if (orderService.updateOrder(request.getOrderId(), request.getPizzaId(), request.getCount()) <= 0) {
+            if (!orderService.updateOrder(request.getOrderId(), request.getPizzaId(), request.getCount())) {
                 response.setResultType(ResultType.FAILURE);
                 response.setErrorMsg("无法更改商品数量。");
             }
