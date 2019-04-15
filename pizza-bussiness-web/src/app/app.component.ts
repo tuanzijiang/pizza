@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {Order} from "./modules/order/order";
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
+  static orders: Order[];
   title = 'My First Angular App!';
 }
