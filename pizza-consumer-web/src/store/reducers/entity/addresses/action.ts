@@ -5,6 +5,7 @@ import { AddressWeakSchema } from '@entity/schema';
  */
 export const UPDATE_ADDRESS = Symbol('UPDATE_ADDRESS');
 export const UPDATE_ADDRESSES = Symbol('UPDATE_ADDRESSES');
+export const CLEAR = Symbol('CLEAR');
 
 /**
  * action creator
@@ -21,7 +22,12 @@ const updateAddresses = (addresses: {
   type: UPDATE_ADDRESSES,
 });
 
+const clear = () => ({
+  type: CLEAR,
+});
+
 export default {
   updateAddress,
   updateAddresses,
+  clear,
 };

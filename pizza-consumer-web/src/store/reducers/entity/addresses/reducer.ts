@@ -1,6 +1,6 @@
 import { AddressMap } from '@entity/schema';
 
-import { UPDATE_ADDRESS, UPDATE_ADDRESSES } from './action';
+import { UPDATE_ADDRESS, UPDATE_ADDRESSES, CLEAR } from './action';
 
 export default (state: AddressMap = {}, action: any) => {
   switch (action.type) {
@@ -19,6 +19,9 @@ export default (state: AddressMap = {}, action: any) => {
         ...state,
         ...addresses,
       };
+    }
+    case CLEAR: {
+      return {};
     }
     default:
       return state;

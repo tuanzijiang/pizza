@@ -4,6 +4,7 @@ import { Order, Pizza } from '@src/entity';
 import i18n from '@src/utils/i18n';
 import { formater, TIMEFOAMTER } from '@utils/time';
 import autobind from 'autobind-decorator';
+import { fetchOrderApi } from '@src/services/api-fetch-order';
 
 interface OrderListProps {
   orderIds: string[];
@@ -15,6 +16,7 @@ interface OrderListProps {
   };
   handleToOrderDetail: () => void;
   handleSetCurrentId: (currId: string) => void;
+  userId: number;
 }
 
 interface OrderListState {
@@ -33,7 +35,11 @@ export default class OrderList extends React.PureComponent<OrderListProps, Order
   @autobind
   handleDetailClick(id: string) {
     return () => {
-      const { handleToOrderDetail, handleSetCurrentId } = this.props;
+      const { handleToOrderDetail, handleSetCurrentId, userId } = this.props;
+      fetchOrderApi({
+        userId,
+        orderId: id,
+      });
       handleSetCurrentId(id);
       handleToOrderDetail();
     };
@@ -47,6 +53,9 @@ export default class OrderList extends React.PureComponent<OrderListProps, Order
           {
             orderIds.map((orderId: string) => {
               const order = orders[orderId];
+              if (!order) {
+                return <></>;
+              }
               const pizzaIds = order.pizzas;
               const firstPizza = pizzas[pizzaIds[0]];
               const firstPizzaName = firstPizza.name;

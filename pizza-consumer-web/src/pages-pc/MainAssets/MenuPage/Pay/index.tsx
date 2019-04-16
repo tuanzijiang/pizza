@@ -10,6 +10,7 @@ import Image from '@components/Image';
 import { PayType } from '@src/net/api-pay-order';
 import { payOrderApi } from '@src/services/api-pay-order';
 import { openToast } from '@src/utils/store';
+import { sendOrdersApi } from '@src/services/api-send-order';
 
 enum PAY_KIND {
   ALIPAY = 0,
@@ -93,7 +94,9 @@ export default class Pay extends React.PureComponent<PayProps, PayState> {
 
   @autobind
   async handlePayClick() {
-    const { menu, pizzas, cartId } = this.props;
+    const { menu, pizzas, cartId, addressIds } = this.props;
+    const { address_id } = this.state;
+
     let price = 0;
     if (menu && menu.num) {
       const { num } = menu;
@@ -104,7 +107,17 @@ export default class Pay extends React.PureComponent<PayProps, PayState> {
       }, 0);
     }
 
-    const result = await payOrderApi({
+    let result: any;
+
+    result = await sendOrdersApi({
+      userAddressId: address_id === 0 ? addressIds[0] : address_id,
+      orderId: cartId,
+    });
+    if (!result) {
+      openToast('下单失败');
+    }
+
+    result = await payOrderApi({
       orderId: cartId,
       totalPrice: price,
       type: PayType.PC,
@@ -146,13 +159,13 @@ export default class Pay extends React.PureComponent<PayProps, PayState> {
 
     return <div className="pay-addressList">
       {
-        addressIds && addressIds.map(id => {
+        addressIds && addressIds.map((id, idx) => {
           const addressItem = addresses[id];
           return addressItem && <div
             className={cx({
               'pay-addressListItem': true,
               'pay-addressListItem_active': tmp_address_id === id,
-            })} key={id}
+            })} key={idx}
             onClick={this.handleAddressItemClick(id)}
           >
             <div className="pay-addressListInfo">

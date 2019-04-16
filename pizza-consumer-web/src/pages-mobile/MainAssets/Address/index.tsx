@@ -59,10 +59,12 @@ export default class Address extends React.PureComponent<AddressProps, AddressSt
       const currOrder = orders[CART_ORDER_ID] || {};
 
       if (usage === AddressUsage.SELECT) {
-        const order = currOrder.update({
-          address: addressId,
-        });
-        updateOrder(order);
+        if (currOrder.update) {
+          const order = currOrder.update({
+            address: addressId,
+          });
+          updateOrder(order);
+        }
         onPageChange(MainAssetName.Settlement, OpenType.LEFT);
       }
     };
@@ -97,7 +99,7 @@ export default class Address extends React.PureComponent<AddressProps, AddressSt
 
   renderRight() {
     return <div className="address-right" onClick={this.handleEditClick()}>
-      <Icon name="add" classnames="address-rightIcon"/>
+      <Icon name="add" classnames="address-rightIcon" />
     </div>;
   }
 
