@@ -225,13 +225,16 @@ public class OrderService {
         OrderEntity order = orderJpaRepository.findByOrderUuid(orderUuid)
                 .orElseThrow(() -> new NotFoundException("No order found with orderUuid[%s]", orderUuid));
         Phones phones = new Phones();
-        DriverEntity driverEntity = driverJpaRepository.findById(order.getDriverId())
-                .orElseThrow(() -> new NotFoundException("No driver found with id[%s]", order.getDriverId()));
-        phones.deliverymanPhone = driverEntity.getPhone();
-
-        PizzaShopEntity shopEntity = pizzaShopJpaRepository.findById(order.getShopId())
-                .orElseThrow(() -> new NotFoundException("No shop found with id[%s]", order.getShopId()));
-        phones.shopPhone = shopEntity.getPhone();
+        if (order.getDriverId() != null) {
+            DriverEntity driverEntity = driverJpaRepository.findById(order.getDriverId())
+                    .orElseThrow(() -> new NotFoundException("No driver found with id[%s]", order.getDriverId()));
+            phones.deliverymanPhone = driverEntity.getPhone();
+        }
+        if (order.getShopId() != null) {
+            PizzaShopEntity shopEntity = pizzaShopJpaRepository.findById(order.getShopId())
+                    .orElseThrow(() -> new NotFoundException("No shop found with id[%s]", order.getShopId()));
+            phones.shopPhone = shopEntity.getPhone();
+        }
         return phones;
     }
 
