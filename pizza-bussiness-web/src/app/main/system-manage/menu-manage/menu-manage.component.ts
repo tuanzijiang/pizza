@@ -77,6 +77,7 @@ export class MenuManageComponent implements OnInit {
     this.inventoryManageService.getIngredientList().subscribe(
       (ingredientList: Ingredient[]) => {
         this.ingredientList = ingredientList;
+        console.log(this.ingredientList);
         for(let menu of this.menuList) {
           menu.ingredients = this.filterIngredient(menu.ingredients, ingredientList);
         }
@@ -85,12 +86,20 @@ export class MenuManageComponent implements OnInit {
     )
   }
 
-  filterIngredient(fromList: Ingredient[], toList: Ingredient[]) {
-    for(let ing of fromList) {
-      let index = toList.findIndex(obj => obj.id == ing.id);
-      toList[index].menuNeedCount = ing.menuNeedCount;
+  filterIngredient(fromList: Ingredient[], toList: Ingredient[]): Ingredient[] {
+    let newIngs = [];
+    for(let ing of toList) {
+      let newIng = new Ingredient();
+      newIng.id = ing.id;
+      newIng.name = ing.name;
+      newIng.menuNeedCount = ing.menuNeedCount;
+      newIngs.push(newIng);
     }
-    return toList;
+    for(let ing of fromList) {
+      let index = newIngs.findIndex(obj => obj.id == ing.id);
+      newIngs[index].menuNeedCount = ing.menuNeedCount;
+    }
+    return newIngs;
   }
 
   getPizzaType() {
@@ -230,7 +239,19 @@ export class MenuManageComponent implements OnInit {
     let tmpMenu = new Menu();
     for (const key in menu) {
       if(menu.hasOwnProperty(key)) {
-        tmpMenu[key] = menu[key];
+        if(key == 'ingredients' && menu[key] != null) {
+          let ingredients = [];
+          for(let ing of menu[key]) {
+            let tempIng = new Ingredient();
+            for(const ingKey in ing) {
+              tempIng[ingKey] = ing[ingKey];
+            }
+            ingredients.push(tempIng);
+          }
+          tmpMenu[key] = ingredients;
+        } else {
+          tmpMenu[key] = menu[key];
+        }
       }
     }
     return tmpMenu;

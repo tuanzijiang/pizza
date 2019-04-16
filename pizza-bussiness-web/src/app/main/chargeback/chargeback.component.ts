@@ -62,9 +62,9 @@ export class ChargebackComponent implements OnInit, AfterViewInit {
       // use the from/start date and add 1 day
       // or the to/end date and add 1 day
       if (this.dateFilters[1]) {
-        e = this.dateFilters[1].getTime() + 86400000;
+        e = this.dateFilters[1].getTime();
       } else {
-        e = s + 86400000;
+        e = s;
       }
       // compare it to the actual values
       return value.getTime() >= s && value.getTime() <= e;
