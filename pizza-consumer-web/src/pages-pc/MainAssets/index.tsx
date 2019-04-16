@@ -108,7 +108,7 @@ export class MainAssets extends React.PureComponent<MainAssetsProps, MainAssetsS
              menu={menu} pizzas={pizzas} addresses={addresses} user={user} cartId={cart_id}/>}
             {navIdx === PageName.ORDER && <Order
               orders={orders} addresses={addresses} orderIds={orderIds}
-              pizzas={pizzas}
+              pizzas={pizzas} user={user}
             />}
           </div>
         </div>
