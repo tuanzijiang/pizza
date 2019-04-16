@@ -25,6 +25,9 @@ export const fetchOrderApi = async (param: FetchOrderReq) => {
     const currOrdersIds: string[] = [];
 
     [responseOrder].forEach(order => {
+      if (!order) {
+        return;
+      }
       const { address, pizzas } = order;
       // @ts-ignore
       const addressId = Address.fromJS(address).id;

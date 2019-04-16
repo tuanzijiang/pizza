@@ -1,4 +1,5 @@
 @import '~@ui/base.scss';
+
 .orderDetail-wrapper {
   height: 100%;
   width: 100%;
@@ -124,6 +125,7 @@
   width: vw(30);
   font-size: vw(14);
   color: $gray_5;
+
   span {
     font-size: vw(12);
   }
@@ -133,6 +135,7 @@
   width: vw(30);
   font-size: vw(14);
   color: $gray_5;
+
   span {
     font-size: vw(12);
   }
@@ -182,4 +185,8 @@
   font-size: vw(12);
   text-align: right;
   color: $gray_4;
+}
+
+.addressInfoItemContent-blue {
+  color: $blue_3;
 }

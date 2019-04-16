@@ -14,6 +14,9 @@ import Icon from '@biz-components/Icon';
 import { fetchOrderApi } from '@src/services/api-fetch-order';
 import { cancelOrdersApi } from '@src/services/api-cancel-order';
 import Image from '@components/Image';
+import { fetchPhoneApi } from '@services/api-fetch-phone';
+import { openToast } from '@src/utils/store';
+import { FetchPhoneResp } from '@src/net/api-fetch-phone';
 
 interface OrderDetailProps {
   onPageChange(idx: MainAssetName, openType?: OpenType, ...extraInfo: any[]): void;
@@ -107,6 +110,42 @@ export default class OrderDetail extends React.PureComponent<OrderDetailProps, O
     onPageChange(MainAssetName.Pay, OpenType.RIGHT, {
       currOrderId,
     });
+  }
+
+  @autobind
+  async handleDeliveryPhone() {
+    const { currOrderId } = this.state;
+    const result = await fetchPhoneApi({
+      orderId: currOrderId,
+    }) as unknown as (FetchPhoneResp | boolean);
+    if (result) {
+      const { deliverymanPhone } = result as FetchPhoneResp;
+      openToast(deliverymanPhone);
+    }
+  }
+
+  @autobind
+  async handleShopPhone() {
+    const { currOrderId } = this.state;
+    const result = await fetchPhoneApi({
+      orderId: currOrderId,
+    }) as unknown as (FetchPhoneResp | boolean);
+    if (result) {
+      const { shopPhone } = result as FetchPhoneResp;
+      openToast(shopPhone);
+    }
+  }
+
+  @autobind
+  async handleServicePhone() {
+    const { currOrderId } = this.state;
+    const result = await fetchPhoneApi({
+      orderId: currOrderId,
+    }) as unknown as (FetchPhoneResp | boolean);
+    if (result) {
+      const { servicePhone } = result as FetchPhoneResp;
+      openToast(servicePhone);
+    }
   }
 
   renderOrder() {
@@ -216,6 +255,30 @@ export default class OrderDetail extends React.PureComponent<OrderDetailProps, O
               </div>
               <div className="orderDetail-addressInfoItemContent">
                 {Address.toAppellation(currAddress)}
+              </div>
+            </div>
+            <div className="orderDetail-addressInfoItem" onClick={this.handleDeliveryPhone}>
+              <div className="orderDetail-addressInfoItemTitle">
+                {i18n('骑手电话')}
+              </div>
+              <div className="orderDetail-addressInfoItemContent addressInfoItemContent-blue">
+                {i18n('查看')}
+              </div>
+            </div>
+            <div className="orderDetail-addressInfoItem" onClick={this.handleShopPhone}>
+              <div className="orderDetail-addressInfoItemTitle">
+                {i18n('商家电话')}
+              </div>
+              <div className="orderDetail-addressInfoItemContent addressInfoItemContent-blue">
+                {i18n('查看')}
+              </div>
+            </div>
+            <div className="orderDetail-addressInfoItem" onClick={this.handleServicePhone}>
+              <div className="orderDetail-addressInfoItemTitle">
+                {i18n('服务电话')}
+              </div>
+              <div className="orderDetail-addressInfoItemContent addressInfoItemContent-blue">
+                {i18n('查看')}
               </div>
             </div>
           </div>
