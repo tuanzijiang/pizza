@@ -2,7 +2,7 @@ import * as React from 'react';
 import './index.scss';
 import { fetchOrdersApi } from '@src/services/api-fetch-orders';
 import { fetchAddressApi } from '@src/services/api-fetch-address';
-import { Order as OrderEntity, Address, Pizza } from '@src/entity';
+import { Order as OrderEntity, Address, Pizza, User } from '@src/entity';
 import { OrderStatus } from '@net/common';
 import OrderList from './OrderList';
 import OrderDetail from './OrderDetail';
@@ -19,6 +19,7 @@ interface OrderProps {
   orders: {
     [key: string]: OrderEntity;
   };
+  user: User;
 }
 
 interface OrderState {
@@ -36,14 +37,14 @@ export default class Order extends React.PureComponent<OrderProps, OrderState> {
   }
 
   componentDidMount() {
+    const { user } = this.props;
     fetchOrdersApi({
-      userId: 123,
+      userId: user.id,
       lastOrderId: '',
       num: 10,
-      status: [OrderStatus.PAID],
     });
     fetchAddressApi({
-      userId: 123,
+      userId: user.id,
     });
   }
 
