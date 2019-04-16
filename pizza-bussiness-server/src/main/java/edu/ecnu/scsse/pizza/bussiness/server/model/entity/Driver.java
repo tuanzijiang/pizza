@@ -44,9 +44,9 @@ public class Driver {
         boolean ableToDelivery=true;
         int sumDeliveryNumEachDriver=0;
         for(Order order:orderList){
-            sumDeliveryNumEachDriver+=order.getMenuList().size();
+            sumDeliveryNumEachDriver+=order.getOrderMenuNum();
         }
-        if(maxDeliveryNumEachDriver-sumDeliveryNumEachDriver<waitToDeliveryOrder.getMenuList().size()){
+        if(maxDeliveryNumEachDriver-sumDeliveryNumEachDriver<waitToDeliveryOrder.getOrderMenuNum()){
             ableToDelivery=false;
         }else {
             if(state == DriverStatus.LEISURE){
@@ -56,10 +56,15 @@ public class Driver {
                 for(Order order:orderList){
                     pointList.add(order.getMapPoint());
                 }
+                List<Order> orders = new ArrayList<>();
+                orders.addAll(orderList);
+                orders.add(waitToDeliveryOrder);
+                deliverySchedule.setOrderList(orders);
+
                 pointList.add(waitToDeliveryOrder.getMapPoint());
                 List<List<Double>> pointToPointTime=getPointToPointTime(pointList);
                 //n=5 得到 全排列 12345，12354等
-                List<List<Integer>> orderPermuList= getPermutaion(orderList.size()+1);
+                List<List<Integer>> orderPermuList= getPermutaion(orders.size());
 
                 //总配送的最短时间
                 double minDeliveryTime=-1;
@@ -75,11 +80,11 @@ public class Driver {
                     long deliveryTime = pointToPointTime.get(0).get(orderRoute.get(0)).longValue()*millisecondNumToOneSecond;
                     //依次是从第i个订单到第i+1个定案的配送时间累加,就是到第i+1个订单的配送时间
                     for(int i=0;i<orderRoute.size()-1;i++){
-                        deliveryTimeEachOrderId.put(orderList.get(i).getOrderId(),deliveryTime);
+                        deliveryTimeEachOrderId.put(orders.get(orderRoute.get(i)-1).getOrderId(),deliveryTime);
                         deliveryTime += pointToPointTime.get(orderRoute.get(i)).get(orderRoute.get(i+1)).longValue()*millisecondNumToOneSecond;
                     }
                     //无论是orderList没有订单还是有很多和订单最终都会执行
-                    deliveryTimeEachOrderId.put(waitToDeliveryOrder.getOrderId(),deliveryTime);
+                    deliveryTimeEachOrderId.put(orders.get(orderRoute.get(orderRoute.size()-1)-1).getOrderId(),deliveryTime);
                     //第一次赋值 或者 上面算的总的配送时间小于最短的配送时间,依次赋值给最短配送时间、回店耗时、最短的每个orderId的配送时间
                     if(minDeliveryTime<0 || deliveryTime<minDeliveryTime){
                         minDeliveryTime=deliveryTime;
@@ -109,10 +114,6 @@ public class Driver {
                 score += (waitToDeliveryOrder.getLatestReceiveTime()-d.getTime()-minDeliveryTimeEachOrderId.get(waitToDeliveryOrder.getOrderId())/millisecondNumToOneSecond/60);
                 deliverySchedule.setScore(score);
                 deliverySchedule.setDeliveryTimeEachOrderId(minDeliveryTimeEachOrderId);
-                List<Order> orders = new ArrayList<>();
-                orders.addAll(orderList);
-                orders.add(waitToDeliveryOrder);
-                deliverySchedule.setOrderList(orders);
                 deliverySchedule.setSumDeliveryDuration(new Double(minDeliveryTime).longValue());
                 deliverySchedule.setMinLatestLeaveTime(minLatestToDelivery);
                 deliverySchedule.setBackDuration(new Double(backTime).longValue());
@@ -334,5 +335,13 @@ public class Driver {
 
     public void setShopName(String shopName) {
         this.shopName = shopName;
+    }
+
+    @Override
+    public String toString() {
+        return "Driver{" +
+                "id=" + id +" "+
+                "orderList=" + new Order().getOrderListInfo(orderList) +
+                '}';
     }
 }

@@ -70,6 +70,22 @@ public class Order implements Comparable<Order>{
         return ingredientNumMap;
     }
 
+    public int getOrderMenuNum(){
+        int cnt=0;
+        for(Menu menu:menuList){
+            cnt+=menu.getCount();
+        }
+        return cnt;
+    }
+
+    public String getOrderListInfo(List<Order> orderList){
+        String rst="";
+        for(Order order :orderList){
+            rst+=("orderId:"+order.getOrderId()+"orderMenuNum:"+order.getOrderMenuNum()+" ");
+        }
+        return rst;
+    }
+
     public String getOrderId() {
         return orderId;
     }
