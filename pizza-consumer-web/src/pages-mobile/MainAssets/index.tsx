@@ -115,6 +115,12 @@ export class MainAssets extends React.PureComponent<LoginAssetsProps, LoginAsset
   render() {
     const { mainStore, updateNavIdx, entityStore, updateOrder, commonStore } = this.props;
     const { navIdx, orderIds } = mainStore;
+    const { user } = entityStore;
+
+    if (user.id === 0) {
+      return <div />;
+    }
+
     return (
       <div className="loginAssets">
         <PageAssets init={MainAssetName.Main} ref={this.pageAssetsEl} changeCb={this.onPageChange}>

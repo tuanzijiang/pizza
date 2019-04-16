@@ -16,6 +16,7 @@ export const reqProto = {
   [Command.SEND_ORDER]: 'order.SendOrderReq',
   [Command.CANCEL_ORDER]: 'order.CancelOrderReq',
   [Command.PAY_ORDER]: 'order.PayOrderReq',
+  [Command.FETCH_PHONE]: 'order.FetchPhoneReq',
 };
 
 export const respProto = {
@@ -34,6 +35,7 @@ export const respProto = {
   [Command.SEND_ORDER]: 'order.SendOrderResp',
   [Command.CANCEL_ORDER]: 'order.CancelOrderResp',
   [Command.PAY_ORDER]: 'order.PayOrderResp',
+  [Command.FETCH_PHONE]: 'order.FetchPhoneResp',
 };
 
 export const reqUrl = {
@@ -52,4 +54,5 @@ export const reqUrl = {
   [Command.SEND_ORDER]: 'send_order',
   [Command.CANCEL_ORDER]: 'cancel_order',
   [Command.PAY_ORDER]: 'pay_order',
+  [Command.FETCH_PHONE]: 'fetch_phone',
 };
