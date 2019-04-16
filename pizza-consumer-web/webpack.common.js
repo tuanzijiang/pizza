@@ -79,6 +79,8 @@ module.exports = {
       description: 'My awesome pizza Web App!',
       background_color: '#ffffff',
       crossorigin: 'use-credentials', //can be null, use-credentials or anonymous
+      inject: true,
+      fingerprints: true,
       icons: [
         {
           src: path.resolve(__dirname, './src/assets/logo.ico'),

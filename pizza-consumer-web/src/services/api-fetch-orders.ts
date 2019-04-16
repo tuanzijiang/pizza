@@ -41,7 +41,7 @@ export const fetchOrdersApi = async (param: FetchOrdersReq) => {
     let updatePizzas: Pizza[] = [];
     const currOrdersIds: string[] = [];
 
-    orders.forEach(order => {
+    orders.reverse().forEach(order => {
       const { address, pizzas } = order;
       const addressId = address.id;
 
