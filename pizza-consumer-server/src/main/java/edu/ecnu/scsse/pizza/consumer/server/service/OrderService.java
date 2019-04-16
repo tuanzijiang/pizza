@@ -393,12 +393,12 @@ public class OrderService {
         List<OrderMenuEntity> orderMenuEntities = orderMenuJpaRepository.findByOrderIdIn(orderIds);
         if (!CollectionUtils.isEmpty(orderMenuEntities)) {
             Set<Integer> menuIds = new HashSet<>();
-            Map<Integer, OrderMenuEntity> omMapping = new HashMap<>();
+            Map<Integer, Set<OrderMenuEntity>> omMapping = new HashMap<>();
             Map<Integer, Set<Integer>> mMapping = new HashMap<>();
 
             orderMenuEntities.forEach(om -> {
                 menuIds.add(om.getMenuId());
-                omMapping.put(om.getOrderId(), om);
+                omMapping.computeIfAbsent(om.getOrderId(), k -> new HashSet<>()).add(om);
                 mMapping.computeIfAbsent(om.getOrderId(), k -> new HashSet<>()).add(om.getMenuId());
             });
 
@@ -407,13 +407,16 @@ public class OrderService {
             List<Order> result = new ArrayList<>();
             entityList.forEach(e -> {
                 Order order = EntityConverter.convert(e);
-                OrderMenuEntity om = omMapping.get(e.getId());
+                Set<OrderMenuEntity> om = omMapping.get(e.getId());
                 Set<Integer> pizzaIds = mMapping.get(e.getId());
-                if (!CollectionUtils.isEmpty(pizzaIds)) {
-                    List<Pizza> pizzas = menuEntities.stream()
-                            .filter(m -> pizzaIds.contains(m.getId()))
-                            .map(m -> EntityConverter.convert(om, m))
-                            .collect(Collectors.toList());
+                if (!CollectionUtils.isEmpty(om) && !CollectionUtils.isEmpty(pizzaIds)) {
+                    List<Pizza> pizzas = new ArrayList<>();
+                    for (OrderMenuEntity ome : om) {
+                        menuEntities.stream()
+                                .filter(m -> pizzaIds.contains(ome.getMenuId()))
+                                .findFirst()
+                                .ifPresent(m -> pizzas.add(EntityConverter.convert(ome, m)));
+                    }
                     order.setPizzas(pizzas);
                     result.add(order);
                 }
