@@ -1,6 +1,7 @@
 package edu.ecnu.scsse.pizza.bussiness.server.service;
 
 import edu.ecnu.scsse.pizza.bussiness.server.model.enums.OrderState;
+import edu.ecnu.scsse.pizza.bussiness.server.model.gaode.BicyclingData;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.ResultType;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.order.OrderReceiveRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.order.OrderReceiveResponse;
@@ -48,7 +49,6 @@ public class OrderReceiveService {
     private DeliveryService deliveryService;
 
 
-
     public OrderReceiveResponse getReceiveShopId(OrderReceiveRequest orderReceiveRequest)
     {
         //请求参数
@@ -62,15 +62,16 @@ public class OrderReceiveService {
         Optional<OrderEntity> orderEntity= orderJpaRepository.findByOrderUuid(orderUuid);
         //组装待处理的订单
         Order aimOrder = new Order();
-
         //组装可供之后计算的aimOrder的信息，主要是原料清单
         if(orderEntity.isPresent()) {//数据库里找不到这个orderUuid
             OrderEntity order = orderEntity.get();
             int orderId = order.getId();
             aimOrder.setOrderId(String.valueOf(orderId));
             aimOrder.setOrderUuid(orderUuid);
-            Timestamp commitTime = order.getCommitTime();
+            Timestamp commitTime = new Timestamp(System.currentTimeMillis());
             aimOrder.setCommitTime(String.valueOf(commitTime));
+            order.setCommitTime(commitTime);
+            //写入提交时间
             aimOrder.setLatestReceiveTime(commitTime.getTime()+max_duration*millisecondNumToOneSecond);
             List<OrderMenuEntity> orderMenuEntityList = orderMenuJpaRepository.findByOrderId(orderId);
             List<Menu> menuList = new ArrayList<>();
@@ -90,7 +91,6 @@ public class OrderReceiveService {
                 menuList.add(menu);
             }
             aimOrder.setMenuList(menuList);
-
 
             //组装全部的shop
             List<PizzaShopEntity> pizzaShopEntityList = pizzaShopJpaRepository.findAll();
@@ -115,63 +115,96 @@ public class OrderReceiveService {
                     orderReceiveResponse = new OrderReceiveResponse();
                     UserAddressEntity userAddress = userAddressEntity.get();
                     int addressId = userAddress.getAddressId();
+                    order.setAddressId(addressId);
                     Optional<AddressEntity> addressEntity = addressJpaRepository.findById(addressId);
                     if (addressEntity.isPresent()) {
                         AddressEntity address = addressEntity.get();
                         double lat = address.getLat().doubleValue();
                         double lon = address.getLon().doubleValue();
+
+                        boolean isAnythingWrong=false;
+                        String errorMsg="";
+
                         Point destination = new MapPoint(lat, lon);
                         aimOrder.setMapPoint(destination);
                         GaoDeMapUtil gaoDeMapUtil = new GaoDeMapUtil();
                         Map<Shop, Double> shopDurationMap = new HashMap<>();
                         for (Shop shop : shopList) {
-                            double duration = gaoDeMapUtil.driveRoutePlan(shop.getMapPoint(), destination).total_duation();
-                            boolean durationBool = (int) duration < max_duration;
-                            boolean commitTimeBool = Timestamp.valueOf(aimOrder.getCommitTime()).after(shop.getStartTime()) && Timestamp.valueOf(aimOrder.getCommitTime()).before(shop.getEndTime());
-                            if (durationBool && commitTimeBool) {
-                                shopDurationMap.put(shop, duration);
+                            BicyclingData bicyclingData=gaoDeMapUtil.driveRoutePlan(shop.getMapPoint(), destination);
+
+                            if (bicyclingData.getErrcode()==0){
+                                double duration = gaoDeMapUtil.driveRoutePlan(shop.getMapPoint(), destination).total_duation();
+                                boolean durationBool = (int) duration < max_duration;
+                                boolean commitTimeBool = Timestamp.valueOf(aimOrder.getCommitTime()).after(shop.getStartTime()) && Timestamp.valueOf(aimOrder.getCommitTime()).before(shop.getEndTime());
+                                if (durationBool && commitTimeBool) {
+                                    shopDurationMap.put(shop, duration);
+                                }
+                            }else {
+                                isAnythingWrong=true;
+                                if(bicyclingData.getErrmsg()!=null){
+                                    errorMsg=bicyclingData.getErrmsg();
+                                }else if(bicyclingData.getErrdetail()!=null){
+                                    errorMsg+=bicyclingData.getErrdetail();
+                                }
+                                break;
                             }
                         }
-                        if (shopDurationMap.size() > 0) {
-                            List<Map.Entry<Shop, Double>> tmpList = new ArrayList<Map.Entry<Shop, Double>>(shopDurationMap.entrySet());
-                            Collections.sort(tmpList, new Comparator<Map.Entry<Shop, Double>>() {
-                                public int compare(Map.Entry<Shop, Double> o1, Map.Entry<Shop, Double> o2) {
-                                    return new Double(o1.getValue() - o2.getValue()).intValue();
+                        if(!isAnythingWrong){
+                            if (shopDurationMap.size() > 0) {
+                                List<Map.Entry<Shop, Double>> tmpList = new ArrayList<Map.Entry<Shop, Double>>(shopDurationMap.entrySet());
+                                Collections.sort(tmpList, new Comparator<Map.Entry<Shop, Double>>() {
+                                    public int compare(Map.Entry<Shop, Double> o1, Map.Entry<Shop, Double> o2) {
+                                        return new Double(o1.getValue() - o2.getValue()).intValue();
+                                    }
+                                });
+                                orderReceiveResponse = getSuitableShopId(tmpList, aimOrder, orderEntity.get());
+                                Thread thread=new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        log.info("orderID:"+aimOrder.getOrderId()+"已被分配到配送服务");
+                                        deliveryService.deliveryOrder(aimOrder);
+                                    }
+                                });
+                                thread.start();
+                                return orderReceiveResponse;
+                            } else {
+                                int result= orderJpaRepository.updateStateCommitTimeAddressIdByOrderUuid(OrderStatus.RECEIVE_FAIL.getDbValue(),order.getCommitTime(),addressId,order.getOrderUuid());
+                                if(result==1){
+                                    order.setState(OrderStatus.RECEIVE_FAIL.getDbValue());
+                                    orderReceiveResponse.setOrderEntity(order);
+                                    orderReceiveResponse.setSuccessMsg("全部门店距离超配送范围");
+                                }else {
+                                    orderReceiveResponse.setResultType(ResultType.FAILURE);
+                                    orderReceiveResponse.setOrderEntity(order);
+                                    orderReceiveResponse.setErrorMsg("全部门店距离超配送范围,更改order表中state为RECEIVE_FAIL，失败");
                                 }
-                            });
-                            orderReceiveResponse = getSuitableShopId(tmpList, aimOrder, orderEntity.get());
-                            Thread thread=new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    log.info("orderID:"+aimOrder.getOrderId()+"已被分配到配送服务");
-                                    deliveryService.deliveryOrder(aimOrder);
-                                }
-                            });
-                            thread.start();
-                            return orderReceiveResponse;
-                        } else {
-                            int result= orderJpaRepository.updateStateByOrderUuid(OrderStatus.RECEIVE_FAIL.getDbValue(),order.getOrderUuid());
-                            if(result==1){
-                                order.setState(OrderStatus.RECEIVE_FAIL.getDbValue());
-                                orderReceiveResponse.setOrderEntity(order);
-                                orderReceiveResponse.setSuccessMsg("全部门店距离超配送范围");
-                            }else {
-                                orderReceiveResponse.setResultType(ResultType.FAILURE);
-                                orderReceiveResponse.setOrderEntity(order);
-                                orderReceiveResponse.setErrorMsg("全部门店距离超配送范围,更改order表中state为RECEIVE_FAIL，失败");
                             }
+                        }
+                        else {
+                            int result= orderJpaRepository.updateStateCommitTimeAddressIdByOrderUuid(OrderStatus.RECEIVE_FAIL.getDbValue(),order.getCommitTime(),addressId,order.getOrderUuid());
+                            orderReceiveResponse.setOrderEntity(order);
+                            orderReceiveResponse.setResultType(ResultType.FAILURE);
+                            orderReceiveResponse.setErrorMsg(errorMsg);
+                            return orderReceiveResponse;
                         }
                     }else{
-                        orderReceiveResponse.setOrderEntity(null);
+                        int result= orderJpaRepository.updateStateCommitTimeByOrderUuid(OrderStatus.RECEIVE_FAIL.getDbValue(),order.getCommitTime(),order.getOrderUuid());
+                        orderReceiveResponse.setOrderEntity(order);
                         orderReceiveResponse.setResultType(ResultType.FAILURE);
                         orderReceiveResponse.setErrorMsg("address表中无法查询到id");
                     }
                 }else {
-                    orderReceiveResponse.setOrderEntity(null);
+                    int result= orderJpaRepository.updateStateCommitTimeByOrderUuid(OrderStatus.RECEIVE_FAIL.getDbValue(),order.getCommitTime(),order.getOrderUuid());
+                    orderReceiveResponse.setOrderEntity(order);
                     orderReceiveResponse.setResultType(ResultType.FAILURE);
                     orderReceiveResponse.setErrorMsg("user_address表中无法查询到id");
                 }
             }
+//            else {
+//                orderReceiveResponse.setOrderEntity(order);
+//                orderReceiveResponse.setResultType(ResultType.FAILURE);
+//                orderReceiveResponse.setErrorMsg("pizza_order写入提交时间失败");
+//            }
         }
         else {
             orderReceiveResponse.setOrderEntity(null);
@@ -223,13 +256,12 @@ public class OrderReceiveService {
                     }
                 }
             }else {
-                List<OrderEntity> orderEntityList = orderJpaRepository.findOrderCommitTodayByShopId(shopId);
-                shopOrderNumMap.put(shopId,orderEntityList.size());
+                shopOrderNumMap.put(shopId,0);
             }
 
         }
         if(finalShop == null){
-            int result= orderJpaRepository.updateStateByOrderUuid(OrderStatus.RECEIVE_FAIL.getDbValue(),order.getOrderUuid());
+            int result= orderJpaRepository.updateStateCommitTimeAddressIdByOrderUuid(OrderStatus.RECEIVE_FAIL.getDbValue(),orderEntity.getCommitTime(),orderEntity.getAddressId(),order.getOrderUuid());
             if(result == 0){
                 orderReceiveResponse.setOrderEntity(orderEntity);
                 orderReceiveResponse.setResultType(ResultType.FAILURE);
@@ -241,7 +273,7 @@ public class OrderReceiveService {
             }
             return orderReceiveResponse;
         }else {
-            int orderResult = orderJpaRepository.updateStateAndShopIdByOrderUuid(OrderStatus.WAIT_DELIVERY.getDbValue(),finalShop.getId(),order.getOrderUuid());
+            int orderResult = orderJpaRepository.updateStateShopIdCommitTimeAdressIdByOrderUuid(OrderStatus.WAIT_DELIVERY.getDbValue(),finalShop.getId(),orderEntity.getCommitTime(),orderEntity.getAddressId(),order.getOrderUuid());
             if(orderResult==1){
                 for(Map.Entry<Integer,Integer> item:orderIngredientNumMap.entrySet()) {
                     int orderIngredientId = item.getKey();

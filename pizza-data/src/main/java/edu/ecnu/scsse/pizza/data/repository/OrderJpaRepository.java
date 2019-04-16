@@ -54,6 +54,11 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
     @Query("update OrderEntity set state=?1 ,commitTime=?2 where orderUuid=?3")
     int updateStateCommitTimeByOrderUuid(Integer state,Timestamp commitTime ,String orderUuid);
 
+    @Transactional
+    @Modifying
+    @Query("update OrderEntity set state=?1 ,commitTime=?2,addressId=?3 where orderUuid=?4")
+    int updateStateCommitTimeAddressIdByOrderUuid(Integer state,Timestamp commitTime ,Integer addressId,String orderUuid);
+
     // update
     @Transactional
     @Modifying
@@ -68,8 +73,8 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
 
     @Transactional
     @Modifying
-    @Query(value="update pizza_order set state=?1 , shop_id=?2,commit_time=?3 where order_uuid=?4",nativeQuery = true)
-    int updateStateAndShopIdByOrderUuid(int state,int shopId,Timestamp commitTime,String orderUuid);
+    @Query(value="update pizza_order set state=?1 , shop_id=?2,commit_time=?3,address_id=?4 where order_uuid=?5",nativeQuery = true)
+    int updateStateShopIdCommitTimeAdressIdByOrderUuid(int state,int shopId,Timestamp commitTime,Integer addressId,String orderUuid);
 
     @Query(value = "select * from pizza_order where state=4", nativeQuery = true)
     List<OrderEntity> findPendingList();

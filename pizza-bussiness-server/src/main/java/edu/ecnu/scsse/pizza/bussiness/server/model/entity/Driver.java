@@ -1,6 +1,7 @@
 package edu.ecnu.scsse.pizza.bussiness.server.model.entity;
 
 
+import edu.ecnu.scsse.pizza.bussiness.server.model.gaode.BicyclingData;
 import edu.ecnu.scsse.pizza.bussiness.server.model.request_response.driver.DriverDetailRequest;
 import edu.ecnu.scsse.pizza.bussiness.server.model.gaode.GaoDeMapUtil;
 import edu.ecnu.scsse.pizza.bussiness.server.service.OrderReceiveService;
@@ -135,7 +136,10 @@ public class Driver {
                 if(i==j){
                     pointITimeList.add(0.0);
                 }else {
-                    pointITimeList.add(new GaoDeMapUtil().driveRoutePlan(pointList.get(i),pointList.get(j)).total_duation());
+                    BicyclingData bicyclingData=new GaoDeMapUtil().driveRoutePlan(pointList.get(i),pointList.get(j));
+                    if(bicyclingData.getErrcode()==0){
+                        pointITimeList.add(bicyclingData.total_duation());
+                    }
                 }
             }
             pointToPointTime.add(pointITimeList);
