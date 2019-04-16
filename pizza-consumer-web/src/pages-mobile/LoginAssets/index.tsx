@@ -11,6 +11,7 @@ import BindTel from './BindTel';
 import { connect } from 'react-redux';
 import { pageMobile as pageActionCreator } from '@store/action';
 import autobind from 'autobind-decorator';
+import { logoutApi } from '@src/services/api-logout';
 
 interface LoginAssetsProps {
   loginStore: any;
@@ -83,6 +84,7 @@ export class LoginAssets extends React.PureComponent<LoginAssetsProps, LoginAsse
   }
 
   componentDidMount() {
+    logoutApi();
     this.loginAssetsEl.current.addEventListener('touchmove', handleTouchMove, { passive: false });
     this.varifyTimer = setInterval(() => {
       this.setState({

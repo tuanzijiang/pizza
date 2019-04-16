@@ -12,6 +12,7 @@ import { CART_ORDER_ID } from '@src/entity/Order';
 import history from '@src/utils/history';
 import { fetch, OBJECT_STORE_NAMES } from '@src/utils/db';
 import store from '@src/store';
+import { logoutApi } from '@src/services/api-logout';
 
 export enum PageName {
   MENU = 1,
@@ -34,6 +35,12 @@ export class MainAssets extends React.PureComponent<MainAssetsProps, MainAssetsS
     this.state = {
       navIdx: PageName.MENU,
     };
+  }
+
+  @autobind
+  handleLogoutClick(e: React.MouseEvent) {
+    logoutApi();
+    history.push('./LoginAssets');
   }
 
   @autobind
@@ -78,7 +85,7 @@ export class MainAssets extends React.PureComponent<MainAssetsProps, MainAssetsS
         <div className="mainAssets-wrapper">
           <div className="mainAssets-header">
             <div className="mainAssets-logo">
-              {i18n('Pizza Express')}
+              <span onClick={this.handleLogoutClick}>{i18n('Pizza Express')}</span>
               <div
                 className={cx({
                   'mainAssets-button': true,
@@ -104,11 +111,11 @@ export class MainAssets extends React.PureComponent<MainAssetsProps, MainAssetsS
             </div>
           </div>
           <div className="mainAssets-content">
-            {navIdx === PageName.MENU && <MenuPage
-             menu={menu} pizzas={pizzas} addresses={addresses} user={user} cartId={cart_id}/>}
-            {navIdx === PageName.ORDER && <Order
+            {user && user.id && navIdx === PageName.MENU && <MenuPage
+              menu={menu} pizzas={pizzas} addresses={addresses} user={user} cartId={cart_id} />}
+            {user && user.id && navIdx === PageName.ORDER && <Order
               orders={orders} addresses={addresses} orderIds={orderIds}
-              pizzas={pizzas}
+              pizzas={pizzas} user={user}
             />}
           </div>
         </div>

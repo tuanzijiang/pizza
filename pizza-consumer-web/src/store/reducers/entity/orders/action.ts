@@ -9,6 +9,8 @@ export const UPDATE_ORDERS = Symbol('UPDATE_ORDERES');
 
 export const UPDATE_ORDER_NUM = Symbol('UPDATE_ORDER_NUM');
 
+export const CLEAR = Symbol('CLEAR');
+
 /**
  * action creator
  */
@@ -31,8 +33,13 @@ const updateOrderNum = (orderId: string, pizzaId: number, count: number) => ({
   type: UPDATE_ORDER_NUM,
 });
 
+const clear = () => ({
+  type: CLEAR,
+});
+
 export default {
   updateOrder,
   updateOrders,
   updateOrderNum,
+  clear,
 };

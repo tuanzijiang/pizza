@@ -45,12 +45,11 @@ export class ChargebackComponent implements OnInit, AfterViewInit {
       {field: 'state', header: '审核结果'},
     ];
 
-    this.chargebackService.getPendingList().subscribe(
-      (pendingList: ChargebackPending[]) => {
-        this.chargebackPendings = pendingList;
-        this.getProcessedOrder();
-      }
-    );
+    this.getPendingList();
+  }
+
+  refreshpage() {
+    this.getPendingList();
   }
 
   ngAfterViewInit(): void {
@@ -70,6 +69,15 @@ export class ChargebackComponent implements OnInit, AfterViewInit {
       // compare it to the actual values
       return value.getTime() >= s && value.getTime() <= e;
     };
+  }
+
+  getPendingList() {
+    this.chargebackService.getPendingList().subscribe(
+      (pendingList: ChargebackPending[]) => {
+        this.chargebackPendings = pendingList;
+        this.getProcessedOrder();
+      }
+    );
   }
 
   getProcessedOrder() {
@@ -97,9 +105,11 @@ export class ChargebackComponent implements OnInit, AfterViewInit {
         if (response.resultType == 'FAILURE') {
           alert(response.errorMsg);
         } else {
+          this.showPage = false;
           if (this.chargebackPendings.find(obj => obj.orderId == pc.orderId) != null) {
             this.chargebackPendings = this.chargebackPendings.filter(obj => obj.orderId != pc.orderId);
           }
+          this.refreshpage();
         }
       }
     )
@@ -111,9 +121,11 @@ export class ChargebackComponent implements OnInit, AfterViewInit {
         if (response.resultType == 'FAILURE') {
           alert(response.errorMsg);
         } else {
+          this.showPage = false;
           if (this.chargebackPendings.find(obj => obj.orderId == pc.orderId) != null) {
             this.chargebackPendings = this.chargebackPendings.filter(obj => obj.orderId != pc.orderId);
           }
+          this.refreshpage();
         }
       }
     )

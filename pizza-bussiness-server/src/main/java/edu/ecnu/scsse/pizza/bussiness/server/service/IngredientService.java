@@ -303,6 +303,7 @@ public class IngredientService {
     public IngredientDetailResponse convert(IngredientEntity entity){
         IngredientDetailResponse ingredient = new IngredientDetailResponse();
         CopyUtils.copyProperties(entity,ingredient);
+        ingredient.setAlertNum(entity.getAlermNum());
         ingredient.setIngredientStatus(IngredientStatus.fromDbValue(entity.getState()).getExpression());
         return ingredient;
     }

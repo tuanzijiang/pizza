@@ -3,6 +3,7 @@ import { PizzaMap, PizzaWeakSchema } from '@entity/schema';
 import {
   UPDATE_PIZZA,
   UPDATE_PIZZAS,
+  CLEAR,
 } from './action';
 
 export default (state: PizzaMap = {}, action: any) => {
@@ -27,6 +28,9 @@ export default (state: PizzaMap = {}, action: any) => {
         ...state,
         ...updatePizzas,
       };
+    }
+    case CLEAR: {
+      return { };
     }
     default:
       return state;

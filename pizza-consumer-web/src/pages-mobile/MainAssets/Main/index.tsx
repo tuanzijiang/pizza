@@ -76,7 +76,7 @@ export default class Main extends React.PureComponent<MainProps, MainState> {
     fetchOrdersApi({
       userId: user.id,
       lastOrderId: '',
-      num: 20,
+      num: 200,
     });
   }
 

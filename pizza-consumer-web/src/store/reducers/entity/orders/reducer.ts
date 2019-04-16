@@ -1,7 +1,7 @@
 import { OrderMap } from '@entity/schema';
 
 import {
-  UPDATE_ORDERS, UPDATE_ORDER, UPDATE_ORDER_NUM,
+  UPDATE_ORDERS, UPDATE_ORDER, UPDATE_ORDER_NUM, CLEAR,
 } from './action';
 
 export default (state: OrderMap = {}, action: any) => {
@@ -36,6 +36,9 @@ export default (state: OrderMap = {}, action: any) => {
           ...currOrder,
         },
       };
+    }
+    case CLEAR: {
+      return { };
     }
     default:
       return state;
