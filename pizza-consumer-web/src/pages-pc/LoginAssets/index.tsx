@@ -6,6 +6,7 @@ import BlurBg from '@biz-components/BlurBg';
 import Login from './Login';
 import Register from './Register';
 import autobind from 'autobind-decorator';
+import { logoutApi } from '@src/services/api-logout';
 
 interface LoginAssetsProps {
   loginStore: any;
@@ -34,6 +35,8 @@ export class LoginAssets extends React.PureComponent<LoginAssetsProps, LoginAsse
   }
 
   componentDidMount() {
+    logoutApi();
+
     this.varifyTimer = setInterval(() => {
       this.setState({
         currentTime: new Date().valueOf(),

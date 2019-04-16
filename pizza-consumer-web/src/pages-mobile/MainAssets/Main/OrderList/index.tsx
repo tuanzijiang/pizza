@@ -40,6 +40,10 @@ export default class OrderList extends React.PureComponent<OrderListProps, Order
         {
           orderIds.map((orderId: string) => {
             const order = orders[orderId];
+            if (!order) {
+              return <></>;
+            }
+
             const pizzaIds = order.pizzas;
             const firstPizza = pizzas[pizzaIds[0]];
             const firstPizzaName = firstPizza.name;

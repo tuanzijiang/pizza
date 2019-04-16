@@ -41,7 +41,7 @@ export default class Order extends React.PureComponent<OrderProps, OrderState> {
     fetchOrdersApi({
       userId: user.id,
       lastOrderId: '',
-      num: 10,
+      num: 200,
     });
     fetchAddressApi({
       userId: user.id,
@@ -65,7 +65,7 @@ export default class Order extends React.PureComponent<OrderProps, OrderState> {
   }
 
   render() {
-    const { orders, pizzas, orderIds, addresses } = this.props;
+    const { orders, pizzas, orderIds, addresses, user } = this.props;
     const { navIdx, currOrderId } = this.state;
     return (
       <div className="order-wrapper">
@@ -75,6 +75,7 @@ export default class Order extends React.PureComponent<OrderProps, OrderState> {
           pizzas={pizzas}
           handleToOrderDetail={this.handleNavChange(1)}
           handleSetCurrentId={this.handleSetCurrentId}
+          userId={user.id}
         />
         }
         {navIdx === 1 && <OrderDetail
