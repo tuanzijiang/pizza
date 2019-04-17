@@ -214,7 +214,7 @@ public class OrderService {
         DateFormat df = new SimpleDateFormat(commitTimePattern);
         df.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
         if(orderEntity.getCommitTime()!=null) {
-            pendingOrder.setCommitTime(df.format(orderEntity.getCommitTime().getTime()));
+            pendingOrder.setCommitTime(df.format(orderEntity.getCommitTime()));
             //已支付时长
             long date = orderEntity.getCommitTime().getTime();
             long cur = (new Date()).getTime();

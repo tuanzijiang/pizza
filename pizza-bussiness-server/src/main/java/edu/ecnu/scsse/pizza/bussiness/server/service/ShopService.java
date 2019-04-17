@@ -39,10 +39,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -191,8 +188,9 @@ public class ShopService{
         CopyUtils.copyProperties(entity,shop);
         shop.setLat(entity.getLat().doubleValue());
         shop.setLon(entity.getLon().doubleValue());
-        String commitTimePattern = "yyyy/MM/dd hh:MM:ss";
+        String commitTimePattern = "yyyy/MM/dd HH:mm:ss";
         DateFormat df = new SimpleDateFormat(commitTimePattern);
+        df.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
         String open = df.format(entity.getStartTime()).split(" ")[1];
         String close = df.format(entity.getEndTime()).split(" ")[1];
         shop.setOpenHours(open+"-"+close);
