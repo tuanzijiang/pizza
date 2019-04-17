@@ -210,10 +210,11 @@ public class OrderService {
         }
 
         //下单时间的格式转换
-        String commitTimePattern = "yyyy/MM/dd hh:MM:ss";
+        String commitTimePattern = "yyyy/MM/dd HH:mm:ss";
         DateFormat df = new SimpleDateFormat(commitTimePattern);
+        df.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
         if(orderEntity.getCommitTime()!=null) {
-            pendingOrder.setCommitTime(df.format(orderEntity.getCommitTime()));
+            pendingOrder.setCommitTime(df.format(orderEntity.getCommitTime().getTime()));
             //已支付时长
             long date = orderEntity.getCommitTime().getTime();
             long cur = (new Date()).getTime();
