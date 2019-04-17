@@ -402,7 +402,6 @@ public class OrderService {
             orderMenuEntities.forEach(om -> {
                 menuIds.add(om.getMenuId());
                 omMapping.computeIfAbsent(om.getOrderId(), k -> new HashSet<>()).add(om);
-                mMapping.computeIfAbsent(om.getOrderId(), k -> new HashSet<>()).add(om.getMenuId());
             });
 
             List<MenuEntity> menuEntities = menuJpaRepository.findAllById(menuIds);
@@ -411,12 +410,11 @@ public class OrderService {
             entityList.forEach(e -> {
                 Order order = EntityConverter.convert(e);
                 Set<OrderMenuEntity> om = omMapping.get(e.getId());
-                Set<Integer> pizzaIds = mMapping.get(e.getId());
-                if (!CollectionUtils.isEmpty(om) && !CollectionUtils.isEmpty(pizzaIds)) {
+                if (!CollectionUtils.isEmpty(om) && !CollectionUtils.isEmpty(menuEntities)) {
                     List<Pizza> pizzas = new ArrayList<>();
                     for (OrderMenuEntity ome : om) {
                         menuEntities.stream()
-                                .filter(m -> pizzaIds.contains(ome.getMenuId()))
+                                .filter(m -> Objects.equals(m.getId(), ome.getMenuId()))
                                 .findFirst()
                                 .ifPresent(m -> pizzas.add(EntityConverter.convert(ome, m)));
                     }
