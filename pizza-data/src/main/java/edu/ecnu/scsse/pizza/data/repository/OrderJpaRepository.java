@@ -202,7 +202,7 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
             "left join \n" +
             "(select DATE(commit_time) as date, count(*) as completeNum\n" +
             "from pizza_order\n" +
-            "where DATE(commit_time) is not null and state = 9\n" +
+            "where DATE(commit_time) is not null and state = 8\n" +
             "group by date) as complete\n" +
             "on total.date = complete.date) as sale\n" +
             "left join\n" +

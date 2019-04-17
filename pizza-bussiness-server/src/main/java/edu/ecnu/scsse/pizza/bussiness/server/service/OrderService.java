@@ -89,7 +89,7 @@ public class OrderService {
 
     private SaleStatus getDaySaleStatus(String date){
         int orderNum = orderJpaRepository.findTotalOrdersByCommitTime(date);
-        int completeNum = orderJpaRepository.findTotalOrdersByCommitTimeAndState(date,9);
+        int completeNum = orderJpaRepository.findTotalOrdersByCommitTimeAndState(date,8);
         int cancelNum = orderJpaRepository.findTotalOrdersByCommitTimeAndState(date,5);
         double totalAmount = orderJpaRepository.findTotalAmountByCommitTime(date);
         return new SaleStatus(date,orderNum, completeNum, cancelNum, totalAmount);
