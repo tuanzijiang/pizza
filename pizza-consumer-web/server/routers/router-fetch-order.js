@@ -14,6 +14,21 @@ const respType = root.lookupType(respProtoType);
 
 const router = new Router();
 
+const map = {
+  UNKONWN: 0,
+  CART: 1,
+  UNPAID: 2,
+  PAID: 3,
+  CANCEL_CHECKING: 4,
+  CANCELED: 5,
+  CANCEL_FAILED: 6,
+  DELIVERING: 7,
+  RECEIVED: 8,
+  FINISH: 9,
+  WAIT_DELIVERY: 10,
+  RECEIVE_FAIL: 11,
+}
+
 router.post('/', async (ctx, next) => {
   const protoBuff = ctx.proto;
   const result = reqType.decode(protoBuff);
@@ -32,6 +47,8 @@ router.post('/', async (ctx, next) => {
   } else {
     try {
       response = await net.post('/fetchOrder', result);
+      const order = response.order;
+      order.status = map[order.status];
       body = {
         resultType: 1,
         order: response.order,
