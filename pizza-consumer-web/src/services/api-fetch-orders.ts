@@ -54,7 +54,7 @@ export const fetchOrdersApi = async (param: FetchOrdersReq) => {
 
       const currOrder = Order.fromJS({
         id: order.id,
-        startTime: order.startTime,
+        startTime: order.startTime || new Date().valueOf(),
         status: (order.status as unknown) as OrderStatusSchema,
         num: pizzasInfo[1],
         pizzas: pizzasInfo[0],
