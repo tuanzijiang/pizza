@@ -6,7 +6,16 @@ export const fetchPhoneApi = async (param: FetchPhoneReq) => {
   const { resultType } = resp as FetchPhoneResp;
 
   if (resultType) {
-    return resp;
+    const {
+      deliverymanPhone,
+      shopPhone,
+      servicePhone,
+    } = resp as FetchPhoneResp;
+    return {
+      deliverymanPhone: deliverymanPhone || '15317315333',
+      shopPhone: shopPhone || '18823909090',
+      servicePhone: servicePhone || '800-8888-888',
+    };
   }
 
   return false;
